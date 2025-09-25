@@ -1,0 +1,84 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style media="screen">
+    .form {
+        margin: 20px;
+        width: 400px;
+    }
+
+    .form textarea {
+        width: 100%;
+        height: 7rem;
+    }
+</style>
+<nav class="plugin_nav">
+    <a class="nav_active" href="{:url('admin/Banner/index')}" >广告管理</a>
+    <a href="{:url('admin/BannerClass/index')}">分类管理</a>
+</nav>
+<div id="app" class="box-padding">
+    <ol class="breadcrumb">
+        <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('admin/Banner/index')}">广告管理</a></li>
+        <li class="active">修改广告</li>
+    </ol>
+    <form class="form" action="{:url('edit')}" method="post">
+        <input type="file" class="hidden select_photo">
+        <input type="hidden" name="id" value="{$info.id}">
+        <div class="form-group">
+            <label>分类</label>
+            <select name="class_id" class="form-control">
+                {$class}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>图片名称</label>
+            <input type="text" class="form-control" placeholder="输入图片名称" name="name" value="{$info.name}">
+        </div>
+        <div class="form-group" style="height: 80px;">
+            <label>封面图片</label>
+            <span class="user_r_text" style="height: 80px;justify-content: flex-start; display: block;">
+          <img class="user_photo" width="60" height="60" src="{$info.img_url}" alt="">
+          <input type="hidden" name="img_url" value="{$info.img_url}">
+          <button type="button" class="btn btn-success btn_select_photo">上传图片</button>
+        </span>
+        </div>
+        <div class="form-group">
+            <label>链接</label>
+            <input type="text" class="form-control" placeholder="请输入链接地址" name="url" value="{$info.url}">
+        </div>
+        <div class="form-group">
+            <label>排序</label>
+            <input type="number" class="form-control" placeholder="数字越大越靠前" name="msort" value="{$info.msort}">
+        </div>
+        <div class="form-group">
+            <label>状态</label>
+            <select name="status" class="form-control" id="">
+                {$status_option}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn_save"> 修改 </button>
+    </form>
+</div>
+
+
+<script>
+    $(function () {
+        $('.btn_select_photo').click(function () {
+            $('.select_photo').trigger('click')
+        });
+        $('.select_photo').localResizeIMG({
+            // maxSize: 480,
+            success: function (result) {
+                $('.btn_save').attr('disabled', 'disabled');
+                $('.user_photo').attr('src', result.base64);
+                $.post('{:url("base64Upload")}', {'base64_data': result.base64}, function (res) {
+                    $('input[name=img_url]').attr('value', res.data);
+                    $('.btn_save').attr('disabled', null);
+                }, 'json'
+            )
+                ;
+            }
+        });
+    });
+
+</script>
+{include file='common/foot' /}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BounsSkin" width="135" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group horizontalCenter="0" verticalCenter="0">
+		<e:Image source="2017110116163155709007_png" x="8" anchorOffsetX="0" width="17" anchorOffsetY="0" height="22.88" scaleX="1" scaleY="1"/>
+		<e:Label id="bouns" text="+1000" x="30" size="18" textColor="0xffba26" bold="true" italic="true" scaleX="1" scaleY="1" y="4"/>
+	</e:Group>
+</e:Skin>

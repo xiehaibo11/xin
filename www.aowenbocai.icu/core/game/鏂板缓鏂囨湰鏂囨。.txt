@@ -1,0 +1,181 @@
+<?php
+namespace core\game;
+
+use core\base\PrizeBase;
+
+class Prize extends PrizeBase
+{
+    /**
+     *投注内容配置，根据传入不同的参数判断奖金计算的方式
+     * @param array $plan 投注的内容(array($code:$money))
+     */
+    public function setPlan($plan = '')
+	{
+		return $this->plan　= $plan;
+	}
+
+    /**
+	* 开奖赔率信息+游戏类型
+	* @param array $code 开奖内容
+    */
+    public function setCode($code = '')
+	{
+		/* $code = [
+			'0,1' => 1.92,
+			'2,6' => 4.75,
+			'7,18' => 11.4,
+			'19' => 22.4,
+			'20' => 100
+			'type' => '2',
+			'num' => '[1,6,18]',
+			'count' => ''
+		];  */
+		return $this->setCode = $code;
+	}
+    
+	private function sp()
+	{
+		$arr = $this->setCode;
+		unset($arr['type']);
+		unset($arr['num']);
+		if(isset($arr['count'])){
+			unset($arr['count']);
+		}
+		return $keys = array_keys($arr);
+	}
+
+    /**
+     * 判断是否中奖
+     * @return boolean
+     */
+    public function isWin()
+	{
+		//猜多个名次排序（直选）
+		if($this->setCode['count']){
+			if($this->code == array_keys($this->plan)){
+				return $this->bonus($status = true);
+
+			}
+			return false;
+		}
+		$length = count($this->code);
+		//开奖号码只有一位
+		if($length == 1){
+			if(in_array($this->code, array_keys($this->plan))){
+				return $this->bonus();
+
+			}
+			return false;
+		//开奖号码有多位（每位赔率不同）
+		} else {
+			foreach($this->code as $prize){
+				if(in_array($prize, array_keys($this->plan))){
+					$data[] = $prize;
+				}
+			}
+			if(!empty($data)){
+				return $this->bonus();
+			}
+			return false;
+		}
+	}
+
+    /**
+     * 奖金
+	 * @return float
+     */
+    public function bonus()
+	{
+		//猜多个名次排序（直选）
+		if($this->setCode['count']){
+			return $plan[$this->code] * $this->setCode;
+		}	
+		$length = count($this->code);
+		$sp = $this->sp();
+		$i = 0;
+		$money = 0;
+		//开奖号码只有一位
+		if($length == 1){
+			foreach($sp as &$key){
+
+				$codes = explode(',', $key);
+				switch (count($codes)){
+					case 1:
+						if($this->code == $key){
+							$money += $plan[$this->code] * $this->setCode[$key];
+						}
+					break;
+					case 2:
+						if($codes[0] <= $this->code  && $this->code  <= $codes[1]){
+							$money += $plan[$this->code] * $this->setCode[$key];
+
+						}
+					break;
+				}		
+			}
+			return $money;
+		//开奖号码有多位（多位赔率不同）
+		} else {
+			foreach($this->code as $data){
+				foreach($sp as &$key){
+					$codes = explode(',', $key);
+					switch (count($codes)){
+						case 1:
+							if($data == $key){
+								$money += $plan[$this->code] * $this->setCode[$key];
+							}
+						break;
+						case 2:
+							if($codes[0] <= $data && $data <= $codes[1]){
+								$money += $plan[$this->code] * $this->setCode[$key];
+
+							}
+						break;
+					}	
+				}
+			}
+			return $money;
+		}
+	}
+
+    /**
+     * 自动生成一个开奖号码
+     * @return array 生成的开奖号码
+	 * @$code int 第一个参数选择生成号码类型，
+     */
+    public function createCode()
+	{	
+		switch ($this->setCode['type']){
+			//$num int 为开奖号码的长度（11选5类型游戏）
+			case 1 :
+				$code = rand(0, pow(10, $this->setCode['num']));
+				return $this->code = str_pad($code, $this->setCode['num'], '0', STR_PAD_LEFT);
+			break;
+			//$num array  不同开奖号码的最大键值数组array(1,6,18);(生肖转盘类游戏)
+			case 2 :
+				$i = 0;
+				foreach($this->setCode['num'] as $v){
+					if($i == 0){
+						$codes[$i] = rand(0, $v);
+					} else {
+						$codes[$i] = rand($this->setCode['num'][$i - 1] + 1, $v);
+					} 
+					$i++;
+				}
+				return $this->code = $codes;
+			break;
+			//$num int 为号码总计个数，$count为开奖号码位数（pk10类型游戏）
+			case 3 :
+				$numbers = range (1, $this->setCode['num']);
+				shuffle($numbers); //随机打乱数组
+				$code = array_slice($numbers, 1, $this->setCode['count']);
+				return $this->code = $code;
+			break;		
+		}
+	}
+}
+
+				// $openRes = array_intersect($val, $str);
+				// $openRes = array_values($openRes);
+				// $result = !empty($openRes) && $openRes == $str ? 1 : 0;
+				// print_r($result);

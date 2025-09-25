@@ -1,0 +1,132 @@
+{include file='common@common/head' /}
+
+<style>
+    .form {
+        margin: .5rem;
+    }
+    .form button.btn
+    {
+        display: block;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    .icon-svg {
+        display: inline-block;
+        margin: 0.2rem .4rem;
+    }
+    .header .header-left{
+        margin-top: .2rem;
+    }
+    .btn-yzm{  margin: 0;line-height: 1.7rem;margin-right: 0.3rem;}
+    .tips{
+        padding: 0 .5rem 0.5rem .5rem;
+        color: #999999;
+    }
+    h4{
+        padding: 0 .5rem;margin: 1rem 0;
+        font-weight: normal;
+        font-size: .8rem;
+        color: #ffffff;
+    }
+    .info{
+        text-align: center;
+        padding: .2rem .5rem;
+        font-size: .8rem;
+        color: #dddddd;
+        line-height: 1.5;
+    }
+</style>
+
+<header class="header">
+    <a class="header-left" href="/index/user/set">
+        <i class="icon-svg icon_left"></i>
+    </a>
+    <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <template v-if="isBind">
+        <div class="info">
+            <h4><i class="iconfont icon-tuiguangyuan_wancheng_icon" style="color: #716aff;font-size: 1rem;padding-right: .5rem"></i>实名制绑定成功</h4>
+            <div>{{name}}</div>
+            <div>{{num}}</div>
+        </div>
+    </template>
+    <template v-else>
+        <div class="form">
+            <h4>您还未绑定实名制信息</h4>
+            <div class="tips">提示：请填写真实信息，填写后不可修改！</div>
+            <div>
+                <div class="item-lg-radius">
+                    <div class="item-line item-lg">
+                        <div class="item-title">姓名</div>
+                        <input type="text" class="input input-line input-lg" placeholder="输入真实姓名" name="nickname" v-model="name">
+                    </div>
+                    <div class="item-line item-lg">
+                        <div class="item-title">身份证</div>
+                        <input type="text" class="input input-line input-lg" placeholder="输入身份证证号" name="email" v-model="num">
+                    </div>
+                </div>
+                <div><button class="btn btn-fill btn-lg" @click="submit">确认绑定</button></div>
+            </div>
+        </div>
+    </template>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                name : '',
+                num : '',
+                isBind : 0
+            },
+            methods: {
+                submit : function() {
+                    var _this = this;
+                    if(!_this.name.length){
+                        $.alert('姓名不能为空!')
+                        return
+                    }
+                    if(!_this.num.length){
+                        $.alert('身份证号码不能为空!')
+                        return
+                    }
+                    var reg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+                    var result = reg.test(_this.num);
+                    if(result){
+                        $.post('/index/user/trueName',{
+                            idname:_this.name,
+                            idnum:_this.num
+                        },function(res) {
+                            $.alert(res.msg)
+                            if(!res.err){
+                                _this.isBind = 1
+                            }
+                        });
+                    }else {
+                        $.alert('格式有误，身份证为15位或18位数字和字母')
+                    }
+
+                }
+            },
+            created: function() {
+                var _this = this;
+                $.get('/index/user/getTrueInfo', function(res) {
+                    if(res.err){
+                        _this.isBind = 0
+                    }else {
+                        _this.isBind = 1
+                        _this.name = res.data.idname
+                        _this.num = res.data.idnum
+                    }
+                    $("#app").removeClass("app_init");
+                });
+            }
+        });
+
+    });
+</script>

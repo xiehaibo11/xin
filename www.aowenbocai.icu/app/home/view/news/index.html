@@ -1,0 +1,73 @@
+{include file='home@common/head' title="游戏介绍"/}
+
+<!--顶部主题图-->
+<div class="buy-banner">
+    <div class="web_">
+        <h1 id="newsTitle">游戏介绍</h1>
+    </div>
+</div>
+
+<div class="bg-white detail hidden">
+    <div class="web_ flex-box product_box">
+        <div class="detail_nav">
+            <div class="nav_title tr"><i class="iconfont icon-wanyouxi"></i> 游戏介绍</div>
+            <div class="nav_list">
+                <ul class="level1">
+                    <li><a class="inactive">彩票类游戏 <i class="iconfont active icon-xialajiantou"></i></a>
+                        <ul class="level2" style="display: block">
+                            {volist name="lotterynav" id="v"}
+                            <li class="l-tit"><a data-title='{$v.title}' href="{:url('./news')}?title={$v.title}">{$v.title}</a></li>
+                            {/volist}
+                        </ul>
+                    </li>
+                    <li style="margin-bottom: 20px"><a class="inactive">休闲小游戏 <i class="iconfont active icon-xialajiantou"></i></a>
+                        <ul class="level2" style="display: block">
+                            {volist name="gamenav" id="v"}
+                            <li class="l-tit"><a data-title='{$v.title}' href="{:url('./news')}?title={$v.title}">{$v.title}</a></li>
+                            {/volist}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="detail_cont flex">
+            {if condition = "isset($info['title'])"}
+            <h4 class="title">{$info.title}</h4>
+            <div class="content">{$info.content}</div>
+            {else}
+            <div class="c-4 f16">暂无相关游戏介绍</div>
+            {/if}
+        </div>
+    </div>
+</div>
+
+{include file='home@common/foot' /}
+<script type="text/javascript">
+    $(function () {
+        var title = GetUrlParam('title');
+        $('.l-tit').children('a').each(function () {
+            if($(this).data("title") == title){
+                $(this).addClass('active');
+            }else {
+                $(this).removeClass('active');
+            }
+        })
+        $('.inactive').click(function(){
+            if($(this).siblings('ul').css('display')=='none'){
+                $(this).parent('li').children('a').find('i').addClass('active')
+                $(this).parent('li').children('a').find('i').removeClass('close')
+
+                $(this).parent('li').siblings('li').removeClass('inactives');
+                $(this).addClass('inactives');
+                $(this).siblings('ul').slideDown(100).children('li');
+            }else{
+                $(this).parent('li').children('a').find('i').addClass('close')
+                $(this).parent('li').children('a').find('i').removeClass('active')
+
+                $(this).removeClass('inactives');
+                $(this).siblings('ul').slideUp(100);
+                $(this).siblings('ul').children('li').children('a').removeClass('inactives');
+            }
+        })
+    });
+</script>

@@ -1,0 +1,57 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<link rel="stylesheet" href="/static/font/iconfont.css"/>
+
+<style>
+    .nav{line-height: 35px;background: #fff;padding: 10px;border-bottom: 2px solid #2da3e8;}
+    .flex b {display: block}
+    .onetask { line-height: 30px;background: #fff;padding: 6px 10px;border-bottom: 1px solid #d9f1ff;}
+    .onetask:last-child{border-bottom: none}
+    .flex img{ display: inline-block;}
+    .flex .flex-text{display: inline-block}
+</style>
+
+<div id="app">
+    <div class="nav flex-box">
+        <span class="flex"> 
+             <img src="/static/theme/default/svg/iconblue/todayactive.png">  
+             <div class="flex-text">今日活跃度<b>{{todayactive}}</b></div>
+        </span>
+        <span class="flex">
+            <img src="/static/theme/default/svg/iconblue/active.png">  
+            <div class="flex-text">本周活跃度<b>{{weekactive}}</b></div>
+        </span>
+    </div>
+    <div class="tasklist">
+        {volist name="list" id="item"}
+        <div class="onetask">
+            <span>{$item.activeInfo.content}</span>
+            {eq name="$item.getaward" value="0"}<a href="/index/{$item.ext}">前往</a>{/eq}
+            {eq name="$item.getaward" value="1"}<a v-on:click="giveactive('{:url('giveactive',['id' =>$item.id])}')">领取</a>{/eq}
+            {eq name="$item.getaward" value="2"}<a v-on:click="giveactive('{:url('giveactive',['id' =>$item.id])}')">已领取</a>{/eq}
+        </div>
+        {/volist}
+    </div>
+</div>
+
+<script>
+    var vue = new Vue({
+            el : "#app",
+            data : {
+                list : [],
+                todayactive : "{$award.today}",
+                weekactive : "{$award.week}"
+            },
+            created: function(){
+             
+            },
+            methods : {
+                giveactive: function (_url){
+                    $.get(_url,function(res){
+                        $.alert(res.msg)
+                    })
+                 }
+            }
+    })
+</script>
+{include file='common@common/foot' /}

@@ -1,0 +1,322 @@
+{include file='common@common/head' /}
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+<script src="/static/font/iconfont.js"></script>
+<!--绑定信息提示-->
+<script src="/static/vue-component/red-point-component.js"></script>
+<style>
+     .btn-yzm{  margin: 0;line-height: 1.5rem;width: 7rem;font-size: .6rem;padding: 0 .2rem;height: 1.5rem}
+    .icon{width:2.5rem;height: 2.5rem }
+    .lock-title{color: #9da9ba;padding: .5rem .75rem;font-size: .85rem;font-weight: 500}
+    .info_lock{background-color: #292d36;margin-bottom: .5rem;padding: 1rem .75rem;}
+    .info_lock .info{text-align: center;font-size: .9rem;padding: .5rem 0;color: #fff;}
+    .info_lock .ts{color: #646a79;font-size: .65rem;padding: .5rem 0;text-align: center}
+    .info_lock .tip{width: 100%;margin: .5rem auto;padding: .5rem 0;text-align: center;background-color: #8d8d8d;border-radius: .2rem;color: #fffcfc}
+    .info_lock a{display:block}
+    .info_lock a span{display: block;text-align: center}
+    .info_lock .tip-red{background-color: #d75852}
+
+     .input.input-lg, .item-line{background-color: #292d36;color: #cccccc}
+     .item-line:after{background: #4d5465;}
+    .info_lock i{color: #cccccc;padding-right: .2rem}
+     .v-modal-overlay {
+         position: fixed;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         background: rgba(0, 0, 0, 0.8);
+         z-index: 10000;
+     }
+     .v-modal-p{
+         display: flex;
+         align-items: center;
+         z-index: 10020;
+         width: 100%;
+         position: fixed;
+         top: 20px;
+         bottom: 20px;
+         left: 0;
+     }
+     .v-modal {
+         width: 90%;
+         z-index: 10080;
+         border-radius: 0.5rem;
+         text-align: center;
+         background: #262932;
+         color: #fff;
+         margin-left: 5%;
+         font-size: .75rem;
+         line-height: 1.1rem;
+         display: flex;
+         position: relative;
+         flex-direction: column;
+         max-height: 100%;
+     }
+    .award{
+        color: #ffec2e;text-align: center;padding: .3rem 0;
+    }
+</style>
+
+<header class="header">
+    <div class="header-nav">
+        <a class="nav-word" id="cancleBtn" href="/index/user/set" data-no-cache="true"><i class="icon-svg icon_left"></i></a>
+    </div>
+    <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init" v-cloak>
+    <div v-if="status">
+        <!--绑定手机号-->
+        <div class="lock-title" style="position: relative">
+            绑定手机号
+            <red-point style="top: 0.3rem;left: .3rem;"></red-point>
+        </div>
+        <div class="login-input info_lock">
+            <div v-if="defaultInfo.tel==1">
+                <div class="item-line item-lg">
+                    <i class="iconfont icon-icon-copy"></i>
+                    <input type="text" class="input input-line input-lg" placeholder="请输入手机号"  v-model="info.tel"><span v-on:click="msgsubmit" class="btn btn-yzm">{{btntext}}{{btnmsg}}</span>
+                </div>
+                <div class="item-line item-lg">
+                    <i class="iconfont icon-yanzhengma"></i>
+                    <input type="text" class="input input-line input-lg" placeholder="请输入验证码" v-model="info.yzm">
+                </div>
+                <div v-on:click="lockTel" class="tip tip-red">提交</div>
+                <div class="award">奖励：+{{defaultInfo.lockTelAward}} <img src="/static/images/index/common_jd.png" alt="" width="18"></div>
+                <div class="ts">可用绑定的手机号进行登录哦!</div>
+            </div>
+            <div v-else>
+                <div class="info">{{defaultInfo.tel}}</div>
+                <div class="ts">可用已绑定的手机号进行登录哦!</div>
+                <div class="tip">已绑定</div>
+            </div>
+        </div>
+        <!--绑定手机号 end-->
+        <!--绑定用户名-->
+        <div class="lock-title">绑定用户名</div>
+        <div class="login-input info_lock">
+            <div v-if="defaultInfo.username==1">
+                <div class="item-line item-lg">
+                    <i class="iconfont icon-yonghuming"></i>
+                    <input type="text" class="input input-line input-lg" placeholder="请输入用户名(长度5-13)"  v-model="info.username" ></span>
+                </div>
+                <div class="item-line item-lg">
+                    <i class="iconfont icon-mima11"></i>
+                    <input type="password" class="input input-line input-lg" placeholder="请输入密码(长度6-25)" v-model="info.pwd">
+                </div>
+                <div class="item-line item-lg">
+                    <i class="iconfont icon-mima11"></i>
+                    <input type="password" class="input input-line input-lg" placeholder="请再次输入密码(长度6-25)" v-model="info.pwd2">
+                </div>
+                <div v-on:click="lockUsername" class="tip tip-red">提交</div>
+                <div class="ts">设置的用户名，可以使用用户名+密码进行登录哦，请牢记!</div>
+            </div>
+            <div v-else>
+                <div class="info">{{defaultInfo.username}}</div>
+                <div class="ts">设置的用户名，可以使用用户名+密码进行登录哦，请牢记!</div>
+                <div class="tip">已绑定</div>
+            </div>
+        </div>
+        <!--绑定手机号 end-->
+        <!--绑定qq-->
+        <div class="lock-title">绑定QQ</div>
+        <div class="login-input info_lock">
+            <div v-if="defaultInfo.qq==1">
+                <a href="/index/Qqlogin/toLogin?type=1">
+                    <span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-QQ"></use></svg></span>
+                    <span class="tip tip-red">绑定QQ</span>
+                    <div class="ts">绑定QQ后可直接用QQ账号直接登录</div>
+                </a>
+            </div>
+            <div v-else>
+                <div class="info"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-QQ"></use></svg></div>
+                <div class="tip">已绑定</div>
+            </div>
+        </div>
+        <!--绑定qq end-->
+        <!--绑定微信-->
+        <div class="lock-title">绑定微信</div>
+        <div class="login-input info_lock">
+            <div v-if="defaultInfo.wei==1">
+                <a>
+                    <span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weixin"></use></svg></span>
+                    <div class="ts">浏览器打开请分享至微信中识别二维码</div>
+                    <div class="ts">微信绑定请前往电脑端进行绑定</div>
+                    <!-- <span class="tip tip-red" @click="setQrcode">绑定微信</span> -->
+                    <!--<div class="award">奖励：+ {{defaultInfo.lockTelAward}} <img src="/static/images/index/common_jd.png" alt="" width="18"></div>-->
+                    <div class="ts">绑定微信后可在公众号内直接登录哦！</div>
+                </a>
+            </div>
+            <div v-else>
+                <div class="info"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weixin"></use></svg></div>
+                <div class="tip">已绑定</div>
+            </div>
+        </div>
+        <!--绑定微信 end-->
+    </div>
+    <!--客服弹出窗-->
+    <transition name="fade" v-if="weiModal" @click.self="hideQrcode">
+        <div class="v-modal-overlay"></div>
+    </transition>
+    <transition name="fade"  v-if="weiModal" @click.self="hideQrcode">
+        <div class="v-modal-p" @click.self="hideQrcode">
+            <div class="v-modal" style="background: none">
+                <div class="contact">
+                    <img :src="weiImg" alt="" width="280">
+                    <p style="color: #fdde11;">酷睿科技</p>
+                    <p>浏览器打开请分享至微信中识别二维码</p>
+                </div>
+            </div>
+        </div>
+    </transition>
+    <!--客服弹出窗 结束-->
+</div>
+<template id='redPoint'>
+    <span v-if='lockInfo.tel ==1' class='red-point'></span>
+</template>
+
+<style>
+    .red-point{
+        position: absolute;
+        top: .2rem;
+        width: 0.6rem;
+        height: 0.6rem;
+        border-radius: 50%;
+        background-color: rgb(255, 0, 0);
+        border: 1px solid #ffffff;
+        right: .3rem;
+    }
+</style>
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        //绑定红点提示
+        Vue.component('red-point',{
+            template:"#redPoint",
+            data:function data(){
+                return{
+                    lockInfo : {}
+                }
+            },
+            created:function created() {
+                var _this = this;
+                $.get('/index/User/lockInfo', function (res) {
+                    _this.$set(_this,'lockInfo',res.data)
+                });
+            }
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                info:{
+                    username: '',
+                    pwd: '',
+                    pwd2 : '',
+                    tel: '',
+                    yzm:'',
+                },
+                defaultInfo:{},
+
+                status:0,
+
+                tel : '',
+                btnmsg :'',
+                btntext :'发送验证码',
+                countDown : 120,
+                weiImg:'',
+                weiModal:false
+            },
+            created: function() {
+                var _this = this;
+                $.get('/index/user/lockInfo', function(res) {
+                    _this.$set(_this,'defaultInfo',res.data);
+                    _this.status = 1;
+                    $("#app").removeClass("app_init");
+                });
+            },
+            methods: {
+              msgsubmit:function(){ //发送验证码
+                  var _this = this;
+                  if(_this.countDown != 120) return false;
+                  var reg = /^1[3|4|5|7|8][0-9]{9}$/;
+                  var res = reg.test(_this.info.tel);
+                  if(!res){
+                      $.alert('手机号格式不正确，请输入正确的手机号');
+                      return false;
+                  }
+                  $.get('/index/user/sendSms',{tel : _this.info.tel},function(res) {
+                      if(res.err == 0) {
+                          _this.btntext = '已发送';
+                          _this.btnmsg = "("+_this.countDown+")";
+                          var interval = setInterval(function(){
+                              _this.countDown = _this.countDown - 1;
+                              if(_this.countDown == 0){
+                                  _this.btntext = '发送验证码';
+                                  _this.btnmsg = "";
+                                  _this.countDown = 120;
+                                  clearInterval(interval);
+                                  return;
+                              }
+                              _this.btnmsg = "("+_this.countDown+")";
+                          },1000);
+                      }else{
+                          $.alert(res.msg);
+                      }
+                  });
+              },
+              lockTel:function() { //绑定手机
+                var _this = this;
+                $.get('/index/user/lockTel',{tel : _this.info.tel, yzm : _this.info.yzm},function(res) {
+                    if(!_this.info.tel.length){
+                        $.alert('手机号不能为空')
+                        return false
+                    }
+                    if(!_this.info.yzm.length){
+                        $.alert('验证码不能为空')
+                        return false
+                    }
+                    if(res.err == 0){
+                        Zepto.modal({
+                            content:'绑定成功！ <span style="color: #ffd012;font-size: 1rem;"> +' + _this.defaultInfo.lockTelAward + '</span> ' +
+                            '<img src="/static/images/index/common_jd.png" width="20" alt="">',
+                            btn: [
+                                function($btn) {
+                                    $btn.text('我知道了');
+                                    $btn.click(function() {
+                                        location.href = '/index/user/lockinfo'
+                                    });
+                                }
+                            ]
+                        });
+                    }else {
+                        $.alert(res.msg);
+                    }
+                  });
+              },
+              lockUsername:function() { //绑定用户名
+                var _this = this;
+                $.get('/index/user/lockName',{name : _this.info.username, pwd : _this.info.pwd, pwd2 : _this.info.pwd2},function(res) {
+                    if(res.err == 0){
+                        $.msg(res.msg);
+                        _this.defaultInfo.username = _this.info.username;
+                    }else {
+                        $.alert(res.msg);
+                    }
+                });
+              },
+            //   setQrcode:function(){  //绑定微信
+            //       this.weiImg = '/index/User/setQrcode?type=1',
+            //       this.weiModal = !this.weiModal;
+            //       $('body').css('overflow', 'hidden');
+            //       $('html').css('overflow', 'hidden');
+            //   },
+            //   hideQrcode:function(){
+            //       this.weiModal = !this.weiModal;
+            //       $('body').css('overflow', 'auto');
+            //       $('html').css('overflow', 'auto');
+            //   }
+            }
+        });
+    });
+</script>

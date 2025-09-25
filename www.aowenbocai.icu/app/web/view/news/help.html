@@ -1,0 +1,143 @@
+{include file='web@common/head' title="帮助中心"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/columns.css">
+
+<style>
+.help-detail .d_title{
+    color: #404040;
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+.el-menu{
+    border-right: none;
+}
+.el-menu-item:focus, .el-menu-item:hover, .el-submenu__title:focus, .el-submenu__title:hover {
+    background-color: #eaeaea;
+}
+.el-submenu{
+    border-bottom: 1px solid #dddddd;
+}
+.el-menu-item, .el-submenu__title{
+    height: 40px;
+    line-height: 40px;
+}
+.el-submenu .el-menu-item{
+    border-bottom: 1px solid #eee;
+    height: 40px;
+    line-height: 40px;
+}
+.el-menu--inline li:last-child{
+    border-bottom: none;
+}
+
+.el-collapse-item__header{
+    color: #0c6ad4;padding: 0 10px;font-size: 14px;
+}
+.el-collapse-item__content{
+    padding: 0 10px 20px;
+}
+.page-list .list-rig{
+    min-height: 400px;
+}
+</style>
+
+<div class="page-list web mt15 " id="app" v-cloak>
+    <div class="list-left">
+        <div class="nav-head">帮助中心</div>
+        <div class="nav-list">
+            <el-menu
+                    :default-openeds= openeds
+                    :default-active = active
+                    class="el-menu-vertical-demo bg">
+                <template v-for="item in navData">
+                    <el-submenu :index="item.id.toString()">
+                        <template slot="title">
+                            <span>{{item.title}}</span>
+                        </template>
+                        <template v-for="column in item.column"  class="menu-b">
+                            <el-menu-item :index="item.id.toString() + '-' + column.id.toString()" @click.native="toColumn(column.id)">{{column.title}}</el-menu-item>
+                        </template>
+                        <template v-for="article in item.article"  class="menu-b">
+                            <template v-if="item.title == '玩法介绍'"><!--屏蔽-->
+                                {volist name='navLottery' id='v'}
+                                <el-menu-item v-if="article.title == '{$v.title}'" :index="item.id.toString() + '-' + article.id.toString()" @click.native="toDetail(article.id)">{{article.title}}</el-menu-item>
+                                {/volist}
+                            </template>
+                            <el-menu-item v-else :index="item.id.toString() + '-' + article.id.toString()" @click.native="toDetail(article.id)">{{article.title}}</el-menu-item>
+                        </template>
+                    </el-submenu>
+                </template>
+            </el-menu>
+        </div>
+    </div>
+    <div class="list-rig">
+        <div class="help-list" v-for="item in navData">
+            <!--文章 列表+ 内容 展示-->
+            <template v-for="column in item.column">
+                <el-collapse v-model="activeNames" v-if="showColumn == column.id">
+                    <template v-for="(article,i) in column.article">
+                        <el-collapse-item :name="article.id.toString()">
+                            <template slot="title">
+                                {{i+1}}、{{article.title}}
+                            </template>
+                            <div v-html="article.content"></div>
+                        </el-collapse-item>
+                    </template>
+                </el-collapse>
+            </template>
+            <!--文章内容展示-->
+            <template v-for="article in item.article">
+                <div class="help-detail" v-if="showDetail == article.id">
+                    <div class="d_title">{{article.title}}</div>
+                    <div class="d_content border-b" v-html="article.content"></div>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+
+{include file='web@common/foot' /}
+<script>
+    $(function(){
+        new Vue({
+            el:'#app',
+            data:{
+                activeName:[],
+                curId : {$id}, //文章id
+                navId : {$navid}, //栏目id
+                pid : {$showPid}, //上级栏目id
+                helpid: {$pid}, //帮助中心栏目id
+                active : '9-45', //左侧默认选中样式 9-1
+                showColumn:1, //右侧显示栏目
+                showDetail:0, //右侧显示文章
+                activeNames:[], //手风琴默认打开文章内容
+                openeds:[], //左侧导航默认打开
+                navData:{$nav},
+            },
+            methods:{
+                //点击子栏目
+                toColumn:function(navid){
+                    this.showColumn = navid
+                    this.showDetail = -1
+                },
+                //点击查看文章
+                toDetail:function(id){
+                    this.showColumn = -1
+                    this.showDetail = id
+                }
+            },
+            created:function(){
+                if(this.pid != this.helpid && this.pid != -1){ //左侧导航为子栏目
+                    this.active = this.pid + '-' + this.navId
+                    this.openeds.push(this.pid.toString())
+                    this.activeNames.push(this.curId.toString())
+                }else { //左侧导航为文章标题
+                    this.active = this.navId + '-' + this.curId
+                    this.openeds.push(this.navId.toString())
+                }
+                this.showColumn = this.navId;
+                this.showDetail = this.curId;
+            }
+        })
+    })
+</script>

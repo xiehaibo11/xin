@@ -1,0 +1,125 @@
+{include file='web@common/link' title="转账"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">转账</span>
+        </div>
+        <div class="tips">
+            1{$company['lottery_unit']} = {{scale}}{$company['game_unit']}
+        </div>
+        <div class="transform-cont">
+            <div class="flex-box transform-item change-btn">
+                <span class="label"> 转出账户：</span>
+                <span class="input bg">{{type == 1 ? '账户余额（余额:'+money+'{$company['lottery_unit']}）' : '游戏账户（余额:'+gameMoney+'{$company['game_unit']}）'}}</span>
+                <a @click="type == 1 ? type = 2 : type = 1" class="a-btn"><i class="iconfont icon-zhuanhuan"></i></a>
+            </div>
+            <div class="flex-box transform-item">
+                <span class="label"> 转入账户：</span>
+                <span class="input bg">{{type == 1 ? '游戏账户（余额:'+gameMoney+'{$company['game_unit']}）' : '账户余额（余额:'+money+'{$company['lottery_unit']}）'}}</span>
+            </div>
+            <div class="flex-box transform-item">
+                <span class="label"> 转账数额：</span>
+                <el-input class="input" v-model="num" size="small" placeholder="请输入转账数额" @change="checkNum"></el-input>
+                <div class="chose-btn flex-box" style="margin-left: 10px">
+                    <el-button size="small" @click.native="choseMoney(type == 1 ? money : gameMoney)">全部</el-button>
+                    <el-button size="small" @click.native="choseMoney(type==1? 100 : scale)">{{type==1? 100 : scale}}</el-button>
+                    <el-button size="small" @click.native="choseMoney(type==1? 1000 : scale * 10)">{{type==1? 1000 : scale * 10}}</el-button>
+                    <el-button size="small" @click.native="choseMoney(type==1? 10000 : scale * 100)">{{type==1? 10000 : scale * 100}}</el-button>
+                </div>
+            </div>
+            <div v-show="err.length" class="input red" style="line-height: 1;padding-left: 85px">{{err}}</div>
+            <div v-show="sucMsg.length" class="input green" style="line-height: 1;padding-left: 85px">{{sucMsg}}</div>
+            <div style="padding-left: 85px;margin-top: 25px">
+                <el-button  type="danger" @click="submitForm" :loading="loading" size="small">确认转账</el-button>
+            </div>
+        </div>
+    </el-card>
+</div>
+
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                loading:false,
+                scale:'{$company.recharge_award}', //游戏币比例
+                money:'{$user.money}',//账户余额
+                gameMoney:'{$user.game_money}',//游戏账户余额
+
+                type: 1 ,//转账模式 1 账户=>游戏 2游戏=>账户
+                num: '',//转账数额
+                err:'',
+                sucMsg:''
+            },
+            watch:{
+                type:function (val) {
+                    this.checkNum(this.num);
+                }
+            },
+            methods: {
+                //验证输入数额合法性
+                checkNum:function (val) {
+                    this.err = ''
+                    this.sucMsg = ''
+                    if(val){
+                        var n = this.scale.length - 1
+                        this.num = this.type == 1 ? formateSmallNumber(val,n) : parseInt(val); //保留n位小数
+                        var moneyObj = {
+                            1 : this.money,
+                            2 : this.gameMoney
+                        }
+                        if(Number(this.num) > moneyObj[this.type]){
+                            this.err =  '账户余额不足'
+                            return
+                        }
+                        if(Number(this.num) <= 0){
+                            this.err =  '金额不能为0'
+                            return
+                        }
+                        this.sucMsg = this.type == 1 ? "可转换" + formatMoney(accMul(this.num,this.scale)) + "{$company['game_unit']}" :
+                            "可转换" + formatMoney(accDiv(this.num,this.scale)) + "{$company['lottery_unit']}"
+                    }
+                },
+                //快捷设置数额
+                choseMoney:function (val) {
+                    this.num = val
+                    this.checkNum(this.num);
+                },
+                //清空
+                clear:function () {
+                    this.num = '',
+                    this.type = 1
+                    this.err = ''
+                    this.sucMsg = ''
+                },
+                //确认转换
+                submitForm:function () {
+                    var _this = this;
+                    $.post("{:url('transform')}",{
+                        type : _this.type,
+                        num : _this.num
+                    },function (res) {
+                        if(!res.err){
+                            _this.$alert(res.msg + ',请刷新页面查看更新', '提示', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: function(){
+                                    window.location.href = "{:url('transform')}"
+                                }
+                            });
+                        }else {
+                            _this.$alert(res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                            });
+                        }
+                    })
+                }
+            }
+        });
+    });
+</script>

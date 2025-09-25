@@ -1,0 +1,193 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    body{
+        overflow-y: auto;
+    }
+    .el-input{
+        width: auto;
+    }
+    .el-input__inner{
+        margin-right: 3px;
+    }
+    .options .el-input__inner{
+        width: 100px;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">充值明细</span>
+        </div>
+        <el-radio-group v-model="label" size="small">
+            <el-radio-button @click.native="link('{:url('detail')}')" label="账户明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('drecharge')}')" label="充值明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('dexchange')}')" label="兑换明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('dtransform')}')" label="转账明细" v-if="{$company['game_status']}"></el-radio-button>
+        </el-radio-group>
+        <recharge-detail></recharge-detail>
+    </el-card>
+</div>
+<!--//充值明细-->
+<template id="rechargeDetail">
+    <div>
+        <div class="options">
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="way"
+                    placeholder="请选择充值方式">
+                <el-option
+                        v-for="item in wayOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="result"
+                    placeholder="请选择充值结果">
+                <el-option
+                        v-for="item in resultOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="time"
+                    placeholder="请选择时间">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <el-date-picker v-if="!time" style="width:270px"
+                            v-model="value"
+                            type="daterange"
+                            size="mini"
+                            format="yyyy 年 MM 月 dd 日"
+                            value-format="yyyy-MM-dd"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions0">
+            </el-date-picker>
+        </div>
+        <page-nation :url="url">
+            <el-table-column property="order" label="订单编号" width="150"></el-table-column>
+            <el-table-column property="create_time" label="充值时间" width="200"></el-table-column>
+            <el-table-column property="money" label="金额(元)">
+                <template slot-scope="scope">
+                    <span class="red"> {{scope.row.money}}</span> 元
+                </template>
+            </el-table-column>
+            <el-table-column property="name" label="充值方式"></el-table-column>
+            <el-table-column label="充值状态" width="120">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.statuss == 0">
+                        <template v-if="scope.row.name == '微信扫码充值'|| scope.row.name == '支付宝扫码充值'">
+                            <em class="org">充值审核中</em>
+                        </template>
+                        <template v-else>
+                            <em style="color: #929292;">等待付款</em>
+                        </template>
+                    </span>
+                    <span class="green" v-if="scope.row.statuss == 1">充值成功</span>
+                    <span class="red" v-if="scope.row.statuss == 2">充值失败</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="remark" label="备注" width="150"></el-table-column>
+        </page-nation>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        var id = GetUrlParam('userid');
+        //充值明细
+        Vue.component('recharge-detail', {
+            template: '#rechargeDetail',
+            data: function data() {
+                return {
+                    intUrl: '{:url("details/rechargeList")}'+ '?userid=' + id,
+                    options: [//快捷时间选项
+                        { value: 30, label: '最近一个月' },
+                        { value: 90, label: '最近三个月' },
+                        { value: 180, label: '最近六个月' },
+                        { value: 365, label: '最近六个月' },
+                        { value: 0, label: '自定义时间' }],
+                    wayOptions: {$pay_way}, //充值方式
+                    resultOptions: [//充值结果
+                        { value: '', label: '所有充值' },
+                        { value: '1', label: '充值成功' },
+                        { value: '2', label: '充值失败' },
+                        { value: '0', label: '未完成充值' }],
+                    time: '', //快捷时间值
+                    timeTemp: '',
+                    value: '', //自定义时间值
+                    way: '',
+                    result: '',
+
+                    //设置选择今天之前的日期
+                    pickerOptions0: {
+                        disabledDate: function disabledDate(time) {
+                            return time.getTime() > Date.now();
+                        }
+                    }
+                };
+            },
+
+            computed: {
+                timeValue: function timeValue() {
+                    if (!this.time == 0) {
+                        this.timeTemp = this.time;
+                    }
+                    var day = parseInt(this.timeTemp);
+                    return timeArr(day);
+                },
+                url: function url() {
+                    if (this.value.length) {
+                        return this.intUrl + '&retype=' + this.way + '&reresult=' + this.result + '&starttime=' + this.value[0] + '&endtime=' + this.value[1];
+                    } else {
+                        return this.intUrl + '&retype=' + this.way + '&reresult=' + this.result + '&starttime=' + this.timeValue[0] + '&endtime=' + this.timeValue[1];
+                    }
+                }
+            },
+            methods: {
+                //搜索条件
+                search: function search() {
+                    if (!this.time == 0) {
+                        //自定义时间切换为快捷时间选择
+                        this.value = '';
+                    }
+                }
+            },
+            created: function created() {
+                this.time = this.options[0].value;
+                this.way = this.wayOptions[0].value;
+                this.result = this.resultOptions[0].value;
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                label: '充值明细'
+            },
+            methods: {
+                link: function link(url) {
+                    window.location.href = url + '?userid=' + id;;
+                }
+            }
+        });
+    });
+</script>

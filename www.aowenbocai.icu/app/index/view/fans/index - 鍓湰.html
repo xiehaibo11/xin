@@ -1,0 +1,200 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<link rel="stylesheet" href="__STATIC__/css/fans.css">
+
+
+<div class="page page-current" id="fans">
+    <header class="bar bar-nav">
+      <a class="button button-link button-nav pull-left back">
+        <span class="icon icon-left"></span>
+      </a>
+      <h1 class="title">{$title}</h1>
+    </header>
+
+    <div id="app" class="app_init content">
+        <div>
+        <div class="user_top">
+            <div class="user_photo"></div>
+            <div class="user_top_right">
+                <div>{{info.nickname}} <span class="user_lv">LV.{{info.lv}}</span></div>
+                <div>(签名){{info.explan}}</div>
+            </div>
+        </div>
+
+        <div class="buttons-tab">
+            <a href="#tab1" class="tab-link active button">关注</a>
+            <a href="#tab2" class="tab-link button">粉丝</a>
+          </div>
+
+
+        <div class="fans_list">
+            <div class="search_padded">
+            <div class="searchbar row">
+    <div class="search-input col-80">
+      <label class="icon icon-search" for="search"></label>
+      <input type="search" id='search' placeholder='输入关键字...'/>
+    </div>
+    <a class="button button-fill button-primary col-20">搜索</a>
+  </div>
+  </div>
+    <div class="list-block media-list">
+        <div class="tabs">
+     <div id="tab1" class="tab infinite-scroll active">
+
+                <ul>
+                  <li v-for="item of list">
+                    <div class="item-content">
+                      <div class="item-media">
+                          <img :src="item.user.photo" style='width: 2.2rem;'>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title-row">
+                          <a :href="'/index/user/show?userid=' + item.to_userid" class="item-title">{{item.user.nickname}}(LV.{{item.user.lv}})</a>
+                        </div>
+                        <div class="item-subtitle">（签名）{{item.user.explan}}</div>
+                        <span @click="care(item.to_userid)" class="button btn_right">取消关注</span>
+                      </div>
+
+                    </div>
+                  </li>
+                </ul>
+
+                <div class="infinite-scroll-preloader">
+                  <div class="preloader">
+                  </div>
+                </div>
+     </div>
+     <div id="tab2" class="tab infinite-scroll">
+
+                <ul>
+                  <li v-for="item of list2">
+                    <div class="item-content">
+                      <div class="item-media">
+                          <img :src="item.user.photo" style='width: 2.2rem;'>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title-row">
+                          <a :href="'/index/user/show?userid=' + item.to_userid" class="item-title">{{item.user.nickname}}(LV.{{item.user.lv}})</a>
+                        </div>
+                        <div class="item-subtitle">（签名）{{item.user.explan}}</div>
+                        <span @click="care(item.to_userid)" class="button btn_right">取消关注</span>
+                      </div>
+
+                    </div>
+                  </li>
+                </ul>
+         <!-- 加载提示符 -->
+         <div class="infinite-scroll-preloader">
+           <div class="preloader">
+           </div>
+         </div>
+     </div>
+ </div>
+      </div>
+        </div>
+    </div>
+  </div>
+  </div>
+
+<script>
+
+$(function() {
+    $(document).on("pageInit", '#fans', function(e, id, page) {
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                info: {},
+                list: [],
+                list2: []
+            },
+            methods: {
+                care: function(userid) {
+                    var _this = this;
+                    $.get('/index/fans/care/?to_userid=' + userid, function(res) {
+                        $.toast(res.msg);
+                        if (res.code) {
+                            for (var p in _this.list) {
+                                if (_this.list[p].to_userid == userid) {
+                                    _this.list.splice(p, 1);
+                                }
+                            }
+                        }
+                    },'json');
+                }
+            },
+            computed: {
+                care_str: function() {
+                    return this.info.care_status ? '取消关注' : '关注';
+                }
+            },
+            created:function(){
+                var _this = this;
+
+                setTimeout(function(){
+                    console.log(window.location.href);
+
+                    var userid = $.urlGet()['userid'] || '0';
+                    $.get('/index/user/show/?userid=' + userid, function(res) {
+                        _this.$set(_this, 'info', res.data);
+                        $('#app').removeClass('app_init');
+                    });
+                    loadData(0);
+                    loadData(1);
+
+                }, 0);
+            }
+        });
+
+        var loadData = function(tabIndex) {
+            var loadSize = 7;
+            var p = [1, 1];
+
+            $.get('/index/fans/careList/', {
+                type: tabIndex + 1,
+                page: p[tabIndex],
+            }, function(res) {
+                loading = false;
+                for (var p in res.data) {
+                    var vmList = vm.list;
+                    if (tabIndex) {
+                        vmList = vm.list2;
+                    }
+                    vmList.push(res.data[p]);
+                }
+
+                if (res.data.length < loadSize) {
+                    //$.detachInfiniteScroll($('.infinite-scroll').eq(tabIndex));
+                    $('.infinite-scroll-preloader').eq(tabIndex).hide();
+                    return;
+                }
+                p[tabIndex] ++;
+
+            });
+        }
+
+          //多个标签页下的无限滚动
+          var loading = false;
+          $(page).on('infinite', function() {
+
+            // 如果正在加载，则退出
+            if (loading) return;
+            // 设置flag
+            loading = true;
+            var tabIndex = 0;
+            if($(this).find('.infinite-scroll.active').attr('id') == "tab1"){
+              tabIndex = 0;
+            }
+            if($(this).find('.infinite-scroll.active').attr('id') == "tab2"){
+              tabIndex = 1;
+            }
+              // 重置加载flag
+              loadData(tabIndex);
+              $.refreshScroller();
+
+              // 更新最后加载的序号
+          });
+      });
+    $.init();
+})
+</script>
+{include file='common@common/foot' /}

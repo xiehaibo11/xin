@@ -1,0 +1,50 @@
+{include file='web@common/head' title="文章详情"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/columns.css">
+
+<div class="position" id="position">
+    <div class="web">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item><span>您的位置：</span><a href="{:url('/')}">首页</a></el-breadcrumb-item>
+            <el-breadcrumb-item>{$nav['title']}</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+</div>
+<div class="web view">
+    <div class="view-detail">
+        <div class="d_title">{$view.title}</div>
+        <div class="d_time border-b">阅读：{$view.read_count} 发表：{$view.create_time}</div>
+        <div class="d_content border-b">{$view.content}</div>
+    </div>
+    <div class="view-news">
+        <div class="news_new ">
+            <div class="nav_title border-b">相关最新</div>
+            <div class="list">
+                <div class="list-group list-arrow">
+                    {foreach $list as $item}
+                    <a class="list-item list-item-image-text border-b" href="/web/news/view/?id={$item.id}&amp;navid={$item.nav_id}">
+                        <div class="flex-box">
+                            <div class="list-item-image">
+                                <img src="{$item.pic ?? ''}" alt="">
+                            </div>
+                            <div class="list-item-text flex">
+                                <div class="title ellipsis">{$item.title}</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='web@common/foot' /}
+<script>
+    $(function(){
+        new Vue({
+            el:'#position',
+            data:{
+
+            }
+        })
+    })
+</script>

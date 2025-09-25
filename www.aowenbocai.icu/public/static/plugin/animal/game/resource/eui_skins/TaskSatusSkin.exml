@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="taskSatusSkin" width="70" height="70" currentState="no" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*"  states="dangqian,over,no" >
+	<w:Declarations>
+		<tween:TweenGroup id="guang">
+			<tween:TweenItem target="{group}">
+				<tween:Set/>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object rotation="{360}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Group id="group" width="70" height="70" horizontalCenter="0" verticalCenter="0" anchorOffsetX="35" anchorOffsetY="35" visible.over="false" visible.no="false">
+		<e:Image id="image" source="zoo_sheet2_json.zoo_sheet2017" anchorOffsetX="54" anchorOffsetY="43.2" width="108" height="86.4" horizontalCenter="0" verticalCenter="1" x="0" y="7" scaleX="1" scaleY="1"/>
+	</e:Group>
+	<e:Rect ellipseWidth="30" ellipseHeight="30" fillColor="0x113811" strokeColor="0xe9c430" strokeWeight="2" width="30" height="30" horizontalCenter="-0.5" verticalCenter="-0.5" anchorOffsetX="0" anchorOffsetY="0"/>
+	<e:Image source="zoo_sheet2_json.zoo_sheet2009" anchorOffsetX="0" width="22.1" anchorOffsetY="0" height="18.83" visible.over="false" horizontalCenter="0" verticalCenter="0.5"/>
+	<e:Image source="zoo_sheet2_json.zoo_sheet2005" anchorOffsetX="0" width="23.33" anchorOffsetY="0" height="16.33" visible.dangqian="false" visible.no="false" horizontalCenter="0.5" verticalCenter="2"/>
+</e:Skin>

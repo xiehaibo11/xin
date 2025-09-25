@@ -1,0 +1,41 @@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:80%; height: 80%;">
+        <div class="modal-content" style="height:100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">官方公告</h4>
+            </div>
+            <div class="modal-body" style=" height: calc(100% - 61px); overflow-y: scroll;">
+                <div class="table_box show_gf_article">
+                    <h2 style="text-align: center; font-size:22px; font-weight: bold; line-height:30px;">加载中....</h2>
+                    <div class="my_bz" style="text-align: center; color:#888; font-size:15px; padding-bottom:10px;"></div>
+                    <div class="my_article" style="font-size:15px; line-height:28px; padding:0 30px;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#wx_btn_add").click(function () {
+
+    });
+    $(document).on('click', '.gd_news table tbody a', function () {
+        var id = $(this).data('id');
+        $('#myModal').modal();
+        $('.show_gf_article h2').text('加载中....');
+        $('.show_gf_article .my_bz').text('');
+        $('.show_gf_article .my_article').html('');
+        $.post('{:Url("admin/UpdateVersion/get_news")}', {id: id}, function(res) {
+            if (res.code) {
+                var data =res.data;
+                $('.show_gf_article h2').text(data.title);
+                $('.show_gf_article .my_bz').text('发布时间：' + data.datetime);
+                $('.show_gf_article .my_article').html(data.content);
+            } else {
+                alert(res.msg);
+            }
+        }, 'json');
+    })
+</script>

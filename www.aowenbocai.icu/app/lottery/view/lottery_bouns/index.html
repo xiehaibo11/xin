@@ -1,0 +1,277 @@
+{include file='admin@common/head' /}
+<style>
+    .col-sm-1 {
+        width:100px;
+        padding:0 0 0 15px;
+    }
+    .col-sm-1 .form-control {
+        padding:0;
+        text-align: center;
+    }
+    .p_li {
+        background: #ddd; padding: 10px 0;
+        margin-right:0 !important;
+        margin-left:0 !important;
+    }
+    .p_li2 {
+        background: #f1f1f1; padding: 10px 0;
+        margin-right:0 !important;
+        margin-left:0 !important;
+    }
+</style>
+<nav class="plugin_nav">
+    <a class="nav_active">奖金设置</a>
+  <a href="{:url('site', ['name'=>$name])}">期号配置</a>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 奖金设置【{$lottery}】</li>
+        </ol>
+    </div>
+<style>
+  .form-group  a:hover{text-decoration:none}
+  .control-label{text-align: center !important}
+  .btn-radio-p, .btn-radio{width: 100%}
+  .btn-info.active.radio_checked{background-color: red;border-color:red}
+</style>
+<div class="box-padding">
+    <div class="form-horizontal" style="width:70%;">
+    <div class="form-group col-sm-4" style="width:25%;">
+        <label class="col-sm-1 control-label" style="width:35%;">是否同步</label>
+        <div class="col-sm-8" style="width:65%;">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="is_all" value="1"> 开启同步
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-sm-4" style="width:30%;">
+        <label class="col-sm-1 control-label" style="width:30%;">盈利率</label>
+        <div class="col-sm-8" style="width:70%;">
+            <input type="number" class="form-control bonus_base" value="{$config.bonus_base|default=''}" style="width: 85%; display: inline-block;" placeholder="1-100的数字" name="bonus_base"> %
+        </div>
+    </div>
+    <div class="form-group col-sm-3" style="width:30%;">
+        <label class="col-sm-1 control-label" style="width:30%;">下注模式</label>
+        <div class="col-sm-8" style="width:70%;">
+            <select name="mode" class="form-control" >
+                <option value="1" {if condition="$config.mode == 1"}selected {/if}>默认模式</option>
+                <option value="2" {if condition="$config.mode == 2"}selected {/if}>任意下注</option>
+            </select>
+        </div>
+    </div>
+    <div class="clear"></div>
+    </div>
+  <div class="alert alert-success" role="alert">
+    小提示：开启同步时，以下配置将同步到所有当前类型彩种，玩法奖金 = 最高奖金 * 盈利率。　下注模式：默认模式时下注金额为2元一注，任意下注模式时每注一元，每注下注金额不限。
+  </div>
+    <div class="form-horizontal play_form" style=" margin:0 auto;">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">玩法名称</label>
+        <label for="inputEmail3" class="col-sm-1 control-label">标识sign</label>
+        <label for="inputEmail3" class="col-sm-1 control-label">类型type</label>
+        <label for="inputEmail3" class="col-sm-2 control-label">玩法奖金</label>
+        <label for="inputEmail3" class="col-sm-1 control-label">开关</label>
+        <label for="inputEmail3" class="col-sm-1 control-label">默认选择</label>
+      </div>
+      {volist name="list" id ="item"}
+        <?php
+            if ($item['sign']) {
+                $sign = explode('.', $item['sign']);
+            } else {
+                $sign = '';
+            }
+        ?>
+        <div class="form-group data-from {if condition="count($sign) == 1"} has_son p_li {/if} {if condition="count($sign) == 2"} has_son p_li2 {/if}">
+            <div class="col-sm-2">
+            <input type="text" class="form-control" name="name" value="{$item.name}" readonly>
+            </div>
+            <div class="col-sm-1">
+                <input type="text" class="form-control"  name="sign" value="{$item.sign}" readonly>
+            </div>
+            <div class="col-sm-1">
+                <input type="text" class="form-control"  name="type" value="{$item.type}" readonly>
+            </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control"  name="gain" value="{$item.gain}">
+            </div>
+            <div class="col-sm-1">
+              <input type="hidden" class="form-control"  name="isOpen"  value="{$item.isOpen}">
+              <button data-open = "{$item.isOpen}" class="btn btn-start {eq name='$item.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name='$item.isOpen' value='1'}已关闭{else /}已开启{/eq}</button>
+            </div>
+            {if condition="isset($item.type) and $item.type != ''"}
+            <div class="col-sm-1">
+              <div class="btn-radio-p" data-toggle="buttons">
+                <label class="btn btn-radio btn-info {if condition='$item.type == $config.selected'}active radio_checked{/if}">
+                  <input type="radio" name="options" value="{$item.type}" {if condition="$item.type == $config.selected"}checked{/if}> <span class="radio_text"> {if condition="$item.type == $config.selected"}默认选中{else /} 设置默认{/if}</span>
+                </label> 
+              </div>	
+            </div>
+            <!--<a href="javascript:;" class="add_new_btn" style="display: inline-block; vertical-align: middle; "><i class="icon-plus-sign"></i></a>-->
+            {/if}
+            <!--{if condition="count($sign) == 2"}-->
+            <!--<a href="javascript:;" class="add_new_btn" style="display: inline-block; vertical-align: middle; margin-left:10px;"><i class="icon-plus-sign"></i></a>-->
+            <!--{/if}-->
+            <!--<a href="javascript:;" class="remove_btn" style="display: inline-block; vertical-align: middle; margin-left:2px;"><i class=" icon-minus-sign"></i></a>-->
+        </div>
+      {/volist}
+      <div class="form-group data-from  has_son p_li" style="padding: 0;"></div>
+      <div class="form-group">
+         <!--<div class="col-sm-offset-2 col-sm-1"><button type="button" class="btn btn_add btn-default">添加玩法</button></div>-->
+        <div class="col-sm-offset-1 col-sm-3"><button type="submit" class="btn btn-primary btn_save">保 存</button></div>
+      </div>
+    </div>
+</div>
+</div>
+<script>
+  $("[data-toggle='tooltip']").tooltip();
+  $('.remove_btn').click(function () {
+      $(this).closest('.form-group').remove();
+  });
+  $(".btn_add").click(function(){
+      var my_class = '';
+      var html = '<div class="form-group  data-from ' + my_class + '">\
+            <div class="col-sm-2">\
+            <input type="text" class="form-control"  name="name">\
+            </div>\
+            <div class="col-sm-1">\
+            <input type="text" class="form-control"  name="sign">\
+            </div>\
+            <div class="col-sm-1">\
+              <input type="text" class="form-control"  name="type">\
+              </div>\
+            <div class="col-sm-2">\
+            <input type="text" class="form-control"  name="official_gain">\
+            </div>\
+             <div class="col-sm-2">\
+              <input type="text" class="form-control"  name="gain">\
+              </div>\
+            <div class="col-sm-1">\
+              <input type="hidden" class="form-control"  name="isOpen"  value="0">\
+              <button data-open = "" class="btn btn-start btn-success">已开启</button>\
+            </div>\
+        </div>';
+      $('.play_form').find('.form-group:last').before(html);
+  })
+  $(".add_new_btn").click(function(){
+      var my_class = '';
+      if ($(this).closest('.form-group').hasClass('p_li')) {
+          var my_p = $(this).closest('.p_li').nextAll('.p_li:first');
+          var my_class = ' has_son p_li2';
+      } else {
+          var my_p = $(this).closest('.p_li2').nextAll('.p_li2:first');
+      }
+      if ($(this).closest('.form-group').nextAll('.has_son:first').hasClass('p_li')) {
+          var my_p = $(this).closest('.form-group').nextAll('.p_li:first');
+      }
+      var html = '<div class="form-group  data-from ' + my_class + '">\
+            <div class="col-sm-2">\
+            <input type="text" class="form-control"  name="name">\
+            </div>\
+            <div class="col-sm-1">\
+            <input type="text" class="form-control"  name="sign">\
+            </div>\
+            <div class="col-sm-1">\
+              <input type="text" class="form-control"  name="type">\
+              </div>\
+            <div class="col-sm-2">\
+            <input type="text" class="form-control"  name="official_gain">\
+            </div>\
+             <div class="col-sm-2">\
+              <input type="text" class="form-control"  name="gain">\
+              </div>\
+            <div class="col-sm-1">\
+              <input type="hidden" class="form-control"  name="isOpen"  value="0">\
+              <button data-open = "" class="btn btn-start btn-success">已开启</button>\
+            </div>\
+        </div>';
+      my_p.before(html);
+  })
+
+  $(".btn-start").click(function(){
+    var _this = $(this);
+    _this.removeClass();
+    var before = _this.data('open');
+    before = before ? before : 0;
+    var newOpen = before !== 0 ? 0 : 1;
+    var text = before !== 0 ? '已开启' : '已关闭';
+    var classname = before !== 0 ? 'btn btn-start btn-success' : 'btn btn-start btn-danger';
+    _this.addClass(classname)
+    _this.data('open',newOpen)
+    _this.text(text);
+    console.log(newOpen);
+    _this.parent().find('input[name=isOpen]').val(newOpen)
+  })
+  $(".btn-radio").click(function(){
+    var _this = $(this); 
+    $(".btn-radio").removeClass('radio_checked');
+    _this.addClass('radio_checked');
+    $(".radio_text").text('设置默认');
+    _this.find('.radio_text').text('默认选中')
+  })
+
+//  $(".bonus_base").blur(function () {
+//      $('input[name="gain"]').each(function(){
+//          var official_gain = $(this).closest('.form-group').find('input[name="official_gain"]').val();
+//          var gain = 0;
+//          if (official_gain) {
+//              var data = official_gain.split(',');
+//              for (var i in data) {
+//                  var v = data[i] * $(".bonus_base").val() / 100;
+//                  v = Math.round(v*10000)/10000
+//                if (gain) {
+//                    gain += ',' + v;
+//                } else {
+//                    gain = v;
+//                }
+//              }
+//          }
+//          $(this).val(gain);
+//      })
+//  })
+//  $('input[name="official_gain"]').blur(function () {
+//      var official_gain = $(this).val();
+//      var gain = 0;
+//      if (official_gain) {
+//          var data = official_gain.split(',');
+//          for (var i in data) {
+//              var v = data[i] * $(".bonus_base").val() / 100;
+//              v = Math.round(v*10000)/10000
+//              if (gain) {
+//                  gain += ',' + v;
+//              } else {
+//                  gain = v;
+//              }
+//          }
+//      }
+//      $(this).closest('.form-group').find('input[name="gain"]').val(gain);
+//  })
+
+  $(".btn_save").click(function(){
+      var dataGroup = $(".data-from");
+      var data = [];
+      var config = {};
+      config.selected = $("input[name=options]:checked").val();
+      config.bonus_base = $("input[name=bonus_base]").val();
+      config.mode = $("select[name=mode]").val();
+      dataGroup.each(function(index,e){
+          var _e = $(e);
+          var obj = {};
+          obj.name = _e.find('input[name=name]').val();
+          obj.sign = _e.find('input[name=sign]').val();
+          obj.type = _e.find('input[name=type]').val();
+          //obj.official_gain = _e.find('input[name=official_gain]').val();
+          obj.gain = _e.find('input[name=gain]').val();
+          obj.isOpen = _e.find('input[name=isOpen]').val();
+          data.push(obj);
+      })
+
+    $.post('{:url("edit")}', {data: data,is_all: $("input[name='is_all']:checked").val(),config: config,name: "{$name}"},function(res){
+        $.modal.alert(res.msg)
+    })
+
+  })
+ </script>
+{include file='admin@common/foot' /}

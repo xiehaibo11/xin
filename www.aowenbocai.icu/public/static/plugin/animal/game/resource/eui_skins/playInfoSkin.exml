@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="PlayInfoSkin" width="640" height="1890" xmlns:e="http://ns.egret.com/eui">
+	<e:Scroller id="scroller" anchorOffsetY="0" left="0" right="0" top="0" height="1899.49">
+		<e:Group anchorOffsetY="0" height="1895.49" x="0" y="-79.7">
+			<e:Rect left="0" right="0" top="0" bottom="-98" scaleX="1" scaleY="1" anchorOffsetY="0" fillColor="0x1a232c"/>
+			<e:Label text="一、玩法说明" y="33" anchorOffsetX="0" width="584" anchorOffsetY="0" height="45" textColor="0x8DB1C4" bold="true" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="1、游戏背景：动物园里的小动物逃跑了，召唤玩家使用魔法棒，抓捕拯救动物们！" y="99" anchorOffsetX="0" width="584" anchorOffsetY="0" height="68" textColor="0x8DB1C4" size="22" verticalAlign="top" lineSpacing="8" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="2、游戏开始前请玩家先选好基础法力和法力倍数，瞄准目标进行抓捕；" y="176" anchorOffsetX="0" width="584" anchorOffsetY="0" height="68" textColor="0x8DB1C4" size="22" verticalAlign="top" lineSpacing="8" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="3、玩家点击一次跑动的目标，完成一次抓捕，抓捕成功可获得对应的奖励（详见奖励说明）；" y="254" anchorOffsetX="0" width="584" anchorOffsetY="0" height="68" textColor="0x8DB1C4" size="22" verticalAlign="top" lineSpacing="8" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="4、不同的法力，消耗的金豆不同，得到的奖励也不同；" y="331" anchorOffsetX="0" width="584" anchorOffsetY="0" height="36" textColor="0x8DB1C4" size="22" verticalAlign="top" lineSpacing="8" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="5、每次击中目标会扣除对应的金豆。但打到天空、大地等非目标区域，不会扣除金豆。" y="384" anchorOffsetX="0" width="584" anchorOffsetY="0" height="68" textColor="0x8DB1C4" size="22" verticalAlign="top" lineSpacing="8" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="6、恐龙拥有喷火技能，被成功抓捕后释放，有几率电倒场景内某些动物。" y="460" anchorOffsetX="0" width="584" anchorOffsetY="0" height="68" textColor="0x8DB1C4" size="22" verticalAlign="top" lineSpacing="8" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="7、炸弹人拥有特殊效果，其自身倍率为0，被成功抓捕后触发场景中所有动物爆炸。" y="538" anchorOffsetX="0" width="584" anchorOffsetY="0" height="68" size="22" verticalAlign="top" lineSpacing="8" horizontalCenter="0" x="28" scaleX="1" scaleY="1" textColor="0x8db1c4"/>
+			<e:Label text="二、奖励说明" y="626.5" anchorOffsetX="0" width="584" anchorOffsetY="0" height="45" textColor="0x8DB1C4" bold="true" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Label text="" y="1692.42" anchorOffsetX="0" width="584" anchorOffsetY="0" height="45" textColor="0x8DB1C4" bold="true" horizontalCenter="0" x="28" scaleX="1" scaleY="1"/>
+			<e:Group width="580" height="1120.12" y="688" anchorOffsetX="0" horizontalCenter="-3" anchorOffsetY="0">
+				<e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0x3d5b6b" scaleX="1" scaleY="1" left="0" right="0" top="0" height="1097"/>
+				<e:Rect anchorOffsetX="0" anchorOffsetY="0" fillColor="0x1a232c" scaleX="1" scaleY="1" left="2" right="2" top="72" height="1023"/>
+				<e:Label text="目标" x="109" y="22"/>
+				<e:Label text="奖励" x="401" y="22"/>
+				<e:Rect width="2" height="50" y="11" fillColor="0xadd8ed" fillAlpha="0.6" horizontalCenter="0"/>
+				<e:Group height="99" y="74" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3d5b6b"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.7"/>
+					<e:Label text="猫" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="1.2倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="279" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.6"/>
+					<e:Label text="企鹅" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="4倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="381" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.9"/>
+					<e:Label text="狐狸" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="6倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="483" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.4"/>
+					<e:Label text="鸵鸟" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="10倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="177" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.8"/>
+					<e:Label text="羊" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="2倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="585" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.10"/>
+					<e:Label text="斑马" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="20倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="687" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.5"/>
+					<e:Label text="长颈鹿" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="50倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="789" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.11"/>
+					<e:Label text="鳄鱼" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="100倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="891" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Rect height="1" left="0" right="0" bottom="0" fillColor="0x3D5B6B"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.1"/>
+					<e:Label text="熊猫" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="400倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+				<e:Group height="99" y="992" anchorOffsetY="0" left="0" right="0">
+					<e:Rect width="2" height="50" fillColor="0xADD8ED" fillAlpha="0.3" horizontalCenter="0" verticalCenter="0"/>
+					<e:Image width="80" height="80" x="32" y="9" anchorOffsetX="0" anchorOffsetY="0" source="pic2_json.3"/>
+					<e:Label text="恐龙" x="135" alpha="0.6" verticalCenter="0"/>
+					<e:Label text="100倍" x="399" verticalCenter="0.5"/>
+				</e:Group>
+			</e:Group>
+		</e:Group>
+	</e:Scroller>
+</e:Skin>

@@ -1,0 +1,28 @@
+{include file='web@common/link' title="代理说明"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <span slot="header" class="title">
+            代理说明
+        </span>
+        <div class="article-detail">
+            <div><img src="/static/vipweb/images/agent/agentIntro.jpg" alt=""></div>
+            <div v-html="info.content"></div>
+        </div>
+    </el-card>
+</div>
+
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                info:{$info}
+            },
+            methods: {
+            }
+        });
+    });
+</script>

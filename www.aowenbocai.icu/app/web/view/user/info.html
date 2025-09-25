@@ -1,0 +1,562 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/upload/cropper.min.css">
+<script type='text/javascript' src="__JS__/upload/lrz.all.bundle.js"></script>
+<script type='text/javascript' src="__JS__/upload/cropper.min.js"></script>
+<style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+    .el-form-item {
+        margin-bottom: 18px;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">个人资料</span>
+        </div>
+        <el-tabs v-model="tabs" type="card">
+            <el-tab-pane label="基本资料" name="first">
+                <form-info></form-info>
+            </el-tab-pane>
+            <!--<el-tab-pane label="等级头衔" name="three">-->
+            <!--<grade-info></grade-info>-->
+            <!--</el-tab-pane>-->
+            <el-tab-pane label="头像设置" name="second">
+                <edit-photo></edit-photo>
+            </el-tab-pane>
+        </el-tabs>
+
+    </el-card>
+</div>
+<!--基本资料 组件-->
+<template id="formInfo">
+    <div>
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="ruleForm form login" size="small">
+            <el-form-item label="用户ID：">{$user.id}</el-form-item>
+            <el-form-item label="账号：">
+                {empty name="$user.username"}
+                <em class="red">您还未绑定{$site_name}账号</em> <a class="link" href="" target="_blank">立即去绑定</a>
+                {else /}
+                {$user.username}
+                {/empty}
+            </el-form-item>
+            <el-form-item prop="real_name" label="真实姓名：">
+                <div v-if="{$isname}">{$idname}
+                    <el-tooltip placement="bottom">
+                        <div slot="content">
+                            如需修改，请联系服务
+                        </div>
+                        <i class="el-icon-question org" style="margin-left: 10px"></i>
+                    </el-tooltip>
+                </div>
+                <el-input v-else v-model="ruleForm.real_name" type="text" placeholder="请输入您的真实姓名"></el-input>
+            </el-form-item>
+            <el-form-item prop="nickname" label="昵称：">
+                <el-input v-model="ruleForm.nickname" type="text" placeholder="请输入您的昵称"></el-input>
+            </el-form-item>
+            <el-form-item prop="sex" label="性别：">
+                <el-select v-model="ruleForm.sex" placeholder="请选择您的性别">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="birth" label="生日：">
+                <el-date-picker
+                        v-model="ruleForm.birth"
+                        value-format="yyyy-MM-dd"
+                        type="date"
+                        placeholder="选择日期">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item prop="qq" label="QQ号码：" v-if="isQq">
+                <el-input v-model="ruleForm.qq" type="text" placeholder="请输入您的QQ号码"></el-input>
+            </el-form-item>
+            <el-form-item prop="explan" label="个性签名：">
+                <el-input v-model="ruleForm.explan" type="textarea" placeholder="用低调的文字体现高调的你吧！"></el-input>
+            </el-form-item>
+            <!--选择验证方式-->
+            <el-form-item v-if="chose"  label="验证方式选择：">
+                <div class="flex-box bg" style="padding: 5px 0 5px 10px;border: 1px solid #dcdfe6;border-radius: 4px;">
+                    <a v-if="isYzm" class="chose flex" @click="checkTel"><el-button type="success" size="mini" icon="el-icon-mobile-phone" circle ></el-button> 验证已绑定手机</a>
+                    <a v-if="isEmail" class="chose flex" @click="checkEmail"><el-button type="warning" size="mini" icon="el-icon-message" circle></el-button> 验证已绑定邮箱</a>
+                </div>
+            </el-form-item>
+            <template v-if="changeWay == 1">
+                <div class="tr yz-way"><a class="link" @click="choseBack">更改验证方式</a></div>
+                <el-form-item prop="tel"  label="已绑定手机">
+                    <el-input v-model="ruleForm.showTel" type="tel" placeholder="已绑定手机" disabled></el-input>
+                </el-form-item>
+                <el-form-item prop="yzm"  label="验证码" :error="telErr">
+                    <el-input v-model="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码" @focus="telErr=''"></el-input>
+                    <el-button type="primary" class="btn-yzm" plain @click.native="sendSms" v-if="smsState">{{text}}</el-button>
+                    <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+                </el-form-item>
+            </template>
+            <template v-if="changeWay == 2">
+                <div class="tr yz-way"><a class="link" @click="choseBack">更改验证方式</a></div>
+                <el-form-item  prop="email" label="已绑定邮箱">
+                    <el-input v-model="ruleForm.email" type="text" placeholder="请已绑定邮箱" disabled></el-input>
+                </el-form-item>
+                <el-form-item prop="yzmEmail"  label="验证码" :error="emailErr">
+                    <el-input v-model="ruleForm.yzmEmail" type="tel" class="yzm" placeholder="请输入验证码" @focus="emailErr=''" ></el-input>
+                    <el-button type="primary" plain @click.native="sendEmail" class="btn-yzm" v-if="smsState2" :loading="loadingEmail">{{text2}}</el-button>
+                    <el-button type="info" class="btn-yzm" plain disabled v-else>{{text2}}</el-button>
+                </el-form-item>
+            </template>
+            <el-form-item>
+                <el-button type="danger" @click="submitForm('ruleForm')" :loading="loading">保存</el-button>
+            </el-form-item>
+        </el-form>
+        <div class="tips">
+            <p>提示：</p>
+            <p>1、真实姓名是领取大奖的重要核对依据，请填写真实信息，填写后不可修改</p>
+            <p>2、禁止涉及政治、伟人、传销等一切敏感内容，不得带有反动、歧视、淫秽、低俗等以及其他不符合平台规定的内容</p>
+        </div>
+    </div>
+</template>
+<!--头像设置 组件-->
+<template id="editPhoto">
+    <div>
+        <!--<div class="tips">提醒：修改头像后，需刷新页面！上传头像禁止涉及政治、伟人、传销等一切敏感内容，不得带有反动、歧视、淫秽、低俗，二维码，网址广告等以及其他不符合平台规定的内容！</div>-->
+        <div class="user-detail flex-box" style="align-items: flex-start;">
+            <div style="padding-right: 150px;padding-top: 35px;">
+                <div class="user_info flex-box border-b">
+                    <div class="edit_img tc">
+                        <div style="margin-bottom: 10px">
+                            <img class="user_photo" style="height: 120px;" src="{$user.photo}">
+                        </div>
+                        <el-button class="set-edit" size="mini">上传本地头像</el-button>
+                        <p class="gray">请选择jpg图片上传</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex">
+                <div id="showEdit" class="showEdit" style="display: none">
+                    <h4>图片裁剪</h4>
+                    <div id="report" style="position: relative;height:300px;display: block;width: 100%;">
+                        <img src="{$user.photo}">
+                    </div>
+                    <div class="flex-box btn-image" style="padding:10px 150px">
+                        <el-button size="small" type="primary" class="btn-save flex" id="confirmBtn">保存</el-button>
+                        <el-button size="small" class="btn-cacle flex" id="cancleBtn">取消</el-button>
+                    </div>
+                </div>
+                <input id="image" type="file" capture="camera" style="display: none"/>
+            </div>
+        </div>
+    </div>
+</template>
+<!--等级头衔-->
+<template id="gradeInfo">
+    <div class="grade-info">
+        <div>
+            <p>当前积分：{{userLevelDetail.gradeGrow}}</p>
+            <p>头衔：{{userLevelDetail.userTitle}} <a href="" class="link">(查看等级头衔说明)</a></p>
+            <div class="level-tips">
+                距离下一级需要{{userLevelDetail.nextGrow}}分 每充值1元加1分
+            </div>
+            <div class="flex-box" style="width: 50%">
+                <span class="userGrade">{{userLevelDetail.userGrade}}</span>
+                <span class="flex">
+            <el-progress :text-inside="true" :stroke-width="18" :percentage="userLevelDetail.perNum" status="exception"></el-progress>
+            </span>
+                <span class="nextGrade">{{userLevelDetail.nextGrade}}</span>
+            </div>
+        </div>
+        <div class="level-cont mt15">
+            <div class="cont-title">等级机制</div>
+            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <th width="33%">等级</th>
+                    <th width="33%">头衔</th>
+                    <th width="33%">成长积分</th>
+                </tr>
+                <tr v-for="(item,index) in gradeList" :key="index">
+                    <td>{{item.grade}}</td>
+                    <td>{{item.gradeName}}</td>
+                    <td>{{item.gradeGrow}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    $(function(){
+        $(document).on('click','.edit_img',function () {
+            $(".edit_img>img").attr({src:this.src});
+            $("#image").trigger("click");
+        });
+        // 取消按钮
+        $(document).on('click','#cancleBtn', function() {
+            $("#showEdit").fadeOut();
+        });
+        // 确定裁剪按钮
+        $(document).on('click','#confirmBtn', function() {
+            $("#showEdit").fadeOut();
+            var $image = $('#report > img');
+            var dataURL = $image.cropper("getCroppedCanvas");
+            var imgurl = dataURL.toDataURL("image/jpeg", 0.5);
+            $.post("/index/user/setPhoto",{photo:imgurl},function (data) {
+//                vm.alertMsg(data.msg)
+                if (data.code) {
+//                    $(".user_photo").attr("src", imgurl);
+                    vm.$alert( data.msg, '提示', {
+                        confirmButtonText: '确定',
+                        type: 'success',
+                        center: true,
+                        callback: function(){
+                            if (window != top){
+                                top.location.href = '/web/user/my?ac=0-1';
+                                return;
+                            }
+                            window.location.href = '/web/user/my?ac=0-1';
+                        }
+                    });
+                }else {
+                    vm.alertMsg(data.msg)
+                }
+            });
+        });
+        $(document).on('change', '#image',function() {
+            // 利用的 lrz.all.bundle 插件读取本机图片信息
+            lrz(this.files[0], {
+                width: 800,
+                height: 800,
+                quality: 0.7
+            }).then(function(rst) {
+                $("#report").html('<img src="' + rst.base64 + '">');
+                $("#showEdit").fadeIn();
+                // 利用的 jqery cropper 裁剪图片插件 打开裁剪画面
+                $("#report > img").cropper({
+                    // 图片宽高比例
+                    aspectRatio: 1 / 1,
+                    // 裁剪图片大小,0.7 = 原图片的70%
+                    autoCropArea: 0.7,
+                    strict: true,
+                    guides: false,
+                    center: true,
+                    highlight: false,
+                    dragCrop: false,
+                    cropBoxMovable: false,
+                    cropBoxResizable: false,
+                    zoom: -0.2,
+                    checkImageOrigin: true,
+                    background: false
+                });
+                return rst;
+            }).catch(function(err) {
+                // 万一出错了，这里可以捕捉到错误信息
+                // 而且以上的then都不会执行
+                alert(err);
+            }).always(function() {
+                // 不管是成功失败，这里都会执行
+            });
+            this.value = "";
+        });
+//等级头衔
+        Vue.component('grade-info', {
+            template: '#gradeInfo',
+            data: function data() {
+                return {
+                    //用户信息
+                    userLevelDetail:{},
+                    //等级列表
+                    gradeList:[],
+                };
+            }
+        });
+//头像设置
+        Vue.component('edit-photo', {
+            template: '#editPhoto',
+            data: function data() {
+                return {};
+            }
+        });
+//个人资料信息
+        Vue.component('form-info', {
+            template: '#formInfo',
+            data: function data() {
+                return{
+                    telErr: '',
+                    emailErr: '',
+                    chose: parseInt('{$data.tel.isOpen}') || parseInt('{$data.email.isOpen}') ? true : false,
+                    changeWay: 0, //验证方式选择 1 手机 2邮箱
+                    isYzm: parseInt('{$data.tel.isOpen}'), //是否开启短信接口
+                    isEmail: parseInt('{$data.email.isOpen}'), //是否开启邮箱验证
+                    isQq: "{$company['reg_way']}".split(',').indexOf('common') > -1 ? true : false, //注册时是否必填qq
+                    loading: false,
+                    loadingEmail: false,
+                    options: [{value: '1',
+                        label: '男'
+                    }, {
+                        value: '2',
+                        label: '女'
+                    }, {
+                        value: '3',
+                        label: '保密'
+                    }],
+                    ruleForm: {
+                        nickname: '{$user.nickname}',
+                        showTel: '{$data.tel.number}',
+                        email: '{$data.email.number}',
+                        tel: '{$user.tel}',
+                        explan: '{$user.explan}',
+                        sex:'',
+                        birth:"{$user.birth|default='1900-01-01'}",
+                        yzm: '',
+                        yzmEmail: '',
+                        real_name: '{$idname}',
+                        qq:'{$user.qq}'
+                    },
+                    rules: {
+                        nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+//                        sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
+//                        birth: [{ required: true, message: '请设置生日', trigger: 'blur' }],
+//                        explan: [{ required: true, message: '请输入个性签名', trigger: 'blur' }],
+                        yzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                        yzmEmail: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                        real_name: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
+//                        qq: [{ required: true, message: 'QQ号码不能为空', trigger: 'blur' }, { pattern: /^[1-9][0-9]{4,14}$/, message: '请输入正确的QQ号码', trigger: 'blur' }]
+                    },
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120,
+                    text2: '获取验证码',
+                    smsState2: true,
+                    countDown2: 120
+                };
+            },
+            methods: {
+                //发送手机验证码
+                sendSms: function () {
+                    var _this2 = this;
+                    if (this.countDown != 120) return false;
+                    $.get('/index/user/sendSmsInfo', {
+                        tel: this.ruleForm.tel
+                    }, function (res) {
+                        if (!res.err) {
+                            _this2.smsState = false;
+                            _this2.text = "已发送(" + _this2.countDown + "秒)";
+                            var interval = setInterval(function () {
+                                _this2.countDown = _this2.countDown - 1;
+                                if (_this2.countDown == 0) {
+                                    _this2.text = '获取验证码';
+                                    _this.countDown = 120;
+                                    clearInterval(interval);
+                                    _this2.smsState = true;
+                                    return;
+                                }
+                                _this2.text = "已发送(" + _this2.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this2.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+                //发送邮箱验证码
+                sendEmail: function() {
+                    var _this3 = this;
+                    this.loadingEmail = true;
+                    if (this.countDown2 != 120) return false;
+                    $.get('{:url("sendInfoEmail")}', function (res) {
+                        if (!res.err) {
+                            _this3.smsState2 = false;
+                            _this3.text2 = "已发送(" + _this3.countDown2 + "秒)";
+                            _this3.loadingEmail = false;
+                            var interval = setInterval(function () {
+                                _this3.countDown2 = _this3.countDown2 - 1;
+                                if (_this3.countDown2 == 0) {
+                                    _this3.text2 = '获取验证码';
+                                    _this3.countDown2 = 120;
+                                    clearInterval(interval);
+                                    _this3.smsState2 = true;
+                                    return;
+                                }
+                                _this3.text2 = "已发送(" + _this3.countDown2 + "秒)";
+                            }, 1000);
+                        } else {
+                            _this3.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this3.loadingEmail = false;
+                        }
+                    });
+                },
+                //选择验证方式
+                choseBack: function () {
+                    this.changeWay = 0;
+                    this.chose = true;
+                },
+                //验证是否绑定手机
+                checkTel: function () {
+                    if (!parseInt('{$data.tel.islock}')) {
+                        this.$confirm('您还未绑定手机！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setTel")}');
+                        }).catch(function () {});
+                    } else {
+                        this.chose = false;
+                        this.changeWay = 1;
+                    }
+                },
+                //验证是否绑定邮箱
+                checkEmail: function () {
+                    if (!parseInt('{$data.email.islock}')) {
+                        this.$confirm('您还未绑定邮箱！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setEmail")}');
+                        }).catch(function () {});
+                    } else {
+                        this.chose = false;
+                        this.changeWay = 2;
+                    }
+                },
+                //保存
+                submitForm: function (formName) {
+                    var _this4 = this;
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            var data;
+                            data = {
+                                changeWay: 0, //没有验证
+                                nickname: _this4.ruleForm.nickname,
+                                explan: _this4.ruleForm.explan,
+                                sex: _this4.ruleForm.sex,
+                                birth: _this4.ruleForm.birth
+                            }
+                            if(!{$isname}){
+                                data['real_name'] = _this4.ruleForm.real_name
+                            }
+                            if(_this4.isQq){
+                                data['qq'] = _this4.ruleForm.qq
+                            }
+                            //开启验证码判断
+                            if (_this4.isYzm || _this4.isEmail) {
+                                switch(changeWay){
+                                    case 0:
+                                        _this4.$alert('请选择1种验证方式', '提示', {
+                                            confirmButtonText: '确定',
+                                            type: 'warning',
+                                            center: true,
+                                            lockScroll: false,
+                                            showClose: false
+                                        });
+                                        break;
+                                    case 1:
+                                        if (!_this4.ruleForm.yzm) {
+                                            _this4.telErr = '请输入验证码';
+                                            return false;
+                                        }
+                                        data['changeWay'] = 1 //短信验证
+                                        data['yzm'] = _this4.ruleForm.yzm
+                                        break;
+                                    case 2:
+                                        if (!_this4.ruleForm.yzmEmail) {
+                                            _this4.emailErr = '请输入验证码';
+                                            return false;
+                                        }
+                                        data['changeWay'] = 2 //邮箱验证
+                                        data['yzm'] = _this4.ruleForm.yzmEmail
+                                        break;
+                                }
+                            }
+                            _this4.loading = true;
+                            $.post('{:Url("checkInfoChange")}', data, function (res) {
+                                if (!res.err) {
+                                    _this4.loading = false;
+                                    _this4.$alert( res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        center: true,
+                                        callback: function(){
+//                                            location.href = '{:url("info")}';
+                                            if (window != top){
+                                                top.location.href = '/web/user/my?ac=0-1';
+                                                return;
+                                            }
+                                            window.location.href = '/web/user/my?ac=0-1';
+                                        }
+                                    });
+                                    return;
+                                }
+                                _this4.loading = false;
+                                _this4.$alert( res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'warning',
+                                    center: true
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            },
+            created:function () {
+                var n = Number('{$user.sex}')
+                if(n){
+                    this.ruleForm.sex = this.options[n-1].value
+                }
+            }
+        });
+
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                tabs: 'first'
+            },
+            methods: {
+                alertMsg: function alertMsg(msg) {
+                    this.$alert(msg, '提示', {
+                        confirmButtonText: '确定',
+                        center: true,
+                        lockScroll: false,
+                        showClose: false
+                    });
+                }
+            }
+        });
+    })
+</script>

@@ -1,0 +1,158 @@
+{include file='web@common/link' title="下级报表"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">下级报表</span>
+        </div>
+        <div class="agent-report">
+            <div class="options flex-box">
+                <div class="time-box flex tl cf">
+                    <span class="fl">时间：</span>
+                    <el-radio-group v-model="time" size="mini" @change="handleTime" class="fl">
+                        <el-radio-button label="1">今天</el-radio-button>
+                        <el-radio-button label="2">昨天</el-radio-button>
+                        <el-radio-button label="3">本月</el-radio-button>
+                        <el-radio-button label="4">上月</el-radio-button>
+                    </el-radio-group>
+                    <el-date-picker v-model="value"  style="width:270px;margin-left: 5px" class="fl"
+                                    type="daterange"
+                                    size="mini"
+                                    format="yyyy 年 MM 月 dd 日"
+                                    value-format="yyyy-MM-dd"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </div>
+                <div class="">
+                    <div class="flex-box">
+                        <el-input v-model="subName" type="text" size="mini" placeholder="账号搜索" prefix-icon="el-icon-search" @keyup.enter.native="doSearch"></el-input>
+                        <el-button size="mini" type="primary" @click.native="doSearch">搜索</el-button>
+                    </div>
+                </div>
+            </div>
+            <div v-if="'{$userid}' !== ''" class="cf" style="border-top: 1px solid #e3e3e3;background: #f4f4f4;padding: 5px 10px;font-size: 14px">
+                <span class="fl"><em>当前所查看会员：</em>{$user_info.nickname|default=''}</span>
+                <span class="fr">
+                    <el-button @click.native="go" size="small" icon="el-icon-d-arrow-left" >返回上一级</el-button>
+                    <el-button @click.native="self" size="small" icon="el-icon-caret-left" type="danger">返回自己</el-button>
+                </span>
+            </div>
+            <page-nation :url="url" @game-record="sortC">
+                <el-table-column prop="nickname" label="账号">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.type == 2">
+                            <template v-if="scope.row.statistics.agent_num > 0">
+                                <a class="link f13" v-if="scope.row.type == 2 && scope.row.statistics.agent_num > 0" @click="toSubReport(scope.row.id)">
+                                    {{scope.row.nickname}}
+                                </a>
+                            </template>
+                            <template v-else>
+                                 <span class="f13" @click="toSubReport(scope.row.id)">{{scope.row.nickname}}
+                                 </span>
+                            </template>
+                        </template>
+                        <template v-else>
+                            <em class="f13">{{scope.row.nickname}}</em>
+                        </template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="total_money" label="用户类型" width="">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.type == 1" class="el-tag el-tag--success">普通会员</span>
+                        <span v-if="scope.row.type == 2" class="el-tag el-tag--danger">代理会员</span>
+                        <span v-if="scope.row.type == 0" class="el-tag el-tag--info">测试会员</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="statistics.spend" label="投注金额"></el-table-column>
+                <el-table-column prop="statistics.award" label="中奖金额"></el-table-column>
+                <el-table-column prop="statistics.recharge" label="团队充值"></el-table-column>
+                <el-table-column prop="statistics.rebate" label="团队返点"></el-table-column>
+                <el-table-column prop="statistics.send" label="活动礼金"></el-table-column>
+                <el-table-column prop="statistics.gain" label="团队盈利"></el-table-column>
+                <el-table-column prop="statistics._change" label="兑换金额"></el-table-column>
+            </page-nation>
+        </div>
+        <div class="tips">温馨提示：下级报表最多可查询近半年。</div>
+    </el-card>
+</div>
+
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                time:'1',
+                value : '',
+                name:'',
+                subName:'',
+                userid :'{$userid}',//代理id
+
+                //设置选择六个月之前到今天的日期
+                pickerOptions0: {
+                    disabledDate: function(time) {
+                        var curDate = new Date().getTime();
+                        var three = 180 * 24 * 3600 * 1000;
+                        var threeMonths = curDate - three;
+                        return time.getTime() > Date.now() || time.getTime() < threeMonths;;
+                    }
+                },
+
+                initUrl:"{:url('getStatisticsList')}", //接口地址
+                sort : '',//排序
+            },
+            computed:{
+                url:function () {
+                    var time = this.value.length ? '&starttime=' + this.value[0] + '&endtime=' + this.value[1] :  '&time=' + this.time
+                    var sort = this.sort ? 'sort'  : ''
+                    var name = this.name ?  '&name='+ this.name : ''
+                    var  userid = this.userid ?  '&userid='+ this.userid : ''
+                    return this.initUrl + time + sort + name + userid
+                },
+            },
+            methods: {
+                handleTime(){
+                    //自定义时间切换为快捷时间选择
+                    this.value = '';
+                },
+                //搜索
+                doSearch:function () {
+                    this.name = this.subName
+                },
+                sortC: function(val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 0; //降序
+                        } else {
+                            s = 1; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                    this.$emit('sort-change', this.sort);
+                },
+                //查看下级
+                toSubReport:function (id) {
+                    window.location.href = "{:url('subReport')}?userid=" + id
+                },
+                //返回上一级
+                go:function(){
+                    window.history.go(-1);
+                },
+                //返回自己
+                self:function () {
+                    window.location.href="{:url('subReport')}"
+                },
+            },
+            created:function () {
+
+            }
+        });
+    });
+</script>

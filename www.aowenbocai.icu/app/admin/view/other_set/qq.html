@@ -1,0 +1,186 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+
+<nav class="plugin_nav">
+    <a href="{:url('admin/SystemSet/index')}">基础设置</a>
+    <a href="{:url('admin/SystemSet/setRecharge')}">充值设置</a>
+    <a href="{:url('admin/SystemSet/user')}">会员设置</a>
+    <a href="{:url('admin/SystemSet/company')}">联系方式</a>
+    <div role="presentation" class="dropdown nav_active" style="display: inline-block">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"   style="color: #39aef5;">
+            API接口<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="{:url('admin/OtherSet/index')}">短信验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/emails')}">邮箱验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/qqConnect')}">快速登录接口</a></li>
+            <li><a href="{:url('admin/OtherSet/shareImg')}">微信分享接口</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+            <li>快速登录接口</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+        <div class="alert alert-success" role="alert"> 微信快速登录信息 </div>
+        <!-- <div class="form-group">
+            <label class="col-sm-2 control-label">微信注册</label>
+            <div  class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" name="is_wx_register"  value="0" {if condition="$setting['is_wx_register'] eq 0"}checked{/if}> 关闭
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="is_wx_register"  value="1" {if condition="$setting['is_wx_register'] eq 1"}checked{/if}>  开启
+                </label>
+            </div>
+		</div> -->
+		<div class="form-group">
+            <label class="col-sm-2 control-label">微信验证</label>
+            <div  class="col-sm-5">
+                <input id="wx-state" type="checkbox" name="wx_checked"/>
+            </div>
+		</div>
+        <div class="form-group">
+		  <label class="col-sm-2 control-label">微信 AppId</label>
+		  <div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="微信唯一标识" name="weiappid" value="{$setting['weiappid']}">
+          </div>
+        </div> 
+        <div class="form-group">
+		  <label class="col-sm-2 control-label">微信 AppSecret</label>
+		  <div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="微信 AppSecret" name="weiappsecret" value="{$setting['weiappsecret']}">
+          </div>
+        </div>
+        <div class="form-group">
+		  <label class="col-sm-2 control-label">微信回调地址</label>
+		  <div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="微信回调地址" name="weiurl" value="{$setting['weiurl']}">
+          </div>
+          
+		  <div class="col-sm-2"  style="padding-top:7px;float:left">
+            <span>地址加http://</span>
+           </div>
+        </div>
+        <div class="alert alert-success" role="alert"> 微信扫码登录信息 </div>
+        
+		<div class="form-group">
+            <label class="col-sm-2 control-label">微信扫码</label>
+            <div  class="col-sm-5">
+                <input id="wxsm-state" type="checkbox" name="wxsm_checked"/>
+            </div>
+		</div>
+		<div class="form-group">
+            <label class="col-sm-2 control-label">开放平台APPID</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="微信唯一标识" name="weiopenappid" value="{$setting['weiopenappid']}">
+              </div>
+            </div> 
+            <div class="form-group">
+              <label class="col-sm-2 control-label">开放平台AppSecret</label>
+              <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="微信 AppSecret" name="weiopenappsecret" value="{$setting['weiopenappsecret']}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">开放平台地址</label>
+              <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="微信回调地址" name="weiopenurl" value="{$setting['weiopenurl']}">
+              </div>
+              
+              <div class="col-sm-2"  style="padding-top:7px;float:left">
+                <span>地址加http://</span>
+               </div>
+            </div>
+        <div class="alert alert-success" role="alert"> QQ快速登录信息 </div>
+		<div class="form-group">
+            <label class="col-sm-2 control-label">QQ验证</label>
+            <div  class="col-sm-5">
+                <input id="qq-state" type="checkbox" name="qq_checked"/>
+            </div>
+		</div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">QQ AppId</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="QQ AppId" name="qqappid" value="{$setting['qqappid']}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">QQ AppKey</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="QQ AppKey" name="qqappkey" value="{$setting['qqappkey']}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">QQ回调地址</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="QQ回调地址" name="qqurl" value="{$setting['qqurl']}">
+            </div>
+            
+            <div class="col-sm-2"  style="padding-top:7px;float:left">
+              <span>地址加http://</span>
+             </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary btn_save">保存设置</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch-init.js"></script>
+<script>
+$(function(){
+    //微信快速登录信息 - 微信验证
+    var wxState ="{$setting['wx_checked']}" == 1 ? true : false;
+    var wxValue;
+    $('#wx-state').bootstrapSwitch('state', wxState);
+    $('#wx-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        wxValue = state ? '1' : '0';
+    });
+
+    //微信扫码登录信息 - 微信验证
+    var wxsmState ="{$setting['wxsm_checked']}" == 1 ? true : false;
+    var wxsmValue;
+    $('#wxsm-state').bootstrapSwitch('state', wxsmState);
+    $('#wxsm-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        wxsmValue = state ? '1' : '0';
+    });
+
+    //QQ快速登录信息 - QQ验证
+    var qqState ="{$setting['qq_checked']}" == 1 ? true : false;
+    var qqValue;
+    $('#qq-state').bootstrapSwitch('state', qqState);
+    $('#qq-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        qqValue = state ? '1' : '0';
+    });
+
+	$('.btn_save').click(function() {
+      $.post('{:url("set")}', {
+        data: JSON.stringify({
+            wx_checked : wxValue,
+            wxsm_checked : wxsmValue,
+            qq_checked : qqValue,
+			qqurl: $('input[name=qqurl]').val(),
+			qqappkey: $('input[name=qqappkey]').val(),
+			qqappid: $('input[name=qqappid]').val(),
+			weiurl: $('input[name=weiurl]').val(),
+			weiappsecret: $('input[name=weiappsecret]').val(),
+			weiappid: $('input[name=weiappid]').val(),
+			weiopenurl: $('input[name=weiopenurl]').val(),
+			weiopenappsecret: $('input[name=weiopenappsecret]').val(),
+			weiopenappid: $('input[name=weiopenappid]').val(),
+        })
+      }, function() {
+        $.modal.alert('修改成功');
+      });
+    });
+})
+</script>
+{include file='common/foot' /}

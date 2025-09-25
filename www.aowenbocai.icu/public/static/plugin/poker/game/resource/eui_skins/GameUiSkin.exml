@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameUiSkin" width="640" height="1139" currentState="index" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" xmlns:tween="egret.tween.*" states="index,betting" >
+	<w:Declarations>
+	</w:Declarations>
+	<w:Config id="15f95e208cb"/>
+	<e:Image source="bg_json.2017110116161896377.png" anchorOffsetX="0" width="640" anchorOffsetY="0" height="1043.91" horizontalCenter="0" verticalCenter="0"/>
+	<e:Group anchorOffsetY="0" left="0" right="0" top="0">
+		<e:Rect width="100%" height="73" horizontalCenter="0" top="0" fillColor="0x171421" x="-258" y="-48" scaleX="1" scaleY="1"/>
+		<e:Rect width="272" height="50" x="15" y="12" anchorOffsetX="0" anchorOffsetY="0" fillColor="0xffffff" strokeColor="0xd18f23" strokeWeight="1" ellipseWidth="52" fillAlpha="0"/>
+		<e:Image source="1_json.d00.png" x="28" y="22.61" anchorOffsetX="0" width="22.57" anchorOffsetY="0" height="30.39"/>
+		<e:Label id="money" text="0" x="55.55" y="27" size="22" textColor="0xe0ad14" textColor.betting="0xe0ad14"/>
+		<e:Group id="recharge" width="35" height="35" x="243" y="20">
+			<e:Rect width="35" height="35" x="0" y="0" fillColor="0xea1010" ellipseWidth="36" scaleX="1" scaleY="1"/>
+			<e:Label text="+" x="2.5" y="2.5000000000000036" width="30" verticalAlign="middle" textAlign="center" scaleX="1" scaleY="1"/>
+		</e:Group>
+		<e:Image id="menu" scaleX="0.75" scaleY="0.75" horizontalCenter="268.5" verticalCenter="0" source="top_bg_png"/>
+	</e:Group>
+	<e:Rect width="100%" height="116" horizontalCenter="0" bottom="0" fillColor="0x221c34" fillColor.betting="0x221c34"/>
+	<ns1:Table id="table" skinName="TableSkin" anchorOffsetX="0" anchorOffsetY="0" scaleX="0.5" scaleY="0.5" right="0" bottom="115"/>
+	<e:Group width="100%" height="110.61" anchorOffsetY="0" horizontalCenter="0" bottom="0">
+		<e:Group id="bet_num" includeIn="index" x="28" y="13.26" anchorOffsetX="0" width="457" anchorOffsetY="0" height="51.4">
+			<e:Label text="100" x="0" size="26" includeIn="index" scaleX="1" scaleY="1" top="0" bottom="0" verticalAlign="middle"/>
+			<e:Label text="200" x="74.6" size="26" includeIn="index" scaleX="1" scaleY="1" top="0" bottom="0" verticalAlign="middle"/>
+			<e:Label text="500" x="149.2" size="26" includeIn="index" scaleX="1" scaleY="1" top="0" bottom="0" verticalAlign="middle"/>
+			<e:Label text="1000" x="223.79999999999998" size="26" includeIn="index" scaleX="1" scaleY="1" top="0" bottom="0" verticalAlign="middle"/>
+			<e:Label text="2000" x="312.4" size="26" includeIn="index" scaleX="1" scaleY="1" top="0" bottom="0" verticalAlign="middle"/>
+			<e:Label text="5000" size="26" includeIn="index" scaleX="1" scaleY="1" right="0" top="0" bottom="0" verticalAlign="middle"/>
+		</e:Group>
+		<e:Group id="jixu" width="100" height="80" x="518.48" verticalCenter="-0.3049999999999997" verticalCenter.betting="-0.3049999999999997" x.betting="524.56" visible.index="false">
+			<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" fillColor="0xfd4544" ellipseWidth="10" verticalCenter.betting="0" fillColor.index="0xfd4544"/>
+			<e:Label text="确定" horizontalCenter="0" verticalCenter="0" text.betting="继续"/>
+		</e:Group>
+		<e:Group id="over" width="100" height="80" x="14.92" verticalCenter="-0.3049999999999997" includeIn="betting">
+			<e:Rect width="100%" height="100%" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" horizontalCenter="-1" ellipseWidth="10" verticalCenter="0" fillColor="0x32294c"/>
+			<e:Label text="结算" horizontalCenter="0" verticalCenter="0" textColor="0xa48aef"/>
+		</e:Group>
+		<e:Group includeIn="betting" verticalCenter="0" width="380" horizontalCenter="0">
+			<e:Rect width="100%" height="80" anchorOffsetX="0" anchorOffsetY="0" verticalCenter="-0.3049999999999997" horizontalCenter="0" ellipseWidth="10" x="15" y="-10" scaleX="1" scaleY="1" includeIn="betting" fillColor="0x32294c"/>
+			<e:Group id="bet_sp" width="100%" height="100%" includeIn="betting">
+				<ns1:BetItem width="25%" height="80" skinName="BetItemSkin" currentState="checked" scaleX="1" scaleY="1" verticalCenter="0"/>
+				<ns1:BetItem width="25%" height="80" skinName="BetItemSkin" x="97.66666666666673" str="小" scaleX="1" scaleY="1" verticalCenter="0"/>
+				<ns1:BetItem width="25%" height="80" skinName="BetItemSkin" x="195.33333333333343" str="红" scaleX="1" scaleY="1" verticalCenter="0"/>
+				<ns1:BetItem width="87" height="80" skinName="BetItemSkin" str="黑" scaleX="1" scaleY="1" x="293" verticalCenter="0"/>
+			</e:Group>
+		</e:Group>
+		<e:Group id="isBet" includeIn="betting" left="0" right="0" top="0" bottom="0">
+			<e:Group width="380" height="81" includeIn="betting" scaleX="1" scaleY="1" anchorOffsetX="0" horizontalCenter="0" verticalCenter="0">
+				<e:Rect anchorOffsetX="0" anchorOffsetY="0" left="0" right="0" top="0" bottom="0" fillColor="0x32294c"/>
+				<ns1:BetItem width="25%" height="80" skinName="BetItemSkin" scaleX="1" scaleY="1" verticalCenter="0"/>
+				<ns1:BetItem width="25%" height="80" skinName="BetItemSkin" x="97.66666666666673" str="小" scaleX="1" scaleY="1" verticalCenter="0"/>
+				<ns1:BetItem width="25%" height="80" skinName="BetItemSkin" x="195.33333333333343" str="红" scaleX="1" scaleY="1" verticalCenter="0"/>
+				<ns1:BetItem width="87" height="80" skinName="BetItemSkin" scaleX="1" scaleY="1" x="293" verticalCenter="0" str="黑"/>
+				<e:Rect fillColor="0x32294c" anchorOffsetY="0" left="0" right="0" top="38" bottom="0"/>
+			</e:Group>
+			<e:Rect includeIn="betting" left="0" right="0" top="0" bottom="0" fillAlpha="0.5" fillColor="0x221c34" scaleX="1" scaleY="1"/>
+		</e:Group>
+		<e:Group id="next1" width="200" height="42" includeIn="betting" x="220" y="-37.41" scaleX="1" scaleY="1" visible="false">
+			<e:Rect width="200" height="42" includeIn="betting" y="0" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" ellipseWidth="20" horizontalCenter="0" fillColor="0x221c34" x="0"/>
+			<e:Label id="next" text="下一张牌是？" includeIn="betting" y="11.329999999999927" size="18" x="45.99999999999997" scaleX="1" scaleY="1" horizontalCenter="0" textColor="0x02edc9"/>
+		</e:Group>
+		<e:Rect width="457" height="3" x="28" y="83" anchorOffsetY="0" anchorOffsetX="0" ellipseWidth="10" fillColor="0x0a060d" includeIn="index"/>
+		<e:Rect width="457" height="3" x="28" y="87" anchorOffsetY="0" anchorOffsetX="0" ellipseWidth="10" fillColor="0x2d2543" includeIn="index"/>
+		<e:Rect width="457" height="3" x="28" y="85" fillColor="0x1b1123" anchorOffsetY="0" anchorOffsetX="0" ellipseWidth="10" includeIn="index"/>
+		<e:Group id="arrow" x="23.55" y="60.5" anchorOffsetX="0" anchorOffsetY="0" includeIn="index">
+			<e:Rect width="14" height="14" x="25" y="7" rotation="45" scaleX="1" scaleY="1" fillColor="0xffba00"/>
+			<e:Rect width="20" height="16" x="15" y="15" ellipseWidth="9" scaleX="1" scaleY="1" fillColor="0xffba00"/>
+		</e:Group>
+		<e:Group width="100" height="80" includeIn="index" x="518.48" y="15">
+			<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillColor="0xfd4544"/>
+			<e:Label id="queding" text="确定" textAlign="center" verticalAlign="middle" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+	</e:Group>
+	<e:Group id="his_box1" width="200" x="16" anchorOffsetY="0" top="90" bottom="123" locked="true">
+		<e:Scroller id="scroller" width="200" height.index="100%" horizontalCenter="0" bottom="0" horizontalScrollBar="0" top.betting="0">
+			<e:Group id="his_box">
+				<e:layout>
+					<e:VerticalLayout/>
+				</e:layout>
+			</e:Group>
+		</e:Scroller>
+	</e:Group>
+	<e:Group id="pp" width="412" height="362" x="222" anchorOffsetY="0" anchorOffsetX="0" bottom="476" locked="true">
+		<ns1:Pepo id="pepo" x="26.25" y="0" skinName="PepoSkin" scaleX="0.5" scaleY="0.5"/>
+	</e:Group>
+	<e:Label id="show_bouns" text="当前 100金豆                         " x.index="280" anchorOffsetX="0" width="347" anchorOffsetY="0" height="56" verticalAlign="middle" textAlign="center" size="22" bottom="136" bottom.betting="157" width.betting="348" horizontalCenter.betting="0" visible.index="false" text.betting="当前 100 金豆" visible.betting="false"/>
+	<e:Image id="yingdao" source="2017110116163155709_json.2017110116163155709008" includeIn="betting" anchorOffsetX="0" width="640" anchorOffsetY="0" height="280.43" horizontalCenter="0" bottom="-5" visible="false"/>
+	<e:Label text="先投金豆，将发一张牌猜下一张牌的大小红黑" includeIn="index" x="341" anchorOffsetX="0" width="223" anchorOffsetY="0" height="54" size="22" bottom="130" lineSpacing="10" textColor="0xffffff"/>
+	<e:Label text="请选择金豆" includeIn="index" x="32.55" anchorOffsetX="0" width="166.94" anchorOffsetY="0" height="54.24" textAlign="center" verticalAlign="middle" bottom="133" size="25"/>
+	<e:Group includeIn="index" x="14" y="970" visible="false">
+		<e:Image source="alert_png" scaleX="1.5" scaleY="1.5" horizontalCenter="0" verticalCenter="0"/>
+		<e:Label id="coupon" text="免费x1" size="21" verticalAlign="middle" textAlign="center" horizontalCenter="-0.5" verticalCenter="-1.5" rotation="15" textColor="0xc65b5b"/>
+	</e:Group>
+</e:Skin>

@@ -1,0 +1,19 @@
+{include file='admin@common/head' /}
+<style media="screen">
+    .form{
+        margin:20px;
+        width: 400px;
+    }
+</style>
+<ol class="breadcrumb">
+    <li><a href="/ssc/admin/code">开奖号码管理</a></li>
+    <li class="active">中奖匹配</li>
+</ol>
+<form class="form" action="{:url('prize')}" method="post">
+    <div class="form-group">
+        <label>期数</label>
+        <input type="number" class="form-control" placeholder="输入匹配期数" name="expect">
+    </div>
+    <button type="submit" class="btn btn-default">匹配</button>
+</form>
+{include file='admin@common/foot' /}

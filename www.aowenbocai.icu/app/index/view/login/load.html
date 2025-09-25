@@ -1,0 +1,155 @@
+{include file='common@common/head' /}
+<style>
+    html {
+        background: url(/uploads/extimg/12_bg.jpg) no-repeat center center fixed;
+        background-size: cover;
+        height: 100%;
+        position: relative;
+    }
+    @keyframes load {
+        0% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-50px);
+        }
+        100% {
+            transform: translateY(0px);
+        }
+    }
+    @keyframes ellipse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(0.3);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    .loading_container {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    .load_img {
+        width: 100%;
+        height: 100%;
+        background: url(/static/images/foot.png) no-repeat 0 0;
+        background-size: 2.5rem auto;
+        transform: translateY(0px);
+        animation: load 0.6s infinite ease-in-out;
+        position: relative;
+        z-index: 11;
+    }
+    .load_ellipse {
+        position: absolute;
+        width: 2.6rem;
+        height: 2rem;
+        top: 2.2rem;
+        left: -0.05rem;
+        z-index: 10;
+        animation: ellipse 0.6s infinite ease-in-out;
+    }
+    .reload-btn {
+        text-align: center;
+        margin-top: 1rem;
+        font-size: .6rem;
+    }
+
+    .load-box{
+        color: #fffcfc;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    .loading{
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+    .load-foot{
+        padding: .5rem;
+        font-size: .65rem;
+        text-align: center;
+        color: #9094b9;
+        line-height: 1.1rem;
+    }
+    .load-foot a{
+        font-size: .65rem;
+        color: #babeec;
+    }
+    .load-foot h3{
+        color: #afb5e2;
+        padding: .2rem 0;
+        margin: 0;
+    }
+    .load-foot .kh{
+        font-size: .7rem;
+        color: #ff8300;
+        padding: .2rem 0;
+    }
+</style>
+<div class="load-box" id="app">
+    <div class="loading flex">
+        <div class="loading_container">
+            <div class="load_img" :style="{backgroundPositionY: -(positionY%7)*2.5 + 'rem'}">
+            </div>
+            <svg class="load_ellipse" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <ellipse cx="26" cy="10" rx="26" ry="10" style="fill:rgba(0, 0, 0, .2);stroke:none;"></ellipse>
+            </svg>
+            <div class="reload-btn">正在进入游戏...</div>
+        </div>
+    </div>
+    <div class="load-foot">
+        <h3>[健康游戏忠告]</h3>
+        <div>本游戏平台适合年满16周岁以上的用户使用，<br/>为了您的健康，请合理控制游戏时间。</div>
+        <div class="kh">
+            <p>抵制不良游戏 拒绝盗版游戏 注意自我保护 谨防上当受骗 </p>
+            <p>适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活</p>
+        </div>
+        <div>酷睿科技® <span>川网文(2018)1866-058号</span></div>
+        <div>网站备案号: <a href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action">蜀ICP备11006417号-1</a> 川公网安备 51060302510706号</div>
+    </div>
+</div>
+{include file='common@common/foot' /}
+
+<script>
+    $(function (){
+        'use strict';
+
+        new Vue({
+            el: '#app',
+            data: function data() {
+                return {
+                    positionY: 0,
+                    timer: null,
+                    type: '{$type}'
+                };
+            },
+            mounted: function mounted() {
+                this.timer = setInterval(function () {
+                    this.positionY++;
+                }, 600);
+            },
+            created: function created() {
+                var _this = this;
+                setTimeout(function () {
+                    if (_this.type != '') {
+                        location.href = '/index/Weilogin/tocheck';
+                        return;
+                    }
+                    location.href = '/index/login/load';
+                }, 1500);
+            }
+        });
+    })
+</script>

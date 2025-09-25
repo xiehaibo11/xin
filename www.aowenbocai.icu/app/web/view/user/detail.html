@@ -1,0 +1,271 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    body{
+        overflow-y: auto;
+    }
+    .el-input{
+        width: auto;
+    }
+    .el-input__inner{
+        margin-right: 3px;
+    }
+    .options .el-input__inner{
+        width: 100px;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">账户明细</span>
+        </div>
+        <el-radio-group v-model="label" size="small">
+            <el-radio-button @click.native="link('{:url('detail')}')" label="账户明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('drecharge')}')" label="充值明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('dexchange')}')" label="兑换明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('dtransform')}')" label="转账明细" v-if="{$company['game_status']}"></el-radio-button>
+        </el-radio-group>
+        <coin-detail></coin-detail>
+    </el-card>
+</div>
+<!--虚拟货币明细-->
+<template id="coinDetail">
+    <div>
+        <div class="options">
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="source"
+                    placeholder="请选择交易来源">
+                <el-option
+                        v-for="item in sourceOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="time"
+                    placeholder="请选择时间">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="trade"
+                    placeholder="请选择交易类型">
+                <el-option
+                        v-for="item in tradeOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="sz"
+                    placeholder="请选择收支类型">
+                <el-option
+                        v-for="item in szOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <div class="flex tr">
+                <div class="flex-box" style="justify-content: flex-end">
+                    <el-input placeholder="ID查询" v-model="id" class="input-with-select" size="mini"></el-input>
+                    <el-input v-model="remark" type="text" size="mini" placeholder="备注查询"></el-input>
+                    <el-button plain size="mini" type="info" @click.native="doSearch">搜索</el-button>
+                </div>
+            </div>
+        </div>
+        <div class="bg" v-if="!time" style="padding: 0px 90px 10px;">
+            <el-date-picker style="width:270px"
+                            v-model="value"
+                            type="daterange"
+                            size="mini"
+                            format="yyyy 年 MM 月 dd 日"
+                            value-format="yyyy-MM-dd"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions0">
+            </el-date-picker>
+        </div>
+        <page-nation :url="url" @game-record="sortC">
+            <el-table-column property="id" label="ID" width="90"></el-table-column>
+            <el-table-column property="create_time" label="交易时间" width="150" sortable="custom"></el-table-column>
+            <el-table-column property="ext_name" label="交易来源" ></el-table-column>
+            <el-table-column prop="money" label="收支" sortable="custom">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.money > 0" class="green"> +{{scope.row.money}}</span>
+                    <span v-else class="red">{{scope.row.money}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="after" label="余额"></el-table-column>
+            <el-table-column property="remark" label="备注" width="340"></el-table-column>
+        </page-nation>
+    </div>
+</template>
+
+{include file='web@common/end'/}
+<script>
+    'use strict';
+    $(function () {
+        var id = GetUrlParam('userid');
+        //虚拟货币明细
+        Vue.component('coin-detail', {
+            template: '#coinDetail',
+            data: function data() {
+                return {
+                    intUrl: '{:url("details/list")}'+ '?userid=' + id,
+                    options: [//快捷时间选项
+                        { value: 7, label: '最近一周' },
+                        { value: 30, label: '最近一个月' },
+                        { value: 90, label: '最近三个月' },
+                        { value: 180, label: '最近六个月' },
+                        { value: 0, label: '自定义时间' }],
+                    sourceOptions: {$extList}, //交易来源选项
+                    tradeOptions: [//交易类型选项
+                        { value: '', label: '所有交易类型' },
+                        { value: '0', label: '消费' },
+                        { value: '1', label: '中奖' },
+                        { value: '2', label: '充值' },
+                        { value: '3', label: '兑换' },
+                        { value: '4', label: '赠送' }],
+                    szOptions: [//交易类型选项
+                        { value: '', label: '所有收支' },
+                        { value: '1', label: '收入' },
+                        { value: '0', label: '支出' }],
+                    time: '', //快捷时间值
+                    timeTemp: '',
+                    value: '', //自定义时间值
+                    source: '', //交易来源
+                    trade: '', //交易类型
+                    sz: '', //收支
+                    id: '', //id查询
+                    remark: '', //备注
+                    idWords: '',
+                    remarkWords: '',
+                    sort: '', //排序
+
+                    //设置选择今天之前的日期
+                    pickerOptions0: {
+                        disabledDate: function disabledDate(time) {
+                            return time.getTime() > Date.now();
+                        }
+                    }
+                };
+            },
+
+            computed: {
+                timeValue: function timeValue() {
+                    if (!this.time == 0) {
+                        this.timeTemp = this.time;
+                    }
+                    var day = parseInt(this.timeTemp);
+                    return timeArr(day);
+                },
+                url: function url() {
+                    var source, trade, sz, sort, id, remark;
+                    if (this.source.length) {
+                        source = '&source=' + this.source;
+                    } else {
+                        source = '';
+                    }
+                    if (this.trade.length) {
+                        trade = '&trade=' + this.trade;
+                    } else {
+                        trade = '';
+                    }
+                    if (this.sz.length) {
+                        sz = '&sz=' + this.sz;
+                    } else {
+                        sz = '';
+                    }
+                    if (this.sort.length) {
+                        sort = this.sort;
+                    } else {
+                        sort = '';
+                    }
+                    if (this.idWords.length) {
+                        trade = '';
+                        sz = '';
+                        id = '&id=' + this.idWords;
+                    } else {
+                        id = '';
+                    }
+                    if (this.remarkWords.length) {
+                        trade = '';
+                        sz = '';
+                        remark = '&remark=' + this.remarkWords;
+                    } else {
+                        remark = '';
+                    }
+                    if (this.value.length) {
+                        return this.intUrl + '&starttime=' + this.value[0] + '&endtime=' + this.value[1] + source + trade + sz + sort + id + remark;
+                    } else {
+                        return this.intUrl + '&starttime=' + this.timeValue[0] + '&endtime=' + this.timeValue[1] + source + trade + sz + sort + id + remark;
+                    }
+                }
+            },
+            methods: {
+                //搜索条件
+                search: function search() {
+                    if (!this.time == 0) {
+                        //自定义时间切换为快捷时间选择
+                        this.value = '';
+                    }
+                },
+                sortC: function sortC(val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 1; //降序
+                        } else {
+                            s = 0; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                },
+
+                //搜索
+                doSearch: function doSearch() {
+                    this.trade = this.tradeOptions[0].value;
+                    this.sz = this.szOptions[0].value;
+                    this.idWords = this.id;
+                    this.remarkWords = this.remark;
+                }
+            },
+            created: function created() {
+                this.time = this.options[0].value;
+                this.source = this.sourceOptions[0].value;
+                this.trade = this.tradeOptions[0].value;
+                this.sz = this.szOptions[0].value;
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                label: "账户明细"
+            },
+            methods: {
+                link: function link(url) {
+                    window.location.href = url + '?userid=' + id;
+                }
+            }
+        });
+    });
+</script>

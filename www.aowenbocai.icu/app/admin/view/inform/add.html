@@ -1,0 +1,137 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style>
+    .box-padding-bottom {
+        margin-left: 1rem
+    }
+
+    .checkbox label {
+        width: 15%
+    }
+</style>
+<nav class="plugin_nav">
+    <a href="{:url(index)}">通知管理</a>
+    <a class="nav_active">发送通知</a>
+</nav>
+<div class="box-padding">
+    <ol class="breadcrumb">
+        <li><i class="glyphicon glyphicon-link"></i> 消息管理</li>
+        <li>发送通知</li>
+    </ol>
+    <div class="form-horizontal form_max">
+        <form action="" method="post" id="frm-reg">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">添加通知</label>
+                <div class="col-sm-6">
+                    <textarea class="form-control" rows="3" name="content"></textarea>
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">查看链接</label>
+                <div class="col-sm-6">
+                    <input class="form-control" name="href"></textarea>
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">被通知人</label>
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control words" placeholder="模糊查询输入">
+                        <input type="hidden" name="userid">
+                        <span class="input-group-addon btn btn-serach">搜索用户</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group serachResult" style="display:none">
+                <label for="inputEmail3" class="col-sm-2 control-label"></label>
+                <div class="col-sm-10">
+                    <div style="width:100%">
+                        <span>搜索结果如下,请选择用户:</span>
+                        <span class="btn btn-success btn-sm close-choice" style="margin-left: 22%;">关闭选项</span>
+                    </div>
+                    <div class="showUser">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label"></label>
+                <div class="col-sm-6">
+                    <button class="btn btn-primary btn-send">发送通知</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(".btn-serach").click(function () {
+        var words = $(".words").val();
+        $.post('{:url("admin/User/serachUser")}', {'words': words}, function (res) {
+            var html = '';
+            if (res.err > 0) {
+                html = res.msg;
+            } else {
+                var data = res.data;
+                var length = data.length;
+                for (i = 0; i < length; i++) {
+                    if (i % 5 == 0 && i != 0) html += '</div>';
+                    if (i % 5 == 0) html += '<div class="checkbox">'
+                    var username = data[i]['username'] ? data[i]['username'] : data[i]['nickname'];
+                    html += '<label><input type="checkbox" name="username" value="' + data[i]['id'] + '" item ="' + username + '">' + username + '</label>';
+                }
+                html += '<div>\
+                        <span class="btn btn-success btn-sm selectAll" style="margin-top: 2%;">全选</span>\
+                        <span class="btn btn-success btn-sm over" style="margin-top: 2%;">反选</span>\
+                        <span class="btn btn-success btn-sm cancleAll" style="margin-top: 2%;">取消选中</span>\
+                        <span class="btn btn-success btn-sm check-choice" style="margin-top: 2%;">确认名单</span>\
+                    </div>'
+            }
+            $(".showUser").html(html);
+            $(".serachResult").show();
+
+            $(".check-choice").click(function () {
+                var ids = '';
+                var name = '';
+                $("[name='username']:checked").each(function () {
+                    ids += $(this).val() + '_';
+                    name += $(this).attr("item") + ',';
+                })
+                ids = ids.substring(0, ids.length - 1);
+                if (name.length > 20) {
+                    name = name.substring(0, 20) + '等';
+                } else {
+                    name = name.substring(0, name.length - 1);
+                }
+                $("input[name=userid]").val(ids);
+                $(".words").val(name);
+                $(".serachResult").hide();
+            })
+            $(".selectAll").click(function () {
+                $("[name='username']").prop("checked", true);
+            })
+            $(".cancleAll").click(function () {
+                $("[name='username']").prop("checked", false);
+            })
+
+            $(".over").click(function () {
+                $("[name='username']").each(function () {
+                    if ($(this).is(":checked")) {
+                        $(this).prop("checked", false);
+                    } else {
+                        $(this).prop("checked", true);
+                    }
+                })
+            })
+
+        })
+
+        $(".close-choice").click(function () {
+            $(".serachResult").hide();
+        })
+    })
+</script>
+{include file='common/foot' /}

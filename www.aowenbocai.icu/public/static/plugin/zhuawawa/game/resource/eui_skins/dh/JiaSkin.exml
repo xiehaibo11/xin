@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="JiaSkin" width="750" height="1356" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="zhua">
+			<tween:TweenItem target="{group0}">
+				<tween:Wait duration="1500"/>
+				<tween:Set/>
+				<tween:To duration="600">
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1900"/>
+				<tween:Set/>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object rotation="{20.45}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{group1}">
+				<tween:Wait duration="1500"/>
+				<tween:Set/>
+				<tween:To duration="600">
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1900"/>
+				<tween:Set/>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object rotation="{-20.45}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image0}">
+				<tween:Wait duration="2300"/>
+				<tween:Set/>
+				<tween:To duration="400">
+					<tween:props>
+						<e:Object rotation="{30}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1300"/>
+				<tween:Set/>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image1}">
+				<tween:Wait duration="2300"/>
+				<tween:Set/>
+				<tween:To duration="400">
+					<tween:props>
+						<e:Object rotation="{30}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1300"/>
+				<tween:Set/>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Group id="group" horizontalCenter="0" top="-437">
+		<e:Image source="2_json.吊绳" top="0" y="-184" scaleX="1" scaleY="1" horizontalCenter="0"/>
+		<e:Group width="270.67" height="254" y="610.85" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0">
+			<e:Group id="group0" width="182" height="252" anchorOffsetY="5.33" anchorOffsetX="69.33" scaleX="1" scaleY="1" rotation="20.45" x="158" y="6">
+				<e:Image source="2_json.夹子右上" x="60.5" y="0" scaleX="1" scaleY="1" rotation="346.09"/>
+				<e:Image id="image0" source="2_json.夹子右下" x="155.45" y="65.03" scaleX="1" scaleY="1" anchorOffsetX="10.51" anchorOffsetY="11.03"/>
+			</e:Group>
+			<e:Group id="group1" width="182" height="252" anchorOffsetY="5.33" anchorOffsetX="69.33" scaleX="-1" scaleY="1" rotation="-20.45" x="114" y="9">
+				<e:Image source="2_json.夹子右上" x="60.5" y="0" scaleX="1" scaleY="1" rotation="346.09"/>
+				<e:Image id="image1" source="2_json.夹子右下" x="155.45" y="65.02" scaleX="1" scaleY="1" anchorOffsetX="10.51" anchorOffsetY="11.02"/>
+			</e:Group>
+		</e:Group>
+		<e:Image source="2_json.中心" y="552.5" scaleX="1" scaleY="1" horizontalCenter="0"/>
+		<e:Group id="gift" width="200" height="280" y="635" scaleX="1" scaleY="1" horizontalCenter="0.5" anchorOffsetY="0"/>
+	</e:Group>
+</e:Skin>

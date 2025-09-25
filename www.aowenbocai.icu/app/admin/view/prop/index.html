@@ -1,0 +1,83 @@
+{include file='common/head' /}
+
+<style media="screen">
+    .box-padding{
+        padding:20px;
+    }
+    .form-group-left{
+        margin-left:15px;
+    }
+</style>
+<nav class="plugin_nav">
+    <a class="nav_active"   href="{:url('prop/index')}">道具管理</a>
+    <a class=""  href="{:url('user_bag/index')}">玩家道具</a>
+    <a class=""  href="{:url('add')}">添加道具</a>
+</nav>
+<div id="app">
+<div class="box-padding">
+    <div class="box-padding-bottom breadcrumb">
+        <ol>
+            <li><i class="glyphicon glyphicon-link"></i> 道具管理</li>
+        </ol>
+        <form class="form-inline" action="" method="get">
+            <div class="form-group form-group-left">
+                <label>关键字:</label>
+                <input type="text" name="words" value="{$param.words}" class="form-control"  placeholder="名称">
+            </div>
+            <input type="hidden" id="sort_field" name="sort_field" value="{$param.sort_field}">
+            <input type="hidden" id="sort_asc" name="sort_asc" value="{$param.sort_asc}">
+            <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="table_box">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="sort_btn" data-field="id">ID</th>
+                <th>名称</th>
+                <th>图片</th>
+                <th>类型</th>
+                <th>变量</th>
+                <th>模块</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="list"  id="item"}
+            <tr>
+                <td>{$item.id}</td>
+                <td>{$item.name}</td>
+                <td><img src="{$item.img_url}" style="height:40px;" ></td>
+                <td>{$item.type_txt}</td>
+                <td>{$item.param_name}</td>
+                <td>{$item.ext_info}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="{:url('edit')}?id={$item.id}" class="btn btn-info btn-xs">修改</a>
+                        <a href="#" class="btn btn-info btn-xs isdelete" data-url="{:url('delete')}?id={$item.id}">删除</a>
+                    </div>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-right">{$list->render()}</div>
+
+</div>
+</div>
+</div>
+<script type='text/javascript' src="__STATIC__/admin/list_base.js"></script>
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+    });
+</script>
+
+{include file='common/foot' /}

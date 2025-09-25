@@ -1,0 +1,126 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+
+<nav class="plugin_nav">
+    <a href="{:url('admin/SystemSet/index')}">基础设置</a>
+    <a href="{:url('admin/SystemSet/setRecharge')}">充值设置</a>
+    <a href="{:url('admin/SystemSet/user')}">会员设置</a>
+    <a href="{:url('admin/SystemSet/company')}">联系方式</a>
+    <div role="presentation" class="dropdown nav_active" style="display: inline-block">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"  style="color: #39aef5;">
+            API接口<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="{:url('admin/OtherSet/index')}">短信验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/emails')}">邮箱验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/qqConnect')}">快速登录接口</a></li>
+            <li><a href="{:url('admin/OtherSet/shareImg')}">微信分享接口</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+            <li>微信分享接口</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">是否开启</label>
+            <div  class="col-sm-6">
+                <input id="share-state" type="checkbox" name="is_share"/>
+            </div>
+        </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">分享标题</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" name="share_title"  value="{$setting['share_title']}" placeholder="微信分享标题">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">分享描述</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" name="share_desc" value="{$setting['share_desc']}" placeholder="微信分享描述">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">分享链接</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" name="share_link" value="{$setting['share_link']}" placeholder="微信分享链接">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">分享图片</label>
+        <div class="col-sm-5">
+          <input type="file" class="select_photo" style="display: none;">
+         <input type="text" class="form-control" name="share_img" value="{$setting['share_img']}" placeholder="微信分享图片" style="width:85%;display:inline-block">
+        </div>
+        <div class="col-sm-3">
+
+            <button  type="button" class="btn btn-primary btn-delete" data-id = "share">清除</button>    
+            <button class="btn btn-success btn_select_photo" type="button" style="display:inline-block">选择图片</button>
+        </div>
+      </div>
+      
+      <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label"></label>
+          <div class="col-sm-3">
+            <img src="{$setting['share_img']}" alt="" width="200" class="share_image" style="width:100%">
+          </div>
+
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary btn_save">保存设置</button>
+        </div>
+      </div>
+    </div>
+</div>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch-init.js"></script>
+<script>
+  //微信分享接口
+  var shareState ="{$setting['is_share']}" == 1 ? true : false;
+  var shareValue;
+  $('#share-state').bootstrapSwitch('state', shareState);
+  $('#share-state').on('switchChange.bootstrapSwitch', function (event,state) {
+      shareValue = state ? '1' : '0';
+  });
+  $(".btn-delete").click(function(){
+    var name = $(this).data('id');
+    $('input[name='+name+'_img]').val('');
+    $("."+name+"_image").attr('src', '');
+    $.post('{:url("system_set/setPicValue")}', {name: name+'_img'}, function(res) {
+    $.modal.alert('修改成功');
+    })
+})
+$('.btn_select_photo').click(function () {
+  $('.select_photo').click();
+});
+$('.select_photo').localResizeIMG({
+  quality : 1,
+  success: function (result) {
+    $('.share_image').attr('src', result.base64);
+    $.post("{:url('admin/SystemSet/setShare')}", { 'base64_data': result.base64}, function (res) {
+      $('input[name=share_img]').attr('value', res.data);
+    }, 'json');
+  }
+});
+
+   $('.btn_save').click(function() {
+      $.post('{:url("set")}', {
+        data: JSON.stringify({
+            is_share : shareValue,
+            share_title : $('input[name=share_title]').val(),
+            share_desc : $('input[name=share_desc]').val(),
+            share_img : $('input[name=share_img]').val(),
+            share_link : $('input[name=share_link]').val(),
+        })
+      }, function() {
+        $.modal.alert('修改成功');
+      });
+    });
+</script>
+{include file='common/foot' /}

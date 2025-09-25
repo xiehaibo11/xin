@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HelpSkin" width="724" height="456" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="btn_close" left="0" right="0" top="0" bottom="0" fillAlpha="0"/>
+	<e:Group horizontalCenter="-12.5" verticalCenter="-1.5" anchorOffsetX="0" width="623" anchorOffsetY="0" height="433">
+		<e:Rect fillAlpha="0.58" ellipseWidth="23" scaleX="1" scaleY="1" left="0" right="0" top="0" bottom="0"/>
+		<e:Rect width="2" x="302" fillColor="0x2caa08" scaleX="1" scaleY="1" top="20" bottom="20"/>
+		<e:Scroller anchorOffsetX="0" anchorOffsetY="0" height="342" width="274" y="74" x="13" scaleX="1" scaleY="1">
+			<e:Group>
+			<e:Group anchorOffsetY="0" height="62" y="0" anchorOffsetX="0" left="0" right="201">
+				<e:Image source="shu_json.shu001" scaleX="1" scaleY="1" left="20" anchorOffsetX="0" width="58" anchorOffsetY="0" height="54.83" verticalCenter="0"/>
+				<e:Label text="萌萌鼠 奖励 * 2倍" x="91" verticalCenter="1" size="22"/>
+			</e:Group>
+			<e:Group anchorOffsetY="0" height="62" y="10" anchorOffsetX="0" left="0" right="201" x="10">
+				<e:Image scaleX="1" scaleY="1" left="20" anchorOffsetX="0" width="58" anchorOffsetY="0" height="54.83" verticalCenter="0" source="shu_json.shu006"/>
+				<e:Label text="矿矿鼠 奖励 * 5倍" x="91" verticalCenter="1" size="22"/>
+			</e:Group>
+			<e:Group anchorOffsetY="0" height="62" y="40" anchorOffsetX="0" left="0" right="201" x="40">
+				<e:Image scaleX="1" scaleY="1" left="20" anchorOffsetX="0" width="58" anchorOffsetY="0" height="54.83" verticalCenter="0" source="shu_json.shu010"/>
+				<e:Label text="海盗鼠 奖励 * 10倍" x="91" verticalCenter="1" size="22"/>
+			</e:Group>
+			<e:Group anchorOffsetY="0" height="62" y="20" anchorOffsetX="0" left="0" right="201" x="20">
+				<e:Image scaleX="1" scaleY="1" left="20" anchorOffsetX="0" width="58" anchorOffsetY="0" height="54.83" verticalCenter="0" source="shu_json.shu014"/>
+				<e:Label text="呆呆鼠 奖励 * 20倍" x="91" verticalCenter="1" size="22"/>
+			</e:Group>
+			<e:Group anchorOffsetY="0" height="62" y="30" anchorOffsetX="0" left="0" right="201" x="30">
+				<e:Image scaleX="1" scaleY="1" left="20" anchorOffsetX="0" width="58" anchorOffsetY="0" height="54.83" verticalCenter="0" source="shu_json.shu017"/>
+				<e:Label text="调皮兔 奖励 * 50倍" x="91" verticalCenter="1" size="22"/>
+			</e:Group>
+			<e:layout>
+				<e:VerticalLayout/>
+			</e:layout>
+			</e:Group>
+		</e:Scroller>
+		<e:Group width="290" height="335" x="319" y="75" anchorOffsetY="0" anchorOffsetX="0" scaleX="1" scaleY="1">
+			<e:Scroller left="0" right="0" top="0" bottom="0">
+			<e:Group>
+				<e:Label text="一、玩法说明\n  1.玩家需注册帐号方可参与该游戏；\n 2.玩家首先应选择每次打地鼠需要花费的金豆数，然后点击游戏中的地鼠；\n  3.能否打晕地鼠取决于地鼠的概率；\n二、其他说明\n 1.用户不得利用外挂、爬虫软件或其它恶意手段获得奖励，一经发现，我们有权对所有使用非法手段的账号进行不予发奖、冻结、查封等操作。在法律许可的范围内酷睿游戏拥有本活动的解释权；\n 2.受网络影响，页面动画表现可能存在误差，最终中奖结果请以订单详情中的结果为准；" wordWrap="true" size="20" lineSpacing="10" y="0" scaleX="1" scaleY="1" width="290" x="0"/>
+			</e:Group>
+			</e:Scroller>
+		</e:Group>
+		<e:Label text="奖励说明" x="82" y="20" textColor="0xf7c727" scaleX="1" scaleY="1"/>
+		<e:Label text="游戏说明" x="401" y="20" textColor="0xf7c727" scaleX="1" scaleY="1"/>
+	</e:Group>
+</e:Skin>

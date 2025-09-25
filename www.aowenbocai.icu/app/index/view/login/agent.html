@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>代理登录</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/vipweb/js/vue-2.6.9.js"></script>
+    <!-- 引入element-ui样式 -->
+    <link rel="stylesheet" type="text/css" href="/static/vipweb/theme/element/index.css">
+    <!-- 引入element-ui组件库 -->
+    <script src="/static/vipweb/js/element-ui-2.3.8.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_613146_sk4gdb38bq.css">
+    <link rel="stylesheet" type="text/css" href="/static/vipweb/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/vipweb/css/style.css">
+    <link rel="stylesheet" href="/static/vipweb/css/login.css">
+    <script src="/static/vipweb/js/init.js"></script>
+    <script src="/static/vipweb/js/lottery.js"></script>
+    <!--[if lt IE 10]>
+    <div style="position:absolute;left:0;top:0;width:100%;height:50px;background:rgb(255,255,233);color:rgb(30,84,148);border-bottom:1px solid rgb(230,230,198);text-align:center;line-height:50px;fonts-size:12px;z-index:99999;">您使用的浏览器版本过低，可能会影响到您浏览本网页，建议您升级至ie10及以上版本或更换浏览器!</div>
+    <![endif]-->
+</head>
+<body>
+
+<div id="top">
+    <div class="header flex-box web">
+        <div class="logo"><a href="/"><img src="/uploads/extimg/logo.png" alt="代理系统" onerror="this.src='/static/images/logo.png'"></a></div>
+        <div style="font-size: 25px">代理登录</div>
+        <div class="info tr flex">
+            <!-- 联系方式可以后续添加 -->
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .jz{
+        margin: 0 auto;
+    }
+    div{
+        background-repeat: no-repeat;
+    }
+
+</style>
+
+<div id="app" class="page-login" style="min-height: 500px" :style="{'height':wHeight + 'px','paddingTop':pdTop + 'px'}">
+    <div style="max-width: 1200px;margin: 0 auto;" class="cf">
+        <div class="login-box" style="padding-right: 0" :class="wWidth > 1024 ? 'fr' : 'jz'">
+            <div class="login-way bg flex-box" v-cloak>
+                <h4 class="flex tc red" style="text-align: center; width: 100%;">
+                    <div>
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">代理系统登录</div>
+                        <div style="font-size: 1rem; opacity: 0.8;">Agent System Login</div>
+                    </div>
+                </h4>
+            </div>
+            <div class="login-form" v-cloak>
+                <agent-login @success="loginSuc"></agent-login>
+                <div class="tr link">
+                    <a class="link" href="/index/login/load" style="padding-right: 8px">返回会员登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="foot mt15 bg" style="padding-bottom: 0" id="foot">
+    <div class="web">
+        <ul class="note flex-box">
+            <li>
+                <i class="iconfont icon-zhanghuanquan"></i>
+                <span>账户安全</span>
+            </li>
+            <li>
+                <i class="iconfont icon-fuwu"></i>
+                <span>金牌服务</span>
+            </li>
+            <li>
+                <i class="iconfont icon-youxi1"></i>
+                <span>游戏丰富</span>
+            </li>
+            <li>
+                <i class="iconfont icon-xinyu"></i>
+                <span>品牌信誉</span>
+            </li>
+        </ul>
+        <div class="tips tc" style="padding-bottom: 0;margin-bottom: 0;">
+            <p class="tc">
+                <em class="red">适龄提示：本站游戏适合18岁以上玩家</em><em style="color: green;padding-left: 5px">未满18岁的玩家需在家长监督下进行游戏</em>
+                <a href="#" class="link" target="_blank" style="padding-right: 25px;">家长监护工程</a>
+            </p>
+            <p>
+                健康游戏公告：拒绝盗版游戏 抵制不良游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活
+            </p>
+            <div>彩虹科技有限公司</div>
+        </div>
+    </div>
+</div>
+
+<!-- Vue代理登录组件 -->
+<script>
+$(function () {
+    // 代理登录组件
+    Vue.component("agent-login", {
+        template: '<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="0px" class="ruleForm">\
+                <el-form-item prop="username">\
+                  <el-input type="text" v-model="ruleForm.username" auto-complete="off" placeholder="请输入代理账号" @keyup.enter.native="submitForm(\'ruleForm\')"></el-input>\
+                </el-form-item>\
+                <el-form-item prop="password">\
+                  <el-input type="password" v-model="ruleForm.password" auto-complete="off" placeholder="请输入登录密码" @keyup.enter.native="submitForm(\'ruleForm\')"></el-input>\
+                </el-form-item>\
+                <el-form-item>\
+                  <el-button class="btn-full" type="danger" @click="submitForm(\'ruleForm\')" :loading="loading">代理登录</el-button>\
+               </el-form-item>\
+                <el-alert v-if="errMsg.length" :title="errMsg" type="error" show-icon :closable="false"></el-alert>\
+                </el-form>',
+        data: function() {
+            return {
+                loading: false,
+                errMsg: '',
+                ruleForm: {
+                    username: '',
+                    password: ''
+                },
+                rules: {
+                    username: [
+                        { required: true, message: '请输入代理账号', trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入登录密码', trigger: 'blur' },
+                        { min: 6, message: '密码长度大于6位', trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        methods: {
+            submitForm: function(formName) {
+                var _this = this;
+                _this.errMsg = '';
+                _this.$refs[formName].validate(function(valid) {
+                    if (valid) {
+                        _this.loading = true;
+                        $.post('/index/login/agentLogin', {
+                            username: _this.ruleForm.username,
+                            password: _this.ruleForm.password
+                        }, function(res) {
+                            if (!res.err) {
+                                _this.$emit('success', [res.nickanme, res.money, res.url]);
+                                _this.loading = false;
+                                return;
+                            }
+                            _this.loading = false;
+                            _this.errMsg = res.msg;
+                        });
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            }
+        }
+    });
+
+    // 头部Vue实例
+    var topVm = new Vue({
+        el: '#top'
+    });
+
+    // 脚部Vue实例
+    var footVm = new Vue({
+        el: '#foot',
+        data: {
+            regVisible: false,
+            ysVisible: false,
+            gameVisible: false
+        }
+    });
+
+    // 主Vue实例
+    $(function () {
+        // 背景图随机
+        var bg = new Array();
+        bg = [
+            { img: '/static/vipweb/images/login/login_bg_sr.png', color: '#dfd5d4', position: '22% center' },
+            { img: '/static/vipweb/images/login/login_bg_dj.png', color: '#a0e5d8', position: '22% center'},
+            { img: '/static/vipweb/images/login/login_bg_cs.png', color: '#ff6455', position: '22% 0'},
+            { img: '/static/vipweb/images/login/login_bg_jcll.png', color: '#00245d', position: '22% center'}
+        ];
+        var bgIdx = Math.floor(Math.random() * bg.length);
+        $('.page-login').css({
+            'background-image': 'url(' + bg[bgIdx].img + ')',
+            'background-repeat': 'no-repeat',
+            'background-color': bg[bgIdx].color,
+            'background-position': bg[bgIdx].position
+        });
+
+        var wHeight = $(window).height();
+        var wWidth = $(window).width();
+        var tHeight = $('#top').height();
+        var fHeight = $('#foot').height();
+        var totalHeight = tHeight + fHeight + 35;
+
+        new Vue({
+            el: '#app',
+            data: {
+                wHeight: accSub(wHeight, totalHeight, 3),
+                wWidth: wWidth
+            },
+            computed: {
+                pdTop: function () {
+                    return accDiv(this.wHeight - 388, 2, 3);
+                }
+            },
+            methods: {
+                loginSuc: function (v) {
+                    var _this = this;
+                    this.$message({
+                        message: '登录成功',
+                        type: 'success'
+                    });
+                    setTimeout(function () {
+                        window.location.href = v[2];
+                        _this.loading = false;
+                    }, 1000);
+                }
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>

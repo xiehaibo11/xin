@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameUiSkin" width="1280" height="800" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="light">
+			<tween:TweenItem target="{light2}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+			<tween:TweenItem target="{light1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image left="2" right="-2" top="0" bottom="0" source="bg_img_png"/>
+	<e:Group left="0" right="0" top="0" bottom="0">
+		<e:Group height="100%" x="56" y="352" width="620">
+			<e:Image scaleX="0.85" scaleY="0.85" source="turn_png" verticalCenter="5" horizontalCenter="0"/>
+			<e:Group id="light2" left="0" right="0" top="0" bottom="0" scaleX="0.85" scaleY="0.85">
+				<e:Image source="light1_png" anchorOffsetX="347.5" anchorOffsetY="374" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+				<e:Image source="light2_png" anchorOffsetX="347.5" anchorOffsetY="374" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+			</e:Group>
+			<e:Group id="light1" left="0" right="0" top="0" bottom="0" alpha="0" scaleX="0.85" scaleY="0.85">
+				<e:Image source="light1_png" anchorOffsetX="347.5" anchorOffsetY="374" scaleX="1" scaleY="1" rotation="15" alpha="1" horizontalCenter="0" verticalCenter="0"/>
+				<e:Image source="light2_png" anchorOffsetX="347.5" anchorOffsetY="374" scaleX="1" scaleY="1" rotation="15" horizontalCenter="0" verticalCenter="0"/>
+			</e:Group>
+			<ns1:TurnTable id="turntable" skinName="TurnTableSkin" scaleX="0.85" scaleY="0.85" horizontalCenter="0" verticalCenter="0"/>
+			<e:Button id="back_btn" label="" scaleX="1" scaleY="1" top="70" left="0">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="back_up_png" source.down="back_down_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:ToggleSwitch id="music_btn" label="" scaleX="1" scaleY="1" right="0" top="70">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="music_crr000_png" source.down="music_crr001_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:ToggleSwitch>
+		</e:Group>
+		<e:Group x="908" y="323" height="100%">
+			<e:Group height="30" x="148" y="28" scaleX="1" scaleY="1" alpha="1">
+				<e:Label text="今日剩余次数：" x="204" y="-3" textColor="0x46a3ce" verticalAlign="middle" textAlign="center" size="30"/>
+				<e:Label id="times" text="0" size="30" verticalAlign="middle" textAlign="center" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" textColor="0xf2c780"/>
+				<e:Label text="次" x="462" y="-11" textColor="0x46a3ce" textAlign="center" verticalAlign="middle" size="30"/>
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" gap="0"/>
+				</e:layout>
+			</e:Group>
+			<ns1:HistoryPanel id="his_panel" y="801" horizontalCenter="0" skinName="HistorySkin" x="-582" scaleX="1" scaleY="1"/>
+			<e:Group id="help" width="520" y="1253" horizontalCenter="0" x="-582" scaleX="1" scaleY="1">
+				<e:Label text="玩法说明：" x="112" y="47" textColor="0xCEBEBE"/>
+				<e:Label text="1.每人每天有3次免费抽奖机会，点击“抽奖”按钮开始抽奖。" x="122" y="57" width="100%" textColor="0xCEBEBE" lineSpacing="15"/>
+				<e:Label text="2.指针停止位置，获得相应奖品。" x="122" y="57" width="100%" textColor="0xCEBEBE"/>
+				<e:layout>
+				<e:VerticalLayout horizontalAlign="left" verticalAlign="bottom" paddingLeft="20" gap="20" paddingBottom="10"/>
+				</e:layout>
+			</e:Group>
+			<e:layout>
+				<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="30"/>
+			</e:layout>
+		</e:Group>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" gap="60"/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

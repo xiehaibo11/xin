@@ -1,0 +1,145 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<style media="screen">
+  .add-botton {
+    float: right;
+    margin-right: 30px;
+  }
+
+  .box-padding-bottom {
+    padding-bottom: 15px;
+  }
+
+  .box-padding {
+    padding: 20px;
+  }
+
+  .form-group-left {
+    margin-left: 15px;
+  }
+</style>
+<nav class="plugin_nav nav">
+    <a id="tasklist" style="cursor: pointer" href = "{:url('index')}">任务列表</a>
+    <a id = "addtask" style="cursor: pointer" href = "{:url('index',['class' => 'addtask'])}">添加任务</a>
+    <a class="nav_active" href = "{:url('admin/active/log')}" >任务日志</a>
+</nav>
+<div class="box-padding">
+    <div class="form-group form-group-left" style="margin:-10px 0 0 -10px;display:inline-block">
+        <div class="btn-group" data-toggle="buttons" style="margin:1rem">
+        <label class="btn btn-primary isdelete" data-url="{:url('deletelogdata', ['day' =>'1'])}">
+            <input type="checkbox"> 清除全部数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('deletelogdata', ['day' =>'30'])}">
+            <input type="checkbox"> 清除30天前的数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('deletelogdata', ['day' =>'15'])}">
+            <input type="checkbox"> 清除15天前的数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('deletelogdata', ['day' =>'7'])}">
+            <input type="checkbox"> 清除7天前的数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('deletelogdata', ['day' =>'3'])}">
+            <input type="checkbox"> 清除3天前的数据
+        </label>
+        </div>
+    </div>
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 任务日志</li>
+        </ol>
+        <form class="form-inline" action="">
+            <div class="form-group form-group-left">
+                <label>时间</label>
+                <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="starttime" value="{$query.starttime}" />
+                    <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+                </div>
+                <label>到</label>
+                <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="endtime" value="{$query.endtime}" />
+                    <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+                </div>
+            </div>
+            <div class="form-group form-group-left">
+                <label>关键字:</label>
+                <input type="text" name="words" class="form-control" value="{$query.words}" placeholder="关键字/用户名/内容/扩展名">
+            </div>
+            <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="table_box">
+    <table class="table table-striped table-bordered table-hover tc">
+        <thead>
+          <tr>
+              <th width="190">用户昵称（用户名）</th>
+              <th>扩展名</th>
+              <th>任务名</th>
+              <th>完成状态</th>
+              <th>添加时间</th>
+              <th width="150">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+            {foreach $list.data as $item} 
+          <tr>
+            <td>{$item.user_info.nickname} （<a>{$item.user_info.username}</a>）</span></td>
+            <td>{$item.ext_info.title}</td>
+            <td>{$item.activeinfo.content}</td>
+            <td>
+                {eq name = '$item.getaward' value = '0'}<span style = "color:rgb(247, 94, 38)">进行中</span>{/eq}
+                {eq name = '$item.getaward' value = '1'}<span style = "color:aquamarine">已完成</span>{/eq}
+                {eq name = '$item.getaward' value = '2'}<span style = "color:rgb(40, 153, 206)">已领取</span>{/eq}
+
+            </td>
+            <td>{$item.create_time}</td>
+            <td><a href="#" class="btn btn-primary isdelete btn-sm" data-url="{:url('deletelogdata', ['id' => $item.id])}">删除</a></td>
+          </tr>
+      {/foreach}
+      
+        </tbody>
+      </table>
+    </div>
+      
+    <div class="text-right">{$page}</div>
+</div>
+</div>
+
+<script>
+  $(function () {
+    $('.isdelete').click(function () {
+      var _url = $(this).data("url");
+      $.modal.confirm('你是否确定删除', function () {
+        location.href = _url;
+      });
+    });
+    $('#begintime,#endtime').datetimepicker({
+      language: 'zh-CN',
+      weekStart: 1,
+      todayBtn: 1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+			endDate : new Date(),
+      minView: 2,
+      forceParse: 0
+    });
+    $('#begintime').on('changeDate',function(e){  
+			var startTime = e.date;  
+			$('#endtime').datetimepicker('setStartDate',startTime);  
+		});
+		$('#endtime').on('changeDate',function(e){  
+			var startTime = e.date;  
+			$('#begintime').datetimepicker('setStartDate',startTime);  
+		});
+  });
+
+</script>
+{include file='common/foot' /}

@@ -1,0 +1,156 @@
+{include file='admin@common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<nav class="plugin_nav">
+    <a class="" href="{:url('index')}">奖品列表</a>
+    <a class="nav_active" href="{:url('add')}">添加奖品</a>
+</nav>
+<style>
+    .icon_box {
+        display: -webkit-box;
+        -webkit-box-orient: horizontal;
+        -webkit-box-pack: center;
+        -webkit-box-align: center;
+
+        display: box;
+        box-orient: horizontal;
+        box-pack: center;
+        box-align: center;
+
+        width: 80px;
+        height: 80px;
+        background: #C6EAFF;
+        overflow: hidden;
+        border: 1px solid #9ED3FF;
+        border-radius: 3px;
+        position: absolute
+    }
+
+    .dis {
+        background: #FFCCCC;
+        border: 1px solid #FF9E9E;
+    }
+
+    .fish_info {
+        padding: 10px;
+    }
+
+    .right {
+        margin-left: 88px;
+        line-height: 26px;
+    }
+
+    .hit,
+    .sp {
+        color: #C32AD6;
+        font-weight: 700;
+    }
+
+    .sp {
+        color: #23AB92;
+    }
+
+    .edit {
+        max-width: 900px;
+    }
+
+    .title {
+        line-height: 45px;
+    }
+</style>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 添加奖品</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+        <div class="alert alert-success" role="alert">
+            小提示：命中率和赔率的计算公式为
+            <span class="text-danger">预期奖金 / 命中 = 赔率</span>（以1000分率为参考），例如预期奖金为 950（期望奖金） / 950（命中） = 1（赔率）
+        </div>
+        <form class="edit" method="post" action="{:url('add')}">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputEmail1">奖品图标</label>
+                <div class="col-sm-2">
+                    <div id="exampleInputEmail1">
+                        <div class="icon_box">
+                            <img src="" alt="" width="54" class="icon_game">
+                        </div>
+                        <input type="file" class="hidden select_photo">
+                        <span class="user_r_text center-center"
+                              style="height: 80px;justify-content: flex-start;position: relative;margin-left: 10%;">
+                  <input type="hidden" name="icon" value=""></span>
+                    </div>
+                </div>
+                <div class="col-sm-2" style="margin-top: 22px;margin-left: -60px">
+                    <button type="button" class="btn btn-success btn_select_photo">更换LOGO</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputEmail1">奖品说明</label>
+                <div class="col-sm-3">
+                    <input name="title" type="text" class="form-control" id="exampleInputEmail1" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputEmail1">命中率</label>
+                <div class="col-sm-3">
+                    <input name="hit" type="text" class="form-control" id="exampleInputEmail1" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputEmail1">消耗金币</label>
+                <div class="col-sm-3">
+                    <select name="bet_money" class="form-control select">
+                        <option value="200" checked>200</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                        <option value="2000">2000</option>
+                        <option value="5000">5000</option>
+                        <option value="10000">10000</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputPassword1">奖品</label>
+                <div class="col-sm-3">
+                    <select name="gift_type" class="form-control select">
+                        <option value="coin">金豆</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputPassword1">奖品数量</label>
+                <div class="col-sm-3">
+                    <input type="text" name="gift_value" class="form-control" value="" placeholder="金豆数值">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-3">
+                    <button type="submit" class="btn btn-primary btn-block">修改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.btn_select_photo').click(function () {
+            $('.select_photo').click();
+        });
+        $('.select_photo').localResizeIMG({
+            maxSize: 200,
+            success: function (result) {
+                $('.btn_save').attr('disabled', 'disabled');
+                $('.icon_game').attr('src', result.base64);
+                $.post("{:url('base64Upload')}", {'base64_data': result.base64, 'userid': ''}, function (res) {
+                    $('input[name=icon]').attr('value', res.data);
+                    $('.btn_save').attr('disabled', null);
+                }, 'json');
+            }
+        });
+    });
+
+</script>
+{include file='admin@common/foot' /}

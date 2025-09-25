@@ -1,0 +1,88 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<link rel="stylesheet" href="/static/plugin/game/css/guess.css">
+<header class="header">
+    <a class="header-nav" href="javascript:history.go(-1);">
+        <span class="back"><i class="iconfont icon-jiantouzuo"></i></span>
+    </a>
+    <div class="header-center">我的竞猜</div>
+</header>
+<div class="p-height"></div>
+<div id="app">
+    <div class="inform-list">
+        <loading-box url="{:Url('/guess/index/getRecord')}">
+            <template scope="props">
+                <template v-for="(item,index) of props.list">
+                    <my-list :item="item" :index="index" ></my-list>
+                </template>
+            </template>
+        </loading-box>
+    </div>
+</div>
+<template id="myList">
+    <div class="guess-list">
+        <!--竞猜主题-->
+        <div class="flex-box list-box">
+            <div class="theme-img" :style="'backgroundImage: url(' + item.img + ')'"></div>
+            <div class="theme-info flex">
+                <p class="title">{{item.title}}</p>
+                <p class="flex-box foot">
+                    <span class="time" v-if="item.state == 0">{{item.end_time}}前开奖</span>
+                    <span class="time" v-if="item.state == 1 || item.state == 2">已开奖</span>
+                </p>
+            </div>
+        </div>
+        <!--竞猜选项-->
+        <div class="guess-select">
+            <template v-for="(select,i) in item.plan">
+                <div class="selct-list" :class="{'code':item.code == i}">
+                    <span>{{select.title}}</span>
+                    <span class="odds">{{select.sp}}</span>
+                    <!--竞猜状态显示-->
+                    <div class="guess-show" v-if="item.order_cont[i]" :class="['font3',
+                {'font5':item.order_cont[i].toString().length>=5},
+                {'font6':item.order_cont[i].toString().length>=6}]">{{item.order_cont[i]}}</div>
+                    <!--竞猜状态显示 end-->
+                </div>
+            </template>
+        </div>
+        <!--竞猜选项 end-->
+        <!--竞猜主题 end-->
+        <!--订单详情-->
+        <div class="order-detail">
+            <div class="flex-box order-list">
+                <span class="order-time">{{item.create_time}}</span>
+                <span class="order-beans">共投注{{item.beans}}金豆</span>
+            </div>
+            <div class="flex-box order-list">
+                <span class="order-d">订单编号：{{item.order_id}}</span>
+                <span class="order-state1" v-if="item.state == 0">待开奖</span>
+                <span class="order-state2" v-if="item.state == 1">未中奖</span>
+                <span class="order-state3" v-if="item.state == 2">中奖{{item.gain}}金豆</span>
+            </div>
+        </div>
+        <!--订单详情 end-->
+    </div>
+</template>
+<script>
+    $(function () {
+        Vue.component('my-list',{
+            props: ['item','index'],
+            template: '#myList',
+            data(){
+                return{
+                    showObj:-1,
+                }
+            },
+            methods:{
+            }
+        })
+        let vue = new Vue({
+            el : "#app",
+            data : {
+            },
+        })
+    });
+</script>
+{include file='common@common/foot' /}

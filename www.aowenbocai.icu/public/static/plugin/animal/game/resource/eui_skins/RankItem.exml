@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="rankItemSkin" width="580" height="100" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<w:Config id="1600be217f4"/>
+	<e:Rect id="my_bg" left="0" right="0" top="0" bottom="0" fillColor="0x26323e"/>
+	<e:Rect width="80" height="80" x="52" y="50" anchorOffsetX="40" anchorOffsetY="40" ellipseWidth="80" ellipseHeight="80" strokeWeight="0" strokeColor="0xffffff" fillColor="0xffffff"/>
+	<e:Rect id="pic_mask" width="76" height="76" x="52" y="50" anchorOffsetX="38" anchorOffsetY="38" ellipseWidth="76" ellipseHeight="76" mask="pic_mask"/>
+	<e:Image id="user_pic" width="76" height="76" x="52" y="50" anchorOffsetX="38" anchorOffsetY="38"/>
+	<e:Label id="nick_name" text="名字" x="109" y="22" size="26"/>
+	<e:Label id="create_time" text="10-12 12:12" x="109" y="56" size="20" textColor="0x959594"/>
+	<e:Image source="zoo_sheet2_json.zoo_sheet2009" x="300" y="31.05" anchorOffsetX="0" width="37.48" anchorOffsetY="0" height="31.95"/>
+	<e:Label id="hit_money" text="100" x="344" y="34" size="26"/>
+	<e:Group width="146" x="433" top="0" bottom="1" anchorOffsetY="0">
+		<e:Image id="animal_pic" width="60" height="60" x="53" y="5" scaleX="1" scaleY="1" horizontalCenter="0"/>
+		<e:Label id="win_money" text="4324324" y="70" scaleX="1" scaleY="1" left="0" right="0" textAlign="center" size="26" textColor="0xe8685c"/>
+	</e:Group>
+</e:Skin>

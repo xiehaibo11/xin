@@ -1,0 +1,229 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="/static/font/iconfont.css"/>
+<link rel="stylesheet" href="/static/css/fatie.css"/>
+<script src="__STATIC__/js/jquery-3.2.1.js"></script>
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/plugin/bbs/css/style.css?a=2">
+<script src="/static/font/iconfont.js"></script>
+<header class="header">
+	<div class="header-nav">
+		<a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);"><i class="icon-svg icon_left"></i></a>
+	</div>
+	<div class="header-center">发帖</div>
+	<div class="header-right"><a href="/index/"><i class="iconfont icon-home" style="color:#666;font-size:0.9rem;margin-right:0.7rem;"></i></a></div>
+</header>
+<body>
+<div class="p-height"></div>
+<div class="card-con" id="app" v-cloak>
+	<form id="publish" onsubmit="return false;">
+		<div class="publish-article-content">
+			<div class="margin10">
+				<div class="article-tit">帖子内容</div>
+				<!--<input type="hidden" id="target" name="content" maxlength="1000"/>-->
+				<textarea rows="5" cols="30" id="inputEdit" name="content" v-model="txt" class="input input-lg textarea" maxlength="1000" placeholder="请输入帖子内容(内容最多1000字)"></textarea>
+				<div class="article-tip flex-box">
+					<div class="upload-emoji"  @click="emojiShow">
+						<span><i class="iconfont icon-emoji"></i></span>
+					</div>
+					<div class="upload-button" @click="imgShow">
+						<span class="upload"><i class="iconfont icon-tupian2"></i></span>
+						<span class="count">（{{imgNum}}/6）</span>
+					</div>
+					<div class="count">
+						<span v-if="txt.length>1000" style="color: #f00">{{computedCharLen}}</span>
+						<span v-if="txt.length<1000">{{computedCharLen}}</span> / 1000字
+					</div>
+				</div>
+			</div>
+			<!--图片上传 开始-->
+			<div class="container" v-show="showImg">
+				<!--    照片添加    -->
+				<div class="z_photo">
+					<div class="z_file">
+						<!--input type="file" name="file" id="file" value="" accept="image/*" multiple onchange="imgChange('z_photo','z_file');" /-->
+					</div>
+					<div class="img_box"></div>
+					<input class="c_img" style="display: none;" type="file" value=""/>
+					<input class="url_img" type="hidden" name="imgurl" value=""/>
+				</div>
+
+				<!--遮罩层-->
+				<div class="z_mask">
+					<!--弹出框-->
+					<div class="z_alert">
+						<p>最多只能上传6张图片</p>
+						<p>
+							<span class="z_cancel">取消</span>
+							<span class="z_sure">确定</span>
+						</p>
+					</div>
+				</div>
+			</div>
+			<!--图片上传 结束-->
+			<!--表情 开始-->
+			<div class="container-emoji"  v-show="showEmoji" id="face">
+				<i v-if="emoji.emojiArr.length" v-for="(item,index) in emoji.emojiArr" @click=inserEmoji(index+1)>
+					<img :src="item" alt="">
+				</i>
+			</div>
+			<!--表情 结束-->
+		</div>
+		<div class="tips">
+			<p class="title">发帖说明：</p>
+			<p>1、禁止发布虚假信息</p>
+			<p>2、反法律法规，反社会，反国家，反民族的恐怖、暴力、恶心、迷信、粗俗、意淫、猥琐、下流、涉黄、伦理、暴力、色情、反社会、过于敏感的政治帖不健康帖或者相关链接</p>
+		</div>
+		<div style="height: 38px;width: 100%"></div>
+		<div class="btn btn-fill btn-lg alert margin10">发布</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+    'use strict';
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            wordNum: 0,
+            txt: '', //帖子内容
+            showEmoji: false,
+            showImg: false,
+            imgNum: 0,
+            emoji: { //表情属性
+                emojiArr: [],
+                path: '/static/images/emoji/',
+                len: 75
+            }
+    
+        },
+        computed: {
+            computedCharLen: function computedCharLen() {
+                // 获取字符的个数
+                return this.txt.length;
+            }
+        },
+        methods: {
+            getEmoji: function getEmoji() {
+                //获取表情
+                for (var i = 1; i <= this.emoji.len; i++) {
+                    var url = this.emoji.path + i + '.gif';
+                    this.emoji.emojiArr.push(url);
+                }
+            },
+            emojiShow: function emojiShow() {
+                //表情容器
+                this.showEmoji = !this.showEmoji;
+                if (this.showImg = true) {
+                    this.showImg = !this.showImg;
+                }
+            },
+            imgShow: function imgShow() {
+                //图片容器
+                this.showImg = !this.showImg;
+                if (this.showEmoji = true) {
+                    this.showEmoji = !this.showEmoji;
+                }
+            },
+            inserEmoji: function inserEmoji(n) {
+                //插入表情
+                $('#inputEdit').insertAtCaret('[em_' + n + ']');
+                this.txt = $('#inputEdit').val();
+            }
+        },
+        created: function created() {
+            this.getEmoji();
+        }
+    });
+    $('.z_file').click(function () {
+        if ($('.url_img').val().length > 200) {
+            var mask = document.getElementsByClassName("z_mask")[0];
+            var cancel = document.getElementsByClassName("z_cancel")[0];
+            var sure = document.getElementsByClassName("z_sure")[0];
+            mask.style.display = "block";
+            cancel.onclick = function () {
+                mask.style.display = "none";
+            };
+            sure.onclick = function () {
+                mask.style.display = "none";
+            };
+            return false;
+        }
+        $('.c_img').click();
+    });
+    
+    $('.c_img').localResizeIMG({
+        maxSize: 400,
+        success: function success(result) {
+            $.post('{:url(base64Upload)}', { 'base64_data': result.base64 }, function (res) {
+                var val = $('.url_img').val();
+                var img = $('<div class="upimg-list"><img data-value="' + res.data + '" src="' + result.base64 + '"/><img class="del" src="/static/images/del.png"></div>');
+                img.data('url', res.data);
+                $('.img_box').append(img);
+                $('.url_img').attr('value', val + ',' + res.data);
+                $('#imageUpload').attr('disabled', null);
+            }, 'json');
+            vm.imgNum = $('.upimg-list').find('img').length / 2 + 1;
+        }
+    });
+    $('.img_box').on('click', '.del', function () {
+        src = $(this).prev().attr('data-value');
+        values = $('.url_img').val();
+        values = values.replace(',' + src, '');
+        $('.url_img').val(values);
+        $(this).parent().html('');
+        $.ajax({
+            type: "POST",
+            url: "{:Url('index/bbs/imgdel')}",
+            data: { img: src },
+            success: function success(data) {}
+        });
+        vm.imgNum = $('.upimg-list').find('img').length / 2;
+    });
+    $('.alert').click(function () {
+        var object = $("textarea[name='content']");
+        var content = object.val();
+        if (content.length > 1000) {
+            Zepto.msg('内容长度超过1000');
+        } else {
+            var data = $('#publish').serialize();
+            $.post('{:Url(\'index/bbs/begin_add\')}', data, function (data) {
+                switch (data['code']) {
+                    case 0:
+                        Zepto.msg(data.msg);
+                        setTimeout("window.location.href ='/index/bbs' ", 1000);
+                        break;
+                    case 1:
+                        Zepto.msg(data.msg);
+                        break;
+                }
+            });
+        }
+    });
+    //	判断光标位置
+    $.fn.extend({
+        insertAtCaret: function insertAtCaret(myValue) {
+            var $t = $(this)[0];
+            if (document.selection) {
+                this.focus();
+                sel = document.selection.createRange();
+                sel.text = myValue;
+                console.log(sel);
+                this.focus();
+            } else if ($t.selectionStart || $t.selectionStart == '0') {
+                var startPos = $t.selectionStart;
+                var endPos = $t.selectionEnd;
+                var scrollTop = $t.scrollTop;
+                $t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
+                this.focus();
+                $t.selectionStart = startPos + myValue.length;
+                $t.selectionEnd = startPos + myValue.length;
+                $t.scrollTop = scrollTop;
+            } else {
+                this.value += myValue;
+                this.focus();
+            }
+        }
+    });
+</script>
+</body>
+</html>

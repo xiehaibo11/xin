@@ -1,0 +1,28 @@
+{include file='web@common/link' title='游戏道具'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div class="props">
+    <div class="el-card box-card is-always-shadow">
+        <div class="el-card__header">
+            <div class="clearfix">
+                <span class="title">游戏道具</span>
+            </div>
+        </div>
+        <div class="props-list el-card__body">
+            <ul>
+                {volist name='data' id='v'}
+                <li class="flex-box">
+                    <div class="img"><img src="{$v.pic}" alt="" width="84"></div>
+                    <div class="info">
+                        <p class="name">{$v.name}</p>
+                        <p class="desc">{$v.desc}</p>
+                        <p class="org num">拥有数量：{$v.num}</p>
+                        <a href="{:url('web/game/index')}?ext={$v.ext_name}" target="_blank"><button class="el-button el-button--danger el-button--mini">立即使用</button></a>
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+</div>
+{include file='web@common/end'/}

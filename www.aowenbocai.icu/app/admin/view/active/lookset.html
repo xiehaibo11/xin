@@ -1,0 +1,66 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+    .input-group{margin-top: 10px}
+    .inline-div{display:inline-table;margin: 0;margin-left: 2%}
+    .flex{flex: 1;display: inline-flex}
+    .awrad span{width:6%}
+    .title{height: 34px; padding: 8px 11px;border-radius: 2px;border-right: 1px solid #ccc !important;} 
+    .awrad .flex span{width: 40%;padding: 8px 10px; margin-left: 5%;}
+    .dropdown-menu{min-width: 94px}
+    .dropdown-menu li{text-align: center;    margin-bottom: 5px;border-bottom: 1px dashed #ccc;}
+    .dropdown-menu li:last-child{border-bottom: none}
+</style>
+<nav class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav" style="padding-left: 42px">
+        <li id = "tasklist"><a href="{:url('index')}">任务列表</a></li>
+        <li id = "addtask"><a  href="{:url('index',['class' =>addtask])}">添加任务</a></li>
+        <li class="active"><a>设置奖励</a></li>
+    </ul>
+</nav>
+<div class="box-padding">
+    <div class="content addtask">
+        <form action="{:url('award', ['id' => $info.id])}" method="post" id="add">
+            <div class="input-group">
+                <span class="input-group-addon">任 务 名</span>
+                <input type="text" class="form-control" value="{$info.content}">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">活跃度</span>
+                <input type="text" class="form-control num" name="active" value="{$info.award.active}">
+            </div> 
+            <div class="input-group">
+                <span class="input-group-addon">经验</span>
+                <input type="text" class="form-control num" name="exp" value="{$info.award.exp}">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">金币</span>
+                <input type="text" class="form-control num" name="coin" value="{$info.award.coin}">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">免费券</span>
+                <select name="prop_param" class="form-control"  id="">
+                    <option value="">请选择免费券</option>
+                    {volist name="info.coupon_list"  id="v"}
+                    <option value="{$v.param_name}" {if condition="$info.award.prop_param eq $v.param_name"}selected{/if}>{$v.name}</option>
+                    {/volist}
+                </select>
+            </div>
+            <div class="input-group">
+                <button class="btn btn-success btn-lg" type="submit">提 交</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(".num").focusout(function(){
+        if($(this).val() < 0){
+            $.modal.alert('奖励值不能为负数');
+            $(this).val('');
+        }
+    })
+</script>
+{include file='common/foot' /}

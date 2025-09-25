@@ -1,0 +1,149 @@
+@charset "utf-8";
+//基础font-size
+$baseFontSize: 16px !default;//变量的值可以根据自己需求定
+
+//主色
+$bColor: #e50e03;
+$Success:#67C23A;
+$Warning: #ff6b13;
+//$Danger:#F56C6C;
+$Danger:#e34f48;
+$Info:#909399;
+$boder-color:#d9d9d9;
+
+$color-bg:#f8f8f8; //背景色
+$color-c:#ffffff;//内容背景色
+
+$color-font-primary:#303133; //主要文字
+$color-font-common:#606266; //常规文字
+$color-font-secondary:#909399; //次要文字
+$color-font-seize:#C0C4CC; //占位文字
+
+$color-border-one:#DCDFE6;//一级边框
+$color-border-two:#E4E7ED;//二级边框
+$color-border-three:#EBEEF5;//三级边框
+$color-border-four:#F2F6FC;//四级边框
+
+$font-large:18px;
+$font-common:16px;
+$font-small:14px;
+$font-mini:12px;
+
+//去单位
+@function strip-units($number){
+    @return $number / ($number * 0 + 1);
+}
+//px转rem
+@function pxTorem($px){  //$px为需要转换的字号
+    @return strip-units($px / $baseFontSize) * 1rem;
+}
+
+@function rem($val){
+    @return $val/32+rem;
+}
+
+//check rem(val) -- 判断传入数值是正数、auto、0，如果是正数则换算出rem结果
+@function checkRem($val){
+    @if $val == auto{
+        @return auto;
+    }@else if $val==0{
+        @return 0;
+    }@else{
+        @return rem($val);
+    }
+}
+
+//check px(val) -- 判断传入数值是正数、auto、0，如果是正数则在后面添加px单位
+@function checkPx($val){
+    @if $val == auto{
+        @return auto;
+    }@else if $val==0{
+        @return 0;
+    }@else{
+        @return $val+px;
+    }
+}
+
+//@mixin box(val,t,r,b,l) -- 根据盒子模型来，有四个方位值（仅写一个方法值也可）,同时输入带rem和px单位的结果
+@mixin box($box,$t,$r:$t,$b:$t,$l:$r){
+    #{$box}:checkPx($t) checkPx($l) checkPx($b) checkPx($l);
+    #{$box}:checkRem($t) checkRem($r) checkRem($b) checkRem($l);
+}
+
+//@mixin point(val,val) -- 指定属性，同时输入带rem和px单位的结果
+@mixin point($poi,$val){
+    //#{$poi}:checkPx($val);
+    #{$poi}:checkRem($val);
+}
+//圆角border-radius eg:@include rounded(10px);
+@mixin rounded($radius){
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
+//盒模型阴影box-shadow eg:@include shadow(0, 1px, 2px, rgba(0,0,0,.5));
+@mixin shadow($x, $y, $blur, $color){
+    -webkit-box-shadow: $x $y $blur $color;
+    -moz-box-shadow: $x $y $blur $color;
+    box-shadow: $x $y $blur $color;
+}
+
+
+// 渐变 eg: @include linear-gradient(#ff70b1, #d42a78);
+@mixin linear-gradient($from, $to) {
+    /* Fallback for sad browsers */
+    background-color: $to;
+    /* Mozilla Firefox */
+    background-image:-moz-linear-gradient($from, $to);
+    /* Opera */
+    background-image:-o-linear-gradient($from, $to);
+    /* WebKit (Chrome 11+) */
+    background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0, $from), color-stop(1, $to));
+    /* WebKit (Safari 5.1+, Chrome 10+) */
+    background-image: -webkit-linear-gradient($from, $to);
+    /* IE10 */
+    background-image: -ms-linear-gradient($from, $to);
+    /* W3C */
+    background-image: linear-gradient($from, $to);
+}
+
+@mixin linear-gradient-deg135($from, $to) {
+    /* Fallback for sad browsers */
+    background-color: $to;
+    /* Mozilla Firefox */
+    background-image:-moz-linear-gradient(135deg,$from, $to);
+    /* Opera */
+    background-image:-o-linear-gradient(135deg,$from, $to);
+    /* WebKit (Chrome 11+) */
+    background-image:-webkit-gradient(linear, left top, right top, color-stop(0, $from), color-stop(1, $to));
+    /* WebKit (Safari 5.1+, Chrome 10+) */
+    background-image: -webkit-linear-gradient(135deg,$from, $to);
+    /* IE10 */
+    background-image: -ms-linear-gradient(135deg,$from, $to);
+    /* W3C */
+    background-image: linear-gradient(135deg,$from, $to);
+}
+@mixin linear-gradient-deg90($from, $to) {
+    /* Fallback for sad browsers */
+    background-color: $to;
+    /* Mozilla Firefox */
+    background-image:-moz-linear-gradient(90deg,$from, $to);
+    /* Opera */
+    background-image:-o-linear-gradient(90deg,$from, $to);
+    /* WebKit (Chrome 11+) */
+    background-image:-webkit-gradient(linear, left top, right top, color-stop(0, $from), color-stop(1, $to));
+    /* WebKit (Safari 5.1+, Chrome 10+) */
+    background-image: -webkit-linear-gradient(90deg,$from, $to);
+    /* IE10 */
+    background-image: -ms-linear-gradient(90deg,$from, $to);
+    /* W3C */
+    background-image: linear-gradient(90deg,$from, $to);
+}
+
+@mixin dz($time:0.2s){
+    -webkit-transition: all $time ease-in-out;
+    -moz-transition: all $time ease-in-out;
+    -o-transition: all $time ease-in-out;
+    transition: all $time ease-in-out;
+}

@@ -1,0 +1,5 @@
+{"file":"Load.png","frames":{
+"LoadingInterface_LoadingBar_bg":{"x":0,"y":370,"w":428,"h":24,"offX":0,"offY":0,"sourceW":428,"sourceH":24},
+"LoadingInterface_LoadingBar_img":{"x":428,"y":370,"w":422,"h":19,"offX":0,"offY":0,"sourceW":422,"sourceH":19},
+"LoadingInterface_LoadingBar_light":{"x":669,"y":0,"w":27,"h":33,"offX":0,"offY":0,"sourceW":27,"sourceH":33},
+"LoadingInterface_logo_img_03":{"x":0,"y":0,"w":669,"h":370,"offX":0,"offY":1,"sourceW":671,"sourceH":413}}}

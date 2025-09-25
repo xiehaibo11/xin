@@ -1,0 +1,79 @@
+{include file='web@common/head' title="title"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/columns.css">
+<style>
+    .topImg{
+        height: 150px;
+    }
+</style>
+{volist name="banner" id="v"}
+<div class="topImg" style="background: url('{$v.img_url}') no-repeat center"></div>
+{/volist}
+<div id="position" class="position">
+    <div class="web">
+        <div class="el-breadcrumb">
+            <span class="el-breadcrumb__item">
+                <span role="link" class="el-breadcrumb__inner">
+                    <span>您的位置：</span><a href="/web">首页</a>
+                </span>
+                <i class="el-breadcrumb__separator el-icon-arrow-right"></i>
+            </span>
+            <span class="el-breadcrumb__item">
+                <span class="el-breadcrumb__inner">{$nav['title']}</span>
+            </span>
+        </div>
+    </div>
+</div>
+<div style="background-color: #eeeeee;padding-top: 20px">
+    <div class="news web">
+        <div class="news-left">
+            <div>
+                {volist name="newsList" id="vo" empty="暂时没有相关信息"}
+                <a class="list-item-l flex-box" href="{:url('news/view')}?id={$vo.id}&amp;navid={$vo.nav_id}" target="_blank">
+                    {if condition="!empty($vo.pic)"}
+                    <div class="list-item-image" style="background: url({$vo.pic}) no-repeat center;background-size: cover"></div>
+                    {/if}
+                    <div class="list-item-text flex">
+                        <div class="title">{$vo.title}</div>
+                        <div class="summary">
+                            <?php if (mb_strlen($vo['content_index']) > 90){
+                            echo mb_substr($vo['content_index'], 0, 90, 'utf-8')."...";
+                            }else{
+                            echo $vo['content_index'];
+                            }
+                            ?>
+                        </div>
+                        <div class="tl">
+                            <button type="button" class="el-button el-button--danger"><span>查看详情</span></button>
+                        </div>
+                    </div>
+                </a>
+                <div class="foot-shadow"></div>
+                {/volist}
+                <div class="page">{$newsList->render()}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='web@common/foot' /}
+<style type="text/css">
+    .news .list-item-l{
+        background: #ffffff;
+        box-shadow: 0 4px 8px #cdcdcd;
+        padding: 15px;
+        align-items: flex-start;
+    }
+    .news .list-item-l:hover{
+        background-color: #ffffff;
+    }
+    .news .foot-shadow{
+        height: 18px;
+        background: url("/static/vipweb/images/activityShaw.png") no-repeat center;
+    }
+    .news .list-item-l .list-item-image{
+        width: 680px;
+        height: 170px;
+    }
+    .news .list-item-l .list-item-text .title{
+        color: #DE3031;
+    }
+</style>

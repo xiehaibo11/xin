@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RecordDataSkin" width="684" height="1200" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Scroller id="scroller" top="0" anchorOffsetY="0" anchorOffsetX="0" bottom="5" left="0" right="0">
+		<e:Group anchorOffsetX="0" x="-110" y="0" width="232" anchorOffsetY="0" height="617">
+		<e:Group y="35" left="0" right="0">
+			<e:List id="list" scaleX="1" scaleY="1" left="0" right="0" top="0" bottom="0" itemRendererSkinName="RecordItemSkin"/>
+			<e:layout>
+				<e:BasicLayout/>
+			</e:layout>
+		</e:Group>
+		<e:Group y="318" left="55" right="-11" anchorOffsetX="0" anchorOffsetY="0" height="62">
+			<e:Rect height="50" anchorOffsetY="0" anchorOffsetX="0" verticalCenter="0" ellipseWidth="23" fillAlpha="0.2" fillColor="0xffffff" left="0" right="0"/>
+			<e:Label id="tips" text="上拉加载更多" size="18" y="22" left="20" right="20"/>
+		</e:Group>
+		<e:layout>
+			<e:VerticalLayout horizontalAlign="center" gap="7"/>
+		</e:layout>
+		</e:Group>
+	</e:Scroller>
+</e:Skin>

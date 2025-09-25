@@ -1,0 +1,90 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style media="screen">
+    .form {
+        margin: 20px;
+        width: 400px;
+    }
+
+    .form textarea {
+        width: 100%;
+        height: 7rem;
+    }
+    .lh34 {
+        line-height:34px;
+    }
+</style>
+<div id="app" class="box-padding">
+    <ol class="breadcrumb">
+        <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('admin/invitation_code/index')}">邀请码管理</a></li>
+        <li class="active">修改</li>
+    </ol>
+    <form class="form" action="{:url('edit')}" method="post">
+        <input type="file" class="hidden select_photo">
+        <input type="hidden" name="id" value="{$info.id}">
+        <div class="form-group">
+            <label>类型</label>
+            <select name="type" class="form-control">
+                <option value="1" {if condition="info.type == 1"} selected {/if}>普通会员</option>
+                <option value="2" {if condition="info.type == 2"} selected {/if}>代理会员</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>邀请码</label>
+            <input type="text" class="form-control" placeholder="输入邀请码" name="code" value="{$info.code}">
+        </div>
+        <div class="form-group">
+            <label>备注</label>
+            <textarea class="form-control" name="remark">{$info.remark}</textarea>
+        </div>
+        <div class="form-group ">
+            <label>返点设置</label>
+            <div class=" alert alert-success version_content" role="alert">
+                <div class="form-group lh34">
+                    <label class="col-sm-3 control-label">时时彩</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="输入时时彩返点" name="ssc" value="{$info.rebate.ssc}">
+                    </div>
+                    <div class="col-sm-3"><= {$user_rebate.ssc}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group lh34">
+                    <label class="col-sm-3 control-label">快3</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="输入快3返点" name="ks" value="{$info.rebate.ks}">
+                    </div>
+                    <div class="col-sm-3"><= {$user_rebate.ks}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group lh34">
+                    <label class="col-sm-3 control-label">11选5</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="输入11选5返点" name="syxw" value="{$info.rebate.syxw}">
+                    </div>
+                    <div class="col-sm-3"><= {$user_rebate.syxw}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group lh34">
+                    <label class="col-sm-3 control-label">pk10</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="输入pk10返点" name="pk10" value="{$info.rebate.pk10}">
+                    </div>
+                    <div class="col-sm-3"><= {$user_rebate.pk10}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group lh34">
+                    <label class="col-sm-3 control-label">pc28</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="输入pc28返点" name="pc28" value="{$info.rebate.pc28}">
+                    </div>
+                    <div class="col-sm-3"><= {$user_rebate.pc28}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="remark red text-center">（注：返点不能高于最大返点）</div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn_save"> 修改 </button>
+    </form>
+</div>
+
+{include file='common/foot' /}

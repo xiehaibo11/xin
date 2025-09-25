@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ItemTextSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<w:Config id="16006ff956c"/>
+	<e:Group id="time" width="640" height="100" anchorOffsetY="0" x="0" top="0">
+		<e:Label id="label0" text="2017-12-07 15:35:30" verticalAlign="middle" textAlign="left" y="10" size="25" width="240" x="50" textColor="0x776363"/>
+		<e:Label text="共投1000金豆" id="label1" verticalAlign="middle" y="7.5" width="250" textColor="0x776363" x="340" textAlign="right"/>
+		<e:Label id="label2" text="Label2" y="50" textColor="0x776363" size="25" width="240" x="50" textAlign="left"/>
+		<e:Label id="label3" text="label3" y="50" size="25" width="200" x="390" textAlign="right" textColor="0x776363"/>
+	</e:Group>
+	<e:Group id="pai" width="640" anchorOffsetY="0" horizontalCenter="0" y="103">
+		<e:Label id="label4" text="label4" size="25" x="50" y="10"/>
+		<e:Rect width="640" height="12" horizontalCenter="0" fillColor="0x000000" fillAlpha="0.5" x="0" scaleX="1" scaleY="1" bottom="0" y="188"/>
+	</e:Group>
+	<e:Group id="line" width="640" height="3" y="100" horizontalCenter="0">
+		<e:Rect width="20" height="3" fillColor="0x808080" x="50" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="80" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="110" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="140" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="170" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="200" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="230" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="260" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="290" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="320" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="350" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="380" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="410" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="440" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="470" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="500" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="530" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" verticalCenter="0" x="560"/>
+	</e:Group>
+</e:Skin>

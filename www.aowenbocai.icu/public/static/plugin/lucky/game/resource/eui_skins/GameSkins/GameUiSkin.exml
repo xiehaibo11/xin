@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameUiSkin" width="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" xmlns:tween="egret.tween.*" height="1334">
+	<w:Declarations>
+	</w:Declarations>
+	<e:Group id="all" left="0" right="0" top="0" bottom="0">
+		<e:Image id="backImg" source="starbg_png" scaleX="1" scaleY="1" left="0" right="0" top="0" bottom="0"/>
+		<e:Group id="head" width="750" horizontalCenter="0" top="0" height="20%">
+			<e:Image id="lg0" source="star_poolsNewxiu_json.star_poolsNewxiu003" horizontalCenter="0" verticalCenter="0"/>
+			<e:Image id="lg1" source="coins_json.coins000" horizontalCenter="0" verticalCenter="10"/>
+			<e:Image id="lg2" source="bg-allxiu_json.bg-allxiu009" horizontalCenter="0" bottom="25"/>
+			<e:Image id="logo" source="star_poolsNewxiu_json.star_poolsNewxiu007" top="0" horizontalCenter="0"/>
+			<e:Image id="explain" source="star_poolsNewxiu_json.star_poolsNewxiu004" horizontalCenter="0" bottom="0" visible="false"/>
+			<e:Group width="300" height="50" horizontalCenter="0" verticalCenter="10" visible="false">
+				<e:Rect width="300" height="30" horizontalCenter="0" verticalCenter="0" ellipseWidth="40"/>
+				<e:Label id="fudai" text="福袋奖励:798798798" width="280" textAlign="left" verticalAlign="middle" horizontalCenter="0" verticalCenter="-1" size="25" textColor="0xffe605"/>
+			</e:Group>
+			<e:Label id="allBouns" text="0" horizontalCenter="0" bottom="30" size="50" visible="false"/>
+			<e:Group width="230" height="50" top="20" left="10">
+				<e:Image source="mehldxiugaixiu_png" horizontalCenter="0" verticalCenter="0"/>
+				<e:Label id="balance" text="0" width="120" horizontalCenter="0" verticalCenter="0.5" textColor="0xffd005" size="23"/>
+			</e:Group>
+			<e:Image id="bili" source="star_poolsNewxiu_json.star_poolsNewxiu017" right="30" bottom="0" visible="false"/>
+			<e:Button id="menu" label="" right="30" top="30">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="icon1Newxiu_json.icon1Newxiu000"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+		</e:Group>
+		<e:Group id="box_0" top="21%" scrollEnabled="true" width="200" height="250" horizontalCenter="-240">
+			<e:Image source="icon-goNewxiu_json.icon-goNewxiu000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Group id="box_1" horizontalCenter="0" top="21%" scrollEnabled="true" width="200" height="250">
+			<e:Image source="icon-goNewxiu_json.icon-goNewxiu000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Group id="box_2" top="21%" scrollEnabled="true" width="200" height="250" horizontalCenter="240">
+			<e:Image source="icon-goNewxiu_json.icon-goNewxiu000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Group id="middle" width="750" height="18%" horizontalCenter="0" top="46%">
+			<e:Image source="sexiu_png" left="10" scaleY="0.95" verticalCenter="0"/>
+			<e:Group width="200" height="200" verticalCenter="0" left="25">
+				<e:Image id="lucky" source="icon-goNewxiu_json.icon-goNewxiu000" scaleX="0.8" scaleY="0.8" horizontalCenter="0" verticalCenter="15"/>
+			</e:Group>
+			<e:Group width="200" height="200" horizontalCenter="-15" verticalCenter="0">
+				<e:Image id="luckyImg" source="icon-goNewxiu_json.icon-goNewxiu000" horizontalCenter="0" verticalCenter="0"/>
+			</e:Group>
+			<e:CheckBox id="autoGame" label="CheckBox" skinName="AutoSkin" horizontalCenter="150" bottom="20"/>
+			<e:Button id="begin" label="" right="2" verticalCenter="-50">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="icon1Newxiu_json.icon1Newxiu016" source.down="icon1Newxiu_json.icon1Newxiu015"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Image source="spxiu_json.spxiu029" bottom="10" right="10"/>
+			<e:Label id="auto" text="10" right="45" bottom="13"/>
+		</e:Group>
+		<e:Group width="750" height="125" horizontalCenter="0" top="71%">
+			<e:Button id="cut" label="" left="20" verticalCenter="0">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="icon1Newxiu_json.icon1Newxiu002" source.down="icon1Newxiu_json.icon1Newxiu007"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="add" label="" verticalCenter="0" right="20">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="icon1Newxiu_json.icon1Newxiu003" source.down="icon1Newxiu_json.icon1Newxiu006"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Image source="spxiu_json.spxiu014" horizontalCenter="0" verticalCenter="10"/>
+			<e:Label id="bet" text="0" horizontalCenter="0" verticalCenter="15" size="50" width="300" height="50" verticalAlign="middle" textAlign="center"/>
+		</e:Group>
+		<e:Group id="buttons" width="750" horizontalCenter="0" x="0" scaleX="1" scaleY="1" bottom="5%" height="90">
+			<e:RadioButton label="" x="229" y="31" skinName="BtnSkin" selected="true"/>
+			<e:RadioButton label="" x="239" y="41" skinName="Btn2Skin"/>
+			<e:RadioButton label="" x="249" y="51" skinName="Btn3Skin"/>
+			<e:RadioButton label="" x="259" y="61" skinName="Btn4Skin"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="right" verticalAlign="middle" gap="20" paddingLeft="0" paddingRight="30"/>
+			</e:layout>
+		</e:Group>
+		<e:Button id="re" label="" right="100" bottom="30" visible="false">
+			<e:skinName>
+				<e:Skin states="up,down,disabled">
+				<e:Image width="100%" height="100%" source="icon1Newxiu_json.icon1Newxiu009" source.down="icon1Newxiu_json.icon1Newxiu013"/>
+				<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+			</e:skinName>
+		</e:Button>
+		<e:Button id="bigget" label="" left="20" bottom="6%" scaleX="0.6" scaleY="0.6">
+			<e:skinName>
+			<e:Skin states="up,down,disabled">
+				<e:Image width="100%" height="100%" source="icon1Newxiu_json.icon1Newxiu010" source.down="icon1Newxiu_json.icon1Newxiu012"/>
+				<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+			</e:Skin>
+			</e:skinName>
+		</e:Button>
+	</e:Group>
+</e:Skin>

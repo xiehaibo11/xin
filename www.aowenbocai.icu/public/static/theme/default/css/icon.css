@@ -1,0 +1,66 @@
+.icon_top{
+	background-image:url(../svg/arrow-up.svg);
+}
+.icon_right{
+	background-image:url(../svg/arrow-right.svg);
+}
+.icon_bottom{
+	background-image:url(../svg/arrow-down.svg);
+}
+.icon_left{
+	background-image:url(../svg/back.png);
+	width: 1.5rem;
+	height: 1.5rem;
+}
+.icon_left_w{
+	background-image:url(../svg/arrow-left-w.svg);
+}
+.icon_user{
+	background-image:url(../svg/account.svg);
+}
+.icon_user_w{
+	background-image:url(../svg/account-w.svg);
+}
+.icon_password{
+	background-image:url(../svg/password.svg);
+}
+.icon_phone{
+	background-image:url(../svg/phone.svg);
+}
+.icon_email{
+	background-image:url(../svg/email.svg);
+}
+.icon_chevron_down {
+	background-image:url(../svg/chevron_down.svg);
+}
+.icon_add {
+	background-image:url(../svg/add.svg);
+}
+.icon_add_js {
+	background-image:url(../svg/add_js.svg);
+}
+.icon_add_b_js {
+	background-image:url(../svg/add_b_js.svg);
+}
+.icon_yao1yao {
+	background-image:url(../svg/yaoyiyao.svg);
+}
+.icon_disabled {
+	background-image:url(../svg/disabled.svg);
+}
+.icon_close {
+	background-image:url(../svg/close.svg);
+}
+.icon_comment {
+	background-image:url(../svg/comments.svg);
+}
+.icon_good {
+	background-image:url(../svg/good.svg);
+}
+.icon_delete{
+	background-image:url(../svg/delete.svg);
+}
+
+
+
+

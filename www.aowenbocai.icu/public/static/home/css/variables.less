@@ -1,0 +1,60 @@
+/**
+ * 公用变量
+ */
+@charset "UTF-8";
+
+@WinWitdh:1200px;
+
+@LinkC:#3178e2;
+@white:#ffffff;
+
+@color-base : #4393f7; //主色
+@color-secondary : #ff6f20; //辅色
+@color-dark:#272727; //深色主色
+@color-red:#e62232;
+
+@images : '/static/home/images/';
+
+@gray-base:              #000;
+@gray-darker:            #222;
+@gray-dark:              #333;
+@gray:                   #555;
+@gray-light:             #888;
+@gray-lighter: #c3c3c3;
+@gray-bg:  #f9f9f9;
+
+@font-size-base:          14px;
+@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
+@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+
+
+.dz(@time:0.25s){  //动画时间
+    -webkit-transition: all @time ease-in-out;
+    -moz-transition: all @time ease-in-out;
+    -o-transition: all @time ease-in-out;
+    transition: all @time ease-in-out;
+}
+.borderRadius(@radius:5px){ //圆角
+    -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+    -o-border-radius: @radius;
+    border-radius: @radius;
+}
+.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) { //渐变
+    background: @color;
+    background: -webkit-gradient(linear,left bottom,left top,color-stop(0, @start),color-stop(1, @stop));
+    background: -ms-linear-gradient(bottom,@start,@stop);
+    background: -moz-linear-gradient(center bottom,@start 0%, @stop 100%);
+    background: -o-linear-gradient(@stop,@start);
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
+}
+.bgGradient(){
+    background: linear-gradient(to right, #5ca9fb 0%, #6372ff 100%);
+}
+.bgGradientText(){
+    background: linear-gradient(to right, #5ca9fb 0%, #6372ff 100%);
+    -webkit-background-clip: text;
+    -ms-background-clip: text;
+    -o-background-clip: text;
+    color: transparent;
+}

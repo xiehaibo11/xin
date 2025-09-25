@@ -1,0 +1,125 @@
+{include file='common@common/head' /}
+
+  <style>
+
+    body {
+       background-color: #efeff4;
+    }
+
+    button.btn,
+     a.btn
+    {
+      display: block;
+      margin-top: 1rem;
+      width: 100%;
+    }
+   .icon-svg {
+      margin: .4rem;
+    }
+    .text-center {
+      text-align: center;
+      color: #666;
+      font-size: .7rem;
+    }
+    .header{background-color: #f7f7f7;-webkit-box-shadow: 0 0 3px #ccc;box-shadow: 0 0 3px #ccc;border-bottom: none;}
+    .login-input{margin: 20px 0;border-top: 1px solid #dedede;border-bottom: 1px solid #dedede;padding: 0 .6rem;background-color: #fff;}
+    .input-lg{font-size: 0.8rem;}
+    button.btn-login{color: #FFF;background: #0894ec;border: none;line-height: 2.0rem;font-size: 0.9rem;width: 95%;margin: 15px auto;}
+    .col{color: #0894ec;font-size: 0.7rem;}
+    .btn-yzm{    width: 12rem; margin: 0;line-height: 1.7rem;}
+    .header-right{display: inline-flex;}
+    .header-right .icon-svg{margin: 0;margin-top: .6rem}
+
+  </style>
+  <header class="header">
+    <!-- <div class="header-nav">
+        <a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);" data-no-cache="true"><i class="icon-svg icon_left"></i></a>
+    </div> -->
+    <div class="header-center">
+        {$title}
+        <div class="header-right">
+            <!--<a class="nav-word" href="/index/user/">跳过</a>-->
+            <a class="nav-word" href="/fish50">跳过</a>
+            <i class="icon-svg icon_right"></i>
+        </div>
+    </div>
+    <!-- <div class="header-nav">
+        <a class="nav-word" href="/index/user/">跳过</a>
+        <i class="icon-svg icon_right"></i>
+    </div> -->
+  </header>
+  <div class="p-height"></div>
+  <div id = "app">
+    <div class="login-input">
+      <div class="item-line item-lg">
+        <i class="icon-svg icon_user" style="width: 1.8rem"></i>
+        <input type="text" class="input input-line input-lg" placeholder="请输入手机号"  v-model="tel"><span @click="sendsms" class="btn btn-yzm">{{btnmsg}}</span>
+      </div>
+      <div class="item-line item-lg">
+        <i class="icon-svg icon_password"></i>
+        <input type="text" class="input input-line input-lg" placeholder="请输入验证码" v-model="yzm">
+      </div>
+  </div>
+  <div><button class="btn btn-fill btn-lg btn-login" @click = "tologin">绑定</button></div>
+  <div></div>
+</div>
+{include file='common@common/foot' /}
+<script>
+    $(function () { 
+        var vue = new Vue({
+            el:"#app",
+            data:{
+              countDown : 120,
+              tel :'',
+              yzm : '',
+              btnmsg :'发送验证码',
+              isClick : 0,
+            },
+            methods:{
+              sendsms : function (){
+                var _this = this;
+                if(_this.countDown != 120) return false;
+                var reg = /^1[3|4|5|7|8][0-9]{9}$/;
+                var res = reg.test(_this.tel);
+                if(!res){
+                  $.alert('手机号格式不正确，请输入正确的手机号');
+                  return false;
+                }
+                $.get('/index/login/sendsms',{tel : _this.tel, type: 'bindingPhone'},function (res){
+                    if(res.code == 1) {
+                      _this.isClick = 1;
+                      var interval = setInterval(function(){
+                          _this.countDown = _this.countDown - 1;
+                          if(_this.countDown == 0){
+                            _this.btnmsg = '发送验证码';
+                            _this.countDown = 120;
+                            clearInterval(interval);
+                            return;
+                          }
+                          _this.btnmsg = "消息已发送("+_this.countDown+")";
+                      },1000)
+                    }else{
+                      $.alert(res.msg);
+                    }
+                });
+              },
+              tologin : function (){
+                var _this = this;
+                if (!_this.isClick){
+                  $.alert("非法操作，请按流程操作");
+                  return false;
+                }
+                $.post('/index/User/set_phone',{tel : _this.tel, yzm : _this.yzm, type: 'bindingPhone'},function (res){
+                    $.alert(res.msg);
+                    if (res.code) {
+                        setTimeout(function () {
+//                            location.href = "/index/User";
+                            location.href = "/index";
+                        }, 2000);
+                    }
+                })
+              }
+            }
+        })
+    });
+</script>

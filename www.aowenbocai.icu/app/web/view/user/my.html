@@ -1,0 +1,247 @@
+{include file='web@common/head' title='个人中心'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<style>
+    .el-main{padding:0}
+    html{min-width: 1200px;}
+    iframe{ width: 929px;height: 1010px;margin-left: 20px;margin-top: 20px}
+</style>
+<div id="app" v-cloak class="bg">
+    <div class="web_ position">
+        <div class="web">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item><i class="el-icon-location" style="padding-right: 10px"></i>个人中心</el-breadcrumb-item>
+                <el-breadcrumb-item v-if="position.length">{{position}}</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+    </div>
+    <div class="web">
+        <!--用户信息 start-->
+        <div class="user-info cf">
+            <div class="user-photo fl">
+                <div class="photo-img" style="backgroundImage: url('{$user.photo}')"></div>
+                <span class="vip-value"><em><i class="iconfont icon-huangguan-copy"></i>{{userLevelDetail.userGrade}}</em></span>
+            </div>
+            <div class="user-d tl fl">
+                <p class="name">{$user.username}（{$user.nickname}）</p>
+                <div class="grade-info" style="padding: 0">
+                    <p>当前积分：{{userLevelDetail.gradeGrow}}</p>
+                    <p>头衔：{{userLevelDetail.userTitle}}
+                            <el-popover
+                                    placement="bottom"
+                                    width="500"
+                                    trigger="click">
+                                <el-table :data="gradeList" stripe>
+                                    <el-table-column width="150" property="grade" label="等级"></el-table-column>
+                                    <el-table-column width="150" property="gradeName" label="头衔"></el-table-column>
+                                    <el-table-column width="150" property="gradeGrow" label="成长积分"></el-table-column>
+                                </el-table>
+                                <a slot="reference" class="link">(等级机制)</a>
+                            </el-popover>
+                        </a>
+                    </p>
+                    <template v-if="userLevelDetail.isVipMax">
+                        <div class="red">
+                            已达到最高等级
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="level-tips">
+                            距离下一级需要{{userLevelDetail.nextGrow}}分 每充值1元加1分
+                        </div>
+                        <div class="flex-box">
+                            <span class="userGrade">{{userLevelDetail.userGrade}}</span>
+                            <span class="flex">
+                             <el-progress :text-inside="true" :stroke-width="18" :percentage="userLevelDetail.perNum" status="exception"></el-progress>
+                        </span>
+                            <span class="nextGrade">{{userLevelDetail.nextGrade}}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="account-info fr">
+                <div class="cf">
+                    <div class="tl fl">
+                        <i class="iconfont icon-yue org"></i>账户余额 : <em class="money-value red">{{money}}</em> {$company.lottery_unit}
+                        <el-button type="text" icon="el-icon-refresh" @click.native="refreshMoney"></el-button>
+                    </div>
+                    <div class="fr account-btn">
+                        <a href="{:url('./pay')}"><el-button type="danger" size="mini">充值</el-button></a>
+                        <a @click="checkExchange"><el-button type="success" size="mini">兑换</el-button></a>
+                    </div>
+                </div>
+                <div class="account-item tl" v-if="Number({$company['game_status']})">
+                    <p class="red game-money">{{game_money}}</p>
+                    <p class="flex-box">
+                        <span class="flex"><i class="iconfont icon-youxi org"></i> 游戏账户（ {$company.game_unit}） </span>
+                        <a><el-button @click="toTransform" type="text" size="mini"><i class="iconfont icon-weibiaoti--"></i> 转换</el-button></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="web" style="border:1px solid #e6e6e6;margin-top: 5px">
+        <el-container>
+            <el-aside style="width: 229px" class="aside-box">
+                <el-menu
+                        :default-active= active
+                        :default-openeds= openArr
+                        class="el-menu-vertical-demo">
+                    <template v-for="(item,i) in navData">
+                        <el-submenu :index="i.toString()" v-if="item.isShow">
+                            <template slot="title">
+                                <i class="iconfont icon-zhanghaoxinxi" :class="item.icon"></i>
+                                <span>{{item.name}}</span>
+                            </template>
+                            <el-menu-item v-for="(nav,k) in item.pages"  :data="i.toString() + '-' + k.toString()" v-if="nav.isShow"
+                                          :key="k"
+                                          :index="i.toString() + '-' + k.toString()"
+                                          @click.native="link(nav.url,nav.name,i.toString() + '-' + k.toString())">
+                                {{nav.name}}
+                            </el-menu-item>
+                        </el-submenu>
+                    </template>
+                </el-menu>
+            </el-aside>
+            <el-main class="white">
+                <iframe :src="src" frameborder="0"  width="100%" scrolling="no" id="userFrame"></iframe>
+            </el-main>
+        </el-container>
+    </div>
+</div>
+{include file='web@common/foot' /}
+<script>
+    $(function () {
+        'use strict';
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                money:"{$user['money']}",
+                game_money:"{$user['game_money']}",
+                openArr:["0","1","2"],
+                navData:[
+                    {name: '账户信息', icon:'icon-zhanghaoxinxi',isShow:1,pages:[
+                        {name : '账户首页', url : '{:url("main")}',isShow:1},
+                        {name : '个人资料', url : '{:url("info")}',isShow:1},
+                        {name : '安全中心', url : '{:url("safe")}',isShow:1},
+                        {name : '银行卡管理', url : '{:url("bank")}',isShow:1},
+                        {name : '个人背包', url : '{:url("props")}',isShow:Number("{$company['game_status']}")},
+                        {name : '消息中心', url : '{:url("inform")}',isShow:1}
+                    ]},
+                    {name: '交易记录', icon:'icon-jiaoyijilu', url : '{:url("detail")}?userid=',isShow:1,pages:[
+                        {name : '投注记录', url : '{:url("lotteryRecord")}?userid=',isShow:Number("{$company['lottery_status']}")},
+                        {name : '追号记录', url : '{:url("chaseRecord")}?userid=',isShow:Number("{$company['lottery_status']}")},
+                        {name : '游戏记录', url : '{:url("gameRecord")}?userid=',isShow:Number("{$company['game_status']}")},
+                        {name : '资金明细', url : '{:url("detail")}?userid=',isShow:1}
+                    ]},
+                    {name: '代理中心', icon:'icon-dailizhongxin',isShow:"{$user.type}" == 0 || "{$user.type}" == 2 ? 1 : 0,pages:[
+                        {name : '代理说明', url : '{:url("agent/explain")}',isShow:1},
+                        {name : '代理报表', url : '{:url("agent/report")}',isShow:1},
+                        {name : '下级报表', url : '{:url("agent/subReport")}',isShow:1},
+                        {name : '下级开户', url : '{:url("agent/invite")}',isShow:1},
+                        {name : '会员管理', url : '{:url("agent/member")}',isShow:1},
+                        {name : '投注明细', url : '{:url("agent/betRecord")}',isShow:1},
+                        {name : '资金明细', url : '{:url("agent/billRecord")}',isShow:1}
+                    ]}],
+
+                active: '0-0', //默认选中导航
+                src: "{:url('main')}", //默认页面
+                position: '首页',
+                curNav: GetUrlParam('ac'), //定位选中导航
+                //用户信息
+                userLevelDetail:{$user_grade},
+                //等级列表
+                gradeList:{$gradeList},
+                isBank : {$banks}, //银行卡列表
+                isWei : {$wei_banks}, //银行卡列表
+                isAlipay : {$alipay_banks}, //银行卡列表
+            },
+            methods: {
+                //进入兑换中心判断是否绑定手机、银行卡
+                checkExchange:function () {
+                    var _this = this
+                    if(Number("{$user.recharge_money}") > 0){
+                        _this.$alert('您还需消费<strong class="red">{$user.recharge_money}</strong>{$company.lottery_unit}才能兑换，投注的消费需要等到开奖后计入', '提示', {
+                            confirmButtonText: '确定',
+                            dangerouslyUseHTMLString: true,
+                            center: true
+                        });
+                        return
+                    }
+                    if (!parseInt('{$data.tel.islock}')) {
+                        _this.$confirm('您还未绑定手机,不能进行兑换！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setTel")}');
+                        }).catch(function () {
+                        });
+                        return
+                    }
+//                    if (!_this.isBank.length && !_this.isWei.length && !_this.isAlipay.length) {
+//                        _this.$confirm('您还绑定任何银行卡/微信/支付宝账号！', '提示', {
+                    if (!_this.isBank.length  && !_this.isAlipay.length) {
+                        _this.$confirm('您还绑定任何银行卡/支付宝账号！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(function () {
+                            _this.toBank();
+                        }).catch(function () {
+                        });
+                        return
+                    }
+                    _this.infoExchange();
+                },
+                toBank: function() {
+                    this.active = '0-3';
+                    this.src = '{:url("bank")}';
+                    this.position = '银行卡管理';
+                },
+                infoExchange: function() {
+                    this.active = '';
+                    this.src = '{:url("exchange")}';
+                    this.position = '兑换';
+                    document.getElementById('userFrame').contentWindow.location.href = '{:url("exchange")}';
+                },
+                toTransform: function() {
+                    this.active = '';
+                    this.src = '{:url("transform")}';
+                    this.position = '转账';
+                },
+                link: function(url, p1, index) {
+                    var _this = this;
+                    $.get('{:url("login/checkLogin")}', function (res) {
+                        if (!res.err) {
+                            _this.src = url;
+                            _this.position = p1;
+                            document.getElementById('userFrame').contentWindow.location.href = url;
+                        } else {
+                            window.location.reload();
+                        }
+                    });
+                },
+                refreshMoney:function () {
+                    var _this = this;
+                    $.get('/index/user/getinfo', function (res) {
+                        _this.$set(_this,'money',res.data.money)
+                        _this.$set(_this,'game_money',res.data.game_money)
+                    });
+                }
+            },
+            created: function() {
+                var m = this.curNav.split('-')[0]
+                var n = this.curNav.split('-')[1]
+                if (this.curNav.length) {
+                    //定位到具体页面
+                    this.src = this.navData[m].pages[n].url;
+                    this.position = this.navData[m].pages[n].name;
+                    this.active = this.curNav.toString();
+                }
+            }
+        });
+    });
+
+</script>

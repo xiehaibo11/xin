@@ -1,0 +1,85 @@
+body {
+    color: #333;
+}
+.header {
+    color: #333;
+}
+.get_gift {
+    background: #333;
+    color: #FF7F2B;
+}
+.get_gift a{
+    color: #FF7F2B;
+    
+}    
+.get_gift_title {
+    padding-left: .5rem;
+    text-align: center;
+    line-height: 2rem;
+    color: #ccc;
+}
+.arrow-right {
+    background-image: url(/static/theme/default/svg/arrow-right.svg?2);
+}
+.svg-gift {
+    background-image: url(/static/theme/default/svg/gift.svg?2);
+}
+.svg-laba {
+    display: inline-block;
+    vertical-align: -.25rem;
+    background-image: url(/static/theme/default/svg/laba.svg?2);
+}
+.get_gift_title .icon-svg {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: -.25rem;
+}
+.icon-svg {
+    margin: auto;
+}
+.game_list {
+    position: relative;
+    margin-top: .5rem;
+    background: #fff;
+}
+.game_list .game_item .icon-svg {
+    width: 2rem;
+    height: 2rem;
+    margin-bottom: .25rem;
+}
+.game_item {
+    padding: .5rem 0;
+}
+.game_list2 {
+    margin-top: .5rem;
+    position: relative;
+    background: #fff;
+
+}
+.wing-l {
+    background-image: url(/static/theme/default/svg/wing-l.svg?2);
+}
+.wing-r {
+    background-image: url(/static/theme/default/svg/wing-r.svg?2);
+}
+.get_gift_nav {
+    line-height: 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+.play_game_title {
+    font-size: .8rem;
+    color: #0080D0;
+    background: #FFF;
+}
+.bo {
+    position: relative;
+    background: #fff;
+    padding: .5rem;
+    border-top: 1px solid #ddd;
+}
+.bo_t {
+    display: inline-block;
+    margin-right: .25rem;
+    color: #FF7F2B;
+}

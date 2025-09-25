@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShowResultSkin" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="win,lose,zero" >
+	<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillAlpha="0.5"/>
+	<e:Group horizontalCenter="0" verticalCenter="0" height="343">
+		<e:Image source="show_png" horizontalCenter="0" bottom="-15" visible.lose="false" visible.zero="false"/>
+		<e:Image source="sprite-bubble-avator_json.sprite-bubble-avator002" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" source.win="sprite-bubble-avator_json.sprite-bubble-avator002"/>
+		<e:Image source="sprite-bubble-avator_json.sprite-bubble-avator000" horizontalCenter="-20" verticalCenter="20"/>
+		<e:Image horizontalCenter="0" verticalCenter="0" source="sprite-game-soldier_json.sprite-game-soldier000"/>
+		<e:Image id="giftImg" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter.lose="70" verticalCenter.win="75" source="sprite-bubble-title_json.sprite-bubble-title000" source.lose="sprite-bubble-title_json.sprite-bubble-title007" bottom.zero="0" source.zero="sprite-bubble-title_json.sprite-bubble-title006"/>
+		<e:Label text="获得奖金：" verticalAlign="middle" textAlign="center" bottom="0" size="30" visible.lose="false" visible.zero="false" textColor="0xe2c27c" horizontalCenter="-70"/>
+		<e:Label id="gift" text="200金豆" bottom="0" visible.lose="false" visible.zero="false" textColor="0xffc823" horizontalCenter="70"/>
+	</e:Group>
+</e:Skin>

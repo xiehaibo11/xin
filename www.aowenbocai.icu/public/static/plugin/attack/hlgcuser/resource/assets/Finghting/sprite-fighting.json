@@ -1,0 +1,6 @@
+{"file":"sprite-fighting.png",
+"frames":
+{"sprite-fighting003":{"x":0,"y":0,"w":418,"h":249,"offX":0,"offY":0,"sourceW":418,"sourceH":249},
+"sprite-fighting000":{"x":420,"y":0,"w":407,"h":230,"offX":0,"offY":0,"sourceW":407,"sourceH":230},
+"sprite-fighting001":{"x":420,"y":232,"w":374,"h":215,"offX":0,"offY":0,"sourceW":374,"sourceH":215},
+"sprite-fighting002":{"x":0,"y":251,"w":361,"h":214,"offX":0,"offY":0,"sourceW":361,"sourceH":214}}}

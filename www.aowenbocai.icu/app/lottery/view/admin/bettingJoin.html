@@ -1,0 +1,177 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+    .form-group{
+        margin-bottom: 0;
+    }
+</style>
+<div id="app">
+  <div class="box-padding">
+      <div class="search breadcrumb">
+          <div class="form-group form-group-left fl" >
+              <label>选择彩种:</label>
+              <div class="dropdown" style="display:inline-block">
+                  <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" style="width:160px">{$lotteryName}
+                      <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1"href="{:url('alllist')}" >所有彩种</a>
+                    </li>
+                      {volist name="$extList" id="item"}
+                      <li role="presentation">
+                          <a role="menuitem" tabindex="-1"{neq name="$item.title" value="$lotteryName"} href="{$item.name}" {/neq}>{$item.title}</a>
+                      </li>
+                      {/volist}
+                  </ul>
+              </div>
+          </div>
+        <form class="form-inline" id="search">
+          <div class="form-group form-group-left">
+            <label>会员名:</label>
+            <input type="text" name="username" class="form-control" {present name="$query.username"} value="{$query.username}" {/present}placeholder="会员名">
+          </div>
+          <div class="form-group form-group-left">
+            <label>方案号:</label>
+            <input type="text" name="lottery_id" class="form-control" {present name="$query.lottery_id"} value="{$query.lottery_id}" {/present}placeholder="方案号">
+          </div>
+          <div class="form-group form-group-left">
+            <label>期号:</label>
+            <input type="text" name="expect" class="form-control" {present name="$query.expect"} value="{$query.expect}" {/present} placeholder="期号">
+          </div>
+          <div class="form-group form-group-left">
+            <label>时间</label>
+            <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+              <input type='text' class="form-control" name="starttime" {present name="$query.starttime"} value="{$query.starttime}" {/present}/>
+              <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+            <label>到</label>
+            <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+              <input type='text' class="form-control" name="endtime" {present name="$query.endtime"} value="{$query.endtime}" {/present}/>
+              <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+        </form>
+          <div class="clear"></div>
+      </div>
+
+  <div class="btn-group isdaydelete fr" style="margin-bottom:20px;">
+    <a data-url="{:url('buyDelete')}" data-day="30" data-name="{$name}" class="btn btn-info btn-sm">清除30天前记录</a>
+    <a data-url="{:url('buyDelete')}" data-day="15" data-name="{$name}" class="btn btn-info btn-sm">清除15天前记录</a>
+    <a data-url="{:url('buyDelete')}" data-day="7" data-name="{$name}" class="btn btn-info btn-sm">清除7天前记录</a>
+    <a data-url="{:url('buyDelete')}" data-day="3" data-name="{$name}" class="btn btn-info btn-sm">清除3天前记录</a>
+    <a data-url="{:url('buyDelete')}" data-day="1" data-name="{$name}" class="btn btn-info btn-sm">全部清除</a>
+  </div>
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>发起人</th>
+            <th>方案号</th>
+            <th>期号</th>
+            <th>购买金额</th>
+            <th>总金额</th>
+            <th>合买/追号</th>
+            <th>总奖金</th>
+            <th>投注时间</th>
+            <th>订单状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {volist name="$list" id ="item"}
+        <tr>
+          <td>{$item.id}</td>
+          <td>{$item.username}</td>
+          <td>{$item.buyInfo.fristPerson}</td>
+          <td><a href="{:url('/web/orders/index')}?lottery_id={$item.buyInfo.lottery_id}&id={$item.buy_id}" target="_blank" class="show_content">{$item.buyInfo.lottery_id}</a></td>
+          <td>{$item.buyInfo.expect}</td>
+          <td>{$item.money}</td>
+          <td>{$item.buyInfo.total_money}</td>
+          <td>{eq name="$item.buyInfo.is_join" value="1"}<span style="color:#7961ff">是</span>{else /}否{/eq}/{eq name="$item.buyInfo.isChase" value="1"}<span style="color:red">是</span>{else /}否{/eq}</td>
+          <td>{$item.buyInfo.bonus}</td>
+          <td>{$item.create_time}</td>
+          <td>{$item.buyInfo.status}</td>
+          <td>
+            <div class="btn-group" role="group" aria-label="...">
+            
+              {if condition="$item.buyInfo.statusCode == 0"}
+                {eq name="$item.buyInfo.finsh" value="0"}<a data-url="{:url('outOfTicket')}" data-id = "{$item.buy_id}" data-num = "{$key + 1}"  data-lottery = '{$item.buyInfo.lottery_id}'class="btn btn-info btn-xs btn-ticket">出票</a>{/eq}
+                <a data-url="{:url('returnTicket')}"  data-id = "{$item.buy_id}" data-num = "{$key + 1}"  data-lottery = '{$item.buyInfo.lottery_id}' class="btn btn-info btn-xs isback">撤单</a>
+              {/if}
+              <a class="btn btn-info isdelete btn-sm" data-num = "{$key + 1}" data-url="{:url('buyDelete', ['id' => $item.buy_id, 'lotteryId' => $item.buyInfo.lottery_id])}">删除</a>
+            </div>
+          </td>
+        </tr>
+        {/volist}
+        </tbody>
+      </table>
+      <div class="tr">
+          {$list->render()}
+      </div>
+  </div>
+</div>
+
+
+{include file='admin@common/foot' /}
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _this = $(this);
+            var e = $.modal.confirm('你是否确定删除', function() {
+                var num = _this.data('num');
+                $.get(_this.data("url"), {id: _this.data('id'), lotteryId: _this.data('lottery')}, function(res){
+                  e.close();
+                  $.modal.alert(res.msg);
+                  if(!res.err){
+                    $(".table").find('tr').eq(num).hide ();
+                  }
+                })
+            });
+        });
+        $('.isback').click(function() {
+            var _this = $(this);
+            $.modal.confirm('你是否确定撤单', function() {
+                var num = _this.data('num');
+                $.get(_this.data("url"), {id: _this.data('id'), lotteryId: _this.data('lottery')}, function(res){
+                  e.close();
+                  $.modal.alert(res.msg);
+                  if(!res.err){
+                    var trNum = $(".table").find('tr').eq(num);
+                    trNum.find('td').eq(9).text('撤单成功');
+                  }
+                })
+            });
+        });
+
+        $(".btn-ticket").click(function(){
+             var _this = $(this);
+             var num = _this.data('num');
+             $.get(_this.data("url"), {id: _this.data('id'), lotteryId: _this.data('lottery')}, function(res){
+               $.modal.alert(res.msg);
+               if(!res.err){
+                var trNum = $(".table").find('tr').eq(num);
+                  trNum.find('td').eq(9).text('出票成功');
+               }
+             })
+        })
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>

@@ -1,0 +1,213 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style>
+  .remark{height: 34px;line-height: 34px;font-size: 16px}
+  .remark i {font-style: normal;font-size: 12px;margin-left: 10px}
+  .tooltip-inner{max-width: 100%;}
+  a:hover{text-decoration:none}
+  .company_img{width: 200px}
+  </style>
+<nav class="plugin_nav">
+    <a  href="{:url('admin/SystemSet/index')}">基础设置</a>
+    <a href="{:url('admin/SystemSet/setRecharge')}">充值设置</a>
+    <a href="{:url('admin/SystemSet/user')}">会员设置</a>
+    <a class="nav_active">联系方式</a>
+    <div role="presentation" class="dropdown" style="display: inline-block">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            API接口<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="{:url('admin/OtherSet/index')}">短信验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/emails')}">邮箱验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/qqConnect')}">快速登录接口</a></li>
+            <li><a href="{:url('admin/OtherSet/shareImg')}">微信分享接口</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+            <li>联系方式</li>
+        </ol>
+    </div>
+  <form action="#" id="userform">
+  <div class="form-horizontal form_max">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">公司名称</label>
+      <div class="col-sm-6">
+        <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+          <input type="text" class="form-control" placeholder=""  value="{$setting.company}" name="company" >
+          </a>
+        </div> 
+    </div>
+
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">联系人</label>
+        <div class="col-sm-6">
+            <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+            <input type="text" class="form-control" placeholder=""  value="{$setting.company_person}" name="company_person" >
+            </a>
+        </div> 
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">联系电话</label>
+        <div class="col-sm-6">
+            <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+            <input type="text" class="form-control" placeholder=""  value="{$setting.company_tel}" name="company_tel" >
+            </a>
+        </div> 
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">邮箱账户</label>
+        <div class="col-sm-6">
+            <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+            <input type="text" class="form-control" placeholder=""  value="{$setting.company_email}" name="company_email" >
+            </a>
+        </div> 
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">在线客服代码(手机端)</label>
+        <div class="col-sm-6">
+            <a class="tooltip-test" data-toggle="tooltip" title="请填写链接地址  如:http://...">
+                <textarea class="form-control" rows="3" id="wap_online_qq">{$setting.wap_online_qq}</textarea>
+            </a>
+        </div> 
+    </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">在线客服代码(电脑端)</label>
+          <div class="col-sm-6">
+              <a class="tooltip-test" data-toggle="tooltip" title="请填写第三方js代码  如:<script language='javascript' src='...'></script>">
+                  <textarea class="form-control" rows="3" id="web_online_qq">{$setting.web_online_qq}</textarea>
+              </a>
+          </div>
+      </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">QQ账户</label>
+        <div class="col-sm-6">
+            <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+            <input type="text" class="form-control" placeholder=""  value="{$setting.company_qq}" name="company_qq" >
+            </a>
+        </div> 
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">QQ二维码</label>
+        <div class="col-sm-5">
+            <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+            <input type="text" class="form-control" placeholder=""  value="{$setting.company_img_qq}" name="company_img_qq" >
+            </a>
+            <input type="file" class="company_qq_select" style="display: none;">
+        </div> 
+        <div class="col-sm-3">
+            <button  type="button" class="btn btn-primary btn-delete" data-id = "company_img_qq">清除</button>
+            <button type="button" class="btn btn-primary company_img_qq_select">上传二维码</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-3">
+        <img src="{$setting.company_img_qq}" alt="" class="company_img_qq" style="width:100%">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">微信账户</label>
+        <div class="col-sm-6">
+            <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+            <input type="text" class="form-control" placeholder=""  value="{$setting.company_wx}" name="company_wx" >
+            </a>
+        </div> 
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">微信二维码</label>
+        <div class="col-sm-5">
+            <a class="tooltip-test" data-toggle="tooltip" title="提示语">
+            <input type="text" class="form-control" placeholder=""  value="{$setting.company_img}" name="company_img" >
+            </a>
+            <input type="file" class="select_photo_logo" style="display: none;">
+        </div> 
+        <div class="col-sm-3">
+            <button  type="button" class="btn btn-primary btn-delete" data-id = "company_img">清除</button>
+            <button type="button" class="btn btn-primary btn_select_photo_logo">上传二维码</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-3">
+            <img src="{$setting.company_img}" alt="" class="company_img" >
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-6">
+            <button type="button" class="btn btn-primary btn_save">保存设置</button>
+        </div>
+    </div>
+  </div>
+  </form>
+</div>
+<script>
+
+$('.company_img_qq_select').click(function () {
+  $('.company_qq_select').click();
+});
+$('.company_qq_select').localResizeIMG({
+  quality : 1,
+  success: function (result) {
+    $('.btn_save').attr('disabled', 'disabled');
+    $('.company_img_qq').attr('src', result.base64);
+    $.post('{:url("setWxImg")}', { 'base64_data': result.base64, 'name': 'company_img_qq'}, function (res) {
+      $('input[name=company_img_qq]').attr('value', res.data);
+      $('.btn_save').attr('disabled', null);
+    }, 'json');
+  }
+});
+
+$('.btn_select_photo_logo').click(function () {
+  $('.select_photo_logo').click();
+});
+$('.select_photo_logo').localResizeIMG({
+  quality : 1,
+  success: function (result) {
+    $('.btn_save').attr('disabled', 'disabled');
+    $('.company_img').attr('src', result.base64);
+    $.post('{:url("setWxImg")}', { 'base64_data': result.base64}, function (res) {
+      $('input[name=company_img]').attr('value', res.data);
+      $('.btn_save').attr('disabled', null);
+    }, 'json');
+  }
+});
+
+
+$(".btn-delete").click(function(){
+    var name = $(this).data('id');
+    $('input[name='+name+']').val('');
+    $("."+name).attr('src', '');
+    $.post('{:url("setPicValue")}', {name: name}, function(res) {
+    $.modal.alert('修改成功');
+    })
+})
+$("[data-toggle='tooltip']").tooltip(); 
+  $(document).on('click','.btn_save',function () {
+    $.post('{:url("set")}', {
+      data: JSON.stringify({
+        company: $('input[name=company]').val(),
+        company_person: $('input[name=company_person]').val(),
+        company_qq: $('input[name=company_qq]').val(),
+        company_email: $('input[name=company_email]').val(),
+        company_tel: $('input[name=company_tel]').val(),
+//        company_icp: $('input[name=company_icp]').val(),
+          wap_online_qq : $('#wap_online_qq').val(),
+          web_online_qq : $('#web_online_qq').val(),
+        company_wx: $('input[name=company_wx]').val(),
+        company_img: $('input[name=company_img]').val(),
+      })
+    }, function() {
+      $.modal.alert('修改成功');
+    });
+  });
+</script> {include file='common/foot' /}

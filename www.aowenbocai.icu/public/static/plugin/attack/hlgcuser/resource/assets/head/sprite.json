@@ -1,0 +1,5 @@
+{"file":"sprite.png",
+"frames":
+{"sprite001":{"x":0,"y":0,"w":55,"h":60,"offX":0,"offY":0,"sourceW":55,"sourceH":60},
+"sprite000":{"x":57,"y":0,"w":54,"h":60,"offX":0,"offY":0,"sourceW":54,"sourceH":60},
+"sprite002":{"x":0,"y":62,"w":54,"h":55,"offX":0,"offY":0,"sourceW":54,"sourceH":55}}}

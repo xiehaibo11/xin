@@ -1,0 +1,421 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<style>
+  .remark{height: 34px;line-height: 34px;font-size: 16px}
+  .remark i {font-style: normal;font-size: 12px;margin-left: 10px}
+  .tooltip-inner{max-width: 100%;}
+  .tooltip-test{color:#333;width: 300px}
+  .form-group a:hover{text-decoration:none;color:#333}
+  .pay_images{max-width: 200px;max-height: 200px}
+  .images_btn{margin: 10px 0;}
+  .timeSplit{width: 20px;padding: 0;line-height: 20px;margin-right: 10px;}
+
+   .diamonds_box .col-sm-2 , .diamonds_add_div .col-sm-2{
+        width:15%;
+    }
+    .col-sm-10 , .col-sm-4 ,.col-sm-5, .radio-inline {
+        padding-left:0;
+    }
+  </style>
+
+<nav class="plugin_nav">
+    <a href="{:url('admin/SystemSet/index')}">基础设置</a>
+    <a class="nav_active" href="{:url('admin/SystemSet/setRecharge')}">充值设置</a>
+    <a href="{:url('admin/SystemSet/user')}">会员设置</a>
+    <a href="{:url('admin/SystemSet/company')}">联系方式</a>
+    <!--<a href="{:url('admin/OtherSet/index')}">API接口</a>-->
+    <div role="presentation" class="dropdown" style="display: inline-block">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            API接口<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="{:url('admin/OtherSet/index')}">短信验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/emails')}">邮箱验证接口</a></li>
+            <li><a href="{:url('admin/OtherSet/qqConnect')}">快速登录接口</a></li>
+            <li><a href="{:url('admin/OtherSet/shareImg')}">微信分享接口</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol >
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+            <li>充值设置</li>
+        </ol>
+    </div>
+  <div action="#" id="userform">
+  <div class="form-horizontal form_max">
+      <div class="form-group">
+          <label class="col-sm-2 control-label">游戏币与{$setting.lottery_unit}比</label>
+          <div class="col-sm-5">
+              <a class="tooltip-test" data-toggle="tooltip" title="游戏币与{$setting.lottery_unit}比 = 游戏币 / {$setting.lottery_unit}">
+                  <input type="text" class="form-control" placeholder="游戏币与{$setting.lottery_unit}比值" name="recharge_award" onkeyup="value=value.replace(/[^\d]/g,'')" value="{$setting['recharge_award']}">
+              </a>
+          </div>
+      </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">三方支付</label>
+      <div  class="col-sm-5">
+        <a class="tooltip-test" data-toggle="tooltip" title="在选择三方支付时，请确认您的三方支付接口已对接完成">
+        <label class="radio-inline">
+          <input type="checkbox" name = "other_pay" data-name="other_wx" value="1" {eq name="$setting.other_wx" value="1"}checked{/eq}> 微信
+        </label>
+        <label class="radio-inline">
+          <input type="checkbox" name = "other_pay" data-name="other_alipay" value="1" {eq name="$setting.other_alipay" value="1"}checked{/eq}>  支付宝
+        </label>
+        {volist name="third_pay_list" id="v"}
+            <label class="radio-inline">
+                <input type="checkbox" name = "other_pay" data-name="third_pay" value="{$key}" data-title="{$v}" {eq name="$setting['third_pay'][$key]" value="$key"}checked{/eq}>  {$v}
+            </label>
+        {/volist}
+        </a>
+      </div>
+    </div>
+    <div class="form-group">
+      <label  class="col-sm-2 control-label">扫码支付</label>
+      <div  class="col-sm-5">
+          <div>
+            <label class="radio-inline col-sm-3">
+              <input type="checkbox" name = "sao_pay" id="pay_wx" {eq name="$setting.pay_wx.value" value="1"}checked{/eq}> 微信
+            </label>
+              <input type="file" class="select_photo_wx" style="display: none;">
+            <button class="btn btn-primary btn-xs images_btn show_wx_image" id="wx_btn_add" {neq name="$setting.pay_wx.value" value="1"} style="display:none"{/neq}>管理二维码</button>
+          </div>
+          <div>
+            <label class="radio-inline col-sm-3">
+              <input type="checkbox" name = "sao_pay" id="pay_alipay" {eq name="$setting.pay_alipay.value" value="1"}checked{/eq}> 支付宝
+            </label>
+              <input type="file" class="select_photo_zfb" style="display: none;">
+              <button class="btn btn-primary btn-xs images_btn show_alipay_image" id="zfb_btn_add"  {neq name="$setting.pay_alipay.value" value="1"} style="display:none"{/neq}>管理二维码</button>
+          </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label  class="col-sm-2 control-label">银行卡转账</label>
+      <div  class="col-sm-5">
+          <div>
+              <label class="radio-inline col-sm-3">
+                  <input type="checkbox" name = "bank_open" id="pay_bank" {eq name="$setting.bank_open" value="1"}checked{/eq}> 开启
+              </label>
+              <button class="btn btn-primary btn-xs images_btn" id="bank_btn_add">管理银行卡</button>
+          </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+        <label  class="col-sm-2 control-label">充值赠送次数</label>
+        <div class="col-sm-5">
+          <a class="tooltip-test" data-toggle="tooltip" title="每日充值赠送次数">
+          <input type="text" class="form-control" placeholder="充值赠送次数" name="recharge_send_times" value="{$setting['recharge_send_times']}">
+          </a>
+        </div>
+    </div>
+    <div class="form-group">
+      <label  class="col-sm-2 control-label">每日兑换次数</label>
+      <div class="col-sm-5">
+          <a class="tooltip-test" data-toggle="tooltip" title="每日兑换次数">
+              <input type="text" class="form-control" placeholder="虚拟货币名称" name="getmoney_times" value="{$setting['getmoney_times']}">
+          </a>
+      </div>
+    </div>
+    <div class="form-group">
+      <label  class="col-sm-2 control-label">充值兑换比例</label>
+      <div class="col-sm-2" style="padding-left:0;">
+          <div class="input-group startBd">
+              <input type="text" class="form-control" name="recharge_change" value="{$setting['recharge_change']}" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+              <span class="input-group-addon">%</span>
+          </div>
+      </div>
+    </div>
+    <div class="form-group">
+        <label  class="col-sm-2 control-label">最低兑换金额</label>
+        <div class="col-sm-5">
+          <a class="tooltip-test" data-toggle="tooltip" title="最低兑换金额">
+          <input type="text" class="form-control" placeholder="最低兑换金额" name="getmoney_low" value="{$setting['getmoney_low']}">
+          </a>
+        </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">兑换时间</label>
+          <div class="flex-box">
+              <div class="timeTime">
+                  <a class="tooltip-test" data-toggle="tooltip" title="开始时间:填写格式为时:分:秒（例如 00:00:00）">
+                      <input type="text" style="width: 150px" class="form-control" placeholder="开始时间" name="getmoney_startime" value="{$setting['getmoney_startime']}">
+                  </a>
+              </div>
+              <label class="col-sm-1 control-label timeSplit">至</label>
+              <div class="timeTime">
+                  <a class="tooltip-test" data-toggle="tooltip" title="结束时间:填写格式为时:分:秒（例如 00:00:00）">
+                      <input type="text" style="width: 150px" class="form-control" placeholder="结束时间" name="getmoney_endtime" value="{$setting['getmoney_endtime']}">
+                  </a>
+              </div>
+          </div>
+      </div>
+      <div class="form-group">
+          <label  class="col-sm-2 control-label">充值说明</label>
+          <div class="col-sm-10">
+            <a class="tooltip-test" data-toggle="tooltip" title="充值说明">
+            <input type="text" class="form-control" style="width: 100%" placeholder="充值说明" name="recharge_info" value="{$setting['recharge_info']}">
+            </a>
+          </div>
+        </div>
+        <div class="form-group">
+            <label  class="col-sm-2 control-label">兑换说明</label>
+            <div class="col-sm-10">
+              <a class="tooltip-test" data-toggle="tooltip" title="兑换说明">
+              <input type="text" class="form-control" style="width: 100%" placeholder="兑换说明" name="getmoney_info" value="{$setting['getmoney_info']}">
+              </a>
+            </div>
+          </div>
+  <div class="alert alert-success" role="alert">
+      充值金额对应的是人民币（元）{$setting.lottery_unit}数与前面的充值金额相对应，充值多少金额获得多少{$setting.lottery_unit}
+
+  </div>
+      <div class="diamonds_box">
+          <div class="form-group">
+            <label  class="col-sm-2 control-label" style="text-align: left;"></label>
+            <label  class="col-sm-2 control-label" style="text-align: left;">充值金额</label>
+            <label  class="col-sm-2 control-label" style="text-align: left;">获得{$setting.lottery_unit}数</label>
+
+            <label  class="col-sm-2 control-label" style="text-align: left;">获得游戏币数</label>
+              <label  class="col-sm-2 control-label" style="text-align: left;">赠送{$setting.lottery_unit}</label>
+          </div>
+        {volist name="$setting.diamonds_recharge" id="item"}
+        <div class="form-group">
+            <label  class="col-sm-2 control-label"></label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" style="width: 100%" placeholder="" name="money_diamonds" value="{$item.money}">
+          </div>
+
+          <div class="col-sm-2">
+            <input type="text" class="form-control" style="width: 100%" placeholder="" disabled name="other_lottery_money" value="{$item.lottery_money}">
+          </div>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" style="width: 100%" placeholder=""  disabled name="other_coin" value="{$item.coin}">
+          </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" style="width: 100%" placeholder="" name="other_award" value="{$item.award}">
+            </div>
+
+          {neq name="$key" value="0"}
+          <div class="col-sm-1">
+            <a href="javascript:;" class="diamonds_dele" style="line-height:34px;">删除</a>
+          </div>
+          {/neq}
+        </div>
+        {/volist}
+        {empty  name = "$setting.diamonds_recharge"}
+            <div class="form-group">
+              <label  class="col-sm-3 control-label">充值金额</label>
+              <label  class="col-sm-3 control-label">获得{$setting.lottery_unit}数</label>
+              <label  class="col-sm-3 control-label">获得游戏币数</label>
+                <label  class="col-sm-2 control-label">赠送{$setting.lottery_unit}</label>
+            </div>
+            
+            <div class="form-group">
+              <div class="col-sm-3">
+                <input type="text" class="form-control" placeholder="" onkeyup="value=value.replace(/[^\d]/g,'')" name="money_diamonds">
+              </div>
+
+            <div class="col-sm-3">
+              <input type="text" class="form-control" placeholder="" disabled name="other_lottery_money">
+            </div>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" placeholder=""  disabled name="other_coin">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" placeholder="" name="other_award">
+            </div>
+        {/empty}
+      </div>
+      <div class="form-group diamonds_add_div">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">
+          <a href="javascript:;" class="add_diamonds" style="display: block; line-height:34px;">增加数据</a>
+        </div>
+      </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="button" class="btn btn-primary btn_save">保存设置</button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+{include file="system_set/wx_pay_ewm" /}
+{include file="system_set/bank_pay" /}
+{include file="system_set/zfb_pay_ewm" /}
+
+
+<script>
+var diamondsMoney = 1;
+var coinMoney = parseInt("{$setting.recharge_award}");
+$("[data-toggle='tooltip']").tooltip();
+
+$("input[name=sao_pay]").click(function(){
+    var _this = $(this);
+    var checked = _this.is(":checked");
+    var btn_name = 'show_wx_image';
+    var image_name = 'wx_image';
+    if(_this.attr('id') == 'pay_alipay'){
+      btn_name = 'show_alipay_image';
+      image_name = 'alipay_image';
+    }
+
+    if(checked){
+      $("."+btn_name).show();
+      $("."+image_name).show();
+    }else{
+      $("."+btn_name).hide();
+      $("."+image_name).hide();
+    }
+})
+
+//银行信息是否开启
+var bankState = '{$setting.bank_open}' == 1 ? true : false;
+var bankValue;
+$('#bank-state').bootstrapSwitch({
+    onText:'开启',
+    offText:'关闭',
+    onColor:'success',
+    offColor:'default',
+    size:'mini'
+});
+$('#bank-state').bootstrapSwitch('state', bankState);
+$('#bank-state').on('switchChange.bootstrapSwitch', function (event,state) {
+    bankValue = state ? '1' : '0';
+    alert(bankValue);
+});
+
+/**充值金额输入*/
+$(document).on('blur', 'input[name=money_diamonds]', function () {
+    var _this = $(this);
+    var money = parseInt(_this.val());
+    var _parent = _this.parent().parent();
+    _parent.find('input[name=other_lottery_money]').val(money * diamondsMoney);
+    _parent.find('input[name=other_coin]').val(money * coinMoney);
+})
+
+  $(".add_other").click(function(){
+      var html = '<div class="form-group">\
+                <label  class="col-sm-2 control-label"></label>\
+                <div class="col-sm-2">\
+                  <input type="text" class="form-control" style="width: 100%" placeholder="充值金额" onkeyup="value=value.replace(/[^\d]/g,\'\')" name="money_num">\
+                </div>\
+                <label  class="col-sm-2 control-label"></label>\
+                <div class="col-sm-2">\
+                  <input type="text" class="form-control" style="width: 100%" placeholder="赠送比例(小数)" name="other_award">\
+                </div>\
+                <div class="col-sm-1">\
+                  <a href="javascript:;" class="other_dele" style="line-height:34px;">删除</a>\
+                </div>\
+            </div>';
+      $(".other").append(html);
+  })
+  $(".add_diamonds").click(function(){
+      var html = '<div class="form-group">\
+                <label  class="col-sm-2 control-label"></label>\
+                <div class="col-sm-2">\
+                  <input type="text" class="form-control" style="width: 100%" placeholder="充值金额" name="money_diamonds">\
+                </div>\
+                <div class="col-sm-2">\
+                  <input type="text" class="form-control" style="width: 100%" placeholder="获得{$setting.lottery_unit}数" disabled name="other_lottery_money">\
+                </div>\
+                <div class="col-sm-2">\
+                  <input type="text" class="form-control" style="width: 100%" placeholder="获得游戏币数" disabled name="other_coin">\
+                </div>\
+                <div class="col-sm-2">\
+                  <input type="text" class="form-control" style="width: 100%" placeholder="赠送游戏币" name="other_award">\
+                </div>\
+                <div class="col-sm-1">\
+                  <a href="javascript:;" class="diamonds_dele" style="line-height:34px;">删除</a>\
+                </div>\
+            </div>';
+      $(".diamonds_box").append(html);
+  })
+ 
+  $(document).on('click','.other_dele, .diamonds_dele',function () {
+      $(this).closest('.form-group').remove();
+  })
+
+  $(document).on('click','.btn_save',function () {
+    var other_recharge_award = [];
+    $("input[name=money_num]").each(function(e){
+      var obj = {};
+      obj.money = $(this).val();
+      obj.award = $('input[name=other_award]').eq(e).val() || 0;
+      other_recharge_award.push(obj);
+    });
+    var other_recharge = JSON.stringify(other_recharge_award);
+
+    var diamonds_lost = [];
+    $("input[name=money_diamonds]").each(function(e){
+        var obj = {};
+        obj.money = $(this).val();
+        obj.lottery_money = $('input[name=other_lottery_money]').eq(e).val() || 0;
+        obj.coin = $('input[name=other_coin]').eq(e).val() || 0;
+        obj.award = $('input[name=other_award]').eq(e).val() || 0;
+        diamonds_lost.push(obj);
+    });
+    var diamonds_lost_data = JSON.stringify(diamonds_lost);
+    var sao_pay = [];
+    $("input[name=sao_pay]").each(function(e){
+        var obj = {};
+        var _this = $(this);
+        obj.name = _this.attr('id');
+        obj.url = $("input[name="+obj.name+"]").val();
+        obj.value = _this.is(":checked") ? 1 : 0;
+        sao_pay.push(obj);
+    });
+    var sao_pay_data = JSON.stringify(sao_pay);
+    var other_pay = [];
+    var third_pay = [];
+    $("input[name=other_pay]").each(function(e){
+        var obj = {};
+        var _this = $(this);
+        if (_this.data('name') == 'third_pay' && _this.is(":checked")) {
+            obj.id = _this.val();
+            obj.title = _this.data('title');
+            third_pay.push(obj);
+        }
+    });
+    other_pay.push({'name': 'third_pay', 'value': third_pay});
+    $("input[name=other_pay]").each(function(e){
+        var obj = {};
+        var _this = $(this);
+        obj.name = _this.data('name');
+        if (obj.name != 'third_pay') {
+            obj.value = _this.is(":checked") ? 1 : 0;
+            other_pay.push(obj);
+        }
+    });
+    var other_pay_data = JSON.stringify(other_pay);
+    $.post('{:url("set")}', {
+      data: JSON.stringify({
+        diamonds_recharge: diamonds_lost_data,
+        other_recharge_award: other_recharge,
+        other_pay: other_pay_data,
+        sao_pay: sao_pay_data,
+        recharge_award: $('input[name=recharge_award]').val(),
+        getmoney_info: $('input[name=getmoney_info]').val(),
+        getmoney_times: $('input[name=getmoney_times]').val(),
+        getmoney_startime: $('input[name=getmoney_startime]').val(),
+        getmoney_endtime: $('input[name=getmoney_endtime]').val(),
+        getmoney_low: $('input[name=getmoney_low]').val(),
+        recharge_info: $('input[name=recharge_info]').val(),
+        recharge_change: $('input[name=recharge_change]').val(),
+        recharge_send_times: $('input[name=recharge_send_times]').val(),
+        bank_open : $('input[name=bank_open]').is(':checked') ? 1 : 0,
+      })
+    }, function() {
+      $.modal.alert('修改成功',function () {
+          location.replace(location.href);
+      });
+
+
+    });
+  });
+</script> {include file='common/foot' /}

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GirlSkin" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" xmlns:ns1="*">
+	<w:Declarations>
+		<tween:TweenGroup id="animation">
+			<tween:TweenItem target="{Hair}">
+				<tween:Set>
+					<tween:props>
+						<e:Object rotation="{-10}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object rotation="{-5}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{hands}">
+				<tween:Set>
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object rotation="{5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="2000" ease="sineOut">
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="times">
+			<tween:TweenItem target="{three}">
+				<tween:Set/>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1.2}" scaleY="{1.2}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}" alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{two}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1000"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{1.2}" scaleY="{1.2}" alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}" scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{one}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="2000"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{1.2}" scaleY="{1.2}" alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}" alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{go0}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="3000"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleY="{3}" scaleX="{3}" alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}" alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{2}" scaleY="{2}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{3}" scaleY="{3}" alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect left="0" right="0" top="0" bottom="0" fillAlpha="0.5"/>
+	<e:Group left="200" bottom="-100">
+		<e:Image source="girl_json.girl4" x="195" y="225"/>
+		<e:Image source="girl_json.girl27" x="-34.5" y="87.96"/>
+		<e:Image id="hands" source="girl_json.girl23" y="315.98" left="6" anchorOffsetX="77" anchorOffsetY="214"/>
+		<e:Image source="girl_json.girl21" x="22" y="-4"/>
+		<e:Image source="girl_json.girl3" x="190" y="161"/>
+		<e:Image id="clothes" source="girl_json.girl1" x="186.67" y="140.02"/>
+		<e:Image source="girl_json.girl12" x="197.68" y="146.72"/>
+		<e:Image source="girl_json.girl15" x="187.03" y="151.98"/>
+		<e:Image source="girl_json.girl14" x="96.19" y="-7.96"/>
+		<e:Image source="girl_json.girl6" x="50.96" y="330.68"/>
+		<e:Image source="girl_json.girl22" x="128" y="382.3"/>
+		<e:Image source="girl_json.girl9" x="49.96" y="333.96"/>
+		<e:Image source="girl_json.girl10" x="149.29" y="220.48"/>
+		<e:Image source="girl_json.girl7" x="157.63" y="148.95"/>
+		<e:Image id="Hair" source="girl_json.girl0" x="169.68" y="125" rotation="-10" anchorOffsetX="0.99" anchorOffsetY="0.17"/>
+	</e:Group>
+	<e:Group width="200" height="200" horizontalCenter="0" verticalCenter="0">
+		<e:Group horizontalCenter="0" verticalCenter="0">
+			<e:Image id="three" source="time_json.time7" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+			<e:Image id="two" source="time_json.time8" horizontalCenter="0" verticalCenter="0"/>
+			<e:Image id="one" source="time_json.time9" horizontalCenter="0" verticalCenter="0"/>
+			<e:Image id="go0" source="time_json.time0" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>

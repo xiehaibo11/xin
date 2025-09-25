@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SoundSkin" xmlns:e="http://ns.egret.com/eui">
+	<e:Group horizontalCenter="0" verticalCenter="0" width="40" height="40" scrollEnabled="true">
+		<e:Image source="music_png" horizontalCenter="0" verticalCenter="0" x="-24" y="-24" scaleX="1" scaleY="1" width="48" height="48"/>
+	</e:Group>
+</e:Skin>

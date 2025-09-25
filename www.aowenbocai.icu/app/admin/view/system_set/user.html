@@ -1,0 +1,354 @@
+{include file='common/head' /}
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<link href="__STATIC__/summernote/summernote.css?v=2" rel="stylesheet">
+<script src="__STATIC__/summernote/summernote.min.js?v=2"></script>
+<script src="__STATIC__/summernote/summernote-zh-CN.js?v=2"></script>
+<style>
+  .form-group .dropdown-toggle {
+    padding:5px 10px !important;
+  }
+</style>
+<style>
+  .remark{height: 34px;line-height: 34px;font-size: 16px}
+  .remark i {font-style: normal;font-size: 12px;margin-left: 10px}
+  .tooltip-inner{max-width: 100%;}
+  .tooltip-test{color:#333}
+  .form-group a:hover,.textarea_class a:hover{text-decoration:none;color:#333}
+  .textarea_class{width: 100%}
+  .modal {z-index:10005;}
+  </style>
+<nav class="plugin_nav">
+    <a  href="{:url('admin/SystemSet/index')}">基础设置</a>
+    <a href="{:url('admin/SystemSet/setRecharge')}">充值兑换</a>
+    <a  class="nav_active">会员设置</a>
+    <a href="{:url('admin/SystemSet/company')}">联系方式</a>
+    <div role="presentation" class="dropdown" style="display: inline-block">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        API接口<span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="{:url('admin/OtherSet/index')}">短信验证接口</a></li>
+        <li><a href="{:url('admin/OtherSet/emails')}">邮箱验证接口</a></li>
+        <li><a href="{:url('admin/OtherSet/qqConnect')}">快速登录接口</a></li>
+        <li><a href="{:url('admin/OtherSet/shareImg')}">微信分享接口</a></li>
+      </ul>
+    </div>
+</nav>
+<div class="box-padding">
+  <div class="breadcrumb">
+    <ol>
+      <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+      <li>会员设置</li>
+    </ol>
+  </div>
+  <div action="#" id="userform">
+  <div class="form-horizontal form_max">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">注册状态</label>
+      <div  class="col-sm-10">
+        <input id="reg-state" type="checkbox" name="is_reg"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">代理充值</label>
+      <div  class="col-sm-10">
+        <input id="agent_recharge" type="checkbox" name="agent_recharge"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">登录方式</label>
+      <div  class="col-sm-10">
+        <label class="checkbox-inline">
+          <input type="checkbox" name="login_way" value="common" {present name="$setting['login_way']['common']"} checked{/present}> 普通登录
+        </label>
+        {eq name="$setting.tel_checked" value="1"}
+        <label class="checkbox-inline">
+          <input type="checkbox" name="login_way" value="tel"{present name="$setting['login_way']['tel']"} checked{/present}> 手机登录
+        </label>
+        {/eq}
+        {if condition="$setting.wx_checked || $setting.wxsm_checked"}
+        <label class="checkbox-inline">
+          <input type="checkbox" name="login_way" value="wei" {present name="$setting['login_way']['wei']"} checked{/present}> 微信登录
+        </label>
+        {/if}
+        {eq name="$setting.qq_checked" value="1"}
+        <label class="checkbox-inline">
+          <input type="checkbox" name="login_way" value="qq" {present name="$setting['login_way']['qq']"} checked{/present}> QQ登录
+        </label>
+        {/eq}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">注册设置</label>
+      <div  class="col-sm-10">
+        <!--<label class="checkbox-inline">-->
+          <!--<input type="checkbox" name="reg_way" value="common" {present name="$setting['reg_way']['common']"} checked{/present}> 普通注册-->
+        <!--</label>-->
+        <!--{eq name="$setting.tel_checked" value="1"}-->
+        <!--<label class="checkbox-inline">-->
+          <!--<input type="checkbox" name="reg_way" value="tel" {present name="$setting['reg_way']['tel']"} checked{/present}> 手机注册-->
+        <!--</label>-->
+        <!--{/eq}-->
+        <label class="checkbox-inline">
+          <input type="checkbox" name="reg_way" value="tel" {present name="$setting['reg_way']['tel']"} checked{/present}> 注册必填手机
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" name="reg_way" value="common" {present name="$setting['reg_way']['common']"} checked{/present}> 注册必填QQ
+        </label>
+        {if condition="$setting.wx_checked || $setting.wxsm_checked"}
+        <label class="checkbox-inline">
+          <input type="checkbox" name="reg_way" value="wei"  {present name="$setting['reg_way']['wei']"} checked{/present}> 微信注册
+        </label>
+        {/if}
+        {eq name="$setting.qq_checked" value="1"}
+        <label class="checkbox-inline">
+          <input type="checkbox" name="reg_way" value="qq"  {present name="$setting['reg_way']['qq']"} checked{/present}> QQ注册
+        </label>
+        {/eq}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">注册赠送</label>
+      <div class="col-sm-5">
+        <a class="tooltip-test" data-toggle="tooltip" title="注册赠送虚拟货币,留空不赠送">
+          <input type="text" class="form-control" placeholder="" name="reg_award" value="{$setting.reg_award}">
+          </a>
+        </div> 
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">注册通知</label>
+      <div class="col-sm-5">
+        <a class="tooltip-test" data-toggle="tooltip" title="新用户注册成功后的通知消息">
+        <input type="checkbox" class="reg_msg_open" value="1" name="reg_msg_status" {$setting.reg_msg_status ? 'checked' : ''}>启用
+        <textarea class="form-control reg_msg" rows="3" name="reg_msg" {$setting.reg_msg_status ? '' : 'style="display: none;"'}>{$setting.reg_msg}</textarea>
+        </a>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">登录赠送</label>
+      <div class="col-sm-5">
+          <a class="tooltip-test" data-toggle="tooltip" title="每日第一次登录赠送虚拟货币,留空不赠送">
+        <input type="text" class="form-control" placeholder="" name="login_award" value="{$setting.login_award}">
+        </a>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">签到赠送</label>
+      <div class="col-sm-5">
+          <a class="tooltip-test" data-toggle="tooltip" title="签到赠送虚拟货币 分别为 连续签到1天、2天、3天、4天、5天、6天、7天和7天连续签到额外奖励 [不赠送填0或留空]">
+        <input type="text" class="form-control" placeholder="" name="sign_in_award" value="{$setting.sign_in_award}">
+        </a>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">绑定手机赠送</label>
+      <div class="col-sm-5">
+        <a class="tooltip-test" data-toggle="tooltip" title="绑定手机赠送虚拟货币,留空不赠送">
+        <input type="text" class="form-control" placeholder="" name="lockTel_award" value="{$setting.lockTel_award}">
+        </a>
+      </div>
+    </div>
+    <div>
+    <div class="alert alert-success" role="alert">
+        等级设置：下面三列分别代表等级标识、等级名称以及经验值。这三列每一行相对应
+    </div>
+    <div class="level_box">
+      <?php $user_level = json_decode($setting['user_level'],true);
+        foreach ($user_level as $key => $v) {
+      ?>
+      <div class="form-group">
+        <label class="col-sm-2 control-label"><?php if ($key == 0) { echo '等级设置';} ?></label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control text-center" placeholder="等级" name="level" value="{$v.level}">
+        </div>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" placeholder="等级名称" name="level_name" value="{$v.level_name}">
+        </div>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" placeholder="经验值" name="explan" value="{$v.explan}">
+        </div>
+        <div class="col-sm-1">
+          <a href="javascript:;" class="level_dele" style="line-height:34px;">删除</a>
+        </div>
+      </div>
+      <?php } ?>
+
+    </div>
+    <div class="form-group">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-2">
+        <a href="javascript:;" class="add_input" style="display: block; line-height:34px;">增加一个</a>
+      </div>
+    </div>
+    <div class="alert alert-success" role="alert">
+        以下条款里面涉及到公司名及平台名请分别用*** 和 %%% 代替
+      </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">用户服务条款</label>
+      <div class="col-sm-10">
+          <a class="tooltip-test" data-toggle="tooltip" title="用户隐私权保护和个人信息授权条款里面的公司或平台名请分别用***和 %%%代替">
+            <textarea id="user_web" class="content">{$setting.user_web}</textarea>
+          </a>
+      </div>
+     
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="button" class="btn btn-primary btn_save">保存设置</button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<script>
+    //注册是否开启
+    var regState = "{$setting['is_reg']}" == 1 ? true : false;
+    var regValue;
+    $('#reg-state').bootstrapSwitch({
+        onText:'开启',
+        offText:'关闭',
+        onColor:'success',
+        offColor:'default',
+        size:'mini'
+    });
+    $('#reg-state').bootstrapSwitch('state',regState)
+    $('#reg-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        regValue = state ? '1' : '0';
+    });
+
+    //代理充值是否开启
+    var agentState = "{$setting['agent_recharge']}" == 1 ? true : false;
+    var agentValue;
+    $('#agent_recharge').bootstrapSwitch({
+        onText:'开启',
+        offText:'关闭',
+        onColor:'success',
+        offColor:'default',
+        size:'mini'
+    });
+    $('#agent_recharge').bootstrapSwitch('state',agentState)
+    $('#agent_recharge').on('switchChange.bootstrapSwitch', function (event,state) {
+        agentValue = state ? '1' : '0';
+    });
+
+    //富文本发送图片
+    function sendFile(Url,file,callback) {
+        var filename = false;
+        try{
+            filename = file['name'];
+        } catch(e){filename = false;}
+        if(!filename){$(".note-alarm").remove();}
+        data = new FormData();
+        data.append("file", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: Url,//路径是你控制器中上传图片的方法，下面controller里面我会写到
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(url) {
+                callback(url);
+            }
+        });
+    }
+    $(document).ready(function() {
+        $(".content").each(function(){
+            var _this = $(this);
+            _this.summernote({
+                lang: "zh-CN",
+                height: 350,
+                callbacks: {
+                    //调用图片上传
+                    onImageUpload: function (files) {
+                        sendFile("{:Url('editor_upload')}?dir=setting_user", files[0], function(data){
+                            _this.summernote('insertImage',data,'img');
+                        });
+                    }
+                }
+            })
+        })
+    });
+
+   $("[data-toggle='tooltip']").tooltip(); 
+  $('.reg_msg_open').click(function () {
+    var $this = $(this);
+    if ($this.is(':checked')) {
+      $('.reg_msg').show();
+      return;
+    }
+    $('.reg_msg').hide();
+  });
+  $('.add_input').click(function(){
+      var html = '<div class="form-group">\
+          <label class="col-sm-2 control-label"></label>\
+          <div class="col-sm-2">\
+          <input type="text" class="form-control text-center" placeholder="等级lv" name="level" value="">\
+          </div>\
+          <div class="col-sm-2">\
+          <input type="text" class="form-control" placeholder="等级名称" name="level_name" value="">\
+          </div>\
+          <div class="col-sm-2">\
+          <input type="text" class="form-control" placeholder="经验值" name="explan" value="">\
+          </div>\
+          <div class="col-sm-1">\
+          <a href="javascript:;" class="level_dele" style="line-height:34px;">删除</a>\
+          </div>\
+          </div>';
+      $('.level_box').append(html);
+  })
+  $(document).on('click','.level_dele',function () {
+      $(this).closest('.form-group').remove();
+  })
+
+  $(document).on('click','.btn_save',function () {
+    var level = [];
+    var has_empty = 1;
+    $('input[name=level]').each(function(i){
+        var obj = {};
+        obj.level = $(this).val();
+        obj.explan = $('input[name=explan]').eq(i).val();
+        obj.level_name = $('input[name=level_name]').eq(i).val();
+        if ($(this).val() == '' || $('input[name=explan]').eq(i).val() == '' || $('input[name=level_name]').eq(i).val() == '') {
+            has_empty = 0;
+        }
+        level.push(obj);
+    })
+      if (!has_empty) {
+          return $.modal.alert('请完整填写等级设置项!');
+      }
+    var level_string = JSON.stringify(level);
+  
+    var login_way = [];
+    var reg_way = [];
+    $('input[name=login_way]:checked').each(function(){
+        login_way.push($(this).val());
+    })
+    $('input[name=reg_way]:checked').each(function(){
+        reg_way.push($(this).val());
+    });
+    $.post('{:url("set")}', {
+      data: JSON.stringify({
+        reg_award: $('input[name=reg_award]').val(),
+        reg_msg_status: $('input[name=reg_msg_status]:checked').length ? 1 : 0,
+        reg_msg: $('textarea[name=reg_msg]').val(),
+        login_award: $('input[name=login_award]').val(),
+        lockTel_award: $('input[name=lockTel_award]').val(),
+        sign_in_award: $('input[name=sign_in_award]').val(),
+        action_award: $('input[name=action_award]').val(),
+        user_level: level_string,
+        login_way : login_way.join(','),
+        reg_way : reg_way.join(','),
+        is_reg : regValue,
+        agent_recharge : agentValue,
+        user_web : $('#user_web').val(),
+      })
+    }, function() {
+      $.modal.alert('修改成功');
+    });
+  });
+</script> {include file='common/foot' /}

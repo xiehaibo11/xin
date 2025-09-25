@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HisItemSkin" width="528" height="81" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group width="70" height="70" anchorOffsetX="0" anchorOffsetY="0" verticalCenter="0.5" x="16">
+		<e:Image id="shu_img" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" verticalCenter="0" horizontalCenter="0" source="fish_long_png"/>
+	</e:Group>
+	<e:Label id="shu_name" text="黄金龙王" y="14" size="22" left="110" textColor="0x00bcef"/>
+	<e:Label id="hit_str" text="捕获" y="14" size="26" right="26" textColor="0xff5000"/>
+	<e:Group y="46.86" right="10">
+		<e:Image y="25" anchorOffsetX="0" anchorOffsetY="0" source="coin003_png" width="27.29" height="28" x="91" scaleX="1" scaleY="1"/>
+		<e:Label id="bouns" text="100000" y="26" size="26" x="125" textColor="0xffbf00" scaleX="1" scaleY="1"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="left"/>
+		</e:layout>
+	</e:Group>
+	<e:Rect height="1" bottom="0" left="0" right="0" fillColor="0xffffff" fillAlpha="0.2"/>
+	<e:Rect height="1" left="0" right="0" bottom="1" fillAlpha="0.2"/>
+	<e:Label text="炮弹：" x="111" y="48" size="20"/>
+	<e:Label id="t_num" text="500" x="165" y="48" size="20"/>
+</e:Skin>

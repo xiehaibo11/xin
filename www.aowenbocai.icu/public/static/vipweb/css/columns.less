@@ -1,0 +1,377 @@
+/**
+ * 独立页面样式文件
+ * 游戏大厅、合买大厅、开奖公告、游戏资讯、网站公告、手机网站介绍、帮助页面
+ */
+@charset "UTF-8";
+@import "./variables";
+
+/**
+ * el-card卡片样式重定义
+ */
+.el-card.is-always-shadow, .el-card.is-hover-shadow:focus, .el-card.is-hover-shadow:hover{-webkit-box-shadow:none;box-shadow:none}
+.el-card{
+    .el-card__header{
+        padding: 0;
+        span{
+            display: inline-block;
+            padding: 10px 20px 5px;
+            font-size: @font-size-base + 1;
+            font-weight: 500;
+            border-bottom: 2px solid @color-base;
+            color: @gray-base;
+            font-weight: 500;
+            font-size: @font-size-large;
+        }
+    }
+    .el-card__body{
+        padding: 20px;
+    }
+}
+/**
+ * 游戏大厅
+ */
+.game{
+    height: 200px;
+}
+.pic-slide .swiper-slide a{
+    height: 200px;
+}
+.game-center{
+    .game-recommend{
+        .list{
+            display:block;
+            box-shadow: 0px 0px 10px #d6d6d6;
+            text-align: center;
+            margin:10px 0;
+            padding: 10px 0 15px;
+            .name-type{
+                padding: 10px;
+                .u-gm-name{
+                    font-size: @font-size-base;
+                    color: @color-secondary;
+                }
+                .u-gm-type{
+                    color: @gray-light;
+                    font-size: @font-size-small;
+                }
+            }
+            a{
+                display: block;
+                img{
+                    height: 148px;
+                    display: block;
+                    background-color: #f1f1f1;
+                    margin-bottom: 15px;
+                }
+            }
+        }
+        .game-xx{
+            box-shadow:none;
+            border:1px solid #e9e9e9
+        }
+    }
+    .game-list{
+        .list{
+            display:block;
+            border:1px solid lighten(@gray-lighter,15%);
+            text-align: center;
+            margin:10px 0;
+            .header{
+                padding: 10px;
+                position: relative;
+                i.iconfont{
+                    position: absolute;right: -5px;top: -37px;color: rgb(255, 0, 0);;font-size: 70px;
+                }
+                img{
+                    width: 76px;
+                    height: 76px;
+                    margin-right: 15px;
+                }
+                .cont{
+                    text-align: left;
+                    .desc{
+                        color: @gray-light;
+                        font-size: @font-size-small;
+                    }
+                }
+            }
+            .foot{
+                padding: 5px;
+                .summary{
+                    color: @gray-light;
+                    font-size: @font-size-small;
+                }
+            }
+        }
+    }
+}
+/**
+ * 合买大厅
+ */
+.jion-hall{
+    .jion-tabs{
+        border-bottom: 2px solid @gray-bg;
+    }
+    .jion-cont {
+        .options{
+            padding: 10px;
+            background-color: @gray-bg;
+        }
+    }
+    .join-record{
+        .head{
+            padding: 0 5px 3px 5px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #dcdada;
+            .title{
+                font-size: 16px;
+                font-weight: bold;
+                i{
+                    font-size: 20px;
+                }
+            }
+        }
+        ul{
+            display: inline-block;
+            padding-left: 20px;
+            li{
+                float: left;
+                display: inline-block;
+                width: 165px;
+                line-height: 1.9;
+                position: relative;
+                a{
+                    font-size: 14px;
+                    &:hover{
+                        color: @color-base;
+                        text-decoration: underline;
+                    }
+                }
+                .more-cont{
+                    position: absolute;
+                    left: -20px;
+                    top: 28px;
+                    z-index: 10;
+                    background-color: #fbfbfb;
+                    border: 1px solid #dedede;
+                    padding: 10px;
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+    .other-join{
+        margin-left: 20px;
+    }
+}
+/**
+ * 开奖大厅
+ */
+.list_tl th{
+    text-align: left;
+}
+.list_tl .el-table__body td{
+    text-align: left;
+}
+
+/**
+  * 新闻页
+ */
+.position{
+    a{
+        font-size: @font-size-base;
+    }
+}
+.news{
+    display: flex;
+    .news-left{
+        padding-right: 20px;
+    }
+    .list-item-l{
+        padding: 15px;
+        border-bottom: 1px dashed #eeeeee;
+        &:hover{
+            background-color: @gray-bg;
+        }
+        .list-item-image{
+            width: 200px;
+            height: 120px;
+            margin-right: 15px;
+            background-size: cover;
+        }
+        .list-item-text{
+            .title{
+                font-size: @font-size-large + 2;
+                color:@gray-base;
+                font-weight: 600;
+            }
+            .summary{
+                padding: 5px 0;
+                font-size: @font-size-base;
+                color: @gray-light;
+                line-height: 1.6;
+            }
+            .time{
+                font-size: @font-size-base;
+                color: @gray;
+            }
+        }
+    }
+    /*php分页*/
+    .page {
+        overflow: hidden;
+        padding: 20px;
+        text-align: center;
+        ul.pagination{
+            display: inline-block;
+            li{
+                float: left;
+                display: inline-block;
+                padding: 0 5px;
+                font-weight: bold;
+                &.disabled{
+                    color: #999999;
+                    cursor: not-allowed;
+                }
+                &.active{
+                    color: @color-base;
+                }
+                &.page_total{
+                    font-weight: normal;
+                    .pageInputNum{
+                        width: 30px;
+                        text-align: center;
+                        margin: 0 3px;
+                    }
+                    button{
+                        background: none;
+                        border: 1px solid #999999;
+                        padding: 1px 5px;
+                        color: #101010;
+                        cursor: pointer;
+                        &:hover{
+                            background-color: #f1f1f1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.view{
+    display: flex;
+    .view-detail{
+        width: 75%;
+        padding: 15px 30px 30px 0;
+        .d_title {
+            padding:10px 0;
+            font-size: @font-size-large + 2;
+            font-weight: 700;
+            color: @gray-base;
+        }
+        .d_time {
+            margin-bottom: 15px;
+            font-size: @font-size-small;
+            color: #999;
+        }
+        .d_content {
+            font-size: @font-size-base + 1;
+            line-height: 2;
+            text-align: center;
+            span , strong ,a ,p{
+                font-size:  @font-size-base + 1;
+            }
+            p{
+                padding: 5px 0;
+                text-align: left;
+            }
+            img{
+                max-width: 100%;
+            }
+        }
+    }
+    .view-news{
+        width: 25%;
+        border-left: 1px solid #e6e6e6;
+        background-color: #f7f7f7;
+        padding-bottom: 30px;
+        .nav_title{
+            padding: 0px 15px;
+            margin: 30px 0 10px 0;
+            background: url("/static/vipweb/images/border_left_red.png?t=1234535") no-repeat left center;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #545454;
+        }
+        .list {
+            padding: 0 5px;
+            .list-item{
+                display: block;
+                padding: 12px 0;
+                border-bottom: 1px solid #ececec;
+                &:hover{
+                    background-color: #f2f1f1;
+                }
+            }
+            .list-item-image img{
+                width: 50px;
+                height: 40px;
+                margin-right:5px;
+            }
+            .list-item-text {
+                color: #777;
+                font-size:@font-size-small + 1;
+                div{
+                    text-align: left;
+                }
+                .title {
+                    color: #333;
+                    font-size: @font-size-small + 1;
+                }
+            }
+        }
+    }
+}
+
+.view-news{
+    width: 25%;
+    border-left: 1px solid #e6e6e6;
+    background-color: #f7f7f7;
+    padding-bottom: 30px;
+    .nav_title{
+        padding: 0px 15px;
+        margin: 30px 0 10px 0;
+        background: url("/static/vipweb/images/border_left_red.png?t=1234535") no-repeat left center;
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: #545454;
+    }
+    .list {
+        padding: 0 5px;
+        .list-item{
+            display: block;
+            padding: 12px 0;
+            border-bottom: 1px solid #ececec;
+            &:hover{
+                background-color: #f2f1f1;
+            }
+        }
+        .list-item-image img{
+            width: 50px;
+            height: 40px;
+            margin-right:5px;
+        }
+        .list-item-text {
+            color: #777;
+            font-size:@font-size-small + 1;
+            div{
+                text-align: left;
+            }
+            .title {
+                color: #333;
+                font-size: @font-size-small + 1;
+            }
+        }
+    }
+}
+

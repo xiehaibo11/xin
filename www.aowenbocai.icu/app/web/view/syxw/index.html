@@ -1,0 +1,3531 @@
+{include file='web@common/islogin_head' title='$title'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/game_lottery.css">
+<script src="/static/vipweb/vue-component/module-login.js"></script>
+
+<div class="lottery-bg">
+    <div id="app" class="web game-lottery" v-cloak>
+        <!--logindialog start-->
+        <login-info site-name="{$site_name}" @login-success="loginSuccess" @login-out="loginOut" msg-num="{$msgNum}" :nickname="nickname" :login-visible="loginVisible"
+                    reg-url="{:url('reg/index')}" my-url="{:url('user/my')}" @open-dialog="loginVisible = true" @close-dialog="loginVisible = false" @refresh="refreshMoney"
+                    :money="accountMoney">
+        </login-info>
+        <!--logindialog end-->
+        <div style="position: relative">
+            <div class="stop_selling" v-if="pause">
+                <div class="stop_selling_title"><img src="/static/vipweb/images/stop_selling_title.png" alt=""></div>
+            </div><!--暂停销售-->
+            <div class="head">
+                <el-row :gutter="10">
+                    <el-col :span="3">
+                        <div class="lottery-logo">
+                            <div class="lottery-img"><img class="game-icon" src="{$lottery.image}" alt=""></div>
+                            <div class="lottery-name">{$lottery.title}</div>
+                        </div>
+                    </el-col>
+                    <el-col :span="9" class="lottery-info">
+                        <div class="lottery-info-issue flex-box">
+                            <div class="tc">
+                                <div class="current_numero">第<b>{{defaultInfo.issue}}</b>期</div>
+                                <div>本期剩余时间</div>
+                            </div>
+                            <div class="time"  :class="{'red':defaultInfo.time<=10}">
+                                <i class="el-icon-time"></i>
+                                <i class="timer">{{timer}}</i>
+                            </div>
+                        </div>
+                        <div class="lottery-info-sum"><b>{{jgTime}}</b>分钟一期，每天<b>{{defaultInfo.totalIssue}}</b>期，返奖率<b class="red">59%</b></div>
+                        <div class="lottery-info-link">
+                            <a @click="playLink" class="no-bd-l">
+                                <i class="el-icon-document"></i>
+                                <span>玩法介绍</span>
+                            </a>
+                            <a  v-popover:popover1>
+                                <i class="el-icon-question"></i>
+                                <span>中奖说明</span>
+                            </a>
+                            <el-popover
+                                    ref="popover1"
+                                    placement="bottom"
+                                    title="中奖说明"
+                                    width="900"
+                                    trigger="click">
+                                <el-table
+                                        :data="navList"
+                                        :span-method="objectSpanMethod"
+                                        size="small"
+                                        border
+                                        style="width: 100%; margin-top: 20px">
+                                    <el-table-column prop="name" label="玩法"  width="120"></el-table-column>
+                                    <el-table-column label="开奖号码示例">
+                                        <template slot-scope="scope">
+                                            <div class="tl">01 02 03 04 05</div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="投注号码示例"  width="200">
+                                        <template slot-scope="scope">
+                                            <div v-if="scope.row.type == 13">01</div>
+                                            <div v-if="scope.row.type == 1">01 02</div>
+                                            <div v-if="scope.row.type == 2">01 02 04</div>
+                                            <div v-if="scope.row.type == 3">01 02 04 05</div>
+                                            <div v-if="scope.row.type == 4">01 02 03 04 05</div>
+                                            <div v-if="scope.row.type == 5">01 02 03 04 05 06</div>
+                                            <div v-if="scope.row.type == 6">01 02 03 04 05 06 07</div>
+                                            <div v-if="scope.row.type == 7">01 02 03 04 05 06 07 08</div>
+                                            <div v-if="scope.row.type == 8">01</div>
+                                            <div v-if="scope.row.type == 9">01 02</div>
+                                            <div v-if="scope.row.type == 10">02 01</div>
+                                            <div v-if="scope.row.type == 11">01 02 03</div>
+                                            <div v-if="scope.row.type == 12">01 02 03</div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="中奖规则" width="300">
+                                        <template slot-scope="scope">
+                                            <div v-if="scope.row.type == 13">选1个号码，猜中开奖号码任意1个数字</div>
+                                            <div v-if="scope.row.type == 1">选2个号码，猜中开奖号码任意2个数字</div>
+                                            <div v-if="scope.row.type == 2">选3个号码，猜中开奖号码任意3个数字</div>
+                                            <div v-if="scope.row.type == 3">选4个号码，猜中开奖号码任意4个数字</div>
+                                            <div v-if="scope.row.type == 4">选5个号码，猜中开奖号码任意5个数字</div>
+                                            <div v-if="scope.row.type == 5">选6个号码，猜中开奖号码的全部5个数字</div>
+                                            <div v-if="scope.row.type == 6">选7个号码，猜中开奖号码的全部5个数字</div>
+                                            <div v-if="scope.row.type == 7">选8个号码，猜中开奖号码的全部5个数字</div>
+                                            <div v-if="scope.row.type == 8">选1个号码，猜中开奖号码第1个数字</div>
+                                            <div v-if="scope.row.type == 9">选2个号码与开奖的前2个号码相同</div>
+                                            <div v-if="scope.row.type == 10">选2个号码与开奖的前2个号码相同且顺序一致</div>
+                                            <div v-if="scope.row.type == 11">选3个号码与开奖的前3个号码相同</div>
+                                            <div v-if="scope.row.type == 12">选3个号码与开奖的前3个号码相同且顺序一致</div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="单注奖金"  width="100">
+                                        <template slot-scope="scope">
+                                            <div class="tr"><em class="red">{{handleGain(scope.row.gain)}}</em> {$company['lottery_unit']}</div>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                </el-table>
+                            </el-popover>
+                        </div>
+                    </el-col>
+                    <!--开奖区 start-->
+                    <el-col :span="10"  :offset="1" class="lottery-kj">
+                        <div class="kj-issue"><span>第<b>{{defaultInfo.expect}}</b>期开奖号码</span></div>
+                        <div class="kj-num">
+                            <div class="kj-num-item">
+                                <div class="inner">
+                                    <ul :style="{ top: -defaultInfo.awardNumber[0]*72 + 'px' }">
+                                        <li><span>正</span></li>
+                                        <li v-for="n in 11"><span>{{n | addPreZero}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="kj-num-item">
+                                <div class="inner">
+                                    <ul :style="{ top: -defaultInfo.awardNumber[1]*72 + 'px' }">
+                                        <li><span>在</span></li>
+                                        <li v-for="n in 11"><span>{{n | addPreZero}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="kj-num-item">
+                                <div class="inner">
+                                    <ul :style="{ top: -defaultInfo.awardNumber[2]*72 + 'px' }">
+                                        <li><span>开</span></li>
+                                        <li v-for="n in 11"><span>{{n | addPreZero}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="kj-num-item">
+                                <div class="inner">
+                                    <ul :style="{ top: -defaultInfo.awardNumber[3]*72 + 'px' }">
+                                        <li><span>奖</span></li>
+                                        <li v-for="n in 11"><span>{{n | addPreZero}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="kj-num-item">
+                                <div class="inner">
+                                    <ul :style="{ top: -defaultInfo.awardNumber[4]*72 + 'px' }">
+                                        <li><span>中</span></li>
+                                        <li v-for="n in 11"><span>{{n | addPreZero}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kj-info flex-box">
+                            <div class="kj-lost flex tr">今天已售<em class="red">{{issueAfter}}</em>期，还剩<em class="red">{{defaultInfo.totalIssue - issueAfter}}</em>期</div>
+                            <div class="kj-time flex tl">销售时间：{$info.startTime}-{$info.endTime}</div>
+                        </div>
+                    </el-col>
+                    <!--开奖区 end-->
+                </el-row>
+            </div>
+            <!--选项区 start-->
+            <el-row :gutter="0" class="main">
+                <el-col :span="18" class="bet-left">
+                    <div class="bet-nav">
+                        <ul class="bet-type-link flex-box">
+                            <li v-for="item in navList" class="flex" @click="tabActive(item.type,item.gain)" :class="{'active':defaultInfo.type==item.type}">
+                                <a href="javascript:;">{{item.name}}<span><u v-if="item.type==1">易</u><u v-if="item.type==7">热</u><u v-if="item.type==12">高</u>{{handleGain(item.gain)}}</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bet-b">
+                        <!--选号区 start-->
+                        <div class="bet-cont">
+                            <div class="bet-item rx1" v-show="defaultInfo.type==13">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio13" label="1" border size="mini" v-if="{$small.13.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio13" label="3" border size="mini" v-if="{$small.13.3} !== 1">单式</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio13 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="1" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio13 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="1" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item rx2" v-show="defaultInfo.type==1">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio1" label="1" border size="mini" v-if="{$small.1.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio1" label="3" border size="mini" v-if="{$small.1.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio1" label="2" border size="mini" v-if="{$small.1.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio1 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="2" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio1 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="2" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio1 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="2" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item rx3" v-show="defaultInfo.type==2">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio2" label="1" border size="mini" v-if="{$small.2.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio2" label="3" border size="mini" v-if="{$small.2.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio2" label="2" border size="mini" v-if="{$small.2.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio2 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="3" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio2 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain"  number="3" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio2 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="3" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item rx4" v-show="defaultInfo.type==3">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio3" label="1" border size="mini" v-if="{$small.3.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio3" label="3" border size="mini" v-if="{$small.3.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio3" label="2" border size="mini" v-if="{$small.3.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio3 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="4" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio3 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="4" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio3 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="4" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item rx5" v-show="defaultInfo.type==4">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio4" label="1" border size="mini" v-if="{$small.4.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio4" label="3" border size="mini" v-if="{$small.4.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio4" label="2" border size="mini" v-if="{$small.4.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio4 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="5" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio4 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="5" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio4 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="5" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item rx6" v-show="defaultInfo.type==5">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio5" label="1" border size="mini" v-if="{$small.5.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio5" label="3" border size="mini" v-if="{$small.5.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio5" label="2" border size="mini" v-if="{$small.5.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio5 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="6" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio5 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="6" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio5 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="6" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item rx7" v-show="defaultInfo.type==6">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio6" label="1" border size="mini" v-if="{$small.6.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio6" label="3" border size="mini" v-if="{$small.6.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio6" label="2" border size="mini" v-if="{$small.6.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio6 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="7" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio6 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="7" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio6 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="7" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item rx8" v-show="defaultInfo.type==7">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio7" label="1" border size="mini" v-if="{$small.7.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio7" label="3" border size="mini" v-if="{$small.7.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio7" label="2" border size="mini" v-if="{$small.7.3} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio7 == 1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="8" @bet="addToArea" :type="defaultInfo.type"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio7 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="8" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio7 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="8" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item q1" v-show="defaultInfo.type==8">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio8" label="1" border size="mini" v-if="{$small.8.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio8" label="3" border size="mini" v-if="{$small.8.3} !== 1">单式</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio8 == 1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="1" @bet="addToArea" :type="defaultInfo.type"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio8 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="1" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item qzu2" v-show="defaultInfo.type==9">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio9" label="1" border size="mini" v-if="{$small.9.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio9" label="3" border size="mini" v-if="{$small.9.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio9" label="2" border size="mini" v-if="{$small.9.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio9 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="2" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio9 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt  :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="2" :type="defaultInfo.type" @bet="addToArea"
+                                                     :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio9 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="2" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item qzhi2" v-show="defaultInfo.type==10">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio10" label="1" border size="mini" v-if="{$small.10.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio10" label="3" border size="mini" v-if="{$small.10.3} !== 1">单式</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio10 == 1">
+                                    <bet-item-qz :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="2" :type="defaultInfo.type" @bet="addToArea"
+                                                 :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-qz>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio10 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="2" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item qzu3" v-show="defaultInfo.type==11">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio11" label="1" border size="mini" v-if="{$small.11.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio11" label="3" border size="mini" v-if="{$small.11.3} !== 1">单式</el-radio>
+                                    <el-radio v-model="radio11" label="2" border size="mini" v-if="{$small.11.2} !== 1">胆拖</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio11 ==1"><!--普通投注-->
+                                    <bet-item-rx-normal :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="3" :type="defaultInfo.type" @bet="addToArea"
+                                                        :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-normal>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio11 ==2"><!--胆拖投注-->
+                                    <bet-item-rx-dt :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="3" :type="defaultInfo.type" @bet="addToArea"
+                                                    :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-rx-dt>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio11 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="3" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                            <div class="bet-item qzhi3" v-show="defaultInfo.type==12">
+                                <div class="chose-play">
+                                    <el-radio v-model="radio12" label="1" border size="mini" v-if="{$small.12.1} !== 1">复式</el-radio>
+                                    <el-radio v-model="radio12" label="3" border size="mini" v-if="{$small.12.3} !== 1">单式</el-radio>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio12 ==1">
+                                    <bet-item-qz :issue="defaultInfo.issue" :timer="timer" :miss="defaultInfo.miss" :gain="gain" number="2" :type="defaultInfo.type" @bet="addToArea"
+                                                 :bet-model="betModel" :unit-is-open="unitIsOpen" :label="label" :value="value" :scale="scale" :multiple="multiple"></bet-item-qz>
+                                </div>
+                                <div class="bet-type-tab" v-if="radio12 == 3"><!--单式投注-->
+                                    <copy-grounp :type="defaultInfo.type" :n="3" @bet="copyAdd" :gain="gain"></copy-grounp>
+                                </div>
+                            </div>
+                        </div>
+                        <!--选号区 end-->
+                        <div class="unit-model-box">
+                            <div class="unit-model-cont">
+                                <div class="model-box" v-if="betModel == 1 && unitIsOpen">
+                                    <model-unit @change-model="changeModel" @change-mul="changeMultiple"></model-unit><!--模式1-->
+                                </div>
+                                <div class="rebate-box flex-box" v-if="rebateIsOpen && isRebate">
+                                    <span class="rebate-val">{{rebateVal}}%</span>
+                                    <i class="el-icon-remove-outline" :class="{'disabled' : sliderValue == 0 }" style="padding-left: 3px" @click="changeRebate('sub')"></i>
+                                    <span class="rebate-slider flex">
+                                        <el-slider v-model="sliderValue" :show-tooltip="false" :step="0.1" :max="userRebate"></el-slider>
+                                    </span>
+                                    <i class="el-icon-circle-plus-outline"  :class="{'disabled' : sliderValue == userRebate}" style="padding-right: 3px"  @click="changeRebate('add')"></i>
+                                    <span>{{gain}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--投注区 start-->
+                        <div class="bet-foot">
+                            <div class="bet-area flex-box">
+                                <!--投注列表 start-->
+                                <div class="bet-area-box">
+                                    <div class="flex-box bet-area-title">
+                                        <h6 class="flex c-1">投注列表</h6>
+                                    </div>
+                                    <ul class="bet-area-list">
+                                        <li class="flex-box" v-for="(item,index) in bet.betArr">
+                                            <span class="title">[{{item.type_text}}]</span>
+                                            <span class="code flex">{{item.num}}</span>
+                                            <template v-if="betModel == 1  && unitIsOpen"> <!--模式1 元角分厘开启 单位-->
+                                                <span class="code t-h">{{item.unit}}</span>
+                                            </template>
+                                            <span class="notes t-h"><em>{{item.notes}}</em>注</span>
+                                            <!--模式1 默认模式-->
+                                            <template v-if="betModel == 1  && !unitIsOpen">
+                                                <span class="notes t-h"><em>{{bet.multiple}}</em>倍</span>
+                                                <span class="notes t-h"><em class="red">{{item.money * bet.multiple}}</em>{$company['lottery_unit']}</span>
+                                                <span class="notes t-h" v-if="rebateIsOpen && isRebate">返{{item.rebate}}%</span>
+                                            </template>
+                                            <!--模式1 元角分厘开启-->
+                                            <template v-if="betModel == 1  && unitIsOpen">
+                                                <span class="notes t-h"><em>{{item.multiple}}</em>倍</span>
+                                                <span class="notes t-h"><em class="red">{{item.money}}</em>{$company['lottery_unit']}</span>
+                                                <span class="notes t-h" v-if="rebateIsOpen && isRebate">返{{item.rebate}}%</span>
+                                            </template>
+                                            <!--模式2 -->
+                                            <template v-if="betModel == 2">
+                                                <div class="each-set-money" style="width:200px">
+                                                    每注
+                                                    <el-input-number style="width:120px" v-model="item.money" :min="minMoney" label="金额" size="mini" @change="changeBetArr(item.money,index)"></el-input-number>
+                                                    {$company['lottery_unit']}
+                                                </div>
+                                                <span class="notes t-h" v-if="rebateIsOpen && isRebate">返{{item.rebate}}%</span>
+                                            </template>
+                                            <a class="delete link" @click="deleteBet(index,item.notes)"><i class="el-icon-error"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--投注列表 end-->
+                                <div class="bet-area-qbtn flex">
+                                    <span class="tips">机选一注，试试手气</span>
+                                    <a @click="betRandom(1)"><el-button plain size="small" class="btn-full">机选1注</el-button></a>
+                                    <a @click="betRandom(5)"><el-button plain size="small" class="btn-full">机选5注</el-button></a>
+                                    <a @click="betRandom(10)"><el-button plain size="small" class="btn-full">机选10注</el-button></a>
+                                    <a @click="clearList" style="margin-bottom: 0"><el-button plain size="small" class="btn-full">清空列表</el-button></a>
+                                </div>
+                            </div>
+                            <div class="bet-area-txt">
+                                已选 <strong class="red">{{bet.notes}}</strong> 注，投
+                                <template v-if="betModel == 1 && !unitIsOpen">
+                                    <el-input-number v-model="bet.multiple" :min="1" label="设置倍数" size="small" @change="changeMul"></el-input-number> 倍，
+                                </template>
+                                共计 <strong class="red">{{zgMoney}}</strong> {$company['lottery_unit']}
+                            </div>
+                            <!--购买方式 start-->
+                            <div class="buy-type">
+                                <div class="flex-box header">
+                                    <em>购买方式：</em>
+                                    <el-radio-group v-model="bet.buyType">
+                                        <el-radio :label="1">自购</el-radio>
+                                        <el-radio :label="2" v-if="betModel == 2 && joinOpen || betModel == 1 && !unitIsOpen && joinOpen">合买</el-radio>
+                                    </el-radio-group>
+                                    <el-checkbox v-if="betModel == 1" style="margin-left: 30px" v-model="bet.isChase" @change="doChase">追号</el-checkbox>
+                                    <div class="notes tr flex">
+                                        <template v-if="bet.buyType==1">
+                                            由投注人自行全额下注彩票，独享奖金
+                                            <el-tooltip placement="bottom">
+                                                <div slot="content">
+                                                    选好投注号码后，由自己全额支付购彩{$company['lottery_unit']}。<br>中奖后，自己独享全部奖金。
+                                                </div>
+                                                <i class="el-icon-question"></i>
+                                            </el-tooltip>
+                                        </template>
+                                        <template v-if="bet.buyType==2">
+                                            多人出资购买彩票，奖金按购买比例分享
+                                            <el-tooltip  placement="bottom">
+                                                <div slot="content">
+                                                    <em>合买：</em>选好投注号码后，由多人出资<br>参与合买彩票。中奖后，奖金按参与<br>比例分享。
+                                                </div>
+                                                <i class="el-icon-question"></i>
+                                            </el-tooltip>
+                                        </template>
+                                    </div>
+                                </div><!--方式选择-->
+                                <div class="buy-type-cont">
+                                    <!--追号内容start-->
+                                    <div  v-if="bet.isChase" :class="{'border-none': bet.buyType==2}">
+                                        <div class="tab-radio-inner" style="padding: 0px">
+                                            <div style="padding: 5px 10px;font-size: 13px">
+                                                <template v-if="bet.isChase">
+                                                    连续多期购买同一个（组）号码
+                                                    <el-tooltip class="item" effect="dark" content="选好投注号码后，对期数、期号、倍数进行设置后，系统按照设置进行购买。" placement="bottom">
+                                                        <i class="el-icon-question"></i>
+                                                    </el-tooltip>
+                                                </template>
+                                            </div>
+                                            <table class="chase" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #ddd;padding-bottom: 5px;">
+                                                <tr>
+                                                    <th width="8%" class="tc">序号</th>
+                                                    <th width="30%"><el-checkbox v-model="checkAll" @change="checkedBox"></el-checkbox> 追
+                                                        <span class="chase-input"><input class="el-input__inner" v-model="chaseNum" type="tel" @blur="chaseIssue"></span>期
+                                                    </th>
+                                                    <th width="17%" class="tc">
+                                                        <span class="chase-input"><input class="el-input__inner" v-model="chaseMul" type="tel" @blur="chaseM"></span>倍
+                                                    </th>
+                                                    <th width="20%" class="tc">方案金额</th>
+                                                    <th width="25%" class="tc">预计开奖时间</th>
+                                                </tr>
+                                            </table>
+                                            <div class="chase-cont">
+                                                <table class="chase"  border="0" cellpadding="0" cellspacing="0"  width="100%">
+                                                    <tr v-for="(item,index) in chaseData">
+                                                        <td width="8%" align="center">{{index+1}}</td>
+                                                        <td width="30%" >
+                                                            <el-checkbox v-model="item.checked" v-if="index==0" disabled></el-checkbox>
+                                                            <el-checkbox v-model="item.checked" v-else @change="checkB(index,item.checked)"></el-checkbox>
+                                                            {{item.issue}} <em  class="red" style="font-size: 12px" v-if="index==0">(当前期必选)</em></td>
+                                                        <td width="17%" align="center">
+                                                            <span class="chase-input"><input class="el-input__inner" type="tel" v-model="item.multiple" @input="checkMul(index,item.multiple)"></span>倍
+                                                        </td>
+                                                        <td width="20%" align="center"><em class="red">{{item.multiple * oneMoney}}</em>{$company['lottery_unit']}</td>
+                                                        <td width="25%" align="center">{{item.time}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="bg foot-ts flex-box">
+                                            <div class="tl flex">共追号 <b class="red">{{issueTotal}}</b> 期，总投注金额<b class="red"> {{chaseMoney}} </b>{$company['lottery_unit']}</div>
+                                            <div class="tr flex notes">
+                                                中奖后停止追号 <el-switch v-model="isStop"></el-switch>
+                                                <el-tooltip  placement="bottom-start">
+                                                    <div slot="content">
+                                                        <b>中奖停追：</b>勾选后，您的追号方案中的某一期中奖后，<br/>
+                                                        后续的追号订单将被撤销，资金返还您的账户中。如不<br/>
+                                                        勾选，系统一直帮您购买所有的追号投注任务。<br/>
+                                                    </div>
+                                                    <i class="el-icon-question"></i>
+                                                </el-tooltip>
+                                            </div>
+                                        </div>
+                                    </div><!--追号-->
+                                    <!--合买内容start-->
+                                    <div v-if="bet.buyType==2">
+                                        <div class="tab-radio-inner">
+                                            <div class="bet-jion">
+                                                <div class="info">
+                                                    我要分成：<el-input-number v-model="jion.total_share" :min="minTotalShare" :max="money" size="small" @change="checkJion" @keydown.native="channelInputLimit"></el-input-number> 份
+                                                    <span class="jion-tip">每份<b class="red">{{perMoney}}</b>{$company['lottery_unit']}</span>
+                                                    <span>(每份至少1{$company['lottery_unit']})</span>
+                                                </div>
+                                                <div class="info">
+                                                    我要认购：<el-input-number v-model="jion.buy_share" :min="minJionMoney" :max="jion.total_share" size="small" @change="checkJion" @keydown.native="channelInputLimit"></el-input-number> 份
+                                                    <span class="jion-tip">发起人至少认购<b class="red">5</b>%</span>
+                                                    <span>(已认购<b class="red">{{isbuy}}</b>%,共<b class="red">{{countShareMoney(jion.buy_share)}}</b>{$company['lottery_unit']})</span>
+                                                </div>
+                                                <div class="info">
+                                                    我要保底：<el-input-number v-model="jion.bd_share" :min="0" :max="bdMax" size="small" @change="isAllBd" @keydown.native="channelInputLimit"></el-input-number> 份
+                                                    <el-checkbox v-model="jion.isAll" @click.native="allBd"></el-checkbox> 全额保底
+                                                    <span class="jion-tip">最多可保底<b class="red">{{bdMax}}</b>份</span>
+                                                    <span>(已保底<b class="red">{{bdPercent}}</b>%,共<b class="red">{{countShareMoney(jion.bd_share)}}</b>{$company['lottery_unit']})</span>
+                                                </div>
+                                                <div v-if="{$system['isGain']}" class="info flex-box" style="align-items: flex-start;">
+                                                    <div>盈利佣金：</div>
+                                                    <div class="flex">
+                                                        <el-radio-group v-model="jion.gain" size="mini">
+                                                            <el-radio-button label="0%"></el-radio-button>
+                                                            <template v-for="n in 10">
+                                                                <el-radio-button :label="n + '%'"></el-radio-button>
+                                                            </template>
+                                                        </el-radio-group>
+                                                        <div class="jion-tip">若方案盈利，盈利佣金=奖金*佣金比例</div>
+                                                    </div>
+                                                </div>
+                                                <div class="info flex-box">
+                                                    <div>保密设置：</div>
+                                                    <div>
+                                                        <el-radio-group v-model="jion.infoState">
+                                                            <el-radio :label="0">完全公开</el-radio>
+                                                            <el-radio :label="1">截止后公开</el-radio>
+                                                            <el-radio :label="2">仅跟单人可见</el-radio>
+                                                            <el-radio :label="3">完全保密</el-radio>
+                                                        </el-radio-group>
+                                                    </div>
+                                                </div>
+                                                <div class="info flex-box" style="align-items: flex-start">
+                                                    <div>合买宣言：</div>
+                                                    <div style="width:400px">
+                                                        <el-input
+                                                                size="mini"
+                                                                type="textarea"
+                                                                :autosize="{ minRows: 2, maxRows: 4}"
+                                                                placeholder="说点什么吧！"
+                                                                v-model="jion.declaration">
+                                                        </el-input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="bg foot-ts">
+                                            您需支付：<b class="red">{{countShareMoney(jion.buy_share + jion.bd_share)}}</b> {$company['lottery_unit']}
+                                            <em class="color-gray">（认购{{countShareMoney(jion.buy_share)}}{$company['lottery_unit']}+保底{{countShareMoney(jion.bd_share)}}{$company['lottery_unit']}）</em>
+                                        </div>
+                                    </div><!--合买-->
+                                </div>
+                            </div>
+                            <!--购买方式 end-->
+                            <!--提交-->
+                            <div class="submit tc">
+                                <el-button type="primary" @click.native="submit" style="font-size: 18px;margin: 10px 0;">确认提交</el-button>
+                                <p>
+                                    <el-checkbox v-model="bet.checked">
+                                        <span>我已阅读并同意</span>
+                                    </el-checkbox>
+                                    <a class="link" @click="agreeVisible = true">《用户服务协议》</a>
+                                    <a class="link" @click="gameVisible = true">《游戏服务协议》</a>
+                                </p>
+                            </div>
+                        </div>
+                        <!--投注区 end-->
+                    </div>
+                    <!--底部展示-->
+                    <div class="bet-foot">
+                        <today-kj :kj-code="kjCode" :total-issue="defaultInfo.totalIssue"></today-kj>
+                        <my-record :record-data="recordData" @refresh="getRecordData"></my-record><!--我的投注记录-->
+                    </div>
+                </el-col>
+                <el-col :span="6" class="bet-rig">
+                    <!--betRight-->
+                    <bet-right :recent-award-data="recentAwardData" :cold="cold" :hot="hot"></bet-right>
+                </el-col>
+            </el-row>
+            <!--选项区 end-->
+        </div>
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                top="0"
+                :lock-scroll = "false"
+                width="450px"
+        >
+            <span style="font-size: 15px">你好，第<b class="red">{{defaultInfo.expect}}</b>期已截止，当前期是第<b class="red">{{defaultInfo.issue}}</b>期，投注时请确认选择的期号。</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!--订单信息确认-->
+        <el-dialog
+                title="订单信息确认"
+                :visible.sync="orderVisible"
+                top="0"
+                :lock-scroll = "false"
+                width="450px"
+        >
+            <div class="order-info">
+                <div>
+                    <span class="name">投注彩种:</span>
+                    <span class="info">{$lottery.title}</span>
+                </div>
+                <div>
+                    <span class="name">投注方式:</span>
+                    <span class="info">{{order.type}}<em v-if="bet.isChase">追号</em></span>
+                </div>
+                <div>
+                    <span class="name">投注期号:</span>
+                    <span class="info">{{defaultInfo.issue}}<em v-if="bet.isChase">(追 <em class="red">{{issueTotal}}</em>期)</em></span>
+                </div>
+                <template v-if="bet.isChase"><!--追号显示-->
+                    <div>
+                        <span class="name">方案金额:</span>
+                        <span class="info"><b class="red">{{zgMoney}}</b> {$company['lottery_unit']}</span>
+                    </div>
+                </template>
+                <template v-if="bet.buyType==2"><!--合买显示-->
+                    <div>
+                        <span class="name">投注总额:</span>
+                        <span><b class="red" v-if="bet.isChase">{{chaseMoney}}</b><b class="red" v-else>{{zgMoney}}</b> {$company['lottery_unit']}</span>
+                    </div>
+                    <div>
+                        <span class="name">认购金额:</span>
+                        <span><b class="red">{{order.money}}</b> {$company['lottery_unit']} <em class="info">(认购{{countShareMoney(jion.buy_share)}}{$company['lottery_unit']} + 保底{{countShareMoney(jion.bd_share)}}{$company['lottery_unit']})</em></span>
+                    </div>
+                    <div  v-if="{$system['isGain']}">
+                        <span class="name">盈利佣金:</span>
+                        <span>{{jion.gain}}</span>
+                    </div>
+                </template>
+                <template v-else>
+                    <div>
+                        <span class="name" v-if="bet.isChase">投注总额:</span>
+                        <span class="name" v-else>方案金额:</span>
+                        <span class="info"><b class="red">{{order.money}}</b> {$company['lottery_unit']}</span>
+                    </div>
+                </template>
+                <div v-if="betModel == 1 && !unitIsOpen && !bet.isChase">
+                    <span class="name">投注倍数:</span>
+                    <span class="info"><b class="red">{{bet.multiple}}</b> 倍</span>
+                </div>
+                <div>
+                    <span class="name">账户余额:</span>
+                    <span class="info">{{formatMoney}} {$company['lottery_unit']}</span>
+                </div>
+            </div>
+            <div class="tips tc" v-if="accountMoney < order.money" style="font-size: 14px;color: #333">
+                您的<b class="red">账户余额不足</b>，请先充值!
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="orderVisible = false">取消</el-button>
+                <el-button v-if="accountMoney < order.money" type="primary" @click="goPay">立即充值</el-button>
+                <el-button v-else type="primary" @click="submitOrder" :disabled="notDo">确定购买</el-button>
+            </span>
+        </el-dialog>
+        <!--用户服务协议-->
+        <el-dialog
+                title="用户服务协议"
+                :visible.sync="agreeVisible"
+                :lock-scroll = false :center="true"
+                top = 0
+                width="60%">
+            <div class="service-cont">{$company.user_web}</div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="agreeVisible = false">我知道了</el-button>
+             </span>
+        </el-dialog>
+        <!--游戏户服务协议-->
+        <el-dialog
+                title="游戏服务协议"
+                :visible.sync="gameVisible"
+                :lock-scroll = false :center="true"
+                top = 0
+                width="60%">
+            <div class="service-cont">{$company.web_service}</div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="gameVisible = false">我知道了</el-button>
+             </span>
+        </el-dialog>
+    </div>
+</div>
+<!--投注--右侧内容-->
+<template id="betRight">
+    <div>
+        <div class="concent-award">
+            <div class="bt">近期开奖</div>
+            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr class="title">
+                    <td width="24%">期号</td>
+                    <td width="40%">开奖号码</td>
+                    <td width="18%">大小比</td>
+                    <td width="18%">奇偶比</td>
+                </tr>
+                <tr v-for="(item,index) in recentAwardData" v-if="index < 10">
+                    <td v-if="!expect_type">
+                        <em v-if="item.expect.toString().length > 10">{{item.expect | slice4}}</em>
+                        <em v-else>{{item.expect | slice}}</em>
+                    </td>
+                    <td v-else>{{item.expect}}</td>
+                    <td>
+                        <b class="red">{{item.code[0]}} {{item.code[1]}}</b>
+                        <em class="red">{{item.code[2]}}</em>
+                        <em>{{item.code[3]}} {{item.code[4]}}</em>
+                    </td>
+                    <td>{{item.dx}}</td>
+                    <td>{{item.jo}}</td>
+                </tr>
+            </table>
+            <div class="tr">
+                <a v-if="!expect_type" :href="'{:url('./history')}' + '/index/name/' + historyName" target="_blank" class="link">查询历史开奖</a>
+                <a v-else :href="'{:url('./history')}' + '/all_list/name/' + historyName" target="_blank" class="link">查询历史开奖</a>
+            </div>
+        </div>
+        <div class="trend-lr">
+            <div class="title">
+                <span>出号统计</span>
+                <div class="type tabs">
+                    <span :class="{'active':coldNum}" style="border-right: none" @click="coldNum=true">冷号</span><span  @click="coldNum=false" :class="{'active':!coldNum}">热号</span>
+                </div>
+            </div>
+            <div class="cont">
+                <div class="cold-num numbers" v-if="coldNum">
+                    <p class="muted">最近100期内出现次数最少的号码</p>
+                    <ul>
+                        <li v-for="item in cold">
+                            <span class="ball ball-red">{{item.code}}</span>
+                            <span class="line flex"><em :style="{width:(item.num/coldMax * 100) + '%' }"></em></span>
+                            <span class="num"><em class="red">{{item.num}}</em>次</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="hot-num numbers" v-else>
+                    <p class="muted">最近100期内出现次数最多的号码</p>
+                    <ul>
+                        <li v-for="item in hot">
+                            <span class="ball ball-red">{{item.code}}</span>
+                            <span class="line flex"><em :style="{width:(item.num/hotMax * 100) + '%' }"></em></span>
+                            <span class="num"><em class="red">{{item.num}}</em>次</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!--底部 今日开奖号-->
+<template id="todayKj">
+    <div class="lottery-award-all" style="border:none;">
+        <div class="head flex-box" style="border-color: #eaeaea;border-width: 1px 0 1px 0;margin-bottom: 0" @click="isShow = !isShow">
+            <span class="flex name">今日开奖号码</span>
+            <span class="change" v-if="!isShow">展开 <i class='el-icon-arrow-down'></i></span>
+            <span class="change" v-else>关闭 <i class='el-icon-arrow-up'></i></span>
+        </div>
+        <el-collapse-transition>
+            <div class="flex-box cont" v-show="isShow">
+                <template v-if="!expect_type"> <!--日期型-->
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="20%">期次</td>
+                                <td width="80%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in column">
+                                <td width="20%">{{checkUp(n)[0]}}</td>
+                                <td width="80%" :class="{'red' : kjCode[checkUp(n)[1]]}">{{kjCode[checkUp(n)[1]] || '--'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="20%">期次</td>
+                                <td width="80%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in column">
+                                <td width="20%">{{checkUp(n + column)[0]}}</td>
+                                <td width="80%" :class="{'red' : kjCode[checkUp(n + column)[1]]}">{{kjCode[checkUp(n + column)[1]] || '--'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="20%">期次</td>
+                                <td width="80%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in column">
+                                <td width="20%">{{checkUp(n + column*2)[0]}}</td>
+                                <td width="80%" :class="{'red' : kjCode[checkUp(n + column*2)[1]]}">{{kjCode[checkUp(n + column*2)[1]] || '--'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="20%">期次</td>
+                                <td width="80%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in totalIssue-column*3">
+                                <td width="20%">{{checkUp(n + column*3)[0]}}</td>
+                                <td width="80%" :class="{'red' : kjCode[checkUp(n + column*3)[1]]}">{{kjCode[checkUp(n + column*3)[1]] || '--'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </template>
+                <template v-else><!--累加型-->
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="28%">期次</td>
+                                <td width="72%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in column">
+                                <td width="28%">{{firstIssue + n - 1}}</td>
+                                <td width="72%" class="red" v-if="kjCode.hasOwnProperty(firstIssue + n - 1)">{{kjCode[firstIssue + n - 1]}}</td>
+                                <td width="72%" v-else>--</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="28%">期次</td>
+                                <td width="72%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in column">
+                                <td width="28%">{{firstIssue + n + column - 1}}</td>
+                                <td width="72%" class="red" v-if="kjCode.hasOwnProperty(firstIssue + n + column - 1)">{{kjCode[firstIssue + n + column - 1]}}</td>
+                                <td width="72%" v-else>--</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="28%">期次</td>
+                                <td width="72%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in column">
+                                <td width="28%">{{firstIssue + n + column*2 - 1}}</td>
+                                <td width="72%" class="red" v-if="kjCode.hasOwnProperty(firstIssue + n + column*2 - 1)">{{kjCode[firstIssue + n + column*2 - 1]}}</td>
+                                <td width="72%" v-else>--</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="all-num">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="28%">期次</td>
+                                <td width="72%">开奖号码</td>
+                            </tr>
+                            <tr v-for="n in totalIssue-column*3">
+                                <td width="28%">{{firstIssue + n + column*3 - 1}}</td>
+                                <td width="72%" class="red" v-if="kjCode.hasOwnProperty(firstIssue + n + column*3 - 1)">{{kjCode[firstIssue + n + column*3 - 1]}}</td>
+                                <td width="72%" v-else>--</td>
+                            </tr>
+                        </table>
+                    </div>
+                </template>
+            </div>
+        </el-collapse-transition>
+    </div>
+</template>
+<!--底部 我的投注记录-->
+<template id="myRecord">
+    <div class="lottery-award-all" style="border:none;">
+        <div class="head flex-box" style="border-color: #eaeaea;border-width: 1px 0 1px 0;margin-bottom: 0;margin-top: 0;" @click="isShow=!isShow">
+            <span class="flex name">我的投注记录<em class="f13 c-2">（最多显示最近20条记录）</em></span>
+            <span class="change" v-if="!isShow">展开 <i class='el-icon-arrow-down'></i></span>
+            <span class="change" v-else>关闭 <i class='el-icon-arrow-up'></i></span>
+        </div>
+        <el-collapse-transition>
+            <div class="flex-box cont" v-show="isShow">
+                <el-table
+                        :data="recordData"
+                        style="width: 100%">
+                    <el-table-column prop="BuyInfo.lottery_id" label="方案编号"  width="175"></el-table-column>
+                    <el-table-column prop="BuyInfo.expect" label="期号"></el-table-column>
+                    <el-table-column label="合买" width="50">
+                        <template slot-scope="scope">
+                            <span :class="{'red': scope.row.BuyInfo.is_join}">{{scope.row.BuyInfo.is_join ? '是' : '否'}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="money" label="投注金额" sortable width="100">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.money}}{$system.lottery_unit}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="方案状态" width="100">
+                        <template slot-scope="scope">
+                    <span v-if="scope.row.BuyInfo.statusCode == 0">
+                        <template v-if="scope.row.BuyInfo.is_join">
+                             <em v-if="!scope.row.BuyInfo.finsh">合买中</em>
+                             <em v-else>未出票</em>
+                        </template>
+                        <template v-else>
+                            未出票
+                        </template>
+                    </span>
+                            <span v-if="scope.row.BuyInfo.statusCode == 1" class="green">等待开奖</span>
+                            <span v-if="scope.row.BuyInfo.statusCode == 2 && scope.row.bonus > 0" class="red">已中奖</span>
+                            <span v-if="scope.row.BuyInfo.statusCode == 2 && scope.row.bonus == 0" class="c-3">未中奖</span>
+                            <span v-if="scope.row.BuyInfo.statusCode == 6" class="c-3">流产撤单</span>
+                            <span v-if="scope.row.BuyInfo.statusCode == 7" class="c-3">系统撤单</span>
+                            <span v-if="scope.row.BuyInfo.statusCode == 8" class="c-3">用户撤单</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="bonus" label="奖金" sortable width="110">
+                        <template slot-scope="scope">
+                            <span><em :class="{'red':scope.row.bonus > 0}">{{scope.row.bonus}}</em>{$system.lottery_unit}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="create_time" label="投注时间" width="120" sortable>
+                        <template slot-scope="scope">
+                            <span>{{scope.row.create_time | timeSplit}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="85">
+                        <template slot-scope="scope">
+                            <div class="flex-box">
+                                <el-button type="text" size="mini" @click.native="toDetail(scope.row.buy_id,scope.row.BuyInfo.lottery_id)">详情</el-button>
+                                <el-button type="text" size="mini" @click.native="cancelOrder(scope.row.BuyInfo.lottery_id)" v-if="scope.row.BuyInfo.statusCode <= 1 && !scope.row.BuyInfo.is_join">撤单</el-button>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </el-collapse-transition>
+    </div>
+</template>
+<!--任选1/2/3/4/5/6/7/8 /前一/前二组选/前三组选 普通投注-->
+<template id="rxNormal">
+    <div>
+        <div class="bet-tips" v-if="type < 8 || type == 13">
+            <i class="el-icon-warning"></i>玩法说明：从01-11共11个号码中选择1个号码进行购买，当期的5个开奖号码中包含所选号码，奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}
+            <el-tooltip placement="bottom" v-if="type == 13"><!--任一-->
+                <div slot="content">
+                    投注：01<br>
+                    开奖：01,*,*,*,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 1"><!--任二-->
+                <div slot="content">
+                    投注：01,02<br>
+                    开奖：01,02,*,*,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 2"><!--任三-->
+                <div slot="content">
+                    投注：01,02,03<br>
+                    开奖：01,02,03,*,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 3"><!--任四-->
+                <div slot="content">
+                    投注：01,02,03,04<br>
+                    开奖：01,02,03,04,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 4"><!--任五-->
+                <div slot="content">
+                    投注：01,02,03,04,05<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 5"><!--任六-->
+                <div slot="content">
+                    投注：01,02,03,04,05,06<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 6"><!--任七-->
+                <div slot="content">
+                    投注：01,02,03,04,05,06,07<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 7"><!--任八-->
+                <div slot="content">
+                    投注：01,02,03,04,05,06,07,08<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+        </div>
+        <!--前一-->
+        <div class="bet-tips" v-if="type == 8">
+            <i class="el-icon-warning"></i>玩法说明：至少选择1个号码，所选号码与开奖号码第一位一致，奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}
+            <el-tooltip placement="bottom">
+                <div slot="content">
+                    投注：01<br>
+                    开奖：01,*,*,*,*<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+        </div>
+        <!--前二组选-->
+        <div class="bet-tips" v-if="type == 9">
+            <i class="el-icon-warning"></i>玩法说明：至少选择2个号码，所选号码与开奖号码的前两位号码相同（顺序不限），奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}
+            <el-tooltip placement="bottom">
+                <div slot="content">
+                    投注：01,02<br>
+                    开奖：01,02,*,*,*<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+        </div>
+        <!--前三组选-->
+        <div class="bet-tips" v-if="type == 11">
+            <i class="el-icon-warning"></i>玩法说明：至少选择3个号码，所选号码与开奖号码的前三位号码相同（顺序不限），奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}
+            <el-tooltip placement="bottom">
+                <div slot="content">
+                    投注：01,02,03<br>
+                    开奖：01,02,03,*,*<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+        </div>
+        <div class="bet-ball-box flex-box">
+            <div class="time">
+                <p>{{issue}}期剩余</p>
+                <p class="red value">{{timer}}</p>
+            </div>
+            <div class="nav">
+                <p>选号</p>
+                <p class="miss">遗漏</p>
+            </div>
+            <div class="balls">
+                <ul class="flex-box">
+                    <li v-for="(item,index) in ball">
+                        <a href="javascript:;" :class="{'selected':item.selected}" @click="doBet(item.num,index)">{{item.num}}</a>
+                        <template v-if="miss !== 0">
+                            <i :class="{'red':miss.rx[index+1]>10}" v-if="type < 8 || type == 13">{{miss.rx[index+1]}}</i> <!--任选-->
+                            <i :class="{'red':miss.qy[index+1]>10}" v-if="type == 8">{{miss.qy[index+1]}}</i> <!--前一-->
+                            <i :class="{'red':miss.ze[index+1]>10}" v-if="type == 9">{{miss.ze[index+1]}}</i> <!--前二组选-->
+                            <i :class="{'red':miss.zs[index+1]>10}" v-if="type == 11">{{miss.zs[index+1]}}</i> <!--前三组选-->
+                        </template>
+                        <template v-else>
+                            <i>--</i>
+                        </template>
+                    </li>
+                </ul>
+            </div>
+            <div class="select">
+                <a href="javascript:;" class="filter-all" @click="choseAll">全</a>
+                <a href="javascript:;" class="filter-bigs" @click="choseBig">大</a>
+                <a href="javascript:;" class="filter-smalls" @click="choseSmall">小</a>
+                <a href="javascript:;" class="filter-odds" @click="choseJs">奇</a>
+                <a href="javascript:;" class="filter-evens" @click="choseOs">偶</a>
+                <span href="javascript:;" class="clear-balls" @click="clear">清空</span>
+            </div>
+        </div>
+        <div class="tr bet-clear" style="height: 28px">
+            <em  v-if="betModel == 1 && notes >=1" >
+                （如中奖，奖金<em class="red"><em v-if="gainMin > 0 && gainMin !== countGain">{{gainMin}}</em><em v-if="gainMin > 0 && gainMin !== countGain" style="color: #333333">～</em>{{countGain}}</em>{$company['lottery_unit']}）
+            </em>
+        </div>
+        <div class="bet-solutions">
+            <div class="flex-box add-box">
+                <div class="flex tr">
+                    <div>您已选中了<strong class="red">{{notes}}</strong>注
+                        <template v-if="betModel == 1">
+                            ，共<strong class="red">{{totalMoney}}</strong>{$company['lottery_unit']}
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-pools">
+                <el-button :type="notes >= 1 ? 'warning' : 'info'" @click.navtive="add" icon="el-icon-download">添加到投注区</el-button>
+            </div>
+        </div>
+    </div>
+</template>
+<!--任选2/3/4/5/6/7 /前二组选/前三组选 胆拖投注-->
+<template id="rxDt">
+    <div class="lottery-dt">
+        <div class="bet-tips">
+            <i class="el-icon-warning"></i>玩法说明：至少选择 1<em v-if="num -1 > 1">～{{num - 1}}</em> 个胆码，选2～10个拖码，胆码加拖码不少于{{num + 1}}个,
+            <em v-if="type>=5 && type<9">每注组合必然包含所有胆码，其余号码用拖码补充。只要所选的每注{{num}}个号码当中，有5个和当期的5个开奖号码全部相同,</em>
+            <em v-if="type<5">只要当期的5个开奖号码中有{{num > 5 ? 5 : num}}个包含所选号码（每注包含{{num > 5 ? 5 : num}}个号码），并且胆码必须全是开奖号码，</em>
+            <em v-if="type==9">只要当期的前二位开奖号码中有2个包含所选号码（每注包含2个号码），</em>
+            <em v-if="type==11">只要当期的前三位开奖号码中有3个包含所选号码（每注包含3个号码），</em>
+            即为中奖，奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}
+            <el-tooltip placement="bottom" v-if="type == 1"><!--任二-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02<br>
+                    开奖：01,02,*,*,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 2"><!--任三-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02,03<br>
+                    开奖：01,02,03,*,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 3"><!--任四-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02,03,04<br>
+                    开奖：01,02,03,04,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 4"><!--任五-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02,03,04,05<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 5"><!--任六-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02,03,04,05,06<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 6"><!--任七-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02,03,04,05,06,07<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 7"><!--任八-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02,03,04,05,06,07,08<br>
+                    开奖：01,02,03,04,05(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 9"><!--前二组选-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02<br>
+                    开奖：01,02,*,*,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 11"><!--前三组选-->
+                <div slot="content">
+                    投注：胆码：01 拖码：02,03<br>
+                    开奖：01,02,03,*,*(不限顺序)<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+        </div>
+        <div class="bet-ball-box flex-box">
+            <div class="time">
+                <p>{{issue}}期剩余</p>
+                <p class="red value">{{timer}}</p>
+            </div>
+            <div class="nav">
+                <p>选号</p>
+                <p class="miss">遗漏</p>
+            </div>
+            <div class="balls">
+                <div>
+                    <div class="dm-title"><b class="red">胆码区</b> <span class="notes">您认为必出的号码(<em class="red">选择<em v-if="num -1 > 1"> 1～</em>{{num - 1}}个</em>)</span></div>
+                    <ul class="flex-box">
+                        <li v-for="(item,index) in ballDm">
+                            <a href="javascript:;" :class="[item.selected == 3 ? 'selected' : '',item.selected == 2 ? 'forbidden': '']" @click="doDmBet(item.num,index)">{{item.num}}</a>
+                            <template v-if="miss !== 0">
+                                <i :class="{'red':miss.rx[index+1]>5}" v-if="type < 7">{{miss.rx[index+1]}}</i> <!--任选-->
+                                <i :class="{'red':miss.ze[index+1]>5}" v-if="type == 9">{{miss.ze[index+1]}}</i> <!--前二组选-->
+                                <i :class="{'red':miss.zs[index+1]>5}" v-if="type == 11">{{miss.zs[index+1]}}</i> <!--前三组选-->
+                            </template>
+                            <template v-else>
+                                <i>--</i>
+                            </template>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="dm-title"><b class="red">拖码区</b> <span class="notes">您认为可能的号码(<em class="red">至少选择2个</em>)</span></div>
+                    <div class="flex-box">
+                        <div>
+                            <ul class="flex-box">
+                                <li v-for="(item,index) in ballTm">
+                                    <a href="javascript:;" :class="[item.selected == 3 ? 'selected' : '',item.selected == 2 ? 'forbidden': '']" @click="doTmBet(item.num,index)">{{item.num}}</a>
+                                    <template v-if="miss !== 0">
+                                        <i :class="{'red':miss.rx[index+1]>10}" v-if="type < 7">{{miss.rx[index+1]}}</i> <!--任选-->
+                                        <i :class="{'red':miss.ze[index+1]>10}" v-if="type == 9">{{miss.ze[index+1]}}</i> <!--前二组选-->
+                                        <i :class="{'red':miss.zs[index+1]>10}" v-if="type == 11">{{miss.zs[index+1]}}</i> <!--前三组选-->
+                                    </template>
+                                    <template v-else>
+                                        <i>--</i>
+                                    </template>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="select">
+                            <a href="javascript:;" class="filter-all" @click="tmAll" style="width: 56px">拖码全包</a>
+                            <span href="javascript:;" class="clear-balls" @click="clearTm">清空</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tr bet-clear" style="height: 28px">
+            <em  v-if="betModel == 1 && notes >=1" >
+                （如中奖，奖金<em class="red"><em v-if="gainMin > 0 && gainMin !== countGain">{{gainMin}}</em><em v-if="gainMin > 0 && gainMin !== countGain" style="color: #333333">～</em>{{countGain}}
+            </em>{$company['lottery_unit']}）
+            </em>
+        </div>
+        <div class="bet-solutions">
+            <div class="flex-box add-box">
+                <div class="flex tr">
+                    <div>您已选中了<strong class="red">{{notes}}</strong>注
+                        <template v-if="betModel == 1">
+                            ，共<strong class="red">{{totalMoney}}</strong>{$company['lottery_unit']}
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-pools">
+                <el-button :type="notes >= 1 ? 'warning' : 'info'" @click.navtive="add" icon="el-icon-download">添加到投注区</el-button>
+            </div>
+        </div>
+    </div>
+</template>
+<!--前二、前三直选-->
+<template id="betItemQz">
+    <div class="lottery-qz">
+        <div class="bet-tips">
+            <i class="el-icon-warning"></i>玩法说明：每位至少选择1个号码，与开奖号码的前<em v-if="type == 10">两</em><em v-if="type == 12">三</em>位号码相同且顺序一致，奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}
+            <el-tooltip placement="bottom" v-if="type == 10">
+                <div slot="content">
+                    投注：01,02<br>
+                    开奖：01,02,*,*,*<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+            <el-tooltip placement="bottom" v-if="type == 12">
+                <div slot="content">
+                    投注：01,02,03<br>
+                    开奖：01,02,03,*,*<br>
+                    奖金：<em class="org">{{gain}}</em>
+                </div>
+                <a class="org">选号示例</a>
+            </el-tooltip>
+        </div>
+        <div class="bet-ball-box flex-box">
+            <div class="time">
+                <p>{{issue}}期剩余</p>
+                <p class="red value">{{timer}}</p>
+            </div>
+            <div>
+                <div class="code-box flex-box">
+                    <div class="nav" style="padding-top: 5px;">
+                        <p>第一位</p>
+                        <p class="miss">遗漏</p>
+                    </div>
+                    <div class="balls">
+                        <ul class="flex-box">
+                            <li v-for="(item,index) in ballFir">
+                                <a href="javascript:;" :class="{'selected' : item.selected}" @click="doBet(1,item.num,index)">{{item.num}}</a>
+                                <template v-if="miss !== 0">
+                                    <i :class="{'red':miss.qy[index+1]>10}">{{miss.qy[index+1]}}</i>
+                                </template>
+                                <template v-else>
+                                    <i>--</i>
+                                </template>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="select">
+                        <a href="javascript:;" class="filter-all" @click="choseAll(1)">全</a>
+                        <a href="javascript:;" class="filter-bigs" @click="choseBig(1)">大</a>
+                        <a href="javascript:;" class="filter-smalls" @click="choseSmall(1)">小</a>
+                        <a href="javascript:;" class="filter-odds" @click="choseJs(1)">奇</a>
+                        <a href="javascript:;" class="filter-evens" @click="choseOs(1)">偶</a>
+                        <span href="javascript:;" class="clear-balls" @click="clear(1)">清空</span>
+                    </div>
+                </div>
+                <div class="code-box flex-box">
+                    <div class="nav" style="padding-top: 5px;">
+                        <p>第二位</p>
+                        <p class="miss">遗漏</p>
+                    </div>
+                    <div class="balls">
+                        <ul class="flex-box">
+                            <li v-for="(item,index) in ballSec">
+                                <a href="javascript:;" :class="{'selected' : item.selected}" @click="doBet(2,item.num,index)">{{item.num}}</a>
+                                <template v-if="miss !== 0">
+                                    <i :class="{'red':miss.qe[index+1]>10}">{{miss.qe[index+1]}}</i>
+                                </template>
+                                <template v-else>
+                                    <i>--</i>
+                                </template>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="select">
+                        <a href="javascript:;" class="filter-all" @click="choseAll(2)">全</a>
+                        <a href="javascript:;" class="filter-bigs" @click="choseBig(2)">大</a>
+                        <a href="javascript:;" class="filter-smalls" @click="choseSmall(2)">小</a>
+                        <a href="javascript:;" class="filter-odds" @click="choseJs(2)">奇</a>
+                        <a href="javascript:;" class="filter-evens" @click="choseOs(2)">偶</a>
+                        <span href="javascript:;" class="clear-balls" @click="clear(2)">清空</span>
+                    </div>
+                </div>
+                <div class="code-box flex-box" v-if="type == 12"> <!--前三直选-->
+                    <div class="nav" style="padding-top: 5px;">
+                        <p>第三位</p>
+                        <p class="miss">遗漏</p>
+                    </div>
+                    <div class="balls">
+                        <ul class="flex-box">
+                            <li v-for="(item,index) in ballThr">
+                                <a href="javascript:;" :class="{'selected' : item.selected}" @click="doBet(3,item.num,index)">{{item.num}}</a>
+                                <template v-if="miss !== 0">
+                                    <i :class="{'red':miss.qs[index+1]>10}">{{miss.qs[index+1]}}</i>
+                                </template>
+                                <template v-else>
+                                    <i>--</i>
+                                </template>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="select">
+                        <a href="javascript:;" class="filter-all" @click="choseAll(3)">全</a>
+                        <a href="javascript:;" class="filter-bigs" @click="choseBig(3)">大</a>
+                        <a href="javascript:;" class="filter-smalls" @click="choseSmall(3)">小</a>
+                        <a href="javascript:;" class="filter-odds" @click="choseJs(3)">奇</a>
+                        <a href="javascript:;" class="filter-evens" @click="choseOs(3)">偶</a>
+                        <span href="javascript:;" class="clear-balls" @click="clear(3)">清空</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tr bet-clear" style="height: 28px"><em  v-if="betModel == 1 && notes >=1" >（如中奖，奖金<em class="red">{{countGain}}</em>{$company['lottery_unit']}）</em></div>
+        <div class="bet-solutions">
+            <div class="flex-box add-box">
+                <div class="flex tr">
+                    <div>您已选中了<strong class="red">{{notes}}</strong>注
+                        <template v-if="betModel == 1">
+                            ，共<strong class="red">{{totalMoney}}</strong>{$company['lottery_unit']}
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-pools">
+                <el-button :type="notes >= 1 ? 'warning' : 'info'" @click.navtive="add" icon="el-icon-download">添加到投注区</el-button>
+            </div>
+        </div>
+    </div>
+</template>
+<!--模式选择、单注倍数设置-->
+<template id="modelUnit">
+    <div class="flex-box">
+        <el-input-number v-model="multiple" :min="1" label="设置倍数" size="mini" @change="changeMul"></el-input-number> 倍
+        <span class="flex-box unit">模式
+             <el-select v-model="value" size="mini" placeholder="请选择" style="width: 60px">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+              </el-select>
+        </span>
+        <el-tooltip placement="bottom">
+            <div slot="content">
+                <em>1元 = 1{$company['lottery_unit']}<br></em>
+                <em>1角 = 0.1{$company['lottery_unit']}<br></em>
+                <em>1分 = 0.01{$company['lottery_unit']}<br></em>
+                <em>1厘 = 0.001{$company['lottery_unit']}<br></em>
+            </div>
+            <i class="el-icon-question org"></i>
+        </el-tooltip>
+    </div>
+</template>
+<!--单式-->
+<template id="copyGrounp">
+    <div>
+        <div class="bet-tips" v-if="type < 8 || type == 13"><i class="el-icon-warning"></i>玩法说明：从01-11共11个号码中选择{{n}}个号码进行购买,与开奖号码任意<em v-if="n > 5">5</em><em v-else>{{n}}</em>个数字相同,单注奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}</div>
+        <div class="bet-tips" v-if="type == 8"><i class="el-icon-warning"></i>玩法说明：从01-11共11个号码中选择{{n}}个号码进行购买,与开奖号码第1个数字相同,单注奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}</div>
+        <div class="bet-tips" v-if="type == 9"><i class="el-icon-warning"></i>玩法说明：从01-11共11个号码中选择{{n}}个号码进行购买,与开奖号码的前两位号码相同（顺序不限）,单注奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}</div>
+        <div class="bet-tips" v-if="type == 10"><i class="el-icon-warning"></i>玩法说明：从01-11共11个号码中选择{{n}}个号码进行购买,与开奖号码的前两位号码相同且顺序一致,单注奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}</div>
+        <div class="bet-tips" v-if="type == 11"><i class="el-icon-warning"></i>玩法说明：从01-11共11个号码中选择{{n}}个号码进行购买,与开奖号码的前三位号码相同（顺序不限）,单注奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}</div>
+        <div class="bet-tips" v-if="type == 12"><i class="el-icon-warning"></i>玩法说明：从01-11共11个号码中选择{{n}}个号码进行购买,与开奖号码的前三位号码相同且顺序一致,单注奖金<em class="red">{{gain}}</em>{$company['lottery_unit']}</div>
+        <div class="copydiv copy-box">
+            <div class="pasterIntro">
+                <strong>格式说明：</strong>
+                <p>
+                   (1)每位之间以英文字符逗号(",")或者空格分割；<br>
+                    (2)每行填写一注投注号码；<br>
+                    单注示例：
+                    <template v-if="type == 1">01,02 或 01 02</template>
+                    <template v-if="type == 2">01,02,03 或 01 02</template>
+                    <template v-if="type == 3">01,02,03,04 或 01 02 03 04</template>
+                    <template v-if="type == 4">01,02,03,04,05 或 01 02 03 04 05</template>
+                    <template v-if="type == 5">01,02,03,04,05,06 或 01 02 03 04 05 06</template>
+                    <template v-if="type == 6">01,02,03,04,05,06,07 或 01 02 03 04 05 06 07</template>
+                    <template v-if="type == 7">01,02,03,04,05,06,07,08 或 01 02 03 04 05 06 07 08</template>
+                    <template v-if="type == 8 || type == 13">01</template>
+                    <template v-if="type == 9 || type == 10">01,02 或 01 02</template>
+                    <template v-if="type == 11 || type == 12">01,02,03 或 01 02 03</template>
+                </p>
+            </div>
+            <div><em class="red">【提示】</em>请按照格式说明输入或粘贴投注号码，最多输入500注。</div>
+            <el-input
+                    type="textarea"
+                    :rows="8"
+                    placeholder="请按照格式说明输入或粘贴投注号码"
+                    v-model="copyValue">
+            </el-input>
+            <div class="copy_err red" v-if = "errCont.length > 0 && show">
+                <div>共有{{errCont.length}}行错误！</div>
+                <div>
+                    <p v-for="(item,index) in errCont">
+                        <span>第{{item.row}}行</span> <span>{{item.num}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tr bet-clear" style="height: 28px">
+            <em  v-if="betModel == 1 && notes >=1" >
+                <!--（如中奖，奖金<em class="red"><em v-if="gainMin > 0">{{gainMin}}</em><em v-if="gainMin > 0" style="color: #333333">～</em>{{countGain}}</em>{$company['lottery_unit']}）-->
+            </em>
+        </div>
+        <div class="bet-solutions">
+            <div class="flex-box add-box">
+                <div class="flex tr">
+                    <div>已输入<strong class="red">{{notes}}</strong>注，最多500注</div>
+                </div>
+            </div>
+            <div class="btn-pools">
+                <el-button :type="notes >= 1 ? 'warning' : 'info'" @click.navtive="add" icon="el-icon-download">添加到投注区</el-button>
+            </div>
+        </div>
+    </div>
+</template>
+
+{include file='web@common/foot'/}
+
+<script type="text/javascript">
+    $(function(){
+        //单式投注
+        Vue.component('copy-grounp', {
+            template:'#copyGrounp',
+            props:['betModel','type','n','gain'],
+            data:function(){
+                return{
+                    copyValue:'', //textarea内容
+                    errCont:[], //错误号码内容组
+                    resArr:[],//最终投注号码组
+                    notes:0,
+                    show:false
+                }
+            },
+            watch:{
+                copyValue:function(){
+                    this.show = false
+                    this.check();
+                }
+            },
+            computed:{
+
+            },
+            methods:{
+                check:function(){
+                    this.$set(this,'errCont',[])
+                    this.$set(this,'resArr',[])
+                    this.notes = 0
+                    var betArr = this.copyValue.replace(/\s+$/g,'').split(/[(\r\n)\r\n]+/) || [] //去掉空白字符 以回车分割
+                    //检测每注的合法性
+                    var errData
+                    var betNumArr = ['01','02','03','04','05','06','07','08','09','10','11'] //号码选号组
+                    for(var i = 0 ; i < betArr.length; i++){
+                        //检测每个号码
+                        var hasSame = false
+                        var hasErrNum = false
+                        var str = betArr[i].replace(/\s/g,',').split(',') || []
+                        for(var j = 0;j < str.length ; j++){
+                            if(str[j] == str[j + 1] ){hasSame = true}
+                            if(!isExist(betNumArr,str[j])){hasErrNum = true}
+                        }
+                        if(hasErrNum || hasSame || str.length !== this.n){
+                            errData = {
+                                'row' : i + 1,
+                                'num' : betArr[i]
+                            }
+                            this.errCont.push(errData)
+                        }else {
+                            this.resArr.push(betArr[i])
+                            this.notes +=1
+                        }
+                    }
+                },
+                clear:function () {
+                    this.$set(this,'errCont',[])
+                    this.$set(this,'resArr',[])
+                    this.$set(this,'copyValue','')
+                },
+                add:function(){
+                    var _this = this;
+                    if(!_this.copyValue.length){
+                        _this.$alert('请先复制投注号码！', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'warning',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return false
+                    }
+                    if(_this.notes > 500){
+                        _this.$alert('最多只能输入500注！', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'warning',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return false
+                    }
+                    _this.check();
+                    _this.show = true
+                    if(_this.errCont.length > 0){
+                        _this.$confirm("所输入号码中有 <b class='red'>" + _this.errCont.length + "</b> 行错误", '提示', {
+                            confirmButtonText: '过滤错误号码继续添加',
+                            cancelButtonText: '返回查看修改',
+                            type: 'warning',
+                            dangerouslyUseHTMLString: true,
+                            center: true
+                        }).then(function() {
+                            _this.$emit('bet',_this.resArr)//向父组件传递投注内容
+                            _this.clear();
+                        }).catch(function() {
+
+                        });
+                    }else {
+                        _this.$emit('bet',_this.resArr)//向父组件传递投注内容
+                        _this.clear();
+                    }
+                },
+            }
+        })
+        //单位模式，倍数设置
+        Vue.component('model-unit', {
+            template:'#modelUnit',
+            data:function(){
+                return{
+                    options: {$unitArr},
+                    value:'1',
+                    multiple:'1',//倍数
+                }
+            },
+            watch:{
+                value:function(val){
+                    this.$emit('change-model',[this.scale,this.label,val])
+                },
+                multiple:function (val) {
+                    this.$emit('change-mul',val)
+                }
+            },
+            computed:{
+                scale:function () {
+                    var valueObj = {
+                        1 : 1,
+                        2 : 10,
+                        3 : 100,
+                        4 : 1000
+                    }
+                    return valueObj[this.value]
+                },
+                label:function () {
+                    var valueObj = {
+                        1 : '元',
+                        2 : '角',
+                        3 : '分',
+                        4 : '厘'
+                    }
+                    return valueObj[this.value]
+                }
+            },
+            methods:{
+                //更改倍数
+                changeMul: function(val) {
+                    var _this = this
+                    setTimeout(function(){
+                        _this.multiple = parseInt(val)
+                    },0)
+                }
+            }
+        })
+        //前二、前三直选 组件
+        Vue.component('bet-item-qz', {
+            template:'#betItemQz',
+            props:['issue','timer','miss','number','gain','type','betModel','minMoney','unitIsOpen','label','value','scale','multiple'], //['当前投注期号','投注倒计时','号码遗漏','任选几(2/3/4/5/6/7/8)','中奖1注的奖金','投注类型值'],
+            data:function(){
+                return{
+                    ballFir : [
+                        {num:'01',selected:false},
+                        {num:'02',selected:false},
+                        {num:'03',selected:false},
+                        {num:'04',selected:false},
+                        {num:'05',selected:false},
+                        {num:'06',selected:false},
+                        {num:'07',selected:false},
+                        {num:'08',selected:false},
+                        {num:'09',selected:false},
+                        {num:'10',selected:false},
+                        {num:'11',selected:false}], //第一位 ball value
+                    ballSec : [
+                        {num:'01',selected:false},
+                        {num:'02',selected:false},
+                        {num:'03',selected:false},
+                        {num:'04',selected:false},
+                        {num:'05',selected:false},
+                        {num:'06',selected:false},
+                        {num:'07',selected:false},
+                        {num:'08',selected:false},
+                        {num:'09',selected:false},
+                        {num:'10',selected:false},
+                        {num:'11',selected:false}], //第二位 ball value
+                    ballThr : [
+                        {num:'01',selected:false},
+                        {num:'02',selected:false},
+                        {num:'03',selected:false},
+                        {num:'04',selected:false},
+                        {num:'05',selected:false},
+                        {num:'06',selected:false},
+                        {num:'07',selected:false},
+                        {num:'08',selected:false},
+                        {num:'09',selected:false},
+                        {num:'10',selected:false},
+                        {num:'11',selected:false}], //第三位位 ball value
+                    betFirNum : [], //第一位数据
+                    betSecNum : [], //第二位数据
+                    betThrNum : [], //第二位数据
+                }
+            },
+            computed:{
+                num:function(){
+                    return parseInt(this.number)
+                },
+                //注数
+                notes:function(){
+                    if(this.type == 10){ //前二直选
+                        return getCount(Zuhe(this.betFirNum,this.betSecNum))
+                    }
+                    if(this.type == 12){ //前三直选
+                        return getCount(Zuhe(this.betFirNum,this.betSecNum,this.betThrNum))
+                    }
+                },
+                countGain:function(){
+                    return accMul(this.gain,this.multiple,5)
+                },
+                //投注总额
+                totalMoney:function(){
+                    var count = accMul(2, accMul(Number(this.notes),Number(this.multiple)))
+                    var s  = accDiv(Number(count),Number(this.scale),5)
+                    return s
+                },
+
+                betNumObj:function () {
+                    return {
+                        1 : {'betArr': this.betFirNum, 'ball' : this.ballFir},
+                        2 : {'betArr': this.betSecNum, 'ball' : this.ballSec},
+                        3 : {'betArr': this.betThrNum, 'ball' : this.ballThr}
+                    }
+                }
+            },
+            methods:{
+                //投注选号状态
+                doBet:function(w,num,s){
+                    var betNum = this.betNumObj[w].betArr
+                    var ball = this.betNumObj[w].ball
+                    var chose = betNum.indexOf(num)
+                    if(chose > -1){
+                        betNum.splice(chose, 1)
+                    }else {
+                        betNum.push(num)
+                    }
+                    //改变球的选中状态
+                    ball[s].selected = !ball[s].selected
+                },
+                //全
+                choseAll:function(w){
+                    var ball = this.betNumObj[w].ball
+                    if(w == 1){
+                        this.betFirNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            this.betFirNum.push(ball[i].num)
+                            ball[i].selected = true
+                        }
+                    }
+                    if(w == 2){
+                        this.betSecNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            this.betSecNum.push(ball[i].num)
+                            ball[i].selected = true
+                        }
+                    }
+                    if(w == 3){
+                        this.betThrNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            this.betThrNum.push(ball[i].num)
+                            ball[i].selected = true
+                        }
+                    }
+                },
+                //大
+                choseBig:function(w){
+                    var ball = this.betNumObj[w].ball
+                    if(w == 1){
+                        this.betFirNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i > 4){
+                                this.betFirNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 2){
+                        this.betSecNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i > 4){
+                                this.betSecNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 3){
+                        this.betThrNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i > 4){
+                                this.betThrNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                },
+                //小
+                choseSmall:function(w){
+                    var ball = this.betNumObj[w].ball
+                    if(w == 1){
+                        this.betFirNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i <= 4){
+                                this.betFirNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 2){
+                        this.betSecNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i <= 4){
+                                this.betSecNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 3){
+                        this.betThrNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i <= 4){
+                                this.betThrNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                },
+                //奇数
+                choseJs:function(w){
+                    var ball = this.betNumObj[w].ball
+                    if(w == 1){
+                        this.betFirNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i%2 == 0){
+                                this.betFirNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 2){
+                        this.betSecNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i%2 == 0){
+                                this.betSecNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 3){
+                        this.betThrNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i%2 == 0){
+                                this.betThrNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                },
+                //偶
+                choseOs:function(w){
+                    var ball = this.betNumObj[w].ball
+                    if(w == 1){
+                        this.betFirNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i%2 !== 0){
+                                this.betFirNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 2){
+                        this.betSecNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i%2 !== 0){
+                                this.betSecNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                    if(w == 3){
+                        this.betThrNum = []
+                        for(var i = 0 ; i < ball.length;i ++ ){
+                            if(i%2 !== 0){
+                                this.betThrNum.push(ball[i].num)
+                                ball[i].selected = true
+                            }else {
+                                ball[i].selected = false
+                            }
+                        }
+                    }
+                },
+                //清空
+                clear:function(w){
+                    var ball = this.betNumObj[w].ball
+                    for(var i in ball){
+                        ball[i].selected = false
+                    }
+                    if(w == 1){
+                        this.betFirNum =[]
+                    }
+                    if(w == 2){
+                        this.betSecNum =[]
+                    }
+                    if(w == 3){
+                        this.betThrNum =[]
+                    }
+                },
+
+                //添加到选区
+                add:function(){
+                    if(this.notes < 1){
+                        this.$alert('请至少选择1注投注号码', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'warning',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return
+                    }
+                    var betNum;
+                    var firNum =  this.betFirNum.sort().join(",");
+                    var secNum =  this.betSecNum.sort().join(",");
+                    var thrNum =  this.betThrNum.sort().join(",");
+                    if(this.type == 10){
+                        betNum = firNum + '|' + secNum;
+                    }
+                    if(this.type == 12){
+                        betNum = firNum + '|' + secNum + '|' + thrNum;
+                    }
+                    this.$emit('bet',[betNum,this.notes]); //向父组件传递投注内容[投注号码，投注注数，投单式 / 复式,投注类型type]，且顺序需固定
+                    this.clear(1); //清空选项
+                    this.clear(2); //清空选项
+                    this.clear(3); //清空选项
+                }
+            }
+        })
+        //任选2/3/4/5/6/7/8 /前二组选/前三组选 胆拖投注 组件
+        Vue.component('bet-item-rx-dt', {
+            template: '#rxDt',
+            props:['issue','timer','miss','number','gain','type','betModel','minMoney','unitIsOpen','label','value','scale','multiple'], //['当前投注期号','投注倒计时','号码遗漏','任选几(2/3/4/5/6/7/8)','中奖1注的奖金','投注类型值'],
+            data:function(){
+                return{
+                    ballDm : [ //显示胆码区选号 selected 1可选 2已被拖码选 3 选中
+                        {num:'01',selected:1},
+                        {num:'02',selected:1},
+                        {num:'03',selected:1},
+                        {num:'04',selected:1},
+                        {num:'05',selected:1},
+                        {num:'06',selected:1},
+                        {num:'07',selected:1},
+                        {num:'08',selected:1},
+                        {num:'09',selected:1},
+                        {num:'10',selected:1},
+                        {num:'11',selected:1}], //ball value
+                    ballTm : [ //显示拖码选号  selected 1可选 2已被胆码选 3 选中
+                        {num:'01',selected:1},
+                        {num:'02',selected:1},
+                        {num:'03',selected:1},
+                        {num:'04',selected:1},
+                        {num:'05',selected:1},
+                        {num:'06',selected:1},
+                        {num:'07',selected:1},
+                        {num:'08',selected:1},
+                        {num:'09',selected:1},
+                        {num:'10',selected:1},
+                        {num:'11',selected:1}], //ball value
+                    betDmNum : [], //胆码投注数据
+                    betTmNum : [], //拖码投注数据
+                }
+            },
+            computed:{
+                num:function(){ //类型要求选择数量
+                    return parseInt(this.number)
+                },
+                dmNum:function(){ // 胆码选择数量
+                    return this.betDmNum.length
+                },
+                tmNum:function(){ // 拖码选择数量
+                    return this.betTmNum.length
+                },
+                notes:function(){ //选择注数
+                    if(this.dmNum + this.tmNum < parseInt(this.number) + 1 || this.dmNum == 0){
+                        return 0
+                    }else {
+                        return combination(this.tmNum,parseInt(this.number)  - this.dmNum)
+                    }
+                },
+                //最高中奖注数
+                max:function(){
+                    //任选
+                    if(this.type < 8){
+                        if(parseInt(this.number) > 5){
+                            return combination(this.tmNum - (5-this.dmNum)  ,parseInt(this.number) - 5)
+                        }else {
+                            return combination(5 - this.dmNum ,parseInt(this.number) - this.dmNum)
+                        }
+                    }
+                    //前一、前二组选、前三组选
+                    if(this.type ==8 || this.type == 9 || this.type == 11){
+                        return 1
+                    }
+                },
+                //奖金计算
+                countGain:function(){
+                    if(this.notes > this.max){
+                        return accMul(accMul(this.gain ,this.max),this.multiple,5); //最高奖金
+                    }else{
+                        return accMul(accMul(this.gain ,this.notes),this.multiple,5);
+                    }
+                },
+                //奖金最低值计算 任七胆拖???
+                gainMin:function(){
+                    if(this.type < 8){  //任选
+                        if(this.dmNum + this.tmNum <= this.number || this.number == 5){
+                            return 0
+                        }else {
+                            var bz =5 - (11 - (this.dmNum + this.tmNum)) - this.dmNum;
+                            if(bz > this.num - this.dmNum){
+                                if(this.gain * combination(bz,this.num - this.dmNum) == this.countGain){
+                                    return 0
+                                }else {
+                                    return accMul(accMul(this.gain ,combination(bz,this.num - this.dmNum)),this.multiple,5)
+                                }
+                            } else {
+                                return accMul(this.gain,this.multiple,5)
+                            }
+                        }
+                    }
+                    if(this.type ==8 || this.type == 9 || this.type == 11){ //前一、前二组选、前三组选
+                        return 0
+                    }
+                },
+                //投注总额
+                totalMoney:function(){
+                    var count = accMul(this.notes,this.multiple) * 2
+                    var s  = accDiv(count,this.scale)
+                    return s
+                }
+            },
+            methods:{
+                //投注胆码选号状态
+                doDmBet:function(num,index){
+                    var chose = this.betDmNum.indexOf(num) //-1 存在
+                    if(chose > -1){
+                        this.betDmNum.splice(chose, 1);
+                        this.ballTm[index].selected = this.ballTm[index].selected ==3  ? 2 : 1;
+                        this.ballDm[index].selected = this.ballDm[index].selected == 1 || this.ballDm[index].selected ==2  ? 3 : 1;
+                    }else {
+                        if(this.dmNum >= parseInt(this.number) -1){ //胆码数量判断
+                            if(this.number == 2){
+                                this.$alert('<div>至少选择1个胆码，选2～10个拖码，胆码 + 拖码≥<em class="red">'+ (this.num + 1) + '</em>个</div>', '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'warning',
+                                    center: true,
+                                    dangerouslyUseHTMLString: true,
+                                    lockScroll: false,
+                                    showClose: false
+                                });
+                            }else {
+                                this.$alert('<div>至少选择 1～'+ (this.num - 1) + '</em> ' +' 个胆码，选2～10个拖码，胆码 + 拖码≥<em class="red">'+ (this.num + 1) + '</em>个</div>', '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'warning',
+                                    center: true,
+                                    dangerouslyUseHTMLString: true,
+                                    lockScroll: false,
+                                    showClose: false
+                                });
+                            }
+                        }else {
+                            this.betDmNum.push(num)
+                            this.ballTm[index].selected = 2
+                            this.ballDm[index].selected = 3
+                            if(this.betTmNum.indexOf(num) > -1){
+                                this.betTmNum.splice(this.betTmNum.indexOf(num), 1);
+                            }
+                        }
+                    }
+                },
+                //投注拖码选号状态
+                doTmBet:function(num,index){
+                    var chose = this.betTmNum.indexOf(num) //-1 不存在
+                    if(chose > -1){
+                        this.betTmNum.splice(chose, 1);
+                        this.ballDm[index].selected = this.ballDm[index].selected ==3  ? 2 : 1;
+                        this.ballTm[index].selected = this.ballTm[index].selected == 1 || this.ballTm[index].selected ==2  ? 3 : 1;
+                    }else {
+                        this.betTmNum.push(num)
+                        if(this.betDmNum.indexOf(num) > -1){
+                            this.betDmNum.splice(this.betDmNum.indexOf(num), 1);
+                        }
+                        this.ballDm[index].selected = 2
+                        this.ballTm[index].selected = 3
+                    }
+                },
+                //拖码全拖
+                tmAll:function(){
+                    this.betTmNum = [];
+                    for(var i = 0 ; i < 11 ; i ++){
+                        var chose = this.betDmNum.indexOf(this.ballTm[i].num); //-1 存在
+                        if(chose > -1){
+                            this.ballTm[i].selected = 2;
+                        }else {
+                            this.betTmNum.push(this.ballTm[i].num)
+                            this.ballTm[i].selected = 3
+                            this.ballDm[i].selected = 2
+                        }
+                    }
+                },
+                //清空拖码
+                clearTm:function(){
+                    for(var i = 0 ; i < 11 ; i ++){
+                        var chose = this.betDmNum.indexOf(this.ballTm[i].num); //-1 存在
+                        if(chose > -1){
+                            this.ballTm[i].selected = 2;
+                        }else {
+                            this.betTmNum.splice(chose,1)
+                            this.ballTm[i].selected = 1;
+                            this.ballDm[i].selected = 1;
+                        }
+                    }
+                },
+                //添加到选区后清空
+                clear:function(){
+                    for(var i = 0 ; i < 11 ; i ++){
+                        this.ballTm[i].selected = 1;
+                        this.ballDm[i].selected = 1;
+                    }
+                    this.betTmNum = []
+                    this.betDmNum = []
+                },
+                //添加到选区
+                add:function(){
+                    if(this.notes < 1){
+                        if(this.number -1 ==1){
+                            this.$alert('<div>至少选择 '+ (this.num - 1) + '</em> ' + ' 个胆码，选2～10个拖码，胆码 + 拖码≥<em class="red">'+ (this.num + 1) + '</em>个</div>', '提示', {
+                                confirmButtonText: '确定',
+                                type: 'warning',
+                                center: true,
+                                dangerouslyUseHTMLString: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                        }else {
+                            this.$alert('<div>至少选择 1～'+ (this.num - 1) + '</em> ' +' 个胆码，选2～10个拖码，胆码 + 拖码≥<em class="red">'+ (this.num + 1) + '</em>个</div>', '提示', {
+                                confirmButtonText: '确定',
+                                type: 'warning',
+                                center: true,
+                                dangerouslyUseHTMLString: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                        }
+                        return
+                    }
+                    var betNum;
+                    var dmNum =  this.betDmNum.sort().join(",") + '#';
+                    var tmNum =  this.betTmNum.sort().join(",");
+                    betNum = dmNum + tmNum ;
+                    this.$emit('bet',[betNum,this.notes]); //向父组件传递投注内容[投注号码，投注注数，投单式 / 复式,投注类型type]，且顺序需固定
+                    this.clear(); //清空选项
+                }
+            }
+        })
+        //任选1/2/3/4/5/6/7/8 /前一/前二组选/前三组选 普通投注 组件
+        Vue.component('bet-item-rx-normal', {
+            template: '#rxNormal',
+            props:['issue','timer','miss','number','gain','type','betModel','minMoney','unitIsOpen','label','value','scale','multiple'], //['当前投注期号','投注倒计时','号码遗漏','任选几(2/3/4/5/6/7/8)','中奖1注的奖金','投注类型值'],
+            data:function(){
+                return{
+                    ball : [ //显示选号
+                        {num:'01',selected:false},
+                        {num:'02',selected:false},
+                        {num:'03',selected:false},
+                        {num:'04',selected:false},
+                        {num:'05',selected:false},
+                        {num:'06',selected:false},
+                        {num:'07',selected:false},
+                        {num:'08',selected:false},
+                        {num:'09',selected:false},
+                        {num:'10',selected:false},
+                        {num:'11',selected:false}], //ball value
+                    betNum : [], //投注数据
+                }
+            },
+            computed:{
+                //中奖号码个数 大于5时返回5
+                numberAfter:function(){
+                    if(this.number>5){
+                        return 5
+                    }else {
+                        return parseInt(this.number)
+                    }
+                },
+                //最高中奖注数
+                max:function(){
+                    var neednum =  parseInt(this.number);  //要求选择个数
+                    var len = this.betNum.length;  //已选个数
+                    //任选
+                    if(this.type < 8 || this.type == 13){
+                        if(neednum > 5){
+                            return combination(len-5,neednum-5)
+                        }else {
+                            return combination(5,neednum)
+                        }
+                    }
+                    //前一、前二组选、前三组选
+                    if(this.type ==8 || this.type == 9 || this.type == 11){
+                        return 1
+                    }
+                },
+                //选择注数计算
+                notes:function(){
+                    return combination(this.betNum.length,parseInt(this.number))
+                },
+                //奖金计算
+                countGain:function(){
+                    if(this.notes > this.max){
+                        return accMul(accMul(this.gain, this.max),this.multiple,5); //最高奖金
+                    }else{
+                        return accMul(accMul(this.gain, this.notes),this.multiple,5)
+                    }
+                },
+                //奖金最低值计算
+                gainMin:function(){
+                    if(this.type < 8 || this.type == 13){  //任选
+                        if(this.betNum.length == 11 || this.betNum.length <= this.number || this.number >=5){ //全选时必中最高中奖注数 or 未选够号码 or 所选号码要求5以上 最低值返回0
+                            return 0
+                        }else {
+                            var bz = 5 - (11 - this.betNum.length);
+                            if(bz > 0 && bz > this.number){
+                                if(this.gain * combination(bz,this.number) == this.countGain){
+                                    return 0
+                                }else {
+                                    return accMul(accMul(this.gain , combination(bz,this.number)),this.multiple,5)
+                                }
+                            } else {
+                                return accMul(this.gain,this.multiple,5)
+                            }
+                        }
+                    }
+                    if(this.type ==8 || this.type == 9 || this.type == 11){ //前一、前二组选、前三组选
+                        return 0
+                    }
+                },
+                //投注总额
+                totalMoney:function(){
+                    var count = accMul(this.notes,this.multiple) * 2
+                    var s  = accDiv(count,this.scale)
+                    return s
+                }
+            },
+            methods:{
+                //投注选号状态
+                doBet:function(num,s){
+                    var chose = this.betNum.indexOf(num)
+                    if(chose > -1){
+                        this.betNum.splice(chose, 1)
+                    }else {
+                        this.betNum.push(num)
+                    }
+                    //改变球的选中状态
+                    this.ball[s].selected = !this.ball[s].selected
+                },
+                //全
+                choseAll:function(){
+                    this.betNum = [];
+                    for(var i in this.ball){
+                        this.betNum.push(this.ball[i].num)
+                        this.ball[i].selected = true;
+                    }
+                },
+                //大
+                choseBig:function(){
+                    this.betNum = [];
+                    for(var i in this.ball){
+                        if(i > 4){
+                            this.betNum.push(this.ball[i].num)
+                            this.ball[i].selected = true
+                        }else {
+                            this.ball[i].selected = false
+                        }
+                    }
+                },
+                //小
+                choseSmall:function(){
+                    this.betNum = [];
+                    for(var i in this.ball){
+                        if(i <= 4){
+                            this.betNum.push(this.ball[i].num)
+                            this.ball[i].selected = true
+                        }else {
+                            this.ball[i].selected = false
+                        }
+                    }
+                },
+                //奇数
+                choseJs:function(){
+                    this.betNum = [];
+                    for(var i in this.ball){
+                        if(i%2 ==0){
+                            this.betNum.push(this.ball[i].num)
+                            this.ball[i].selected = true
+                        }else {
+                            this.ball[i].selected = false
+                        }
+                    }
+                },
+                //偶
+                choseOs:function(){
+                    this.betNum = [];
+                    for(var i in this.ball){
+                        if(i%2 !==0){
+                            this.betNum.push(this.ball[i].num)
+                            this.ball[i].selected = true
+                        }else {
+                            this.ball[i].selected = false
+                        }
+                    }
+                },
+                //清空
+                clear:function(){
+                    this.betNum = [];
+                    for(var i in this.ball){
+                        this.ball[i].selected = false
+                    }
+                },
+                //添加到选区
+                add:function(){
+                    if(this.betNum.length < this.number){
+                        this.$alert('请至少选择'+ this.number + '个号码', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'warning',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return
+                    }
+                    var betNum =  this.betNum.sort().join(",");
+
+                    this.$emit('bet',[betNum,this.notes]); //向父组件传递投注内容[投注号码，投注注数，投单式 / 复式,投注类型type]，且顺序需固定
+                    this.clear(); //清空选项
+                }
+            }
+        })
+        //投注--右侧内容 组件
+        Vue.component('bet-right', {
+            template: '#betRight',
+            props:['recentAwardData','cold','hot'],
+            data:function(){
+                return{
+                    coldNum:true,
+                    historyName:'{$name}',
+                    expect_type : Number("{$lottery['expect_type']}"), //期号类型
+                }
+            },
+            computed:{
+                // 冷号最大值
+                coldMax:function(){
+                    return this.cold[4].num
+                },
+                // 热号最大值
+                hotMax:function(){
+                    return this.hot[0].num
+                },
+            }
+        })
+        //底部--今日开奖号码 组件
+        Vue.component('today-kj',{
+            template:'#todayKj',
+            props:['kjCode','totalIssue'],
+            data:function(){
+                return{
+                    isShow:false,
+                    todayInfo:'{$info.today}',//info.today
+                    expect_type : Number("{$lottery['expect_type']}"), //期号类型
+                    firstIssue:{$firstIssue}, //当天第一期期号
+                    hasError: false // 错误状态
+                }
+            },
+            computed:{
+                // 安全的总期数
+                safeTotalIssue: function() {
+                    const total = parseInt(this.totalIssue) || 0;
+                    return Math.max(0, total); // 确保非负
+                },
+                // 安全的列数
+                column: function(){
+                    return Math.max(1, Math.ceil(this.safeTotalIssue/4));
+                },
+                // 安全的第四列数量
+                safeColumn4: function() {
+                    const result = this.safeTotalIssue - this.column * 3;
+                    return Math.max(0, result); // 确保非负
+                }
+            },
+            errorCaptured: function(err, vm, info) {
+                console.error('TodayKj组件渲染错误:', err);
+                this.hasError = true;
+                return false; // 阻止错误向上传播
+            },
+            methods:{
+                //今日开奖期号处理判断
+                checkUp:function (n) {
+                    try {
+                        var string = ''
+                        var totalLength = this.safeTotalIssue.toString().length;
+                        var nLength = n.toString().length;
+
+                        for(var i = 0 ; i < totalLength - nLength ; i++){
+                            string +='0'
+                        }
+                        var addZero = string + "" + n; //序号根据总期数补零
+                        var issueString = this.todayInfo + ''+ addZero   //期号拼接
+                        return [addZero , issueString]
+                    } catch (error) {
+                        console.error('checkUp方法错误:', error);
+                        return ['--', '--'];
+                    }
+                }
+            }
+        })
+        //底部--我的投注记录 组件
+        Vue.component('my-record',{
+            template:'#myRecord',
+            props:['recordData'],
+            data:function(){
+                return{
+                    isShow:false
+                }
+            },
+            filters:{
+                timeSplit:function (val) {
+                    return val.toString().slice(5)
+                }
+            },
+            methods:{
+                toDetail: function (id, orderid) {
+                    var u = '?lottery_id=' + orderid + '&id=' + id;
+                    window.open('{:url("./orders")}' + u);
+                },
+                //撤销订单
+                cancelOrder:function (id) {
+                    var _this = this
+                    _this.$confirm('确定要撤销该订单吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        lockScroll: false
+                    }).then(function(){
+                        $.get('{:url("orders/returnTicket")}', {
+                            lottery_id:id,
+                        }, function (res) {
+                            if(!res.err){
+                                _this.$alert(res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    center: true,
+                                    type: 'success',
+                                    lockScroll: false,
+                                    callback: function(action){
+                                        _this.$emit('refresh')
+                                    }
+                                })
+                            }else {
+                                _this.$alert(res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    center: true,
+                                    type: 'error',
+                                    lockScroll: false
+                                });
+                            }
+                        });
+                    }).catch(function(){
+                    });
+                }
+            }
+        })
+        //字符串截取
+        Vue.filter("slice", function(value) {
+            return value.toString().slice(2);
+        });
+        //字符串截取
+        Vue.filter("slice4", function(value) {
+            return value.toString().slice(4);
+        });
+        //开奖号区前置补零
+        Vue.filter("addPreZero", function(value) {
+            if(value<10){
+                return '0'+value;
+            }else {
+                return value;
+            }
+        });
+        'use strict';
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                pause: {$pause} ? true : false, //彩种是否暂停销售
+                expect_type : Number("{$lottery['expect_type']}"), //期号类型
+
+                label:'元', //单位值
+                value:'1', //单位值
+                scale: 1,//比例
+                multiple:'1',//倍数
+
+                joinOpen: '{$company.join_isOpen}'== 1 ? true : false, //是否开启合买
+                betModel: Number({$mode}), //模式1常规模式 2自定义金额模式
+                unitIsOpen: '{$company.unit_isOpen}'== 1 ? true : false, //模式1下 元角分模式是否开启
+                minMoney:  Number('{$company.mode2_min_money}') ,//模式2下每注的最低金额
+                rebateIsOpen:  '{$company.rebate_isOpen}'== 1 ? true : false ,//返点是否开启
+
+                sliderValue: Number('{$user_rebate}'), //用户返点值
+                rebate : Number('{$bonus_base}'), //系统返点值
+                userRebate : Number('{$user_rebate}'),//用户返点值
+                upRebate: Number('{$up_user_rebate}'), //上级返点值
+
+                navList: {$play}, //投注种类选项
+                jgTime: '{$info.timelong}', //几分钟一期
+                //初始数据
+                defaultInfo: {
+                    issue: '{$info.expect}', //当前投注期号
+                    sort_expect:'{$info.sort_expect}',
+                    time: '{$info.down_time}', //当期投注剩余时间（秒）
+                    awardNumber: '{$info.awardNumber.code}'.split(","), //最新一期开奖号码
+                    expect: '{$info.awardNumber.expect}', //最新开奖期号
+                    type: '{$info.type}', //默认选中 与 navList 的type相对应
+                    gain: '{$info.gain}', //默认选中金币
+                    totalIssue: '{$info.startIssue}', //总期数
+                    kjTime: '{$openTime}', //开奖时间
+                    todayTime: '{$info.todayTime}', //今天的日期
+                    miss: {$miss} //当期投注期遗漏
+                },
+
+                //右侧--近期开奖
+                recentAwardData: {$ten},
+                //右侧--冷热号统计
+                cold: {$cold},
+                hot: {$hot},
+
+                //底部--今日开奖号码
+                //开奖数组
+                kjCode: {$open},
+
+                //投注类型 普通投注 or 胆拖投注 or 单式投注
+                radio1: '1', //任选二
+                radio2: '1', //任选三
+                radio3: '1',//任选四
+                radio4: '1',//任选五
+                radio5: '1',//任选六
+                radio6: '1',//任选七
+                radio7: '1',//任选八
+                radio8: '1',//前一
+                radio9: '1',//前二组选
+                radio10: '1',//前二直选
+                radio11: '1',//前三组选
+                radio12: '1',//前三直选
+                radio13: '1',//任一
+                dialogVisible: false, //期号提示显示控制
+                orderVisible: false, //投注信息确认
+                loginVisible: false, //登录弹窗
+                agreeVisible: false, //用户服务协议内容
+                gameVisible: false, //游戏服务协议内容
+                nickname: '{present name="$user.sid"} {$user.nickname}{/present}', //登录昵称
+                accountMoney: '{$user.money}', //账户余额
+                loginType: -1, //判断登录后应执行的操作
+
+                //投注数据
+                bet: {
+                    notes: 0, //投注总注数
+                    multiple: 1, //投注倍数
+                    checked: true, //投注协议
+                    isChase: false, //是否追号
+                    betArr: [], //投注内容
+                    buyType: 1, //购买方式 1 自购 2 合买
+                    expectArr: [] //期号、倍数
+                },
+                //合买数据
+                jion: {
+                    total_share:0,//份数
+                    buy_share:0,//购买份数
+                    bd_share:0,//保底份数
+                    infoState: 0, //是否公开
+                    gain: '0%',
+                    isAll: false, //是否全保
+                    declaration: ''
+                },
+
+                //追号数据
+                chaseNum: 10, //默认追号期数
+                chaseMul: 1, //追号倍数设置
+                checkAlls: true, //是否全选
+                isStop: false, //中奖是否停止追号
+                chaseData: [], //追号数据内容
+
+                //订单显示数据
+                order: {
+                    money: 0,
+                    type: '自购'
+                },
+
+                isGet:'{$getnewcode}',//加载页面时是否获取开奖
+                notDo:false, //禁止双击提交
+                playLinkUrl:'',
+                intervalFun : null,
+
+                recordData:[]
+            },
+            computed: {
+                //用户返点为0 时不显示
+                isRebate:function () {
+                    return this.userRebate == 0 ? false : true
+                },
+                showWords:function () {
+                    return this.betModel == 1 ? '奖' : '赔'
+                },
+                //用户所选 返点值
+                rebateVal:function () {
+                    return accSub(this.userRebate,this.sliderValue)
+                },
+                //最高奖金计算百分比
+                maxRebate:function () {
+                    return accSub(1 ,accDiv(accAdd(accAdd(this.rebate,this.upRebate), this.rebateVal),100))
+                },
+                //返点后最高奖金
+                gain:function () {
+                    var curGain = this.defaultInfo.gain
+                    var a = this.betModel == 1 ? 1 : 2; //模式2下奖金减半
+                    return this.rebateIsOpen ? accDiv(accDiv(accMul(curGain,this.maxRebate),this.scale),a,5) : accDiv(curGain , a ,5)//保留4位小数
+                },
+                //投注剩余时间格式化
+                timer: function() {
+                    if (this.defaultInfo.time == 0) {
+                        return '00:00';
+                    } else {
+                        return format('i:s', this.defaultInfo.time);
+                    }
+                },
+                //几分钟一期转换成秒
+                intervalTime: function() {
+                    return parseInt(this.jgTime) * 60;
+                },
+                //已售期数
+                issueAfter: function() {
+                    return this.defaultInfo.issue - {$firstIssue};
+                },
+                //投注文字、type值显示处理
+                text: function() {
+                    var nameObj = {
+                        1 : {name:'任二',radio : this.radio1},
+                        2 : {name:'任三',radio : this.radio2},
+                        3 : {name:'任四',radio : this.radio3},
+                        4 : {name:'任五',radio : this.radio4},
+                        5 : {name:'任六',radio : this.radio5},
+                        6 : {name:'任七',radio : this.radio6},
+                        7 : {name:'任八',radio : this.radio7},
+                        8 : {name:'前一',radio : this.radio8},
+                        9 : {name:'前二组选',radio : this.radio9},
+                        10 : {name:'前二直选',radio : this.radio10},
+                        11 : {name:'前三组选',radio : this.radio11},
+                        12 : {name:'前三直选',radio : this.radio12},
+                        13 : {name:'任一',radio : this.radio13},
+                    }
+                    var radioObj = {
+                        1 : '复式',
+                        2 : '胆拖',
+                        3 : '单式'
+                    }
+                    var type = this.defaultInfo.type
+                    var betText =  nameObj[type].name + radioObj[nameObj[type].radio]
+                    var betType = type + '.' + nameObj[type].radio
+                    return [betText , betType]
+                },
+                //选号区总金额
+                zgMoney: function() {
+                    var count = 0
+                    for(var i=0;i<this.bet.betArr.length;i++){
+                        var a = 0
+                        if(this.betModel == 1){
+                            a = this.bet.betArr[i].money
+                        }else {
+                            a = accMul(this.bet.betArr[i].money,this.bet.betArr[i].notes)
+                        }
+                        count = accAdd(count,a);
+                    }
+                    return count * this.bet.multiple
+                },
+                //1倍投注金额（追号时使用）
+                oneMoney: function() {
+                    var count = 0
+                    if(this.betModel == 1){
+                        if(this.unitIsOpen){
+                            for(var i=0;i < this.bet.betArr.length;i++){
+                                var a = accAdd(count,accDiv(this.bet.betArr[i].money,this.bet.betArr[i].multiple))
+                                count = a;
+                            }
+                        }else {
+                            count = accDiv(this.zgMoney,this.bet.multiple)
+                        }
+                    }
+                    return count
+                },
+                //追号
+                //追号总金额
+                chaseMoney: function() {
+                    var money = 0;
+                    for (var i = 0; i < this.chaseData.length; i++) {
+                        if (this.chaseData[i].checked) {
+                            var a = accAdd(money,accMul(this.chaseData[i].multiple,this.oneMoney))
+                            money = a;
+                        }
+                    }
+                    return money;
+                },
+                //追号选中数量
+                chaseDateLen: function() {
+                    var checkedLen = 0;
+                    for (var i = 0; i < this.chaseData.length; i++) {
+                        if (this.chaseData[i].checked) {
+                            checkedLen += 1;
+                        }
+                    }
+                    return checkedLen;
+                },
+                //追号总期数
+                issueTotal: function() {
+                    return this.chaseDateLen;
+                },
+                checkAll: {
+                    set: function set(value) {
+                        this.checkAlls = value;
+                    },
+                    get: function get() {
+                        return this.chaseDateLen < this.chaseData.length ? false : true;
+                    }
+                },
+
+                //合买
+                //合买参考金额
+                money: function() {
+                    if (this.bet.buyType == 2 && this.bet.isChase) {
+                        return this.chaseMoney; //追号合买
+                    } else {
+                        return this.zgMoney; //合买
+                    }
+                },
+                //最小总份数
+                minTotalShare:function () {
+                    return this.money ? 1 : 0
+                },
+                //每份金额 保留2位去掉
+                perMoney:function(){
+                    return this.money ? accDiv(this.money,this.jion.total_share,3) : 0
+                },
+                //最少购买份数 向上取整
+                minJionMoney: function() {
+                    return Math.ceil(this.jion.total_share * 0.05);
+                },
+                //已购买百分比 取整
+                isbuy: function() {
+                    return !this.money ? 0 : Math.floor(this.jion.buy_share / this.jion.total_share * 10000) / 100
+                },
+                //最多可保底
+                bdMax: function() {
+                    return this.jion.total_share - this.jion.buy_share;
+                },
+                //已保底百分比 取整
+                bdPercent: function() {
+                    return !this.money ? 0 :  Math.floor(this.jion.bd_share / this.jion.total_share * 10000) / 100
+                },
+                isLogin: function() {
+                    if (this.nickname.length) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+                //账户余额显示格式化
+                formatMoney: function (_formatMoney) {
+                    function formatMoney() {
+                        return _formatMoney.apply(this, arguments);
+                    }
+
+                    formatMoney.toString = function () {
+                        return _formatMoney.toString();
+                    };
+
+                    return formatMoney;
+                }(function () {
+                    return formatMoney(this.accountMoney);
+                }),
+                //最多追号期数
+                maxChase:function(){
+                    var total = parseInt(this.defaultInfo.totalIssue); //每天售卖期数
+                    var max_chase = Number("{$company['max_chase']}") //最大追号期数
+                    return max_chase ? max_chase > total ? total : max_chase : total //控制最多只能追第二天的期号
+                }
+            },
+            watch: {
+                //监听追号期数变化
+                chaseNum: function (val) {
+                    if (val > 1 && val <= this.maxChase && val % 1 == 0) {
+                        this.doChase();
+                    }
+                    if (val > this.maxChase) {
+                        //最多追号每天总期数
+                        this.chaseNum = this.maxChase;
+                    }
+                },
+                chaseMul: function(val) {
+//                    if (val > 9999) {
+//                        this.chaseMul = 9999;
+//                        for (i in this.chaseData) {
+//                            if (this.chaseData[i].checked) {
+//                                this.chaseData[i].multiple = 9999;
+//                            }
+//                        }
+//                    }
+                    if (val > 0 && val % 1 == 0) {
+                        for (i in this.chaseData) {
+                            if (this.chaseData[i].checked) {
+                                this.chaseData[i].multiple = parseInt(val);
+                            }
+                        }
+                    }
+                },
+                //监听购买总金额
+                money: function (val) {
+                    this.jion.total_share = val
+                },
+                //监听总份数
+                'jion.total_share':function (val) {
+                    this.jion.buy_share = Math.ceil(val * 0.05);
+                    if (this.jion.isAll) {
+                        this.jion.bd_share = this.bdMax;
+                    }
+                },
+            },
+            methods: {
+                handleGain:function (g) {
+                    var a = this.betModel == 1 ? 1 : 2; //模式2下奖金减半
+                    return this.rebateIsOpen ? accDiv(accMul(Number(g),this.maxRebate),a,5) : accDiv(Number(g),a,5)
+                },
+                changeModel:function (emitVal) {
+                    this.scale = emitVal[0]
+                    this.label = emitVal[1]
+                    this.value = emitVal[2]
+                },
+                changeMultiple:function (emitVal) {
+                    this.multiple = emitVal
+                },
+                changeRebate:function (a) {
+                    if(a == 'add'){
+                        if(this.sliderValue < this.userRebate){
+                            this.sliderValue = accAdd(this.sliderValue,0.1)
+                        }
+                    }
+                    if(a == 'sub'){
+                        if(this.sliderValue >0){
+                            this.sliderValue = accSub(this.sliderValue,0.1)
+                        }
+                    }
+                },
+                //更改 追号倍数
+                changeMul:function (val) {
+                    var _this = this
+                    setTimeout(function(){
+                        _this.bet.multiple = parseInt(val)
+                        _this.chaseMul =  parseInt(val)
+                    },0)
+                },
+                //输入的单注金额必须为整数
+                changeBetArr:function (val,i) {
+                    var _this = this;
+                    setTimeout(function () {
+                        _this.$set(_this.bet.betArr[i],'money',parseInt(val))
+                    },0)
+                },
+                //type
+                tabActive: function(n, g) {
+                    //n 投注类型，g投注类型对应的单注奖金
+                    this.defaultInfo.type = n;
+                    this.defaultInfo.gain = g;
+                },
+                objectSpanMethod: function(_ref) {
+                    var row = _ref.row,
+                        column = _ref.column,
+                        rowIndex = _ref.rowIndex,
+                        columnIndex = _ref.columnIndex;
+
+                    if (columnIndex === 1) {
+                        if (rowIndex === 0) {
+                            return {
+                                rowspan: 13,
+                                colspan: 1
+                            };
+                        } else {
+                            return {
+                                rowspan: 0,
+                                colspan: 0
+                            };
+                        }
+                    }
+                },
+                //获取期号信息
+                getIssueInfo: function() {
+                    var _this = this;
+
+                    $.get('{:url("getIssueInfo")}', { name: '{$name}' }, function (res) {
+                        _this.defaultInfo.time = res.data.down_time;
+                        _this.defaultInfo.issue = res.data.expect;
+                        _this.$set(_this.defaultInfo,'time',res.data.down_time)
+                        _this.$set(_this.defaultInfo,'issue',res.data.expect)
+                        _this.$set(_this.defaultInfo,'sort_expect',res.data.sort_expect)
+                        _this.$set(_this.defaultInfo,'expect',res.data.lastIssue)
+                        _this.$set(_this.defaultInfo,'kjTime',res.data.openTime)
+                        _this.$set(_this.defaultInfo,'todayTime',res.data.todayTime)
+                        if (_this.bet.isChase) {
+                            _this.doChase();
+                        }
+                    });
+                },
+                //当期投注倒计时
+                setTime: function() {
+                    var _this2 = this;
+                    var countdown = function countdown() {
+                        _this2.defaultInfo.time--;
+                        //当期投注结束
+                        if (_this2.defaultInfo.time == 0) {
+                            clearInterval(_this2.intervalFun);
+                            $.get('{:url("getIssueInfo")}', { name: '{$name}' }, function (res) {
+                                _this2.$set(_this2.defaultInfo,'time',res.data.down_time)
+                                _this2.$set(_this2.defaultInfo,'issue',res.data.expect)
+                                _this2.$set(_this2.defaultInfo,'sort_expect',res.data.sort_expect)
+                                _this2.$set(_this2.defaultInfo,'expect',res.data.lastIssue)
+                                _this2.$set(_this2.defaultInfo,'kjTime',res.data.openTime)
+                                _this2.$set(_this2.defaultInfo,'todayTime',res.data.todayTime)
+                                _this2.$set(_this2.defaultInfo,'awardNumber',res.data.awardNumber.code.split(','))  //显示正在开奖
+                                _this2.$set(_this2,'recentAwardData',res.data.open) //更新近10期开奖数组
+                                _this2.dialogVisible = true; //期数提示
+
+                                if (_this2.bet.isChase) {
+                                    _this2.doChase();
+                                }
+                            });
+                            setTimeout(function () {
+                                _this2.dialogVisible = false;
+                            }, 5000);
+                            //timer分钟后获取开奖号码
+                            var s = 5000; // 固定为5秒
+                            var ctime = setTimeout(function () {
+                                _this2.getNewCode();
+                                clearTimeout(ctime);
+                            }, s);
+                        }
+                    };
+                    var countdowns = setInterval(countdown, 1000);
+                },
+                //获取开奖号码
+                getNewCode: function() {
+                    var _this3 = this;
+                    var s = _this3.jgTime < 5 ? 5000 : 10000;
+                    this.intervalFun = setInterval(function () {
+                        $.get('{:url("getNewCode")}', {
+                            issue: _this3.defaultInfo.expect,
+                            name: '{$name}'
+                        }, function (res) {
+                            if (!res.err) {
+                                clearInterval(_this3.intervalFun);
+                                _this3.$set(_this3.kjCode, res.data.expect, res.data.codeOpen);
+                                _this3.kjCode[res.data.expect] = res.data.codeOpen;
+                                _this3.$set(_this3,'recentAwardData',res.data.tenCode);
+                                _this3.$set(_this3.defaultInfo,'awardNumber',res.data.code);
+                                $.get('{:url("getColdHot")}', { name: '{$name}' }, function (res) {
+                                    _this3.$set(_this3, 'cold', res.data.cold);
+                                    _this3.$set(_this3, 'hot', res.data.hot);
+                                });
+                                $.get('{:url("getMiss")}', { name: '{$name}' }, function (res) {
+                                    if(res.data){
+                                        _this3.$set(_this3.defaultInfo, 'miss', res.data);
+                                    }
+                                });
+                            }
+                        });
+                    }, s); //每隔10秒
+                },
+                //添加到投注区
+                addToArea: function(numArr) {
+                    var list = {};
+                    list['num'] = numArr[0]; //投注号码
+                    list['notes'] = numArr[1]; //投注号码
+                    list['type_text'] = this.text[0];
+                    list['type'] = this.text[1]; //投注type类型
+                    if(this.rebateIsOpen && this.isRebate){
+                        list['rebate'] = this.rebateVal; //返点百分比
+                    }
+                    if(this.betModel == 1){ //模式1
+                        if(this.unitIsOpen){ //元角分厘模式
+                            list['multiple'] = this.multiple; //投注倍数
+                            list['unit'] =this.label; //投注单位
+                            list['unit_value'] = this.value; //投注单位
+                            list['money'] = accMul(accMul(accDiv(2,this.scale),this.multiple)  , numArr[1]); //投注金额
+                        }else { //默认模式
+                            list['money'] = accMul(numArr[1] , 2);
+                        }
+                    }
+                    if(this.betModel == 2){ //模式2
+                        list['money'] = this.minMoney;
+                    }
+                    this.bet.betArr.unshift(list);
+                    this.bet.notes += numArr[1]; //计算总注数
+                },
+                //单式投注添加
+                copyAdd: function(copyArr){
+                    for(var i=0 ; i< copyArr.length ; i++){
+                        if(this.defaultInfo.type == 10 || this.defaultInfo.type == 12){
+                            copyArr[i] = copyArr[i].replace(/ |,/g, function(matchStr) {
+                                var tokenMap = {
+                                    ' ': '|',
+                                    ',': '|'
+                                };
+                                return tokenMap[matchStr];
+                            });
+                        }else {
+                            copyArr[i] = copyArr[i].replace(/ /g,',')
+                        }
+                        this.addToArea([copyArr[i],1])
+                    }
+                },
+                //删除投注投注列表
+                deleteBet: function(i, n) {
+                    this.bet.betArr.splice(i, 1);
+                    this.bet.notes -= n;
+                },
+                //机选 @param {int} p  机选几注
+                betRandom: function(p) {
+                    var items = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'];
+                    var valObj = {
+                        1 : this.radio1,
+                        2 : this.radio2,
+                        3 : this.radio3,
+                        4 : this.radio4,
+                        5 : this.radio5,
+                        6 : this.radio6,
+                        7 : this.radio7,
+                        8 : this.radio8,
+                        9 : this.radio9,
+                        10 : this.radio10,
+                        11 : this.radio11,
+                        12 : this.radio12,
+                        13 : this.radio13,
+                    }
+                    for (var i = 0; i < p; i++) {
+                        console.log(i)
+                        var num;
+                        if (parseInt(this.defaultInfo.type) < 8 || parseInt(this.defaultInfo.type) == 13) {
+                            //任选 任选1/2/3/4/5/6/7/8 普通投注
+                            var n = parseInt(this.defaultInfo.type) == 13 ? 1 : parseInt(this.defaultInfo.type) + 1
+                            num = getRandomArrayEle(items, n).sort().join(",");
+                        } else if (parseInt(this.defaultInfo.type) == 8) {
+                            //前一 普通投注
+                            num = getRandomArrayEle(items, 1).join(",");
+                        } else if (parseInt(this.defaultInfo.type) == 9) {
+                            //前二组选 普通投注
+                            num = getRandomArrayEle(items, 2).sort().join(",");
+                        } else if (parseInt(this.defaultInfo.type) == 11) {
+                            //前三组选 普通投注
+                            num = getRandomArrayEle(items, 3).sort().join(",");
+                        } else if (parseInt(this.defaultInfo.type) == 10) {
+                            //前二直选
+                            num = getRandomArrayEle(items, 2).sort().join("|");
+                        } else if (parseInt(this.defaultInfo.type) == 12) {
+                            //前三直选
+                            num = getRandomArrayEle(items, 3).sort().join("|");
+                        }
+                        if(valObj[this.defaultInfo.type] == 2){ //胆拖
+                            num = num.replace(',','#')
+                        }
+                        this.addToArea([num,1]);
+                    }
+                },
+                //清空投注列表
+                clearList: function() {
+                    this.bet.betArr = [];
+                    this.bet.expectArr = [];
+                    this.bet.notes = 0;
+                },
+                //追号
+                doChase: function() {
+                    var arr = [];
+                    //投注当天
+                    var date = new Date(this.defaultInfo.kjTime);
+                    var time = date.getTime() / 1000;
+                    //投注第二天
+                    var nextDayVal = getDateStr(this.defaultInfo.todayTime, 1);
+                    var nextDay = getDateStr1(this.defaultInfo.todayTime, 1);
+                    var nextDate = nextDay + " " + '{$info.startTime}';
+                    var nextTime = new Date(nextDate).getTime() / 1000;
+
+                    var init = parseInt(this.issueAfter) + 1;
+                    var total = parseInt(this.defaultInfo.totalIssue);
+                    var deIssue = parseInt(this.defaultInfo.issue);
+                    var string = ''
+                    for(var i = 0 ; i< this.defaultInfo.totalIssue.toString().length ; i++){
+                        string +='0'
+                    }
+                    var nextVal = parseInt(nextDayVal + string);
+
+                    var nextT = nextTime;
+                    for (var i = 0; i < this.chaseNum; i++) {
+                        var chaseList = {};
+                        chaseList['checked'] = true;
+                        chaseList['multiple'] = this.chaseMul;
+                        if(this.expect_type){ //累加
+                            chaseList['issue'] = deIssue + i;
+                        }
+                        if (i > total - init) {
+                            //投注第二天（最多）
+                            if(!this.expect_type){ //日期型
+                                nextVal += 1;
+                                chaseList['issue'] = nextVal;
+                            }
+                            nextT = nextT + this.intervalTime;
+                            chaseList['time'] = format('Y-m-d H:i', nextT + 60);
+                        } else {
+                            //投注当天
+                            if(!this.expect_type) { //日期型
+                                chaseList['issue'] = deIssue + i;
+                            }
+                            chaseList['time'] = format('Y-m-d H:i', time + i * this.intervalTime);
+                        }
+                        arr.push(chaseList);
+                    }
+
+                    this.$set(this, 'chaseData', arr);
+                },
+                //追号 期数设置小于2、不为整数时
+                chaseIssue: function() {
+                    var reg = /^[0-9]+.?[0-9]*$/;
+                    if (this.chaseNum < 2 || !reg.test(this.chaseNum)) {
+                        this.chaseNum = 2;
+                    } else {
+                        this.chaseNum = parseInt(this.chaseNum);
+                    }
+                },
+                //追号 倍数小于1、不为整数时
+                chaseM: function() {
+                    var reg = /^[0-9]+.?[0-9]*$/;
+                    if (this.chaseMul < 1 || !reg.test(this.chaseMul)) {
+                        this.chaseMul = 1;
+                        for (i in this.chaseData) {
+                            if (this.chaseData[i].checked) {
+                                this.chaseData[i].multiple = 1;
+                            }
+                        }
+                    } else if (this.chaseMul / 1 !== 0) {
+                        this.chaseMul = parseInt(this.chaseMul);
+                    }
+                },
+//                //更改投注倍数
+//                changeMul: function changeMul(val) {
+//                    this.chaseMul = val;
+//                },
+                //追号全选 or 全不选
+                checkedBox: function(val) {
+                    for (var i = 1; i < this.chaseData.length; i++) {
+                        this.chaseData[i].checked = val;
+                        if (val) {
+                            this.chaseData[i].multiple = this.chaseMul;
+                        } else {
+                            this.chaseData[i].multiple = '';
+                        }
+                    }
+                },
+                //追号 更改单期倍数 i 排除当前期
+                checkMul: function(i, val) {
+                    var reg = /^[0-9]+.?[0-9]*$/;
+                    if (i == 0) {
+                        if (val < 1) {
+                            this.chaseData[i].multiple = this.chaseMul;
+                        }else if (!reg.test(val)) {
+                            this.chaseData[i].multiple = 1;
+                        } else {
+                            this.chaseData[i].multiple = parseInt(val);
+                        }
+                    } else {
+                        if (val < 1) {
+                            this.chaseData[i].checked = false;
+                        }else if (!reg.test(val)) {
+                            this.chaseData[i].multiple = 1;
+                            this.chaseData[i].checked = true;
+                        } else {
+                            this.chaseData[i].multiple = parseInt(val);
+                            this.chaseData[i].checked = true;
+                        }
+                    }
+                },
+                //追号 更改单期checkbox
+                checkB: function(i, val) {
+                    if (val) {
+                        this.chaseData[i].multiple = this.chaseMul;
+                    } else {
+                        this.chaseData[i].multiple = '';
+                    }
+                },
+                //合买 全额保底
+                allBd: function() {
+                    if (!this.jion.isAll) {
+                        this.jion.bd_share = this.bdMax;
+                    }
+                },
+                isAllBd: function(val) {
+                    if (val == this.bdMax) {
+                        this.jion.isAll = true;
+                    } else {
+                        this.jion.isAll = false;
+                    }
+                },
+                checkJion: function(val) {
+                    if (val + this.jion.bd_share > this.jion.total_share) {
+                        this.jion.bd_share = this.bdMax;
+                        this.jion.isAll = true;
+                    } else {
+                        this.jion.isAll = false;
+                    }
+                },
+                channelInputLimit :function(e) {
+                    let key = e.key
+                    // 不允许输入'e'和'.'
+                    if (key === 'e' || key === '.') {
+                        e.returnValue = false
+                        return false
+                    }
+                    return true
+                },
+                //计算金额（每份金额*购买份数，保留2位小数）
+                countShareMoney:function (share) {
+                    return accMul(this.perMoney,share,3)
+                },
+                //提交订单 判断是否登录
+                submit: function() {
+                    var _this4 = this;
+
+                    $.get('{:url("login/checkLogin")}', function (res) {
+                        if (!res.err) {
+                            _this4.nickname = res.nickname;
+                            _this4.accountMoney = res.money;
+                            _this4.isNotes();
+                        } else {
+                            _this4.loginVisible = true;
+                            _this4.loginType = 0;
+                        }
+                    });
+                },
+                //登录成功
+                loginSuccess: function(v) {
+                    var _this5 = this;
+
+                    this.nickname = v[0];
+                    this.accountMoney = v[1];
+                    this.loginVisible = false;
+                    if (this.loginType == 0) {
+                        setTimeout(function () {
+                            _this5.isNotes();
+                            _this5.loginType = -1;
+                        }, 500);
+                    }
+                },
+                //退出登录
+                loginOut: function() {
+                    $.get('{:url("login/logout")}', function () {
+                        window.location.reload();
+                    });
+                },
+                //刷新余额
+                refreshMoney:function () {
+                    var _this = this;
+                    _this.$set(_this,'accountMoney','...')
+                    $.get('/index/user/getinfo', function (res) {
+                        _this.$set(_this,'accountMoney',res.data.money)
+                    });
+                },
+                //投注注数是否为0
+                isNotes: function() {
+                    if (!this.bet.betArr.length) {
+                        this.$alert('至少选择1注号码才能投注，请先选择方案！', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'warning',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    }
+                    if (this.bet.isChase) {
+                        if (this.issueTotal < 2) {
+                            this.$alert('追号至少选择 2 期(包括当前期)!', '提示', {
+                                confirmButtonText: '确定',
+                                type: 'warning',
+                                center: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                            return;
+                        }
+                    }
+                    if (!this.bet.checked) {
+                        this.$alert('请仔细阅读相关协议！', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    }
+                    if (this.bet.buyType == 1) {
+                        //是否合买
+                        this.order.type = '自购';
+                    } else {
+                        this.order.type = '合买';
+                    }
+                    //支付总金额
+                    var money;
+                    if (this.bet.buyType == 2) {
+                        money = accMul(this.jion.buy_share + this.jion.bd_share,this.perMoney,3); //合买
+                    } else if (this.bet.buyType == 1 && this.bet.isChase) {
+                        money = this.chaseMoney; //自购追号
+                    } else {
+                        money = this.zgMoney; //自购
+                    }
+                    this.order.money = money;
+                    this.orderVisible = true;
+                },
+                //确认提交-支付
+                submitOrder: function() {
+                    var _this = this;
+                    _this.notDo = true;
+                    var type, stop, gain;
+                    gain = _this.jion.gain.substring(0, _this.jion.gain.length - 1); //去掉%
+                    if (_this.bet.buyType == 1) {
+                        //是否合买
+                        type = 0;
+                    } else {
+                        type = 1;
+                    }
+                    //中奖是否停止
+                    if (_this.isStop) {
+                        stop = 1;
+                    } else {
+                        stop = 0;
+                    }
+                    //处理post期号、倍数数组
+                    if (!_this.bet.isChase) {
+                        //未追号
+                        var arr = [];
+                        var expect = {};
+                        expect['expect'] = _this.defaultInfo.issue;
+                        expect['multiple'] = _this.bet.multiple;
+                        arr.push(expect);
+                        _this.$set(_this.bet, 'expectArr', arr);
+                    } else {
+                        //追号
+                        var arr = [];
+                        for (var i = 0; i < _this.chaseData.length; i++) {
+                            if (_this.chaseData[i].checked) {
+                                arr.push({ expect: _this.chaseData[i].issue, multiple: _this.chaseData[i].multiple });
+                            }
+                        }
+                        _this.$set(_this.bet, 'expectArr', arr);
+                    }
+                    var data = {
+                        play_num: JSON.stringify(_this.bet.betArr),
+                        expect: JSON.stringify(_this.bet.expectArr),
+                        lottery_name: '{$name}',
+                        is_hemai: type,
+                        is_stop: stop,
+                    }
+                    if(type){
+                        data['total_share'] = _this.jion.total_share
+                        data['buy_share'] = _this.jion.buy_share
+                        data['bd_share'] = _this.jion.bd_share
+                        data['gain'] = gain
+                        data['show'] = _this.jion.infoState
+                        data['declaration'] = _this.jion.declaration || '这个家伙很懒，只想中大奖！'
+                    }
+                    $.post('{:url("betting")}', data, function (res) {
+                        if (!res.err) {
+                            _this.orderVisible = false;
+                            setTimeout(function () {
+                                _this.$alert(res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    lockScroll: false,
+                                    showClose: false
+                                });
+                                _this.accountMoney = _this.accountMoney - _this.order.money;
+                            }, 300);
+                            _this.clearList();
+                            _this.bet.buyType = 1;
+                            _this.isStop = false;
+                            _this.bet.isChase = false;
+                            _this.bet.multiple = 1;
+                            _this.chaseNum = 10;
+                            _this.chaseMul = 1;
+                            _this.jion.isAll = false;
+                            _this.jion.infoState = 0;
+                            _this.jion.buy_share = 0;
+                            _this.jion.total_share = 0
+                            _this.jion.bd_share = 0;
+                            _this.jion.gain = '0%';
+                            _this.jion.declaration = '';
+                            _this.getRecordData();//更新投注记录列表
+                        } else {
+                            _this.$alert(res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: 'warning',
+                                center: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                        }
+                        _this.notDo = false;
+                    });
+                },
+                //跳转至充值页面
+                goPay: function() {
+                    location.href = '{:url("./pay")}';
+                },
+                //玩法介绍链接
+                playLink: function() {
+                    var _this7 = this;
+                    if(_this7.playLinkUrl.length){
+                        window.open(_this7.playLinkUrl)
+                    }else {
+                        _this7.$message({
+                            showClose: true,
+                            message: '暂无相关玩法介绍',
+                            type: 'error'
+                        });
+                    }
+                },
+                //获取我的投注记录
+                getRecordData:function () {
+                    var _this = this
+                    $.get('/web/details/games?gameid={$name}&limit=20',function (res) {
+                        _this.$set(_this,'recordData',res.data)
+                    })
+                }
+            },
+            created: function() {
+                var _this = this;
+                _this.setTime();
+                if (parseInt(_this.isGet)) {
+                    _this.getNewCode();
+                }
+                $.get('{:url("news/getLotteryNew")}', {
+                    name: '{$name}'
+                }, function (res) {
+                    if (!res.err) {
+                        _this.$set(_this,'playLinkUrl',res.url)
+                    }
+                });
+                //获取投注记录
+                _this.getRecordData();
+            }
+        });
+        document.addEventListener("visibilitychange", function (e) {
+            if(!e.path[0].hidden){
+                vm.getIssueInfo();
+            }
+        }, true);
+    })
+</script>

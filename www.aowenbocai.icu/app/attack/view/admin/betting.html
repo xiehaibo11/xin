@@ -1,0 +1,146 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+  html body{
+    padding:0;
+  }
+  .form-group{
+    margin-bottom: 0;
+  }
+  .breadcrumb{
+    margin-bottom: 0;
+  }
+</style>
+<nav class="plugin_nav">
+  <a href="{:Url('bettingNpc')}">人机对战记录</a>
+  <a class="nav_active" href="{:Url('record')}">玩家对战记录</a>
+</nav>
+<div id="app" class="box-padding">
+    <div class="form-group form-group-left" style="margin:-10px 0 0 -10px;display:inline-block">
+      <div class="btn-group" data-toggle="buttons" style="margin:1rem">
+        <label class="btn btn-primary isdelete" data-url="{:url('BuyDelete')}?day=all">
+          <input type="checkbox"> 清除全部数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('BuyDelete')}?day=30">
+          <input type="checkbox"> 清除30天前数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('BuyDelete')}?day=15">
+          <input type="checkbox"> 清除15天前数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('BuyDelete')}?day=7">
+          <input type="checkbox"> 清除7天前数据
+        </label>
+        <label class="btn btn-primary isdelete" data-url="{:url('BuyDelete')}?day=3">
+          <input type="checkbox"> 清除3天前数据
+        </label>
+      </div>
+    </div>
+  <div class="clear"></div>
+    <div class="breadcrumb">
+      <div class="form-group form-group-left fl" style="margin-left:10px;display:inline-block">
+        <label>选择游戏：</label>
+        <div class="dropdown" style="display: inline-block;">
+          <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">欢乐攻城
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {volist name = "extList" id = "item"}
+            <li role="presentation"  class="toTurn"   href="">
+              <a role="menuitem" tabindex="-1" href="{:Url('/'.$item.name)}">{$item.title}</a>
+            </li>
+            {/volist}
+          </ul>
+        </div>
+      </div>
+      <form class="form-inline fr" id="search">
+        <div class="form-group form-group-left">
+          <label>昵称:</label>
+          <input type="text" name="nickname" class="form-control" value="{$query.nickname}" placeholder="昵称">
+        </div>
+        <div class="form-group form-group-left">
+          <label>时间</label>
+          <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+            <input type='text' class="form-control" name="starttime" value="{$query.starttime}"/>
+            <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+          </div>
+          <label>到</label>
+          <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+            <input type='text' class="form-control" name="endtime" value="{$query.endtime}"/>
+            <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+      </form>
+      <div class="clear"></div>
+    </div>
+    <div class="table_box">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>会员昵称</th>
+          <th>出兵</th>
+          <th>对手用户名</th>
+          <th>对手出兵</th>
+          <th>投注金额</th>
+          <th>奖金</th>
+          <th>状态</th>
+          <th>对局时间</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $item}
+        <tr>
+          <td>{$item.id}</td>
+          <td>{$item.nickname}</td>
+          <td>{$item.betting}</td>
+          <td>{$item.enemy_username}</td>
+          <td>{$item.enemy_betting}</td>
+          <td>{$item.money}</td>
+          <td>{$item.bonus}</td>
+          <td>{$item.status_text}</td>
+          <td>{$item.update_time}</td>
+          <td>
+            <div class="btn-group" role="group" aria-label="...">
+              <a href="#" class="btn btn-info btn-xs isdelete" data-url="{:url('attack/Admin/BuyDelete')}?id={$item.id}">删除</a>
+            </div>
+          </td>
+        </tr>
+        {/foreach}
+        </tbody>
+      </table>
+    </div>
+    <div class="text-right">
+      {$list->render()}
+    </div>
+  </div>
+
+
+{include file='admin@common/foot' /}
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>

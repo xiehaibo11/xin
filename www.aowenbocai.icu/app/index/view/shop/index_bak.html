@@ -1,0 +1,165 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<link rel="stylesheet" href="/static/dropload/dropload.css">
+<script src="/static/dropload/dropload.min.js"></script>
+<style>
+    body{
+        font-family: PingFang SC,Helvetica Neue,Helvetica,Arial,Hiragino Sans GB,Microsoft Yahei,\\5FAE\8F6F\96C5\9ED1,STHeiti,\\534E\6587\7EC6\9ED1,sans-serif;
+        color: #666;
+    }
+    .group_ul{
+        margin: .5rem;
+        background: #fff;
+        border-radius: .2rem;
+    }
+    .group_ul li:nth-child(even){
+        border-left: none;
+    }
+    .group_ul .group_li{
+        width: 50%;
+        height: 11rem;
+        float: left;
+        text-align: center;
+        border-top: 1px solid rgba(0,0,0,.1);
+        border-left: 1px solid rgba(0,0,0,.1);
+        background: #fff;
+        position: relative;
+    }
+    .group_ul .group_li .shop_img{
+        width: 6rem;
+        height: 6rem;
+    }
+    .group_ul .group_title{
+        line-height: 2rem;
+        height: 2rem;
+        color: #333;
+        font-weight: 300;
+        margin-left: .85rem;
+    }
+    .group_ul .group_li .describe{
+        font-size: .6rem;
+        line-height: 1rem;
+        padding: 0 .7rem;
+    }
+    .group_ul .group_li .shop_name{
+        color: #000000;
+    }
+    .group_ul .group_li .money{
+        color: #de4037;
+        font-size: .5rem;
+        font-family: Helvetica Neue Regular,Arial sans-serif;
+        font-weight: 700;
+    }
+    .group_ul .group_li .btn_base{
+        position: absolute;
+        bottom: .2rem;
+        left: 25%;
+        width: 50%;
+        line-height: 1rem;
+        height: 1rem;
+        border-radius: 2px;
+        letter-spacing: .1rem;
+        font-size: .7rem;
+    }
+    .group_ul .group_li .shop_btn{
+        background: #678ee7 linear-gradient(180deg, #678ee7, #5078df) repeat scroll 0 0;
+        border: 1px solid #5c81e3;
+        color: #fff;
+    }
+    .group_ul .group_li .shop_nomal{
+        background: rgba(0,0,0,.1);
+        color: #646464;
+    }
+</style>
+
+<header class="header">
+    <div class="header-nav">
+        <i class="icon-svg icon_left"></i>
+        <a class="nav-word" id="cancleBtn" href="/index/game/" data-no-cache="true">大厅</a>
+    </div>
+    <div class="header-center">{$title}</div>
+    <div class="header-nav">
+        <a href="javascript:;" class="icon-svg icon_email" data-no-cache="true"></a>
+    </div>
+</header>
+
+<div id="app">
+    <div>
+        <ul class="group_ul">
+            <li class="group_title">热门兑换</li>
+            <li class="group_li">
+                <div>
+                    <img class="shop_img" src="http://image.smartisanos.cn/resource/2c1825d6061622db9863d9de02acb11e.png?x-oss-process=image/resize,w_480/quality,Q_90/format,webp">
+                    <div class="describe shop_name">密</div>
+                    <div class="describe">剩余：{{item.has_num}}</div>
+                    <div class="describe money">
+                        <i>¥</i>
+                        {{item.money}}
+                    </div>
+                    <div class="btn_base shop_btn" @click="shopAction" v-if="btnAction">兑换</div>
+                    <div class="btn_base shop_nomal" v-else>已兑罄</div>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+<template id="group">
+    <div>
+        <img class="shop_img" data-k="img_url" src="">
+        <div class="describe shop_name" data-k="name"></div>
+        <div class="describe">剩余： <i data-k="has_num"></i></div>
+        <div class="describe money">
+            <i>¥</i>
+            <em data-k="money"></em>
+        </div>
+        <div class="btn_base shop_btn">兑换</div>
+        <div class="btn_base shop_nomal">已兑罄</div>
+    </div>
+</template>
+
+{include file='common@common/foot' /}
+
+<script>
+    var loadPage = new LoadPage('{:Url("index/Shop/getList")}');
+    loadPage.on('first', function(res){
+        var tpl = $("#group").html();
+        $(tpl).find('')
+    });
+    loadPage.on('next', function(res){
+        console.log(res);
+    });
+    loadPage.first();
+
+    $('.list').dropload({
+        scrollArea : window,
+        domUp : {
+            domClass   : 'dropload-up',
+            domRefresh : '<div class="dropload-refresh">↓下拉刷新</div>',
+            domUpdate  : '<div class="dropload-update">↑释放更新</div>',
+            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>'
+        },
+        domDown : {
+            domClass   : 'dropload-down',
+            domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
+            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+            domNoData  : '<div class="dropload-noData">暂无数据</div>'
+        },
+        loadUpFn : function(me){
+            setTimeout(function(){
+
+                $('.list-group').append('<div class="list-item ellipsis list-item-icon">\
+                <img src="images/1.jpg" alt="">\
+                Apple 苹果 iPhone 6s Plus (A1699) 16G 玫瑰金色 移动联通电信4G 全网通手机\
+            </div>');
+                // 每次数据加载完，必须重置
+                me.resetload();
+                // 解锁loadDownFn里锁定的情况
+                me.unlock();
+                me.noData(false);
+            },1000);
+        },
+        threshold : 50
+    });
+</script>

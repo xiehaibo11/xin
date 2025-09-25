@@ -1,0 +1,316 @@
+{include file='web@common/head' title="开奖结果"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/game_lottery.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<script src="/static/vipweb/js/historyCode.js"></script>
+
+<div class="page-list web mt15" id="app" v-cloak>
+    <div class="list-left">
+        <div class="nav-head">开奖公告</div>
+        <div class="nav-list">
+            <ul>
+                <li v-for="item in navData"><a :class="{'active': item.selected}" @click="link(item.url)">{{item.title}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="list-rig lottery-detail-main" style="min-height: 500px">
+        <div class="lottery-detail-img">
+            <img src="{$lotteryInfo.logo}" alt="" class="game-icon">
+        </div>
+        <div class="lottery-detail-cont">
+            <div class="title">
+                <div class="name flex">{$lotteryInfo.title}开奖结果</div>
+            </div>
+            <div class="cur-issue-bet">
+                <p class="flex-box">
+                    第{{expect}}期正在销售  距投注截止时间还有：<span class="time">{{timer}}</span>
+                    <el-button plain size="mini" @click.native="goBet">立即投注</el-button>
+                </p>
+                <p class="summary">预计开奖时间：{{kjTime}}</p>
+            </div>
+            <div class="new-issue-code">
+                <span>第{{lastIssue}}期开奖号码：</span>
+                <span v-for="item in curIssue.code">
+                    <span class="ball ball-red">{{item}}</span>
+                </span>
+            </div>
+
+            <div class="lottery-award-all" style="padding-bottom: 10px">
+                <div class="flex-box head">
+                    <div class="flex name">开奖详情</div>
+                    <div class="flex-box">
+                        <el-input size="mini" v-model="search" placeholder="根据期号查询" style="margin-right: 5px;width: auto"  @keyup.enter.native="doSearch"></el-input>
+                        <el-button plain size="mini" type="info" @click.native="doSearch">搜索</el-button>
+                    </div>
+                </div>
+                <list-kj :url="url"></list-kj>
+            </div>
+        </div>
+    </div>
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            top="0"
+            :lock-scroll = "false"
+            width="450px"
+    >
+        <span style="font-size: 15px">你好，第<b class="red">{{lastIssue}}</b>期已截止，当前期是第<b class="red">{{expect}}</b>期，投注时请确认选择的期号。</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>
+</div>
+<!--底部 开奖号-->
+<template id="listKj">
+    <div>
+        <page-nation :url="url">
+            <template v-if="typeName == 'pk10'">
+                <el-table-column property="expect" label="期号" width="130"></el-table-column>
+                <el-table-column property="code" label="开奖号码">
+                    <template slot-scope="scope">
+                        <span class="red">{{scope.row.code}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column property="create_time" label="开奖时间" width="180"></el-table-column>
+            </template>
+            <template v-if="typeName == 'ssc'">
+                <el-table-column property="expect" label="期号" width="130"></el-table-column>
+                <el-table-column property="code" label="开奖号码" width="220">
+                    <template slot-scope="scope">
+                        <span class="red">{{scope.row.code}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="十位">
+                    <template slot-scope="scope">
+                        {{sscStatus(scope.row.code).shi}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="个位">
+                    <template slot-scope="scope">
+                        {{sscStatus(scope.row.code).ge}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="后三">
+                    <template slot-scope="scope">
+                        <span :class="sscStatus(scope.row.code).bg_color">{{sscStatus(scope.row.code).hs}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column property="create_time" label="开奖时间" width="180"></el-table-column>
+            </template>
+            <template v-if="typeName == 'syxw'">
+                <el-table-column property="expect" label="期号" width="130"></el-table-column>
+                <el-table-column property="code" label="开奖号码" width="220">
+                    <template slot-scope="scope">
+                        <span class="red">{{scope.row.code}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="大小比">
+                    <template slot-scope="scope">
+                        {{syxwStatus(scope.row.code).dx}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="奇偶比">
+                    <template slot-scope="scope">
+                        {{syxwStatus(scope.row.code).jo}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="create_time" label="开奖时间" width="180"></el-table-column>
+            </template>
+            <template v-if="typeName == 'ks'">
+                <el-table-column property="expect" label="期号" width="130"></el-table-column>
+                <el-table-column property="code" label="开奖号码" width="220">
+                    <template slot-scope="scope">
+                        <span class="red">{{scope.row.code}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="和值">
+                    <template slot-scope="scope">
+                        {{ksStatus(scope.row.code).he}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="形态">
+                    <template slot-scope="scope">
+                        {{ksStatus(scope.row.code).xt}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="类型">
+                    <template slot-scope="scope">
+                        {{ksStatus(scope.row.code).lx}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="create_time" label="开奖时间" width="180"></el-table-column>
+            </template>
+            <template v-if="typeName == 'pc28'">
+                <el-table-column property="expect" label="期号" width="130"></el-table-column>
+                <el-table-column property="code" label="开奖号码" width="220">
+                    <template slot-scope="scope">
+                        <div class="cf pc28-tencode" style="line-height: 22px;padding-left: 0">
+                            <span class="fl pc28-code tc">{{getCodeArr(scope.row.code)[0]}}</span>
+                            <span class="fl">+</span>
+                            <span class="fl pc28-code tc">{{getCodeArr(scope.row.code)[1]}}</span>
+                            <span class="fl">+</span>
+                            <span class="fl pc28-code tc">{{getCodeArr(scope.row.code)[2]}}</span>
+                            <span class="fl">=</span>
+                            <span class="fl tc pc28-he" style="margin-top: 0px;" :style="{'backgroundColor' : pcStatus(scope.row.code).bg_color}">{{pcStatus(scope.row.code).he}}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="形态">
+                    <template slot-scope="scope">
+                        {{pcStatus(scope.row.code).xt}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="色波">
+                    <template slot-scope="scope">
+                         <span class="pc28-sb" style="margin-top: 4px;" :style="{'backgroundColor' : pcStatus(scope.row.code).bg_color}">{{pcStatus(scope.row.code).text_color}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="极值">
+                    <template slot-scope="scope">
+                        {{pcStatus(scope.row.code).jz}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="豹子">
+                    <template slot-scope="scope">
+                        {{pcStatus(scope.row.code).bz}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="create_time" label="开奖时间" width="180"></el-table-column>
+            </template>
+        </page-nation>
+    </div>
+</template>
+{include file='web@common/foot'/}
+
+<script>
+    'use strict';
+
+    $(function () {
+        //开奖号码
+        Vue.component('list-kj', {
+            template: '#listKj',
+            props: ['url'],
+            data: function() {
+                return {
+                    typeName: '{$typeName}',//彩种类型
+                };
+            },
+            computed:{
+                //时时彩个位、十位、后三形态
+                sscStatus:function () {
+                    return function (codeStr) {
+                        return sscStatus(codeStr);
+                    }
+                },
+                //11选5大小比、奇偶比
+                syxwStatus:function() {
+                    return function (codeStr) {
+                        return syxwStatus(codeStr);
+                    }
+                },
+                //快3和值、形态、类型
+                ksStatus:function() {
+                    return function (codeStr) {
+                        return ksStatus(codeStr);
+                    }
+                },
+                //计算pc28【和、形态、颜色，色波】
+                pcStatus:function(){
+                    return function (codeStr) {
+                        return pcStatus(codeStr);
+                    }
+                },
+                //开奖号码转换成数组
+                getCodeArr:function () {
+                    return function (codeStr) {
+                        return getCodeArr(codeStr);
+                    }
+                }
+            }
+        });
+        new Vue({
+            el: '#app',
+            data: {
+                dialogVisible: false,
+                navData: {$lottery}, //左侧导航列表
+                expect: '{$issue.expect}', //当前销售期号
+                lastIssue:'{$issue.lastIssue}',
+                kjTime: '{$openTime}', //当前销售期号预计开奖时间
+                curIssue: {
+                    code: '' //最新开奖号码
+                },
+                time: '{$issue.down_time}', //剩余时间（秒）
+                typeName: '{$typeName}',
+                search: '',
+                url: '{:url("get_list")}'+ '?name={$name}',
+                searchUrl: '{:url("get_list")}'+ '?name={$name}',
+                name:'{$name}'
+            },
+            computed: {
+                //投注剩余时间格式化
+                timer: function timer() {
+                    return format('i:s', this.time);
+                }
+            },
+            methods: {
+                //当期投注倒计时
+                setTime: function() {
+                    var _this = this;
+                    setInterval(function () {
+                        _this.time--;
+                        //当期投注结束
+                        if (_this.time == 0) {
+                            $.get('{:url("./")}' + _this.typeName + '/getIssueInfo', function (res) {
+                                _this.time = res.data.down_time;
+                                _this.expect = res.data.expect;
+                                _this.kjTime = res.data.openTime
+                                _this.lastIssue = res.data.lastIssue
+                                _this.dialogVisible = true; //期数提示
+                                _this.curIssue.code = res.data.awardNumber.code.split(','); //显示正在开奖
+                            });
+                            setTimeout(function () {
+                                _this.dialogVisible = false;
+                            }, 5000);
+                            //1分钟后获取开奖号码
+                            setTimeout(function () {
+                                _this.getNewCode();
+                            }, 60000);
+                        }
+                    }, '1000');
+                },
+                //获取开奖号码
+                getNewCode: function() {
+                    var _this2 = this;
+                    var interval = setInterval(function () {
+                        $.get('{:url("get_list")}' + '?name={$lotteryInfo.name}&last=' + _this2.lastIssue, function (res) {
+                            if (!res.state) {
+                                clearInterval(interval);
+                                _this2.url = _this2.url + '?name={$lotteryInfo.name}&last=' + _this2.lastIssue;
+                                _this2.$set(_this2.curIssue, 'code', res.new);
+                            }
+                        });
+                    }, 10000); //每隔20秒
+                },
+                link: function(url) {
+                    window.location = url;
+                },
+                goBet: function() {
+                    window.location = '{:url("./")}' + this.typeName + '/index/name/' + this.name;
+                },
+                //搜索
+                doSearch: function() {
+                    this.url = this.searchUrl + '&expect=' + this.search;
+                }
+            },
+            created: function() {
+                var _this3 = this;
+                this.setTime();
+                $.get('{:url("get_list")}' + '?name={$lotteryInfo.name}&last='+ this.lastIssue, function (res) {
+                    _this3.$set(_this3.curIssue, 'code', res.new);
+                    if (res.state) {
+                        _this3.getNewCode();
+                    }
+                });
+            }
+        });
+    });
+</script>

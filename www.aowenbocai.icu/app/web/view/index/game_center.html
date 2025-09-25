@@ -1,0 +1,173 @@
+{include file='web@common/head'  title="游戏大厅"/}
+<link rel="stylesheet" href="/static/css/swiper.min.css">
+<script src="__JS__/swiper.min.js"></script>
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/columns.css">
+<style>
+
+</style>
+<!--banner start-->
+<div class="pic-slide game web_">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            {volist name='banner' id='v'}
+            <div class="swiper-slide">
+                {empty name="$v.url"}
+                <a href="javascript:void(0)" target="_blank" style="background-image: url('{$v.img_url}')"></a>
+                {else /}
+                <a href="{$v.url}" target="_blank" style="background-image: url('{$v.img_url}')"></a>
+                {/empty}
+            </div>
+            {/volist}
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+<!--banner end-->
+<div id="app" v-cloak>
+    <div class="web game-center">
+        <!--推荐游戏 4 款-->
+        <el-card class="mt15">
+            <div slot="header">
+                <span>热门游戏推荐</span>
+            </div>
+            <el-row :gutter="20" class="game-recommend">
+                {volist name='rec' id='v'}
+                <el-col :span="6">
+                    <div class="list">
+                        <p class="name-type flex-box">
+                            <span class="u-gm-name tl" title="{$v.title}">{$v.title}</span>
+                            <span class="u-gm-type flex tr" v-if="!{$v.type}">休闲游戏</span>
+                            <span class="u-gm-type flex tr" v-else>开奖游戏</span>
+                        </p>
+                        {if condition = "$v.type eq 1"}
+                        <a @click="link('{$v.name}',{$v.type})">
+                            <img src="{$v.img}" alt="{$v.title}" width="100%" height="158">
+                            <el-button size="mini"  type="danger" round>进入游戏</el-button>
+                        </a>
+                        {else/}
+                        <a @click="link('{$v.link}',{$v.type})">
+                            <img src="{$v.img}" alt="{$v.title}" width="100%" height="158">
+                            <el-button size="mini"  type="danger" round>进入游戏</el-button>
+                        </a>
+                        {/if}
+                    </div>
+                </el-col>
+                {/volist}
+            </el-row>
+        </el-card>
+        <!--推荐游戏 4 款 end-->
+        <!--开奖游戏-->
+        <el-card class="mt15" v-if="{$company['lottery_status']}">
+            <div slot="header">
+                <span>彩票游戏</span>
+            </div>
+            <el-row :gutter="20" class="game-list">
+                <el-tabs v-model="activeName" type="card">
+                    <el-tab-pane label="全部彩种" name="all">
+                        {volist name='navLottery' id='v'}
+                        <el-col :span="8">
+                            <div class="list">
+                                <div class="header flex-box">
+                                    <i class="iconfont icon-yitingshou" v-if="{$v.pause}"></i>
+                                    <div class="pic"><img src="{$v.image}" alt=""></div>
+                                    <div class="cont">
+                                        <h4 class="tit">{$v.title}</h4>
+                                        <p class="desc">{$v.info}</p>
+                                    </div>
+                                </div>
+                                <div class="foot flex-box bg">
+                                    <div class="summary flex tl">{$v.remark}</div>
+                                    <el-button @click.native="link('{$v.name}',{$v.type})" plain size="mini">立即投注</el-button>
+                                </div>
+                            </div>
+                        </el-col>
+                        {/volist}
+                    </el-tab-pane>
+                    <template v-for="(item,index) in navList">
+                        <el-tab-pane :label="item.label" :name="item.type" >
+                            <template v-for="(v,i) in item.data">
+                                <el-col :span="8">
+                                    <div class="list">
+                                        <div class="header flex-box">
+                                            <i class="iconfont icon-yitingshou" v-if="v.pause"></i>
+                                            <div class="pic"><img :src="v.image" alt=""></div>
+                                            <div class="cont">
+                                                <h4 class="tit">{{v.label}}</h4>
+                                                <p class="desc">{{v.info}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="foot flex-box bg">
+                                            <div class="summary flex tl">{{v.remark}}</div>
+                                            <el-button @click.native="link(v.name,v.type)" plain size="mini">立即投注</el-button>
+                                        </div>
+                                    </div>
+                                </el-col>
+                            </template>
+                        </el-tab-pane>
+                    </template>
+                </el-tabs>
+            </el-row>
+        </el-card>
+        <!--开奖游戏 end-->
+        <!--休闲游戏-->
+        <el-card class="mt15" v-if="{$company['game_status']}">
+            <div slot="header">
+                <span>休闲游戏</span>
+            </div>
+            <el-row :gutter="20" class="game-recommend">
+                {volist name='navGame' id='v'}
+                <el-col :span="6">
+                    <div class="list game-xx">
+                        <p class="name-type flex-box">
+                            <span class="u-gm-name tl" title="{$v.title}">{$v.title}</span>
+                        </p>
+                        <a @click="link('{$v.name}',{$v.type})" target="_blank">
+                            <img src="{$v.img}" alt="{$v.title}广告图" width="100%" height="158">
+                            <el-button size="mini"  type="danger" round>进入游戏</el-button>
+                        </a>
+                    </div>
+                </el-col>
+                {/volist}
+            </el-row>
+        </el-card>
+        <!--休闲游戏 end-->
+    </div>
+</div>
+{include file='web@common/foot'/}
+
+<script>
+    $(function(){
+        //banner
+        new Swiper('.pic-slide .swiper-container',{
+            loop:true,
+            autoplay:4500,
+            pagination: '.swiper-pagination',
+            paginationClickable :true,
+            autoplayDisableOnInteraction : false
+        });
+
+        new Vue({
+            el:"#app",
+            data:{
+                activeName: 'all',
+                navList:{$navList}
+            },
+            methods:{
+                link:function(a,type){
+                    var b = a;
+                    if (a.substr(0,1)=='/'){
+                        b = a.substr(1);
+                    }
+                    if (a.substr(0,6)=='/game/'){
+                        b = a.substr(6);
+                    }
+                    if(!type){
+                        window.open('{:url("./game")}?ext='+ b) //休闲类游戏跳转路径
+                    }else {
+                        window.open('{:url("./'+ b + '")}') //开奖类游戏跳转路径
+                    }
+                }
+            }
+        })
+    })
+</script>

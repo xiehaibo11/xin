@@ -1,0 +1,59 @@
+{include file='common/head' /}
+<div id="app" class="box-padding">
+    <div class="breadcrumb">
+        <div class="add-botton fl">
+            <a href="{:url('add')}" class="btn btn-danger" role="button"><i class="glyphicon glyphicon-plus"></i> 添加支付</a>
+        </div>
+        <form class="form-inline fr" action="">
+            <div class="form-group form-group-left">
+                <label>关键字:</label>
+                <input type="text" name="words" class="form-control"  placeholder="名称" value="{$query.words}">
+            </div>
+            <button type="submit" class="btn btn-default btn-sm" >搜索</button>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="table_box">
+        <table class="table table-striped table-bordered table-hover tc">
+            <thead>
+            <tr>
+                <th width="100">ID</th>
+                <th>名称</th>
+                <th>提交地址</th>
+                <th>编码</th>
+                <th class="tc" width="150">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $list as $item}
+            <tr>
+                <td>{$item.id}</td>
+                <td>{$item.name}</td>
+                <td>{$item.post_url}</td>
+                <td>{$item.pay_charset}</td>
+                <td class="tc">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="{:Url('edit')}?id={$item.id}" class="btn btn-primary btn-sm btn_install" title="修改"><i class="glyphicon glyphicon-pencil"></i></a>
+                        <a href="#" class="btn btn-danger btn-sm delete isdelete" title="删除" data-url="{:Url('delete')}?id={$item.id}"><i class="glyphicon glyphicon-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-right">{$list->render()}</div>
+</div>
+
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+    });
+</script>
+
+{include file='common/foot' /}

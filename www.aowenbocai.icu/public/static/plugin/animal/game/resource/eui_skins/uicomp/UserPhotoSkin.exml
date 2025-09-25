@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="UserPhotoSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group width="90" height="114.24" anchorOffsetY="0">
+		<e:Image source="zoo_sheet3_json.zoo_sheet3001" height="80" width="80" anchorOffsetX="40" anchorOffsetY="40" horizontalCenter="0" verticalCenter="-17.119999999999997" visible="false"/>
+		<e:Rect id="bor" scaleX="1" scaleY="1" ellipseWidth="80" width="80" height="80" horizontalCenter="0" strokeAlpha="1" strokeWeight="4" top="0" fillColor="0x487C5C" fillAlpha="1" strokeColor="0xFE0000" name="red"/>
+		<e:Rect id="photo_mask" scaleX="1" scaleY="1" ellipseWidth="72" width="72" height="72" horizontalCenter="0" strokeAlpha="1" strokeWeight="0" top="4" fillColor="0x487C5C" strokeColor="0x74AA7A" fillAlpha="1"/>
+		<e:Image id="m_photo" width="72" height="72" y="4" horizontalCenter="0"/>
+		<e:Label id="m_nickname" text="空席" size="20" fontFamily="Microsoft YaHei" textAlign="center" anchorOffsetY="0" left="0" right="0" y="85"/>
+	</e:Group>
+</e:Skin>

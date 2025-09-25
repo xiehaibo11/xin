@@ -1,0 +1,65 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style media="screen">
+    .add-botton{
+        float: right;
+        margin-right: 30px;
+    }
+    .box-padding-bottom{
+        padding-bottom: 15px;
+    }
+    .box-padding{
+        padding:20px;
+    }
+    .form-group-left{
+        margin-left:15px;
+    }
+</style>
+<div id="app">
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active">{$title}</li>
+        </ol>
+    </div>
+    <div class="form-horizontal">
+        <form class="form" action="" method="post">
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">游戏列表：</label>
+                <div class="col-sm-6 alert alert-success" role="alert" style="margin-bottom:0;">
+                    {$select_option}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2">
+                    <p style="color:#999;">重启后，所有处于游戏的玩家，游戏会断开链接!</p>
+                    <button type="button" class="btn btn-danger update_btn">重启游戏</button>
+                    <button type="button" class="btn btn-primary stop_btn">停止游戏</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+<script>
+    $(function () {
+        $('.update_btn').click(function() {
+            $.modal.confirm('你是否确定重启游戏', function() {
+                $('.form').attr('action', "{:url('doRestart')}");
+                $('.form').submit();
+            });
+        });
+        $('.stop_btn').click(function() {
+            $.modal.confirm('你是否确定停止游戏', function() {
+                $('.form').attr('action', "{:url('doStop')}");
+                $('.form').submit();
+            });
+        });
+    });
+</script>
+
+{include file='common/foot' /}

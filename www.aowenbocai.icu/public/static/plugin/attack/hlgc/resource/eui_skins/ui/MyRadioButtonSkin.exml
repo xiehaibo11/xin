@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="MyRadioButtonSkin" width="30" height="30" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" >
+	<e:Group left="0" right="0" top="0" bottom="0">
+		<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xf7d9d9" ellipseWidth="30" width="30" height="30" fillAlpha.down="0.8" strokeWeight.upAndSelected="5" strokeColor.upAndSelected="0xf7d9d9" fillColor.upAndSelected="0xc66d05" fillColor.downAndSelected="0xc66d05"/>
+		<e:Label id="labelDisplay" text="Label" x="11" y="6" size="20"/>
+		<e:layout>
+			<e:HorizontalLayout verticalAlign="middle"/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

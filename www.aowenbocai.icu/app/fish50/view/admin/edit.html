@@ -1,0 +1,71 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+    <a href="{:url('fish50/setting/index')}">基本设置</a>
+    <a class="nav_active" href="#">玩家道具管理</a>
+    <a  href="{:url('fish50/setting/fishSet')}">鱼种设置</a>
+</nav>
+
+<style>
+  .icon_box {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;
+
+    width: 80px;
+    height: 80px;
+    background: #C6EAFF;
+    overflow: hidden;
+    border: 1px solid #9ED3FF;
+    border-radius: 3px;
+  }
+  .dis {
+    background: #FFCCCC;
+    border: 1px solid #FF9E9E;
+  }
+  .fish_info {
+    padding: 10px;
+  }
+  .right {
+    margin-left: 88px;
+    line-height: 26px;
+  }
+  .hit, .sp {
+    color: #C32AD6;
+    font-weight: 700;
+  }
+  .sp {
+    color: #23AB92;
+  }
+  .edit {
+    max-width: 900px;
+  }
+  .title{ 
+    line-height: 45px;
+  }
+</style>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li><a href="/{$loginName}.php/extend">扩展管理</a></li>
+            <li><a href="/fish50/admin/">玩家管理</a></li>
+            <li class="active">修改</li>
+        </ol>
+    </div>
+    <div class="title">用户昵称： {$info.user_info.nickname}</div>
+    
+    <form class="edit" method="post" action="{:url('edit', ['id' => $info.id])}">
+        <div class="form-group">
+          <label for="exampleInputEmail1">{$info.name}</label>
+          <input name="num" type="text" class="form-control" placeholder="技能卡数量" id="exampleInputEmail1" value="{$info.num}">
+        </div>
+        <button type="submit" class="btn btn-primary">确认修改</button>
+      </form>
+  </div>
+</div>
+{include file='admin@common/foot' /}

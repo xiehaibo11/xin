@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BetItemSkin" width="400" height="300" currentState="index" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="index,checked,hide" >
+	<e:Rect left="0" top="0" bottom="0" width="100%" fillColor="0x53408c" visible.index="false" ellipseWidth.checked="10" fillColor.hide="0x181521" visible.hide="false"/>
+	<e:Label id="code_str" text="大" width="100%" height.checked="60%" horizontalCenter="0" top.checked="0" textAlign="center" verticalAlign="middle" size="24" horizontalCenter.index="0" height.index="60%" top.index="0" height.hide="60%"/>
+	<e:Label id="s_sp" text="1.00" width="100%" height="40%" horizontalCenter="0" bottom.checked="0" verticalAlign="middle" textAlign="center" size="18" height.index="40%" bottom.index="0" bottom.hide="0"/>
+	<e:Rect width="100%" height="100%" includeIn="hide" horizontalCenter="0" verticalCenter="0" fillAlpha="0.5" touchEnabled="true"/>
+</e:Skin>

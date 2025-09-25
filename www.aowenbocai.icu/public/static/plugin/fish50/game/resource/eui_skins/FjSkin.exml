@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="FjSkin" currentState="1" xmlns:e="http://ns.egret.com/eui" states="1,5,10,20,50"  width.1="90" height.1="109">
+	<e:Image source="497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d2604750_json.497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d26047504" includeIn="50" horizontalCenter="0" bottom="0"/>
+	<e:Image source="497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d2604750_json.497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d26047503" includeIn="20" bottom="0" horizontalCenter="0"/>
+	<e:Image source="497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d2604750_json.497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d26047502" includeIn="10" horizontalCenter="0" bottom="0"/>
+	<e:Image source="497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d2604750_json.497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d26047501" includeIn="5" bottom="0" horizontalCenter="0"/>
+	<e:Image includeIn="1" bottom="0" horizontalCenter="0" source="pt_png"/>
+	<e:Image source="497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d2604750_json.497d0b1436e1d92a1a5f8e693ff8e6a5_t01b630e820d26047504" horizontalCenter="0" verticalCenter="0" includeIn=""/>
+</e:Skin>

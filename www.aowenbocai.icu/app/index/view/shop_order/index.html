@@ -1,0 +1,188 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+
+<style>
+    i {
+        font-style: normal;
+    }
+    p {
+        padding:0;
+        margin:0;
+    }
+    .order_list .list_li2 {
+        background: #3b3c44 none repeat scroll 0 0;
+        margin-bottom:0.5rem;
+        position:relative;
+        color: #ffffff;
+    }
+    .order_list .list_li2 table {
+        margin: 0 auto;
+        width: 100%;
+        border-bottom: 1px solid #4f5569;
+    }
+    .order_list .list_li2 table td {
+        padding: 13px 10px;
+        font-size:12px;
+    }
+    .order_list .list_li2 table td i {
+        color: #ababab;
+        font-size: 12px;
+    }
+    .order_list .list_li2 table td font.red {
+        color: #fff;
+        padding: .2rem .5rem;
+        background-color: #de433f;
+        border-radius: .2rem;
+    }
+    .order_list .list_li2 .my_div {
+        padding: 8px 10px;
+        text-align: right;
+    }
+    .order_list .list_li2 .my_div i {
+        color: #868686;
+    }
+    .pro_list {
+        position: relative;
+
+    }
+    .pro_list ul li {
+        position: relative;
+        padding:0.5rem;
+        height: 3.5rem;
+    }
+    .pro_list ul li .my_img {
+        width:3.4rem;
+        height:2.4rem;
+        position: absolute;
+        top:0.5rem;
+        left:0.5rem;
+    }
+    .pro_list ul li .my_img img {
+        width:100%;
+        height:100%;
+    }
+    .pro_list ul li .my_word {
+        margin-left:4rem;
+        line-height:1.1rem;
+    }
+    .pro_list ul li .my_word .info {
+        color: #adb0c1;
+    }
+    .fr {
+        float: right;
+    }
+    .pro_list ul li .my_word i {
+        color: #FF7F2B;
+    }
+    .more{
+        text-align: center;
+        color: #999;
+        font-size: 0.7rem;
+        margin: 0.7rem 0;
+    }
+    .green {
+        color: #fff;
+        padding: .2rem .5rem;
+        background-color: #5cb85c;
+        border-radius: .2rem;
+    }
+    .hs {
+        color: #fff;
+        padding: .2rem .5rem;
+        background-color: #999;
+        border-radius: .2rem;
+    }
+</style>
+
+<header class="header">
+    <div class="header-nav">
+        <a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);"><i class="icon-svg icon_left"></i> </a>
+    </div>
+    <div class="header-title">{$title}</div>
+    <div class="header-nav"></div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <loading-box url="/index/shop_order/getlist">
+        <template scope="props">
+            <div v-for="item of props.list" class="card card-line">
+                <div class="order_list"><group :item="item"></group></div>
+            </div>
+        </template>
+    </loading-box>>
+</div>
+<template id="group" >
+    <div class="list_li2">
+        <table class="cell">
+            <tbody>
+            <tr>
+                <td style=" padding-right:0; color:#fff;">时间：{{item.create_time}}</td>
+                <td style="text-align:right; padding-left:0;">
+                    <font class="red" v-if="item.status==0">未处理</font>
+                    <font class="green" v-else-if="item.status==1">已处理</font>
+                    <font class="hs" v-else="item.status==7">系统撤单</font>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pro_list">
+            <ul>
+                <li class="border-b">
+                    <div class="my_img"><img :src="item.shop_info.img_url" alt=""></div>
+                    <div class="my_word">
+                        <p>{{item.shop_info.name}}</p>
+                        <p class="info">兑换数量：<i>{{item.num}}</i> 消耗余额：<i>{{item.money}}</i></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="my_div" style="padding:0.5rem; color:#999; font-size:0.65rem;">订单编号：SP{{item.id}}</div>
+        <div class="my_div" v-if="item.status==0" style="padding:0.5rem; position: relative; color:#de433f; font-size:0.65rem;border-top:1px solid #4f5569">
+            <a href='javascript:;' :data-id="item.id"  class="btn btn-warning btn-fill back_btn" style="display: inline-block; line-height:1.2rem; font-size:0.5rem">取消兑换</a>
+        </div>
+        <div v-if="item.admin_remark" class="my_div" style="padding:0.5rem; position: relative; color:#de433f; font-size:0.65rem;border-top:1px solid #4f5569">系统：{{item.admin_remark}}</div>
+    </div>
+</template>
+<script>
+
+    $(function () {
+        Vue.component('group', {
+            template: '#group',
+            props: ['item'],
+        });
+        var vm = new Vue({
+            el:'#app',
+            data: {
+            },
+            created: function () {
+                $('#app').removeClass('app_init');
+            }
+
+        });
+
+        $(document).on("click", ".back_btn", function() {
+            var _url = '{:url("index/shop/backOrder")}';
+            var id = $(this).data('id');
+            console.log(id);
+            $.confirm('取消成功后，金豆会返还给您！<br />确认取消兑换吗？', {
+                yes: function() {
+                    $.ajax({
+                        url: _url,
+                        type:'post',
+                        dataType: "json",
+                        data:{id:id},
+                        success:function(data){
+                            $.msg(data.msg);
+                            if (data.code){
+                                setTimeout(function(){window.location.reload();},1000);
+                            }
+                        }
+                    });
+                }
+            });
+        })
+    });
+</script>
+
+{include file='common@common/foot' /}

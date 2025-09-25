@@ -1,0 +1,294 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+
+<style>
+    body{
+        font-family: PingFang SC,Helvetica Neue,Helvetica,Arial,Hiragino Sans GB,Microsoft Yahei,\\5FAE\8F6F\96C5\9ED1,STHeiti,\\534E\6587\7EC6\9ED1,sans-serif;
+        color: #666;
+        background-color: #292d36;
+    }
+    .group_ul{
+        overflow: hidden;
+        padding: .2rem .2rem 0 .2rem;
+    }
+    .group_ul li:nth-child(even){
+        border-left: none;
+    }
+    .group_ul .group_li{
+        width: 46%;
+        margin:0.4rem 2%;
+        float: left;
+        text-align: center;
+        position: relative;
+    }
+    .group_ul .group_li .shop_img{
+        height: 6rem;
+        background-size:contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .group_ul .group_title{
+        line-height: 2rem;
+        height: 2rem;
+        color: #fff;
+        font-weight: 500;
+        font-size:0.85rem;
+        padding-left: .85rem;
+        border-left: 3px solid #c51414;
+        margin: .5rem;
+    }
+    i {
+        font-style: normal;
+    }
+    .group_ul .group_li .describe{
+        font-size: .65rem;
+        line-height: 1.0rem;
+        padding: 0;
+        color: #989db4;
+    }
+    .group_ul .group_li .shop_name{
+        color: #e4e4e5;
+        font-size: 0.7rem;
+        padding: 0.4rem 0 0;
+    }
+    .group_ul .group_li .shop_money{
+        justify-content: center;
+        line-height: 1.1rem;
+    }
+    .group_ul .group_li .shop_money img{
+        color: #de4037;
+        font-size: .65rem;
+        font-family: Helvetica Neue Regular,Arial sans-serif;
+        margin:.1rem .3rem 0 0;
+    }
+    .group_ul .group_li .btn_base{
+        line-height: 1.5rem;
+        height: 1.5rem;
+        border-radius: 5px;
+        letter-spacing: .1rem;
+        font-size: .65rem;
+        padding: 0 0.8rem;
+        margin: 0.2rem auto;
+        justify-content: center;
+    }
+    .group_ul .group_li .shop_btn{
+        /*background: #f34c44 linear-gradient(180deg, #dc453e, #912e29) repeat scroll 0 0;*/
+        background-color: #d0554d;
+        color: #fff;
+    }
+    .group_ul .group_li .shop_nomal{
+        background: #3d3d3d;
+        color: #9f9b9b;
+    }
+    .more {
+        clear: both;
+        height:2rem;
+        line-height:2rem;
+        text-align: center;
+        color: #999;
+    }
+    .red {
+        color: red;
+    }
+    .js {
+        color: #f2f166;
+        font-size: .7rem;
+    }
+    .input-num{
+        width: 2.6rem;
+        text-align: center;
+        height:1.3rem;
+        margin-right: 0.4rem;
+    }
+    /*商品详情弹出层*/
+    .all-modal-overlay{width: 100%;height: 100%;background-color: #3a3e4d;position: fixed;left: 0;top:0;z-index: 3000;
+    display: flex;flex-direction: column}
+    .p-height{width: 100%}
+    .all-modal-content {overflow-y: scroll; color: #fffcfc;}
+    .shop-box {line-height:1rem;color: #000;text-align: left}
+    .shop-box img {width:100%;max-height: 14rem;}
+    .shop-box .info{padding:.3rem .5rem;color: #fffcfc}
+    .shop-box .info .title{line-height: 1.1rem}
+    .shop-box .info .money{padding: .5rem 0 0;}
+    .shop-box .info .money img{width: 25px;margin-right: .3rem;}
+    .shop-box .info .money span{font-size: .8rem;line-height: 25px;color: #f2f166;}
+    .shop-box .detail{color: #fffcfc;padding:.5rem;margin-bottom: 1rem;}
+    .shop-box .detail img{width: 100%}
+    .shop-box h4{padding: .3rem .5rem;margin: 0;background-color: #474c5d;color: #ededed;font-size: .75rem;font-weight: normal;}
+    .all-modal-foot{position: fixed;bottom: 0;left: 0;width: 100%;height: 2.2rem;background-color: #d75852;padding: 0 .5rem;line-height: 2.2rem;}
+    .all-modal-foot .num{color: #FFFFff;font-size:.75rem}
+    .all-modal-foot .num span{color: #333;background-color: #FFFFff;width:2rem;height:1.2rem;border-radius: .2rem;display: inline-block;line-height: 1.2rem }
+    .all-modal-foot i.icon{padding: 0 .2rem;color: #FFFFff;}
+    .all-modal-foot i.icon-gray{color: #bebbbb }
+    .all-modal-foot .btn{flex: 1;text-align: right;padding: 0;background: none}
+    .all-modal-foot .btn span{margin: .35rem;display: inline-block;background-color: #FFFFff;color: #666;padding:0rem .75rem;height: 1.5rem;line-height: 1.5rem;border-radius: .2rem}
+
+</style>
+<div id="app" class="foot_nav_padding">
+    <div>
+        <ul class="group_ul">
+            <li class="group_title flex-box">
+                <span class="flex" style="text-align: left">热门兑换</span>
+                <a class="flex-box" style="text-align: right;color: #ffd719;line-height: 40px;" href="/index/shop_order/index">
+                    <i class="iconfont icon-liwu1" style="font-size: 1.1rem;margin-right: .2rem"></i>
+                    <span>我的兑换</span>
+                </a>
+            </li>
+            <loading-box url="/index/shop/getlist">
+                <template scope="props">
+                    <li class="group_li" v-for="(item,index) of props.list" class="card card-line">
+                        <group :item="item" :index="index"></group>
+                    </li>
+                </template>
+            </loading-box>
+        </ul>
+    </div>
+    <div class="clear"></div>
+</div>
+<!--底部开始-->
+<footer>
+    <div class="flex-box foot_nav">
+        <a class="flex cur" href="/index/shop">
+            <i class="iconfont icon-liwu1"></i>
+        </a>
+        <a class="flex" href="/index/user/action">
+            <i class="iconfont icon-icon02"></i>
+            动态
+        </a>
+        <a class="flex" href="/index">
+            <i class="iconfont icon-youxi4" style="font-size: 1.5rem"></i>
+            大厅
+        </a>
+        <a class="flex" href="/index/bbs">
+            <i class="iconfont icon-quanzi2"></i>
+            圈子
+        </a>
+        <a class="flex" href="/index/user/ranking">
+            <i class="iconfont icon-paihangbang"></i>
+            排行
+        </a>
+    </div>
+</footer>
+<!--底部结束-->
+<template id="group">
+    <div>
+        <div class="shop_img" :style="{backgroundImage: 'url(' + item.img_url +')'}"></div>
+        <div class="describe shop_name">{{item.name}}</div>
+        <div class="shop_money flex-box">
+            <span><img src="/static/images/index/common_jd.png" alt="" width="18"></span>
+            <span><font class="js">{{item.integral}}</font></span>
+        </div>
+        <div class="describe">市场参考价：{{item.money}}</div>
+        <div class="describe">剩余件数：{{item.has_num}}</div>
+        <div class="btn_base shop_btn" @click="modalDetail(index)" v-if="item.has_num > 0">兑换</div>
+        <div class="btn_base shop_nomal" v-else>已兑罄</div>
+        <!--商品详情 开始-->
+        <div class="all-modal-overlay" v-if="isShow == index">
+            <header class="header">
+                <div class="header-nav">
+                    <a class="nav-word" @click="modalHide"><i class="icon-svg icon_left"></i></a>
+                </div>
+                <div class="header-center">商品详情</div>
+            </header>
+            <div class="p-height"></div>
+            <div class="all-modal-content">
+                <div class="shop-box">
+                    <div class="head">
+                        <img :src="item.img_url" alt="" width="100%">
+                        <div class="info">
+                            <div class="title">{{item.name}}</div>
+                            <div class="money flex-box">
+                                <span>单价：</span>
+                                <span><img src="/static/images/index/common_jd.png"></span>
+                                <span>{{item.integral}}金豆</span>
+                            </div>
+                            <div class="describe">市场参考价：{{item.money}}</div>
+                            <div class="describe">剩余件数：{{item.has_num}}</div>
+                        </div>
+                    </div>
+                    <h4>商品描述</h4>
+                    <div class="detail">{{item.detail}}</div>
+                </div>
+            </div>
+            <div class="p-height"></div>
+            <div class="all-modal-foot flex-box">
+                <div class="num">兑换数量
+                    <i class="iconfont icon-jianhao icon icon-gray" v-if="num == 1"></i>
+                    <i  v-if="num > 1" @click="countSub"  class="iconfont icon-jianhao icon"></i>
+                    <span>{{num}}</span>
+                    <i @click="countAdd"  class="icon iconfont icon-jiahao1"></i>
+                </div>
+                <div class="btn"><span @click="subExchange">立即兑换</span></div>
+            </div>
+        </div>
+        <!--商品详情 结束-->
+    </div>
+</template>
+{include file='common@common/foot' /}
+<script>
+   'use strict';
+
+   $(function () {
+       Vue.component('group', {
+           template: '#group',
+           props: ['item', 'index'],
+           data: function data() {
+               return {
+                   isShow: -1,
+                   num: 1 //兑换数量
+               };
+           },
+
+           methods: {
+               modalDetail: function modalDetail(i) {
+                   //商品详情弹出窗
+                   this.isShow = i;
+                   $('body').css({ 'height': '100%', 'overflow': 'hidden' });
+                   $('html').css({ 'height': '100%', 'overflow': 'hidden' });
+               },
+               modalHide: function modalHide() {
+                   //退出商品详情
+                   this.isShow = -1;
+                   $('body').css({ 'height': 'auto', 'overflow': 'auto' });
+                   $('html').css({ 'height': 'auto', 'overflow': 'auto' });
+               },
+               countAdd: function countAdd() {
+                   //添加兑换数量
+                   if (this.num == this.item.has_num) {
+                       $.msg('剩余数量不够了');
+                   } else {
+                       this.num = this.num + 1;
+                   }
+               },
+               countSub: function countSub() {
+                   //减少兑换数量
+                   if (this.num > 1) {
+                       this.num = this.num - 1;
+                   }
+               },
+               subExchange: function subExchange() {
+                   var _this = this;
+
+                   //兑换提交
+                   $.post('{:Url("index/Shop/convert")}', { id: this.item.id, num: this.num }, function (res) {
+                       if (res.code) {
+                           _this.item.has_num -= _this.num;
+                           window.location.href = '{:Url("index/Shop/orderDo")}?id=' + _this.item.id + '&num=' + _this.num;
+                           console.log(_this.num);
+                       } else {
+                           $.msg(res.msg);
+                       }
+                   });
+               }
+           }
+   
+       });
+       var vm = new Vue({
+           el: '#app',
+           data: {
+
+           }
+       });
+   });
+</script>

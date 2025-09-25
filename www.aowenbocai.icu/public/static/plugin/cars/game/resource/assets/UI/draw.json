@@ -1,0 +1,10 @@
+{"file":"draw.png",
+"frames":
+{"draw1":{"x":0,"y":0,"w":205,"h":154,"offX":0,"offY":0,"sourceW":205,"sourceH":154},
+"draw0":{"x":207,"y":0,"w":207,"h":150,"offX":0,"offY":0,"sourceW":207,"sourceH":150},
+"draw3":{"x":416,"y":0,"w":174,"h":175,"offX":0,"offY":0,"sourceW":174,"sourceH":175},
+"draw6":{"x":592,"y":0,"w":174,"h":175,"offX":0,"offY":0,"sourceW":174,"sourceH":175},
+"draw2":{"x":768,"y":0,"w":177,"h":171,"offX":0,"offY":0,"sourceW":177,"sourceH":171},
+"draw4":{"x":207,"y":152,"w":143,"h":178,"offX":0,"offY":0,"sourceW":143,"sourceH":178},
+"draw5":{"x":768,"y":173,"w":227,"h":95,"offX":0,"offY":0,"sourceW":227,"sourceH":95},
+"draw7":{"x":352,"y":177,"w":229,"h":92,"offX":0,"offY":0,"sourceW":229,"sourceH":92}}}

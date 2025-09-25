@@ -1,0 +1,110 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<style media="screen">
+ .id_input{width: 60px;}
+ .starttime, .endtime{width: 200px}
+ .form-control{display: inline-block}
+</style>
+
+<ol class="breadcrumb">
+	<li class="active"><i class="glyphicon glyphicon-link"></i> 数据删除</li>
+	<li>数据删除</li>
+</ol>
+<div class="form-inline" action="" style="display:inline-block;margin-left:10px">
+    <div class="form-group form-group-left">
+        <label>起始时间</label>
+        <div class='input-group date starttime'>
+        <input type='text' class="form-control" name="starttime" />
+        <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+        </div>
+        <label>结束时间</label>
+        <div class='input-group date endtime'>
+        <input type='text' class="form-control" name="endtime" />
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+        </div>
+    </div>
+    <div class="form-group form-group-left">
+        <label>用户ID:</label>
+        <input type="text" name="userid" class="form-control"  placeholder="用户ID">
+    </div>
+    <div class="form-group form-group-left">
+        <label>数据ID:</label>
+        <input type="text" name="dataid" class="form-control"  placeholder="数据ID">
+    </div>
+</div>
+<div class="box-padding">
+    <table class="table">
+        <thead>
+          <tr>
+              <th>表名</th>
+              <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+            {foreach name="$data" id = "item"}
+            <tr>
+                <td>{$item.name}</td>
+                <td><button class="btn btn-primary deleteData" name="{$item.table}" title="{$item.name}">删除</button></td>
+            </tr>
+            {/foreach}
+          <tbody>
+           
+        </tbody>
+      </table>
+</div>
+
+<script>
+$('.starttime,.endtime').datetimepicker({
+    format:"yyyy-mm-dd",
+    language: 'zh-CN',
+    weekStart: 1,
+    todayBtn: 1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    endDate : new Date(),
+    minView: 2,
+    forceParse: 0
+});
+$('.starttime').on('changeDate',function(e){  
+    var startTime = e.date;  
+    $('.endtime').datetimepicker('setStartDate',startTime);  
+});
+$('.endtime').on('changeDate',function(e){  
+    var startTime = e.date;  
+    $('.starttime').datetimepicker('setEndDate',startTime);  
+});
+$(".deleteData").click(function(){
+    var starttime = $("input[name=starttime]").val();
+    var endtime = $("input[name=endtime]").val();
+    var userid = $("input[name=userid]").val();
+    var dataid = $("input[name=dataid]").val();
+    var result = starttime || endtime || userid || dataid;
+    var msg = '您确定要删除该数据表中';
+    if(!result){
+        msg += '所有数据?';
+    }else{
+        msg += starttime ? '创建时间从'+starttime+'开始到' : '创建时间从最初开始到';
+        msg += endtime ? endtime+'之间' : '目前时间';
+        msg += userid ? '，用户ID为'+userid : '，所有用户';
+        msg += dataid ? '以及数据ID为'+dataid+'的所有数据吗？' : '的所有数据吗？';
+    }
+
+    var name = $(this).attr('title');
+    
+    var model = $.modal.confirm(msg, function () {
+         model.close(); 
+        $.post('{:url("History/deleteData")}',{starttime: starttime,endtime: endtime,userid: userid,dataid: dataid,name: name},function(res){
+            $.modal.alert(res.msg)
+        })
+      });
+})
+</script>
+{include file='common/foot' /}

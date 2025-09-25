@@ -1,0 +1,65 @@
+{include file='admin@common/head' /}
+<script src="__STATIC__/wangeditor/wangEditor.min.js"></script>
+<style>
+    .mex {
+        max-width: 500px;
+    }
+</style>
+<nav class="plugin_nav">
+    <a href="{:url('index')}">文章管理</a>
+    <a class="nav_active" href="#">栏目管理</a>
+</nav>
+<div class="box-padding">
+    <ol class="breadcrumb">
+        <li class=""><i class="glyphicon glyphicon-link"></i> 扩展管理</li>
+        <li class="">新闻资讯</li>
+        <li class="">栏目分类</li>
+        <li class="active">添加栏目</li>
+    </ol>
+    <div class="mex">
+        <form class="form" action="/news/admin/addNav" method="post">
+            <div class="form-group">
+                <label>上级栏目</label>
+                <div class="dropdown">
+                    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+                        <span class="showTitle">一级栏目(默认)</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation">
+                            <a name="0" class="nav_id">一级栏目</a>
+                        </li>
+                        {volist name="$list" id="item"}
+                        <li role="presentation">
+                            <a name="{$item.id}" class="nav_id">{$item.title}</a>
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="pid">
+            <div class="form-group">
+                <label>栏目标题</label>
+                <input type="text" class="form-control" placeholder="输入内容" name="title">
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary btn-block">添加</button>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    var E = window.wangEditor
+    var editor = new E('#div1')
+    editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+    editor.create()
+    $(".nav_id").click(function () {
+        var _this = $(this);
+        $(".showTitle").text(_this.text());
+        $("input[name=pid]").val(_this.attr('name'));
+    })
+    $('.form').submit(function () {
+        $('#cont').val(editor.txt.html());
+        console.log(editor.txt.html());
+        //return false;
+    });
+</script>
+{include file='admin@common/foot' /}

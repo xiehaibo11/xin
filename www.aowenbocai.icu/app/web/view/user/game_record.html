@@ -1,0 +1,334 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    body{ overflow-y: auto;}
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">游戏记录</span>
+        </div>
+        <div class="options">
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="game"
+                    placeholder="请选择游戏">
+                <el-option
+                        v-for="item in gameOptions"
+                        :key="item.name"
+                        :label="item.label"
+                        :value="item.value" @click.native="click(item.name)">
+                </el-option>
+            </el-select>
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="time"
+                    placeholder="请选择时间">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <el-date-picker v-if="!time" style="width:270px"
+                    v-model="value"
+                    type="daterange"
+                    size="mini"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :picker-options="pickerOptions0">
+            </el-date-picker>
+        </div>
+        <div>
+            <game-record :url="url" :game-type="name" @sort-change="sortChange"></game-record>
+        </div>
+    </el-card>
+</div>
+<!--游戏记录列表-->
+<template id="gameRecord">
+    <div>
+        <!--欢乐捕鱼 fish50-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'fish50'"  key="fish">
+            <el-table-column property="Id" label="ID" width="100"></el-table-column>
+            <el-table-column property="title" label="攻击对象"></el-table-column>
+            <el-table-column property="bet_money" label="消耗{$company['lottery_unit']}"></el-table-column>
+            <el-table-column property="bouns" label="奖金" sortable="custom">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.bouns > 0" class="green"> + {{scope.row.bouns}}</span>
+                    <span v-else class="red">{{scope.row.bouns}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="bouns" label="状态">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.bouns > 0" class="green">成功</span>
+                    <span v-else>失败</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--打地鼠 dishu-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'dishu'"  key="dishu">
+            <el-table-column property="Id" label="ID" width="100"></el-table-column>
+            <el-table-column property="playInfo.mouse" label="击打地鼠"></el-table-column>
+            <el-table-column property="bet_money" label="消耗{$company['lottery_unit']}"></el-table-column>
+            <el-table-column property="bonus" label="奖金" sortable="custom">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.bonus > 0" class="green"> + {{scope.row.bonus}}</span>
+                    <span v-else class="red">{{scope.row.bonus}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="bonus" label="状态">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.bouns > 0" class="green">成功</span>
+                    <span v-else>失败</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--呆萌动物园 animal-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'animal'" key='animal'>
+            <el-table-column property="id" label="ID" width="100"></el-table-column>
+            <el-table-column property="playInfo.animal" label="击打动物"></el-table-column>
+            <el-table-column property="bullet" label="消耗{$company['lottery_unit']}"></el-table-column>
+            <el-table-column label="奖金" property="bonus" sortable="custom">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.bonus > 0" class="green">{{scope.row.bonus}}</span>
+                    <span v-else class="red">{{scope.row.bonus}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="bonus" label="状态">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.bouns > 0" class="green">成功</span>
+                    <span v-else>失败</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--我要發 fa-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'fa'" key="fa">
+            <el-table-column property="id" label="ID" width="100"></el-table-column>
+            <el-table-column property="expect" label="期号" width="120"></el-table-column>
+            <el-table-column label="下注内容" width="220">
+                <template slot-scope="scope">
+                    <span>{{scope.row.playInfo.code}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="money" label="下注{$company['lottery_unit']}" width="120"></el-table-column>
+            <el-table-column property="playInfo.status" label="状态">
+                <template slot-scope="scope">
+                    <span :class="{'red':scope.row.bonus > 0}">{{scope.row.playInfo.status}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="bonus" label="奖金" sortable="custom">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.bonus > 0" class="green">{{scope.row.bonus}}</span>
+                    <span v-else>0.00</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="下注时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--欢乐攻城 attack-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'attack'" key="attack">
+            <el-table-column property="id" label="ID" width="100"></el-table-column>
+            <el-table-column property="enemy_betting" label="我的出战" width="120"></el-table-column>
+            <el-table-column property="betting" label="对手出战" width="120"></el-table-column>
+            <el-table-column label="对战模式/对手昵称" width="180">
+                <template slot-scope="scope">
+                    <span  v-if="scope.row.playInfo == 25" style="color:#888888">人机对战</span>
+                    <span  v-else>{{scope.row.playInfo.nickname}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="money" label="出战{$company['lottery_unit']}"></el-table-column>
+            <el-table-column property="bonus" label="奖金" sortable="custom">
+                <template slot-scope="scope">
+                    <span :class="{'green': scope.row.bonus > 0}">{{scope.row.bonus}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="出战时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--超级幸运星 lucky-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'lucky'" key="lucky">
+            <el-table-column property="id" label="ID" width="100"></el-table-column>
+            <el-table-column property="playInfo.code" label="下注对象" width="150"></el-table-column>
+            <el-table-column label="开奖信息" width="200">
+                <template slot-scope="scope">
+                    <span>{{scope.row.playInfo.open}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="money" label="消耗{$company['lottery_unit']}"></el-table-column>
+            <el-table-column property="bouns" label="奖金" sortable="custom">
+                <template slot-scope="scope">
+                    <span :class="{'green':scope.row.bouns > 0}">{{scope.row.bouns}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="下注时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--欢乐猜猜猜 poker-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'poker'" key="poker">
+            <el-table-column property="id" label="ID" width="100"></el-table-column>
+            <el-table-column property="playInfo" label="下注内容">
+                <template slot-scope="scope">
+                    <p v-for="item in scope.row.playInfo">{{item.msg}}</p>
+                </template>
+            </el-table-column>
+            <el-table-column property="bet_money" label="下注{$company['lottery_unit']}"></el-table-column>
+            <el-table-column label="奖金" sortable="custom">
+                <template slot-scope="scope">
+                    <span :class="{'green':scope.row.bouns > 0}">{{scope.row.bouns}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="下注时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--欢乐夹娃娃 zhuawawa-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'zhuawawa'" key="zhuawawa">
+            <el-table-column property="id" label="ID" width="100"></el-table-column>
+            <el-table-column property="playInfo.gift" label="抓取对象" width="200"></el-table-column>
+            <el-table-column property="playInfo.bet_money" label="消耗{$company['lottery_unit']}"></el-table-column>
+            <el-table-column  label="抓取结果">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.is_get == 1" class="green">抓取成功</span>
+                    <span v-else class="red">抓取失败</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--宝马奔驰 cars-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'cars'" key="cars">
+            <el-table-column property="id" label="ID" width="100"></el-table-column>
+            <el-table-column property="issue" label="期号" width="120"></el-table-column>
+            <el-table-column property="playInfo.code" label="下注对象" width="250"></el-table-column>
+            <el-table-column property="playInfo.open" label="开奖结果" width="100"></el-table-column>
+            <el-table-column property="money" label="下注{$company['lottery_unit']}"></el-table-column>
+            <el-table-column property="bouns" label="奖金" sortable="custom">
+                <template slot-scope="scope">
+                    <span :class="{'green':scope.row.bouns > 0}">{{scope.row.bouns}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="create_time" label="下注时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+        <!--大转盘 dzp-->
+        <page-nation :url="url" @game-record="sortC" v-if="gameType == 'dzp'" key="dzp">
+            <el-table-column property="id" label="ID" width="150"></el-table-column>
+            <el-table-column property="name" label="获取物品"></el-table-column>
+            <el-table-column property="num" label="数量" width="250"></el-table-column>
+            <el-table-column property="create_time" label="时间" width="150" sortable="custom"></el-table-column>
+        </page-nation>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        var id = GetUrlParam('userid');
+        //休闲游戏游戏记录
+        Vue.component('game-record', {
+            template: '#gameRecord',
+            props: ['url', 'gameType'],
+            data: function data() {
+                return {
+                    sort: ''
+                };
+            },
+
+            methods: {
+                sortC: function sortC(val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 0; //降序
+                        } else {
+                            s = 1; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                    this.$emit('sort-change', this.sort);
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                intUrl: '{:url("Details/gameOther")}?userid=' + id + '&gameid=',
+                options: [//快捷时间选项
+                    { value: 7, label: '最近一周' },
+                    { value: 30, label: '最近一个月' },
+                    { value: 90, label: '最近三个月' },
+                    { value: 180, label: '最近六个月' },
+                    { value: 0, label: '自定义时间' }],
+
+                gameOptions: {$gameInfo}, //游戏分类选项
+                time: '', //快捷时间值
+                timeTemp: '',
+                game: '', //游戏id
+                name: '', //游戏模块名
+                value: '', //自定义时间值
+                sort: '', //排序条件
+
+
+                //设置选择六个月之前到今天的日期
+                pickerOptions0: {
+                    disabledDate: function disabledDate(time) {
+                        var curDate = new Date().getTime();
+                        var three = 180 * 24 * 3600 * 1000;
+                        var threeMonths = curDate - three;
+                        return time.getTime() > Date.now() || time.getTime() < threeMonths;;
+                    }
+                }
+            },
+            computed: {
+                timeValue: function timeValue() {
+                    if (!this.time == 0) {
+                        this.timeTemp = this.time;
+                    }
+                    var day = parseInt(this.timeTemp);
+                    return timeArr(day);
+                },
+                url: function url() {
+                    var sort;
+                    if (this.sort.length) {
+                        sort = this.sort;
+                    } else {
+                        sort = '';
+                    }
+                    if (this.value.length) {
+                        return this.intUrl + this.game + '&starttime=' + this.value[0] + '&endtime=' + this.value[1] + sort;
+                    } else {
+                        return this.intUrl + this.game + '&starttime=' + this.timeValue[0] + '&endtime=' + this.timeValue[1] + sort;
+                    }
+                }
+            },
+            methods: {
+                //搜索条件
+                search: function search() {
+                    if (!this.time == 0) {
+                        //自定义时间切换为快捷时间选择
+                        this.value = '';
+                    }
+                },
+                click: function click(name) {
+                    this.name = name;
+                },
+
+                //排序条件
+                sortChange: function sortChange(val) {
+                    this.sort = val;
+                }
+            },
+            created: function created() {
+                this.time = this.options[0].value;
+                this.game = this.gameOptions[0].value;
+                this.name = this.gameOptions[0].name;
+            }
+        });
+    });
+</script>

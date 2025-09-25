@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{$title}</title>
+		{include file="common/head" /}
+	<div class="col-xs-10" style="min-height: 500px;">
+
+		<div class="page-header"><h3>安装完成</h3></div>
+		<div class="alert alert-success">
+			恭喜您!已成功安装“酷睿-小游戏平台”系统，您现在可以: &nbsp;&nbsp;&nbsp;<a target="_blank" class="btn btn-success" href="{:Url('web/index/index')}">访问网站首页</a>
+		</div>
+		<div class="alert alert-warning">
+			您也可以在后台设置查看相关业务!后台地址：<a href="{:request()->domain()}/{$admin_file}">{:request()->domain()}/{$admin_file}</a> &nbsp;&nbsp;&nbsp;&nbsp;
+			<a target="_blank" class="btn btn-success" href="{:request()->domain()}/{$admin_file}">登陆后台</a>
+		</div>
+		<div class="form-group">
+			<h5><strong>酷睿应用商城</strong></h5>
+			<span class="help-block">应用商城特意为您推荐了一批优秀模块、主题，赶紧来安装几个吧！</span>
+			<table class="table table-bordered">
+				<tbody>
+				<a target="_blank" class="btn btn-success" href="http://www.cooroo.cn/" target="_blank">访问应用商城首页</a>
+				</tbody>
+			</table>
+		</div>
+
+		</div>
+	</div>
+
+			{include file="common/foot" /}
+	
+</body></html>

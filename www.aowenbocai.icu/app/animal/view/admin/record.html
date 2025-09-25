@@ -1,0 +1,158 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+    .form-group{
+        margin-bottom: 0;
+    }
+    .breadcrumb{
+        margin-bottom: 0;
+    }
+</style>
+<div id="app" class="box-padding">
+    <div class="form-group form-group-left" style="margin:-10px 0 0 -10px;display:inline-block">
+        <div class="btn-group" data-toggle="buttons" style="margin:1rem">
+            <label class="btn btn-primary isdelete" data-url="{:url('deleteRecord')}?day=all">
+                <input type="checkbox"> 清除全部数据
+            </label>
+            <label class="btn btn-primary isdelete" data-url="{:url('deleteRecord')}?day=30">
+                <input type="checkbox"> 清除30天前数据
+            </label>
+            <label class="btn btn-primary isdelete" data-url="{:url('deleteRecord')}?day=15">
+                <input type="checkbox"> 清除15天前数据
+            </label>
+            <label class="btn btn-primary isdelete" data-url="{:url('deleteRecord')}?day=7">
+                <input type="checkbox"> 清除7天前数据
+            </label>
+            <label class="btn btn-primary isdelete" data-url="{:url('deleteRecord')}?day=3">
+                <input type="checkbox"> 清除3天前数据
+            </label>
+        </div>
+    </div>
+ <div>
+     <div class="breadcrumb">
+       <div class="fl">
+           <label>选择游戏：</label>
+         <div class="dropdown" style="display: inline-block;">
+           <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">呆萌动物园
+             <span class="caret"></span>
+           </button>
+           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+             {volist name = "extList" id = "item"}
+             <li role="presentation"  class="toTurn"   href="">
+               <a role="menuitem" tabindex="-1" href="{:Url('/'.$item.name)}">{$item.title}</a>
+             </li>
+             {/volist}
+           </ul>
+         </div>
+       </div>
+       <form class="form-inline fr" id="search">
+         <div class="form-group form-group-left">
+           <label>会员名:</label>
+           <input type="text" name="username" class="form-control" value="{$query.username}" placeholder="会员名">
+         </div>
+         <div class="form-group form-group-left">
+           <label>动物:</label>
+           <select name="animal_type" class="form-control" id="">
+             <option value="">全部</option>
+             {foreach $animal_list as $key => $v}
+             <option value="{$key}">{$v}</option>
+             {/foreach}
+           </select>
+         </div>
+         <div class="form-group form-group-left">
+           <label>状态:</label>
+           <select name="status" class="form-control" id="">
+             <option value="-1">全部</option>
+             <option value="1">击杀</option>
+             <option value="0">未击杀</option>
+           </select>
+         </div>
+         <div class="form-group form-group-left">
+           <label>时间</label>
+           <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+             <input type='text' class="form-control" name="starttime" value="{$query.starttime}"/>
+             <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+           </div>
+           <label>到</label>
+           <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+             <input type='text' class="form-control" name="endtime" value="{$query.endtime}"/>
+             <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+           </div>
+         </div>
+         <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+       </form>
+       <div class="clear"></div>
+     </div>
+     <div class="table_box">
+        <table class="table table-striped table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>用户名</th>
+              <th>动物</th>
+              <th>消耗金豆</th>
+              <th>奖励金豆</th>
+              <th>状态</th>
+              <th>击打时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          {foreach $list as $item}
+          <tr>
+            <td>{$item.id}</td>
+            <td>{$item.username}</td>
+            <td><?php echo $animal_list[$item['animal_type']]; ?></td>
+            <td>{$item.bullet}</td>
+            <td>{$item.bonus}</td>
+            <td>{$item.status_text}</td>
+            <td>{$item.create_time}</td>
+            <td>
+              <div class="btn-group" role="group" aria-label="...">
+                <a href="#" class="btn btn-info btn-xs isdelete" data-url="{:url('deleteRecord')}?id={$item.id}">删除</a>
+              </div>
+            </td>
+          </tr>
+          {/foreach}
+          </tbody>
+        </table>
+     </div>
+   <div class="text-right">{$list->render()}</div>
+     
+  </div>
+</div>
+
+
+{include file='admin@common/foot' /}
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+        $('.isback').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定撤单', function() {
+                location.href = _url;
+            });
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>

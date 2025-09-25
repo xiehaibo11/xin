@@ -1,0 +1,325 @@
+@charset "UTF-8";
+@import "./variables";
+
+//竞彩
+@border-color: #ededed;
+@border-2: #B4CCE8;
+@bg-color:#EAF2FC;
+@cont-color:#ffffff;
+@active-color:#1F7DDF;
+.c-3{color: #a5a5a5 };
+.c-2{color: #222222}
+.f-sm{
+    font-size: 14px;
+}
+.f-mini{
+    font-size: 12px;
+}
+.jc-zq-bg{
+    background-color: #006500;
+}
+.jc-bg{
+    .jc-header{
+        background-color: @cont-color;
+        margin-bottom: 10px;
+        line-height: 1.5;
+        border-bottom: 1px solid @border-color;
+        padding: 5px 0;
+        h2{
+            font-weight: normal;
+            color: #000000;
+        }
+        .logo{
+            width: 72px;
+            height: 72px;
+            float: left;
+            background: url(/static/vipweb/images/jc/logo-jczq.png) no-repeat center center;
+        }
+        .logo-text{
+            padding-left: 10px;
+            padding-top: 8px;
+        }
+    }
+    .jc-main{
+        background-color: @cont-color;
+        border: 1px solid @border-color;
+    }
+    .jc-nav{
+        border-bottom:1px solid @border-color;
+        ul>li{
+            float: left;
+            a{
+                display: inline-block;
+                height: 40px;
+                line-height: 40px;
+                padding: 0 20px;
+                font-size: 13px;
+                color: #898989;
+                background: url("/static/vipweb/images/jc/line-s.png") no-repeat right center;
+            }
+            &.active{
+                margin-left: -1px;
+                margin-bottom: -1px;
+                a{
+                    background: none;
+                    background-color: @cont-color;
+                    border-top: 2px solid @color-base;
+                    color: #000;
+                    border-left: 1px solid @border-color;
+                    border-right: 1px solid @border-color;
+                }
+            }
+        }
+    }
+    .jc-filter{
+        padding: 0 15px;
+    }
+    .match-grounp-th th, .betbtn, .betbtn-more {
+        background: url(/static/vipweb/images/jc/jc-bg.png);
+        background-repeat: repeat-x;
+    }
+    .match-grounp-th-fixed{
+        border:1px solid @border-color;
+        background-color: @cont-color;
+        position: fixed;
+        left: 50%;
+        top:0;
+        width: 1200px;
+        margin-left: -600px;
+        z-index: 100;
+    }
+    .jc-bet-main{
+        .match-grounp{
+            margin-bottom: 10px;
+            background-color: @cont-color;
+            border:1px solid @border-color;
+            .itm-rang{
+                height: 39px;
+                line-height: 39px;
+                font-size: 15px;
+                position: relative;
+                i.dg-icon{
+                    display: inline-block;
+                    width: 22px;
+                    height: 22px;
+                    position: absolute;
+                    left: 0;
+                    top:0;
+                    background: url("/static/vipweb/images/jc/jc-dg.png") no-repeat center;
+                }
+            }
+            a.simpleleague-name{
+                display: inline-block;
+                height: 78px;
+                line-height: 78px;
+                width: 80px;
+                margin: 0 auto;
+                background-color: #288C78;
+                color: #fff;
+                //border-radius: 4px;
+            }
+            .match-grounp-th{
+                th{
+                    height: 30px;
+                    line-height: 30px;
+                    font-size: 12px;
+                    text-align: center;
+                    color: #000;
+                    border-right: 1px solid #e2e2e2;
+                    background-position: 0 0;
+                    //.gradient(#F5F5F5, #eaeaea,#FFF);
+                }
+            }
+            .match-grounp-date{
+                border-bottom: 1px solid #dddddd;
+                padding: 0 20px;
+                line-height: 30px;
+                height: 30px;
+                font-size: 12px;
+                color: #333;
+                background: #fff;
+                cursor: pointer;
+                &:hover{
+                    background-color: #f7f7f7;
+                }
+            }
+            .match-grounp-item{
+                .dang-mteam{
+                    .itm-team-l{
+                        width: 103px;
+                        text-align: right;
+                        display: inline-block;
+                    }
+                    .itm-vs{
+                        display: inline-block;
+                        width: 54px;
+                        text-align: center;
+                    }
+                    .itm-team-r{
+                        width: 103px;
+                        text-align: left;
+                        display: inline-block;
+                    }
+                }
+                &:hover{
+                    background-color:#E7F7FF;
+                }
+                tr{
+                    border-bottom: 1px solid #ddd;
+                }
+                td{
+                    text-align: center;
+                    vertical-align: middle;
+                    &.td-betbtn{
+                        border-bottom: 1px solid @border-2;
+                        .betbtn-row{
+                            padding-left: 1px;
+                            width: 100.5%;
+                            position: relative;
+                            .el-badge__content{
+                                position: absolute;
+                                top: 10px;
+                                left: 36px;
+                                z-index: 5;
+                            }
+                            .betbtn{
+                                float: left;
+                                width: 81px;
+                                cursor: pointer;
+                                display: block;
+                                margin-left: -1px;
+                                margin-top: -1px;
+                                height: 40px;
+                                line-height: 40px;
+                                border: 1px solid @border-2;
+                                border-bottom: 0;
+                                text-align: center;
+                                font-weight: bold;
+                                color: #444;
+                                -webkit-user-select: none;
+                                -moz-user-select: none;
+                                -ms-user-select: none;
+                                user-select: none;
+                                background-position: 0 -50px;
+                                font-size: 12px;
+                                flex: 1;
+                                box-sizing: border-box;
+                                &:hover{
+                                    cursor: pointer;
+                                    border: 1px solid @active-color;
+                                    position: relative;
+                                    z-index: 3;
+                                    box-sizing: border-box;
+                                }
+                            }
+                            .active{
+                                background: @active-color;
+                                color: @cont-color;
+                                &:hover{
+                                    cursor: pointer;
+                                    border: 1px solid @border-2;
+                                }
+                            }
+                            .betbtn-off{
+                                width: 238px;
+                            }
+                            .betbtn-more{
+                                height: 79px;
+                                line-height: 79px;
+                                font-weight: normal;
+                                width: 100px;
+                                background-position: 0 -100px;
+                            }
+                            .betbtn-more-on{
+                                margin-bottom: -1px;
+                                height: 80px;
+                                background: @bg-color;
+                                &:hover{
+                                    cursor: pointer;
+                                    border: 1px solid @border-2;
+                                    border-bottom: none;
+                                }
+                            }
+                            .more-has{
+                                background: @active-color;
+                                color: @cont-color;
+                                &:hover{
+                                    border: 1px solid @border-2;
+                                    border-bottom: none;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //展开全部
+            .betmore-box{
+                background: @bg-color;
+                height: 0px;
+                overflow: hidden;
+                .dz(.1s);
+            }
+            .betmore-on{
+                height: 290px;
+                border-bottom: 1px solid #ddd;
+                margin-bottom: 1px;
+            }
+            .bet-more{
+                padding: 20px 40px;
+            }
+            .popbox-betsel-table{
+                margin: 5px 0;
+                th{
+                   width: 70px;
+                    font-weight: normal;
+                    text-align: center;
+                    border:1px solid @border-2;
+                    background: @cont-color;
+                }
+                td{
+                    line-height: 1.2;
+                    border:1px solid @border-2;
+                    padding:8px 5px;
+                    font-size: 12px;
+                    width: 75px;
+                    text-align: center;
+                    color: darken(@border-2,40%);
+                    background: @cont-color;
+                    &:hover{
+                        background-color: #e5f1ff;
+                        cursor: pointer;
+                    }
+                    i{
+                        display: block;
+                        font-weight: bold;
+                        color: #555;
+                    }
+                    &.active{
+                        background-color: @active-color;
+                        color: @cont-color;
+                        i{
+                            color: @cont-color;
+                        }
+                        &:hover{
+                           background-color:  @active-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .jc-bet-foot{
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        margin-left: -612px;
+        min-height: 100px;
+        width: 1224px;
+        background-color:@cont-color;
+    }
+}
+
+
+
+

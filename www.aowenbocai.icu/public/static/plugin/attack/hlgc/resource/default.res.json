@@ -1,0 +1,452 @@
+{
+	"groups": [
+		{
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,backImg_jpg,loading-mask000_png,sprite-loading003_png,sprite-loading001_png,sprite-loading002_png,sprite-loading000_png,sprite-game-soldier_json,sprite-fighting_json,bg-table_json,sprite-bubble-title_json,sprite-defense__170112_json,sprite_json,sprite-game_json,btn1_png,btn2_png,sprite-game-v170726012_png,back_mp3,btn3_mp3,erro_mp3,sprite-bubble-avator_json,sprite-dialog_json,sprite-mora-guide_json,fight_mp3,music_png,bg-table_png,loadingMask_png,data_config_json,choos_png,lose_mp3,btn7_mp3,fightBGM_mp3,win~3_mp3,spxiu_json,common_flower_png,common_jd_png,modal_bg_top_png,modal_btn_close_png,upAndSelected_png,upAndSelected2_png,read_fight_png,read_fight2_png,read_fight3_png,alert (2)_png,question_png,createRoom_png,auto_fight_png,auto_fight1-2_png,auto_create_png,auto_enter_png,alert2_png,show_png,inputImg_png,add_png,cut_png,gougou_png,auto_fight-1_png,checkbox_select_up2_png,checkbox_unselect2_png,zuanshi_icon_png",
+			"name": "preload"
+		},
+		{
+			"keys": "backImg_jpg",
+			"name": "load"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/CheckBox/checkbox_select_disabled.png",
+			"type": "image",
+			"name": "checkbox_select_disabled_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_down.png",
+			"type": "image",
+			"name": "checkbox_select_down_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_up.png",
+			"type": "image",
+			"name": "checkbox_select_up_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_unselect.png",
+			"type": "image",
+			"name": "checkbox_unselect_png"
+		},
+		{
+			"url": "assets/ItemRenderer/selected.png",
+			"type": "image",
+			"name": "selected_png"
+		},
+		{
+			"url": "assets/Panel/border.png",
+			"type": "image",
+			"name": "border_png"
+		},
+		{
+			"url": "assets/Panel/header.png",
+			"type": "image",
+			"name": "header_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_disabled.png",
+			"type": "image",
+			"name": "radiobutton_select_disabled_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_down.png",
+			"type": "image",
+			"name": "radiobutton_select_down_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_up.png",
+			"type": "image",
+			"name": "radiobutton_select_up_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_unselect.png",
+			"type": "image",
+			"name": "radiobutton_unselect_png"
+		},
+		{
+			"url": "assets/ScrollBar/roundthumb.png",
+			"type": "image",
+			"name": "roundthumb_png"
+		},
+		{
+			"url": "assets/Slider/thumb.png",
+			"type": "image",
+			"name": "thumb_png"
+		},
+		{
+			"url": "assets/Slider/track.png",
+			"type": "image",
+			"name": "track_png"
+		},
+		{
+			"url": "assets/Slider/tracklight.png",
+			"type": "image",
+			"name": "tracklight_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/handle.png",
+			"type": "image",
+			"name": "handle_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/off.png",
+			"type": "image",
+			"name": "off_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/on.png",
+			"type": "image",
+			"name": "on_png"
+		},
+		{
+			"url": "assets/Button/button_down.png",
+			"type": "image",
+			"name": "button_down_png"
+		},
+		{
+			"url": "assets/Button/button_up.png",
+			"type": "image",
+			"name": "button_up_png"
+		},
+		{
+			"url": "assets/ProgressBar/thumb_pb.png",
+			"type": "image",
+			"name": "thumb_pb_png"
+		},
+		{
+			"url": "assets/ProgressBar/track_pb.png",
+			"type": "image",
+			"name": "track_pb_png"
+		},
+		{
+			"url": "assets/ScrollBar/track_sb.png",
+			"type": "image",
+			"name": "track_sb_png"
+		},
+		{
+			"url": "assets/bg.jpg",
+			"type": "image",
+			"name": "bg_jpg"
+		},
+		{
+			"url": "assets/egret_icon.png",
+			"type": "image",
+			"name": "egret_icon_png"
+		},
+		{
+			"url": "config/description.json",
+			"type": "json",
+			"name": "description_json"
+		},
+		{
+			"url": "assets/Loading/backImg.jpg",
+			"type": "image",
+			"name": "backImg_jpg"
+		},
+		{
+			"url": "assets/Loading/loading-mask000.png",
+			"type": "image",
+			"name": "loading-mask000_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading003.png",
+			"type": "image",
+			"name": "sprite-loading003_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading001.png",
+			"type": "image",
+			"name": "sprite-loading001_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading002.png",
+			"type": "image",
+			"name": "sprite-loading002_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading000.png",
+			"type": "image",
+			"name": "sprite-loading000_png"
+		},
+		{
+			"url": "assets/Soldier/sprite-game-soldier.json",
+			"type": "sheet",
+			"name": "sprite-game-soldier_json",
+			"subkeys": "sprite-game-soldier000,sprite-game-soldier001,sprite-game-soldier002,sprite-game-soldier003,sprite-game-soldier004,sprite-game-soldier005,sprite-game-soldier006"
+		},
+		{
+			"url": "assets/Finghting/sprite-fighting.json",
+			"type": "sheet",
+			"name": "sprite-fighting_json",
+			"subkeys": "sprite-fighting000,sprite-fighting001,sprite-fighting002,sprite-fighting003"
+		},
+		{
+			"url": "assets/Table/bg-table.json",
+			"type": "sheet",
+			"name": "bg-table_json",
+			"subkeys": "bg-table000"
+		},
+		{
+			"url": "assets/Win/sprite-bubble-title.json",
+			"type": "sheet",
+			"name": "sprite-bubble-title_json",
+			"subkeys": "sprite-bubble-title000,sprite-bubble-title001,sprite-bubble-title002,sprite-bubble-title003,sprite-bubble-title004,sprite-bubble-title005,sprite-bubble-title006,sprite-bubble-title007,sprite-bubble-title008"
+		},
+		{
+			"url": "assets/City/sprite-defense__170112.json",
+			"type": "sheet",
+			"name": "sprite-defense__170112_json",
+			"subkeys": "sprite-defense__170112000,sprite-defense__170112001,sprite-defense__170112002,sprite-defense__170112003,sprite-defense__170112004"
+		},
+		{
+			"url": "assets/head/sprite.json",
+			"type": "sheet",
+			"name": "sprite_json",
+			"subkeys": "sprite000,sprite001,sprite002"
+		},
+		{
+			"url": "assets/Bottm/sprite-game.json",
+			"type": "sheet",
+			"name": "sprite-game_json",
+			"subkeys": "sprite-game000,sprite-game001,sprite-game002,sprite-game003,sprite-game004,sprite-game005,sprite-game006,sprite-game007,sprite-game008,sprite-game009,sprite-game010,sprite-game011,sprite-game012,sprite-game013,sprite-game014"
+		},
+		{
+			"url": "assets/ui/btn1.png",
+			"type": "image",
+			"name": "btn1_png",
+			"scale9grid": "29,0,111,0"
+		},
+		{
+			"url": "assets/ui/btn2.png",
+			"type": "image",
+			"name": "btn2_png",
+			"scale9grid": "51,0,71,0"
+		},
+		{
+			"url": "assets/ui/sprite-game-v170726012.png",
+			"type": "image",
+			"name": "sprite-game-v170726012_png"
+		},
+		{
+			"url": "assets/Music/back.mp3",
+			"type": "sound",
+			"name": "back_mp3"
+		},
+		{
+			"url": "assets/Music/btn3.mp3",
+			"type": "sound",
+			"name": "btn3_mp3"
+		},
+		{
+			"url": "assets/Music/erro.mp3",
+			"type": "sound",
+			"name": "erro_mp3"
+		},
+		{
+			"url": "assets/ShowImg/sprite-bubble-avator.json",
+			"type": "sheet",
+			"name": "sprite-bubble-avator_json",
+			"subkeys": "sprite-bubble-avator000,sprite-bubble-avator001,sprite-bubble-avator002"
+		},
+		{
+			"url": "assets/ui/sprite-dialog.json",
+			"type": "sheet",
+			"name": "sprite-dialog_json",
+			"subkeys": "sprite-dialog000,sprite-dialog001,sprite-dialog002,sprite-dialog003"
+		},
+		{
+			"url": "assets/ui/sprite-mora-guide.json",
+			"type": "sheet",
+			"name": "sprite-mora-guide_json",
+			"subkeys": "sprite-mora-guide000,sprite-mora-guide001"
+		},
+		{
+			"url": "assets/Music/fight.mp3",
+			"type": "sound",
+			"name": "fight_mp3"
+		},
+		{
+			"url": "assets/ui/music.png",
+			"type": "image",
+			"name": "music_png"
+		},
+		{
+			"url": "assets/Loading/bg-table.png",
+			"type": "image",
+			"name": "bg-table_png"
+		},
+		{
+			"url": "assets/ui/loadingMask.png",
+			"type": "image",
+			"name": "loadingMask_png"
+		},
+		{
+			"url": "config/data_config.json",
+			"type": "json",
+			"name": "data_config_json"
+		},
+		{
+			"url": "assets/ui/choos.png",
+			"type": "image",
+			"name": "choos_png"
+		},
+		{
+			"url": "assets/Music/lose.mp3",
+			"type": "sound",
+			"name": "lose_mp3"
+		},
+		{
+			"url": "assets/Music/btn7.mp3",
+			"type": "sound",
+			"name": "btn7_mp3"
+		},
+		{
+			"name": "fightBGM_mp3",
+			"type": "sound",
+			"url": "assets/Music/fightBGM.mp3"
+		},
+		{
+			"name": "win~3_mp3",
+			"type": "sound",
+			"url": "assets/Music/win~3.mp3"
+		},
+		{
+			"name": "spxiu_json",
+			"type": "sheet",
+			"url": "assets/ui/spxiu.json",
+			"subkeys": "spxiu012,spxiu027,spxiu026,spxiu011,spxiu014,spxiu010,spxiu000,spxiu004,spxiu018,spxiu019,spxiu020,spxiu016,spxiu017,spxiu023,spxiu024,spxiu025,spxiu021,spxiu022,spxiu029,spxiu005,spxiu013,spxiu007,spxiu008,spxiu002,spxiu003,spxiu006,spxiu009,spxiu015,spxiu001,spxiu028"
+		},
+		{
+			"name": "common_flower_png",
+			"type": "image",
+			"url": "assets/pay/common_flower.png"
+		},
+		{
+			"name": "common_jd_png",
+			"type": "image",
+			"url": "assets/pay/common_jd.png"
+		},
+		{
+			"name": "modal_bg_top_png",
+			"type": "image",
+			"url": "assets/pay/modal_bg_top.png"
+		},
+		{
+			"name": "modal_btn_close_png",
+			"type": "image",
+			"url": "assets/pay/modal_btn_close.png"
+		},
+		{
+			"name": "upAndSelected_png",
+			"type": "image",
+			"url": "assets/ui/upAndSelected.png"
+		},
+		{
+			"name": "upAndSelected2_png",
+			"type": "image",
+			"url": "assets/ui/upAndSelected2.png"
+		},
+		{
+			"name": "read_fight_png",
+			"type": "image",
+			"url": "assets/ui/read_fight.png"
+		},
+		{
+			"name": "read_fight2_png",
+			"type": "image",
+			"url": "assets/ui/read_fight2.png"
+		},
+		{
+			"name": "read_fight3_png",
+			"type": "image",
+			"url": "assets/ui/read_fight3.png"
+		},
+		{
+			"name": "alert (2)_png",
+			"type": "image",
+			"url": "assets/ui/alert (2).png"
+		},
+		{
+			"name": "question_png",
+			"type": "image",
+			"url": "assets/ui/question.png"
+		},
+		{
+			"name": "createRoom_png",
+			"type": "image",
+			"url": "assets/ui/createRoom.png"
+		},
+		{
+			"name": "auto_fight_png",
+			"type": "image",
+			"url": "assets/ui/auto_fight.png"
+		},
+		{
+			"name": "auto_fight1-2_png",
+			"type": "image",
+			"url": "assets/ui/auto_fight1-2.png"
+		},
+		{
+			"name": "auto_create_png",
+			"type": "image",
+			"url": "assets/ui/auto_create.png"
+		},
+		{
+			"name": "auto_enter_png",
+			"type": "image",
+			"url": "assets/ui/auto_enter.png"
+		},
+		{
+			"name": "alert2_png",
+			"type": "image",
+			"url": "assets/ui/alert2.png"
+		},
+		{
+			"name": "show_png",
+			"type": "image",
+			"url": "assets/ui/show.png"
+		},
+		{
+			"name": "inputImg_png",
+			"type": "image",
+			"url": "assets/ui/inputImg.png"
+		},
+		{
+			"name": "add_png",
+			"type": "image",
+			"url": "assets/ui/add.png"
+		},
+		{
+			"name": "cut_png",
+			"type": "image",
+			"url": "assets/ui/cut.png"
+		},
+		{
+			"name": "gougou_png",
+			"type": "image",
+			"url": "assets/ui/gougou.png"
+		},
+		{
+			"name": "auto_fight-1_png",
+			"type": "image",
+			"url": "assets/ui/auto_fight-1.png"
+		},
+		{
+			"name": "checkbox_select_up2_png",
+			"type": "image",
+			"url": "assets/pay/checkbox_select_up.png"
+		},
+		{
+			"name": "checkbox_unselect2_png",
+			"type": "image",
+			"url": "assets/pay/checkbox_unselect.png"
+		},
+		{
+			"name": "zuanshi_icon_png",
+			"type": "image",
+			"url": "assets/pay/zuanshi_icon.png"
+		}
+	]
+}

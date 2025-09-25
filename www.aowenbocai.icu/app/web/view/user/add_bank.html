@@ -1,0 +1,184 @@
+{include file='web@common/link' title="添加银行卡"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="//at.alicdn.com/t/font_613146_iqjclbkwd2.js"></script>
+<style type="text/css">
+    .icon {
+        width: 20px;
+        height: 20px;
+        vertical-align: -5px;
+        fill: currentColor;
+        overflow: hidden;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <el-radio-group v-model="label">
+                <el-radio-button @click.native="checkName(toBank)" label="银行卡"></el-radio-button>
+                <el-radio-button @click.native="checkName(toAlipay)" label="支付宝"></el-radio-button>
+                <!--<el-radio-button @click.native="checkName(toWei)" label="微信"></el-radio-button>-->
+            </el-radio-group>
+        </div>
+        <div slot="header" class="clearfix" style="margin-top: 15px">
+            <el-breadcrumb>
+                <el-breadcrumb-item><a href="/web/user/safe">银行卡管理</a></el-breadcrumb-item>
+                <el-breadcrumb-item>添加银行卡（储蓄卡）</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <add-bank></add-bank>
+    </el-card>
+</div>
+
+<!--添加银行卡-->
+<template id="addBank">
+    <div>
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="form">
+            <div class="input-title">请添加与您实名制相同姓名的银行卡（储蓄卡）</div>
+            <el-form-item label="持卡人" prop="username">
+                <el-input v-model="ruleForm.username" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="选择银行" prop="name">
+                <el-select v-model="ruleForm.name" placeholder="请选择选择银行" style="width: 200px">
+                    <el-option
+                            v-for="(item,index) in banks"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.name">
+                        <svg class="icon" aria-hidden="true">
+                            <use :xlink:href="'#' + item.icon"></use>
+                        </svg>
+                        <span>{{item.name}}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="银行名称" prop="editName" v-if="ruleForm.name == '其他'">
+                <el-input v-model="ruleForm.editName" type="text"  placeholder="请输入银行卡名称"></el-input>
+            </el-form-item>
+            <el-form-item label="卡号" prop="bank">
+                <el-input v-model="ruleForm.bank" type="tel"  placeholder="请输入银行卡卡号"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm')">确认添加</el-button>
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        //添加银行卡
+        Vue.component('add-bank', {
+            template: '#addBank',
+            data: function data() {
+                return {
+                    banks:[{name:'中国工商银行',icon:'icon-zhongguogongshangyinhang'},
+                        {name:'中国农业银行',icon:'icon-nongyeyinhang-'},
+                        {name:'中国银行',icon:'icon-boc'},
+                        {name:'中国建设银行',icon:'icon-jiansheyinhang1'},
+                        {name:'招商银行',icon:'icon-zhaoshang'},
+                        {name:'交通银行',icon:'icon-jiaotongyinhang-'},
+                        {name:'中国邮政',icon:'icon-zhongguoyouzheng'},
+                        {name:'兴业银行',icon:'icon-xingyeyinhang'},
+                        {name:'浦发银行',icon:'icon-pufayinhang'},
+                        {name:'中国民生银行',icon:'icon-icon_zhongguominshengyinhang'},
+                        {name:'中信银行',icon:'icon-zhongxinyinhang'},
+                        {name:'中国光大银行',icon:'icon-ziyuan'},
+                        {name:'华夏银行',icon:'icon-huaxiayinhang'},
+                        {name:'平安银行',icon:'icon-pinganyinhang'},
+                        {name:'广发银行|CGB',icon:'icon-guangfayinhang'},
+                        {name:'其他',icon:'icon-qita'}
+                    ],
+                    isYzm: parseInt('{$company.tel_checked}'), //是否开启短信接口
+                    ruleForm: {
+                        username: '{$isname.name}',
+                        name: '',
+                        bank: '',
+                        editName: ''
+                    },
+                    rules: { //表单验证
+                        username: { required: true, message: '请输入与您实名制认证相同的持卡人姓名', trigger: 'blur' },
+                        name: [{ required: true, message: '请选择银行', trigger: 'change' }],
+                        bank: [{ required: true, message: '请输入银行卡卡号', trigger: 'blur' }],
+                        editName: [{ required: true, message: '请输入银行卡名称', trigger: 'blur' }]
+                    }
+                };
+            },
+
+            methods: {
+                resetForm: function resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                submitForm: function submitForm(formName) {
+                    var _this = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            var data = {
+                                type: 1,
+                                name: '银行卡',
+                                openname: _this.ruleForm.name == '其他' ? _this.ruleForm.editName : _this.ruleForm.name,
+                                numbers: _this.ruleForm.bank
+                            };
+                            $.post('{:url("lockBank")}', data, function (res) {
+                                if (res.err) {
+                                    _this.$alert(res.msg, '提示', {
+                                        confirmButtonText: '确定'
+                                    });
+                                } else {
+                                    _this.$alert(res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        callback: function () {
+//                                            location.href = '{:url("bank")}';
+                                            if (window != top){
+                                                top.location.href = '/web/user/my?ac=0-3';
+                                                return;
+                                            }
+                                            window.location.href = '/web/user/my?ac=0-3';
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                label: '银行卡'
+            },
+            methods: {
+                checkName: function checkName(callback) {
+                    if (!'{$isname}'.length) {
+                        this.$confirm('您还未做实名制认证！', '提示', {
+                            confirmButtonText: '立即去认证',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(function () {
+                            location.href = '{:url("idCard")}';
+                        }).catch(function () {});
+                    } else {
+                        callback();
+                    }
+                },
+                toBank: function toBank() {
+                    location.href = '{:url("bank")}';
+                },
+                toAlipay: function toAlipay() {
+                    location.href = '{:url("alipay")}';
+                },
+                toWei: function toWei() {
+                    location.href = '{:url("wei")}';
+                }
+            }
+        });
+    });
+</script>

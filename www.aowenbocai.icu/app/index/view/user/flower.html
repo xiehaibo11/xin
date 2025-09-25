@@ -1,0 +1,67 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<style>
+    .ext_head:after{
+        background: none;
+    }
+    .flower_img img{margin-left: .4rem}
+</style>
+<header class="header">
+    <a class="header-nav" href="/index/user">
+      <i class="icon-svg icon_left"></i>
+    </a>
+    <div class="header-center">鲜花明细</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <div>
+        <list-group></list-group>
+    </div>
+</div>
+<template id="list-atom">
+    <div>
+        <div class="card-header">
+            <div class="c_coin flex-box">
+                <span class="datetime">{{item.create_time}}</span>
+                <span class="flex" :class="{'coin_g':item.money > 0}" style="text-align: right"><em v-if="item.money > 0">+</em>{{item.money}}</span>
+                <span class="flower_img"><img width="30" src="/static/images/index/common_flower.png" alt=""></span>
+            </div>
+        </div>
+        <div class="card-content">
+            {{item.remark}}
+        </div>
+    </div>
+</template>
+<template id="list-group">
+    <loading-box url="/index/User/getFlowerList">
+        <template scope="props">
+                <div v-for="item of props.list" class="card card-line">
+                <list-atom :item="item"></list-atom>
+            </div> 
+        </template>
+    </loading-box>
+</template>
+<script>
+$(() => {
+    Vue.component('list-atom', {
+        props: ['item'],
+        template: '#list-atom',
+    });
+    Vue.component('list-group', {
+        template: '#list-group'
+    });
+    
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            info: {}
+        },
+        created: function () {
+            $('#app').removeClass('app_init');
+        }
+    });
+});
+</script>
+{include file='common@common/foot' /}

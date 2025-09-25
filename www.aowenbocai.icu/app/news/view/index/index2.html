@@ -1,0 +1,203 @@
+{include file='common@common/head' /}
+<style>
+    body {
+        background-color: #207e4e;
+        color: #cbeedc;
+    }
+    .header {
+        background-color:#0A6939;
+    }
+    .icon_left {
+        background-image: url(/static/theme/default/svg/arrow-left-w.svg);
+    }
+    .nav-word {
+        color: #ffffff;
+    }
+    .code_histroy {
+        position: relative;
+        background: rgba(0,0,0,.2);
+    }
+    .code_histroy .code_val {
+        position: relative;
+        line-height: 1.8rem;
+    }
+    .code_histroy_title {
+        position: relative;
+        text-align: center;
+        line-height: 2rem;
+    }
+    .code_histroy_title span {
+        font-size: .6rem;
+    }
+    .game_info {
+        padding-left: 1rem;
+        line-height: 2rem;
+    }
+    .content {
+        padding: .5rem;
+    }
+    .over {
+        line-height: 2rem;
+        background: rgba(0,0,0,.2);
+    }
+    .code_now_num {
+        display: inline-block;
+        background: #f44;
+        color: #fff;
+        height: 1.2rem;
+        line-height: 1.2rem;
+        width: 1.2rem;
+        border-radius: .1rem;
+    }
+    .code_da {
+        background: #009688;
+    }
+    .code_shuang {
+        background: #F7B824;
+    }
+    .code_next_time {
+        display: inline-block;
+        padding: 0 .2rem;
+        line-height: 1.2rem;
+        font-weight: 700;
+        border: 1px solid #FFE000;
+        color: #FFBC00;
+        border-radius: .1rem;
+    }
+    .game_play {
+        padding: .5rem;
+        font-size: 1rem;
+        line-height: 3rem;
+        margin-top: .5rem;
+        background: rgba(0,0,0,.2);
+    }
+    .game_play .game_plan {
+        position: relative;
+        margin: .25rem;
+        border: .1rem solid #5ea27f;
+        border-radius: .2rem;
+        color: #FFE000;
+        font-weight: 700;
+    }
+    .game_bet {
+        margin-top: .5rem;
+        padding: .5rem;
+        background: rgba(0,0,0,.2);
+        line-height: 1.5rem;
+    }
+    .bet_num_title {
+        width: 4rem;
+        text-align: center;
+    }
+    .bet_num {
+        margin: 0 .2rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+    }
+    .bet_num_title .icon-svg {
+        vertical-align: middle;
+        display: inline-block;
+    }
+    .game_coin {
+        padding: .5rem;
+        margin-top: .5rem;
+        line-height: 1.4rem;
+        background: rgba(0,0,0,.2);
+
+    }
+    .play_clear {
+        width: 5rem;
+    }
+    .foot_bottom {
+        padding: .5rem;
+
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    /*.code_val[data-code="0"] {
+        background: #09f;
+    }
+    .code_val[data-code="1"] {
+        background: #18f;
+    }
+    .code_val[data-code="2"] {
+        background: #27f;
+    }
+    .code_val[data-code="3"] {
+        background: #36f;
+    }
+    .code_val[data-code="4"] {
+        background: #45f;
+    }
+    .code_val[data-code="5"] {
+        background: #54f;
+    }
+    .code_val[data-code="6"] {
+        background: #63f;
+    }
+    .code_val[data-code="7"] {
+        background: #72f;
+    }
+    .code_val[data-code="8"] {
+        background: #81f;
+    }
+    .code_val[data-code="9"] {
+        background: #90f;
+    }*/
+</style>
+<header class="header">
+    <a class="header-nav" href="/index/user">
+      <i class="icon-svg icon_left"></i>
+      <span class="nav-word">返回</span>
+  </a>
+    <div class="header-center">押宝游戏</div>
+    <div class="header-nav">
+        <!-- <i class="icon-svg icon_email"></i> -->
+    </div>
+</header>
+    <div class="code_histroy_title border-b"><span>最近十期开奖</span> 历史号码</div>
+    <div class="code_histroy flex-box border-b">
+        <div class="flex code_val border-l" data-code="0">0</div>
+        <div class="flex code_val border-l" data-code="2">2</div>
+        <div class="flex code_val border-l" data-code="1">1</div>
+        <div class="flex code_val border-l" data-code="4">4</div>
+        <div class="flex code_val border-l" data-code="0">0</div>
+        <div class="flex code_val border-l" data-code="9">9</div>
+        <div class="flex code_val border-l" data-code="4">4</div>
+        <div class="flex code_val border-l" data-code="7">7</div>
+        <div class="flex code_val border-l" data-code="2">2</div>
+        <div class="flex code_val border-l" data-code="8">8</div>
+    </div>
+    <div class="game_info">提示：请在下方选择下注内容！赔率：1:4</div>
+<div class="content">
+    <div class="over flex-box">
+        <div class="flex">本期开奖: <span class="code_now_num">8</span> <span class="code_now_num code_da">大</span> <span class="code_now_num code_shuang">双</span></div>
+        <div class="flex">距下期开奖时间: <span class="code_next_time">18S</span></div>
+    </div>
+
+    <div class="game_play flex-box">
+        <div class="flex game_plan">大</div>
+        <div class="flex game_plan">小</div>
+        <div class="flex game_plan">单</div>
+        <div class="flex game_plan">双</div>
+    </div>
+    <div class="foot_bottom">
+        <div class="game_coin flex-box">
+            <div class="flex">金币：5000</div>
+            <div class="btn btn-warning btn-fill play_clear">清空选区</div>
+        </div>
+
+        <div class="game_bet flex-box">
+            <div class="bet_num_title">选择筹码<i class="icon-svg" style="background-image: url(/static/svg/cm.svg)"></i></div>
+            <div class="flex-box flex">
+                <div class="bet_num flex btn btn-fill">10</div>
+                <div class="bet_num flex btn">50</div>
+                <div class="bet_num flex btn">100</div>
+                <div class="bet_num flex btn">500</div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='common@common/foot' /}

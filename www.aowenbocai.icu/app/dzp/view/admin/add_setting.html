@@ -1,0 +1,153 @@
+{include file='admin@common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style>
+    .icon_box {
+        display: -webkit-box;
+        -webkit-box-orient: horizontal;
+        -webkit-box-pack: center;
+        -webkit-box-align: center;
+
+        display: box;
+        box-orient: horizontal;
+        box-pack: center;
+        box-align: center;
+
+        width: 80px;
+        height: 80px;
+        background: #C6EAFF;
+        overflow: hidden;
+        border: 1px solid #9ED3FF;
+        border-radius: 3px;
+    }
+
+    .dis {
+        background: #FFCCCC;
+        border: 1px solid #FF9E9E;
+    }
+
+    .fish_info {
+        padding: 10px;
+    }
+
+    .right {
+        margin-left: 88px;
+        line-height: 26px;
+    }
+
+    .hit, .sp {
+        color: #C32AD6;
+        font-weight: 700;
+    }
+
+    .sp {
+        color: #23AB92;
+    }
+
+    .edit {
+        max-width: 900px;
+    }
+
+    .title {
+        line-height: 45px;
+    }
+</style>
+<nav class="plugin_nav">
+    <a href="{:url('index')}">奖品列表</a>
+    <a class="nav_active" href="{:url('add_setting')}">添加奖品</a>
+</nav>
+<div id="app" class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 添加奖品</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+        <form class="edit" method="post" action="{:url('add_setting')}">
+            <input type="file" class="hidden select_photo">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">类型</label>
+                <div class="col-sm-6">
+                    <select name="type" class="form-control" v-model="type">
+                        {$type_option}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" v-show="show_rel">
+                <label class="col-sm-2 control-label">关联道具</label>
+                <div class="col-sm-6">
+                    <select name="rel_id" class="form-control">
+                        {volist name="prop_list" id="v"}
+                        <option value="{$v.id}">{$v.name} - {$v.ext_info}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="height: 80px;">
+                <label class="col-sm-2 control-label">图片</label>
+                <div class="col-sm-6">
+            <span class="user_r_text" style="height: 80px;justify-content: flex-start; display: block;">
+              <img class="user_photo" width="60" height="60" src="" alt="">
+              <input type="hidden" name="photo" value="">
+              <button type="button" class="btn btn-success btn_select_photo">上传图片</button>
+            </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">数量</label>
+                <div class="col-sm-6">
+                    <input name="num" type="text" class="form-control" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">概率</label>
+                <div class="col-sm-6">
+                    <input name="chance" type="text" class="form-control" placeholder="千分比" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-2">
+                    <button type="submit" class="btn btn-primary btn_save">保存</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+{include file='admin@common/foot' /}
+
+<script>
+    $(function () {
+        $('.btn_select_photo').click(function () {
+            $('.select_photo').trigger('click');
+        });
+        $('.select_photo').localResizeIMG({
+            // maxSize: 480,
+            success: function (result) {
+                $('.btn_save').attr('disabled', 'disabled');
+                $('.user_photo').attr('src', result.base64);
+                $.post('{:url('
+                base64Upload
+                ')}', {'base64_data': result.base64}, function (res) {
+                    $('input[name=photo]').attr('value', res.data);
+                    $('.btn_save').attr('disabled', null);
+                }, 'json'
+            )
+                ;
+            }
+        });
+    });
+
+</script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            type: 1
+        },
+        computed: {
+            show_rel: function () {
+                return this.type == 3 ? true : false;
+            }
+        }
+    });
+</script>

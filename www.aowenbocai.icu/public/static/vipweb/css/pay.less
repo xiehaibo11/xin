@@ -1,0 +1,220 @@
+/**
+ * 充值中心
+ */
+@charset "UTF-8";
+@import "./variables";
+
+//充值中心
+.page-title{
+    height: 60px;
+    line-height: 60px;
+    background-color: @gray-bg;
+    span{
+        display: inline-block;
+        height: 58px;
+        line-height: 58px;
+        padding: 0 10px;
+        border-bottom: 2px solid @color-secondary;
+        font-size: 16px;
+        font-weight: bold;
+    }
+}
+.pay{
+    .pay-info{
+        padding: 20px 30px;
+        background: #fffaec;
+        border: 1px solid #ffe9b3;
+        border-bottom: none;
+        font-size: 14px;
+        span{
+            padding-right:15px;
+        }
+    }
+    .pay-cont-tabs{
+        .head{
+            border-bottom: 1px solid #dddddd;
+            ul>li{
+                height: 50px;
+                font-size: 15px;
+                line-height: 50px;
+                padding: 0 20px;
+                background-color: @gray-bg;
+                border:solid #dddddd;
+                border-width: 0 1px 0px 0;
+                display: block;
+                text-align: center;
+                font-weight: 700;
+                font-size: 14px;
+                font-family: arial;
+                color: #666;
+                cursor: pointer;
+                &.active{
+                    background-color: #ffffff;
+                    margin-bottom: -1px;
+                    color: @color-base;
+                }
+            }
+        }
+        .cont{
+            padding: 30px 80px;
+            .row{
+                padding: 15px 0;
+                align-items: flex-start;
+                label{
+                    padding-right: 10px;
+                }
+                .recharge-checkbox{
+                    font-size: 12px;color: #999999;
+                    label{
+                        padding-right: 2px;
+                    }
+                }
+                .money-val{
+                    font-size: 22px;
+                }
+            }
+            .submit{
+                margin-top: 20px;
+                .el-button--primary{
+                    font-size: 16px;
+                }
+            }
+            .tip{
+                border-top:1px dashed #e1e1e1;
+                margin-top: 50px;
+                padding-top: 5px;
+                font-size: 12px;
+            }
+        }
+    }
+}
+.rechage-list{
+    ul{
+      overflow: hidden;
+        li {
+            float: left;
+            border: 1px solid #dcdfe6;
+            width: 160px;
+            text-align: center;
+            margin: 0 20px 20px 0;
+            line-height: 35px;
+            position: relative;
+            cursor: pointer;
+            font-size: 15px;
+            color: #333333;
+            padding: 0 5px;
+            height: 100px;
+            position: relative;
+            .coin{
+                border-bottom: 1px dashed #e0e0e0;
+                padding:10px 0 20px 0;
+                font-size: 18px;
+                .award{
+                    color: #999999;
+                    font-size: 12px;
+                    line-height: 20px;
+                    position: absolute;
+                    width: 160px;
+                    left: 0;
+                    top: 44px;
+                }
+                img{
+                    margin-right: 5px;
+                }
+            }
+            &.active, &:hover {
+                border-color: #ff6c08;
+            }
+            &.error{
+                border-color: red;
+            }
+            i {
+                width: 16px;
+                height: 16px;
+                background: url("@{images}/button_gou.png") no-repeat center;
+                position: absolute;
+                right: 0px;
+                bottom: 0;
+            }
+            .recharge-tip{
+                font-size: 11px;
+                position: absolute;
+                bottom: 30px;
+                width: 100%;
+                text-align: center;
+            }
+        }
+    }
+}
+
+.other-rechage{
+    display: inline;
+    input{
+        width: 100px;
+        padding: 0 5px;
+    }
+}
+
+.pay-sm{
+    display: flex;
+    img{
+        width: 180px;
+        padding-right: 20px;
+    }
+    .rig-info{
+        font-size: 14px;
+    }
+}
+.bank-list{
+    li{
+        padding:10px 15px;
+        border:1px solid #e9e9e9;
+        background-color: #f9f9f9;
+        .borderRadius(6px);
+        float: left;
+        margin: 7px;
+        line-height: 2.5;
+        color: #333333;
+        cursor: pointer;
+        width: 40%;
+        &.active{
+            border-color: #ff6c08;
+            background-color: #ffffff;
+        }
+        span.label{
+            display: inline-block;
+            width: 70px;
+            text-align: right;
+            color: #888888;
+        }
+        input{
+            border:1px solid #eeeeee;
+            padding: 5px;
+            height: 18px;
+            line-height: 18px;
+            box-sizing: content-box;
+            background-color: #ffffff;
+            width: 250px;
+            outline:none
+        }
+    }
+}
+.bank-pay-title{
+    padding: 10px 0;
+    font-size: 18px;
+    color: #000000;
+    margin: 5px 0;
+    em.tip-num{
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        .borderRadius(50%);
+        line-height: 26px;
+        text-align: center;
+        background-color: #4CAF50;
+        color: #ffffff;
+        margin-right: 6px;
+    }
+}
+
+

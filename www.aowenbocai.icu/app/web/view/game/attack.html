@@ -1,0 +1,28 @@
+{include file='web@common/game_head' title="欢乐攻城"/}
+<link rel="stylesheet" href="/static/vipweb/css/game.css">
+<script src="/static/vipweb/js/game.js"></script>
+
+<div class="game-attack">
+    <div class="web web-flex">
+        <div class="game-iframe-sp">
+            <iframe src="{:url('../attack')}" frameborder="0"  scrolling="no"></iframe>
+        </div>
+        <div class="flex help">
+            <div style="margin:0 auto;width: 462px;">
+                <div style="height: 150px;background: url('/static/game/hlgc/resource/assets/ui/sprite-dialog.png') no-repeat -515px 0"></div>
+                <div class="ins">
+                    <h4>玩法说明</h4>
+                    <p>选择兵种和人数，招募士兵出战，每招募100士兵消耗100{$setting['coin_name']}粮草，战胜或者打平获得一定数量奖励，打输没有奖励。</p>
+                </div>
+                <div class="ins">
+                    <h4>自动战斗</h4>
+                    <p>掠夺{$setting['coin_name']}:自动战斗时，当掠夺的{$setting['coin_name']}数量大于等于你设置的掠夺数量时，退出自动战斗。</p>
+                    <p>被掠夺{$setting['coin_name']}:自动战斗时，当掠夺的{$setting['coin_name']}数量大于等于你设置的{$setting['coin_name']}数量时，退出自动战斗。</p>
+                    <p>单局出兵:自动战斗时，每局出兵的数量。</p>
+                    <p>自动出兵:随机，每局随机选择一种士兵出站。不随机则每局出战士兵为你选择的士兵。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='web@common/foot'/}

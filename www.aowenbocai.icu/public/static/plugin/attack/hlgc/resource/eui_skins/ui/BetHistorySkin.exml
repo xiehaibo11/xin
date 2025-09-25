@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BetHistorySkin" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillColor="0x7f2626" fillAlpha="0"/>
+	<e:Group width="640" horizontalCenter="0" height="750" verticalCenter="-20" anchorOffsetY="0">
+		<e:Group id="sc" width="640" height="649" horizontalCenter="0" top="100" x="0" y="120" scaleX="1" scaleY="1" anchorOffsetY="0" locked="true">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xb4712f" ellipseWidth="10"/>
+			<e:Rect fillColor="0xf1d193" left="3" right="3" top="3" bottom="3" ellipseWidth="10"/>
+			<e:Rect left="10" right="10" top="10" bottom="10" fillColor="0xf2debc" ellipseWidth="30"/>
+			<e:Rect left="10" right="10" top="60" bottom="10" fillColor="0xe2b891"/>
+		</e:Group>
+		<e:Image source="sprite-dialog_json.sprite-dialog001" scaleX="1" scaleY="1" horizontalCenter="0" top="0"/>
+		<e:Group id="back1" x="531" y="67" width="40" height="40" locked="true">
+			<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="40" fillColor="0xf78d02" strokeWeight="3" strokeColor="0x845625"/>
+			<e:Image source="sprite-dialog_json.sprite-dialog000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Rect width="620" height="5" fillColor="0x36e2e2" horizontalCenter="0" top="155"/>
+		<e:Scroller id="scroller" scaleX="1" scaleY="1" width="620" top="160" horizontalCenter="0" bottom="13" anchorOffsetY="0">
+			<e:Group>
+				<e:List id="scrollerList" width="100%" horizontalCenter="0" top="0" itemRendererSkinName="BetItemSkin"/>
+				<e:Group id="more" width="620" height="40" scaleX="1" scaleY="1" bottom="0" horizontalCenter="0">
+				<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0"/>
+				<e:Label id="loading" text="正在加载中。。。" verticalCenter="0" textColor="0xa48aef" horizontalCenter="0" size="20" height="100%" width="100%" textAlign="center" verticalAlign="middle"/>
+			</e:Group>
+				<e:layout>
+					<e:VerticalLayout/>
+				</e:layout>
+			</e:Group>
+		</e:Scroller>
+		<e:Label text="对局记录" scaleX="1" scaleY="1" top="60" horizontalCenter="0"/>
+		<e:Label id="zero" text="暂无记录哦！" y="241" horizontalCenter="0" textColor="0x381a1a" visible="false"/>
+	</e:Group>
+</e:Skin>

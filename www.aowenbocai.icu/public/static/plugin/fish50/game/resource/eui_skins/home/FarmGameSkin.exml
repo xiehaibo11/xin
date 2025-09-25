@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="FarmGameSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image source="Multiple field_bg_png" height="720" verticalCenter="0" left="0" right="0"/>
+	<e:Image source="left_ye_png" right="0" top="0"/>
+	<e:Image source="right_ye_png" top="0" left="0"/>
+	<e:Scroller id="scroller" anchorOffsetY="0" top="127" bottom="92" anchorOffsetX="0" scrollPolicyH="on" left="0" scrollPolicyV="off" right="0">
+		<e:Group id="scroller_box" anchorOffsetY="0" anchorOffsetX="0" height="475.24" x="0" y="25.76">
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" gap="50" paddingLeft="20" paddingRight="20" verticalAlign="bottom"/>
+			</e:layout>
+		</e:Group>
+	</e:Scroller>
+	<e:Group id="loading" right="140" left="140" verticalCenter="0">
+		<e:Label text="加载中...." y="0" scaleX="1" scaleY="1" verticalAlign="middle" textAlign="center" anchorOffsetX="0" size="22" left="0" right="0"/>
+	</e:Group>
+	<e:Button id="back_btn" label="Button" y="54.81" skinName="skins.BackButtonSkin" right="98"/>
+</e:Skin>

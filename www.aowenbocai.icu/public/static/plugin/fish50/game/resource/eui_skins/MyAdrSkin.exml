@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="MyAdrSkin" width="400" height="400" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="my_play">
+			<tween:TweenItem target="{group}">
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object scaleX="{0.8}" scaleY="{0.8}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{group0}">
+				<tween:Set>
+					<tween:props>
+						<e:Object y="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="750" ease="sineIn">
+					<tween:props>
+						<e:Object y="{44}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object y="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image}">
+				<tween:Set/>
+				<tween:To duration="750" ease="sineIn">
+					<tween:props>
+						<e:Object x="{69}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object x="{31}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image0}">
+				<tween:Set/>
+				<tween:To duration="750" ease="sineIn">
+					<tween:props>
+						<e:Object x="{295}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object x="{333}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{1.1}" scaleY="{1.1}" alpha="{0.5}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="400">
+					<tween:props>
+						<e:Object scaleX="{1.5}" scaleY="{1.5}" alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1200"/>
+				<tween:Set/>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image id="image1" source="aim_gun_json.aimGun002" horizontalCenter="0" verticalCenter="40"/>
+	<e:Group id="group" horizontalCenter="0" verticalCenter="40">
+		<e:Image source="aim_gun_json.aimGun002" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image source="aim_gun_json.aimGun005" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+	<e:Group id="group0" x="105" y="15" touchThrough="false" touchEnabled="false" touchChildren="false">
+		<e:Image source="aim_gun_json.aimGun003" y="62" x="70"/>
+		<e:Image source="aim_gun_json.aimGun004" x="0" y="0" touchEnabled="false"/>
+	</e:Group>
+	<e:Image id="image" source="aim_gun_json.aimGun000" verticalCenter="39" x="31"/>
+	<e:Image id="image0" source="aim_gun_json.aimGun001" verticalCenter="39" x="333"/>
+</e:Skin>

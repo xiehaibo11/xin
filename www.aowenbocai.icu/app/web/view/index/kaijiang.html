@@ -1,0 +1,118 @@
+{include file='web@common/head' title="开奖公告"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/columns.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    .ks-open-point {
+        height: 40px;
+        width: 40px;
+        display: inline-block;
+        background: url('/static/vipweb/images/open_num.png') no-repeat;
+        background-size:100%;
+        margin-right: 10px;
+    }
+    .point1 {
+        background-position: 0 0;
+    }
+    .point2 {
+        background-position: 0 20%;
+    }
+    .point3 {
+        background-position: 0 40%;
+    }
+    .point4 {
+        background-position: 0 60%;
+    }
+    .point5 {
+        background-position: 0 80%;
+    }
+    .point6 {
+        background-position: 0 100%;
+    }
+</style>
+<div id="app" v-cloak>
+    <div class="web kaijiang">
+        <el-card class="mt15">
+            <div slot="header">
+                <span>开奖公告</span>
+            </div>
+            <kj-list class="list_tl"></kj-list>
+        </el-card>
+    </div>
+</div>
+<!--开奖公告-->
+<template id="kjList">
+    <el-table
+            ref="singleTable"
+            :data="tableData">
+        <el-table-column property="name" label="游戏" width="100">
+            <template slot-scope="scope">{{scope.row.name || '--'}}</template>
+        </el-table-column>
+        <el-table-column property="expect" label="期次" width="150">
+            <template slot-scope="scope">{{scope.row.expect || '--'}}</template>
+        </el-table-column>
+        <el-table-column property="create_time" label="开奖日期" width="200">
+            <template slot-scope="scope">{{scope.row.create_time || '--'}}</template>
+        </el-table-column>
+        <el-table-column property="code" label="开奖号码">
+            <template slot-scope="scope">
+                <template v-if="scope.row.code.length == 1">
+                    <span>暂无开奖号码</span>
+                </template>
+               <template v-else>
+                   <template v-if="scope.row.cz == 'pc28'">
+                       <span class="ball ball-red">{{scope.row.code[0]}}</span>
+                       <em>+ </em>
+                       <span class="ball ball-red">{{scope.row.code[1]}}</span>
+                       <em>+ </em>
+                       <span class="ball ball-red">{{scope.row.code[2]}}</span>
+                       <em>= </em>
+                       <span class="ball ball-blue">{{Number(scope.row.code[0]) + Number(scope.row.code[1]) + Number(scope.row.code[2])}}</span>
+                   </template>
+                   <template v-if="scope.row.cz == 'ks'">
+                       <span class="ks-open-point" :class="'point' + scope.row.code[0]"></span>
+                       <span class="ks-open-point" :class="'point' + scope.row.code[1]"></span>
+                       <span class="ks-open-point" :class="'point' + scope.row.code[2]"></span>
+                   </template>
+                   <template v-if="scope.row.cz !== 'ks' && scope.row.cz !== 'pc28'">
+                       <span v-for="item in scope.row.code" class="ball ball-red">{{item}}</span>
+                   </template>
+               </template>
+            </template>
+        </el-table-column>
+        <el-table-column label="详情" width="80">
+            <template slot-scope="scope">
+                <a :href="'{:url('./')}'+ scope.row.open" target="_blank">
+                    <el-button size="mini" type="text">详情</el-button>
+                </a>
+            </template>
+        </el-table-column>
+        <el-table-column  label="当期投注" width="120">
+            <template slot-scope="scope">
+                <a  :href="'{:url('./')}'+ scope.row.url" target="_blank">
+                    <el-button size="mini" plain>立即投注</el-button>
+                </a>
+            </template>
+        </el-table-column>
+    </el-table>
+</template>
+{include file='web@common/foot'/}
+
+<script>
+    $(function(){
+//        开奖公告
+        Vue.component('kj-list', {
+            template: '#kjList',
+            data:function(){
+                return{
+                    tableData: {$list}
+                }
+            }
+        })
+
+        new Vue({
+            el:"#app",
+            data:{
+            },
+        })
+    })
+</script>

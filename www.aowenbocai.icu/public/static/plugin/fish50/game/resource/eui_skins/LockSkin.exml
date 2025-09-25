@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="LockSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" width="91" height="91">
+	<w:Declarations>
+		<tween:TweenGroup id="lock_play">
+			<tween:TweenItem target="{right}">
+				<tween:Set>
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object rotation="{360}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{left}">
+				<tween:Set>
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object rotation="{360}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}" rotation="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1000"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object rotation="{0}" alpha="{0.4}" scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}" rotation="{360}" scaleX="{1.8}" scaleY="{1.8}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Group left="0" right="0" top="0" bottom="0" anchorOffsetX="75" anchorOffsetY="75">
+		<e:Image id="image" source="aim_json.aim000" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" x="58" y="59" anchorOffsetX="39.5" anchorOffsetY="39.5"/>
+		<e:Group id="right" anchorOffsetX="45.5" anchorOffsetY="45.5" width="91" height="91" horizontalCenter="0" verticalCenter="0">
+			<e:Image source="aim_json.aim000" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" x="48" y="49" anchorOffsetX="39.5" anchorOffsetY="39.5"/>
+			<e:Image source="aim_json.aim001" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" x="71" y="71" anchorOffsetX="17" anchorOffsetY="17"/>
+		</e:Group>
+		<e:Group id="left" anchorOffsetX="45.5" anchorOffsetY="45.55" width="91" height="91" verticalCenter="0" horizontalCenter="0">
+			<e:Image source="aim_json.aim003" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" x="51" y="41" anchorOffsetX="45.5" anchorOffsetY="45.5"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>

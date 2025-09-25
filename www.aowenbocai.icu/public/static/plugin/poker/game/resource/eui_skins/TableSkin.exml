@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="TableSkin" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="chupai">
+			<tween:TweenItem target="{poker}">
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object x="{986}" y="{186}" scaleX="{1}" scaleY="{1}" rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image source="bg_json.2017110116151393710.png" verticalCenter="0" horizontalCenter="0"/>
+	<e:Image id="harf" source="1_json.2017110116155525992.png" y="198.5" horizontalCenter="377"/>
+	<e:Image x="1188" y="62" anchorOffsetX="0" anchorOffsetY="0" rotation="90" scaleX="0.3" scaleY="0.3" source="201711011616571185622_png"/>
+	<ns1:PokeItem id="poker" skinName="PokeSkin" anchorOffsetX="0" anchorOffsetY="0" scaleX="0.3" scaleY="0.3" rotation="90" y="62" horizontalCenter="376"/>
+</e:Skin>

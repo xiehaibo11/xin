@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SetUpSkin" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="move">
+			<tween:TweenItem target="{group}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillAlpha="0.5"/>
+	<e:Group id="group" right="20" top="100" width="270">
+		<e:Image source="setup_json.setup7" left="0" right="0" top="0" bottom="0"/>
+		<e:Group width="270" x="0" y="10">
+			<e:Group y="24" horizontalCenter="0" height="80" width="270">
+				<e:Image source="setup_json.setup5" left="20" verticalCenter="0"/>
+				<e:Label text="音乐" size="30" verticalCenter="0" horizontalCenter="-25"/>
+				<e:ToggleSwitch id="music" label="" width="104" height="40" verticalCenter="0" right="20" selected="true">
+					<e:skinName>
+						<e:Skin states="up,down,disabled">
+						<e:Image width="100%" height="100%" source="setup01_png" source.down="setup02_png"/>
+						<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+						</e:Skin>
+					</e:skinName>
+				</e:ToggleSwitch>
+				<e:Rect width="80%" height="2" horizontalCenter="0" bottom="0" fillColor="0xffffff"/>
+			</e:Group>
+			<e:Group id="help" width="270" y="24" horizontalCenter="0" height="80">
+				<e:Image source="setup_json.setup4" left="20" verticalCenter="0"/>
+				<e:Label text="帮助" size="30" verticalCenter="0" horizontalCenter="-25"/>
+				<e:Image source="setup_json.setup6" verticalCenter="0" right="20"/>
+				<e:Rect width="80%" height="2" horizontalCenter="0" bottom="0" fillColor="0xFFFFFF" x="27" y="95" scaleX="1" scaleY="1"/>
+			</e:Group>
+			<e:Group id="history" width="270" y="34" horizontalCenter="0" height="80" x="10">
+				<e:Image source="setup_json.setup4" left="20" verticalCenter="0"/>
+				<e:Label text="历史记录" size="30" verticalCenter="0" horizontalCenter="0"/>
+				<e:Image source="setup_json.setup6" verticalCenter="0" right="20"/>
+				<e:Rect width="80%" height="2" horizontalCenter="0" bottom="0" fillColor="0xFFFFFF" x="27" y="95" scaleX="1" scaleY="1"/>
+			</e:Group>
+			<e:Group id="home_page" width="270" y="24" horizontalCenter="0" height="80">
+				<e:Image left="20" verticalCenter="0" source="header_json.header7"/>
+				<e:Label text="首页" size="30" verticalCenter="0" horizontalCenter="-25"/>
+				<e:Image source="setup_json.setup6" verticalCenter="0" right="20"/>
+			</e:Group>
+			<e:layout>
+				<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="15"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

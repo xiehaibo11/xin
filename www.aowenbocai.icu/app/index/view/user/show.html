@@ -1,0 +1,429 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<!--绑定信息提示-->
+<script src="/static/vue-component/red-point-component.js"></script>
+
+<header class="header" id = 'header'>
+    <div class="header-nav">
+        <a class="nav-word" id="cancleBtn" href="/index"><i class="icon-svg icon_left"></i> </a>
+    </div>
+    <div class="header-center">我的</div>
+    <div class="header-r flex-box">
+        <a href="/index/user/set" class="user_set" style="position: relative">
+            <i style="color: #d1ecff;font-size:1.0rem;" class="iconfont icon-shezhi"></i>
+            <red-point style="right: .6rem;top: .5rem"></red-point>
+        </a>
+        <a  class="iconfont icon-xinfeng1 msg_box" style="color: #d1ecff" href="/index/user/message">
+            <span class="newmsg" :class="{'msg_show': count > 0}">{{count}}</span>
+        </a>
+        <a  class="iconfont icon-lingdang msg_box" style="color: #d1ecff" href="/index/user/getInform">
+            <span class="newmsg" :class="{'msg_show': countSystem > 0}">{{countSystem}}</span>
+        </a>
+    </div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init paddin-top" v-cloak>
+    <div class="user_my">
+        <div class="show_bg">
+            <div class="user_info flex-box">
+                <img class="user_photo" :src="info.photo" alt="">
+                <div class="user_memo flex">
+                    <div class="user_name text-align-left">{{info.nickname}}
+                        <span class="user_lv">lv.{{info.level.level}} {{info.level.level_name}}</span>
+                    </div>
+                    <p class="flex-box user-property">
+                        <span class="user-jd flex-box">
+                            <span class="h-img-left"><img src="/static/images/index/common_jd.png" alt=""></span>
+                            <span class="h-img-mid flex">{{info.money}}</span>
+                            <span class="h-img-rig"  @click="modalRecharge(true)"><img src="/static/images/index/common_add.png" alt=""></span>
+                        </span>
+                        <span class="user-flower flex-box">
+                            <span class="h-img-left"><img src="/static/images/index/zuanshi_icon.png" alt=""></span>
+                            <span class="h-img-mid flex">{{info.diamonds}}</span>
+                            <span class="h-img-rig" @click="modalRecharge(false)"><img src="/static/images/index/common_add.png" alt=""></span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="user_explan">签名：{{info.explan || '您还没有设置签名！'}}</div>
+            <div class="flex-box charm">
+                <a class="flex border-r" href="/index/fans">
+                    <p class="charm-tit"><i class="iconfont icon-guanzhu"></i>关注</p>
+                    <p>{{info.fansCount.care}}</p>
+                </a>
+                <a class="flex border-r" href="/index/fans">
+                    <p class="charm-tit"><i class="iconfont icon-fensi"></i>粉丝</p>
+                    <p>{{info.fansCount.fans}}</p>
+                 </a>
+                <div class="flex">
+                    <p class="charm-tit"><i style="font-size: 0.85rem;" class="iconfont icon-gerenmeili"></i>魅力值</p>
+                    <p>{{info.charm}}</p>
+                </div>
+            </div>
+             <div class="tab">
+                <div class="tab-header" id="tab-header">
+                    <div class="tab-link tab-active" id="tab1" onclick="setTab('tab',1,4)">我的</div>
+                    <div class="tab-link" id="tab2" onclick="setTab('tab',2,4)">动态</div>
+                    <div class="tab-link" id="tab3" onclick="setTab('tab',3,4)">圈子</div>
+                    <div class="tab-link" id="tab4" onclick="setTab('tab',4,4)">游戏</div>
+                </div>
+             </div>
+        </div>
+        <div class="tab">
+            <div class="tab-content">
+                <div class="tab-page tab1 tab-active" id="con_tab_1">
+                    <div class="flex-list-box">
+                        <p class="flex-list" >
+                            <template v-for="item of nav">
+                                <my-list :item="item"></my-list>
+                            </template>
+                        </p>
+                    </div>
+                </div>
+                <div class="tab-page tab2 " id="con_tab_2">
+                    <loading-box :url="actionUrl"  class="bbs-list-arrow"  nodata="动态里面什么都没有__(；′⌒`)">
+                        <template scope="props">
+                            <template v-for="item of props.list">
+                                <action-list :item="item"></action-list>
+                            </template>
+                        </template>
+                    </loading-box>
+                </div>
+                <div class="tab-page tab3" id="con_tab_3">
+                    <loading-box :url="bbsUrl"  class="bbs-list-arrow"  nodata="圈子是空的__(O_O)?">
+                        <template scope="props">
+                            <template v-for="item of props.list">
+                                <bbs-list :item="item"></bbs-list>
+                            </template>
+                        </template>
+                    </loading-box>
+                </div>
+                <div class="tab-page tab4" id="con_tab_4">
+                    <div class="list">
+                        <div class="list-group">
+                            <div class="newly-game card card-line list-item list-item-image-text border-b" v-for="item of list3">
+                                <div class="list-item-image">
+                                    <img :src="item.image" alt="">
+                                </div>
+                                <div class="list-item-text">
+                                    <div class="title">{{item.title}}</div>
+                                    <div class="memo ellipsis-2">{{item.remark}}</div>
+                                </div>
+                                <a :href="'/' + item.name"><button class="btn btn_right">进入</button></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="list3 == false" class="black_block">去<a href="/index">大厅</a>玩点游戏吧__O(∩_∩)O~~</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--充值弹窗 开始-->
+    <transition name="modal-opacity">
+        <div class="v-modal-overlay" v-if="rechargeMsg.isShow" @click.self="modalRecharge"></div>
+    </transition>
+    <transition name="modal-zoom">
+        <div class="v-modal-p" v-if="rechargeMsg.isShow" @click.self="hideRecharge">
+            <div class="v-modal">
+                <div class="v-modal-header">
+                    <div class="m-title">
+                        <img src="/static/theme/default/svg/modal_bg_top.png" alt="">
+                        <span class="m-tit-name">· 获取金豆 ·</span>
+                    </div>
+                    <div class="m-close" @click="hideRecharge">
+                        <img src="/static/theme/default/svg/modal_btn_close.png" alt="" width="45">
+                    </div>
+                </div>
+                <div class="v-modal-content">
+                    <div class="recharge-mine flex-box font65">
+                        <div><span>我的金豆：</span>{{info.money}}</div>
+                        <div class="flex"><span>我的钻石：</span>{{info.diamonds}}</div>
+                        <!--<div class="flex"><a href="/index/detail">账户明细</a></div>-->
+                    </div>
+                    <div class="recharge-msg text-left text-color-light font7">
+                        <div class="fr money_auto_zh " :class="{no_select: !rechargeMsg.auto_zh}" @click="changeRecharge">钻石转换金豆</div>
+                        <i class="iconfont icon-laba1 font95"></i> 适度娱乐，理性消费！
+                    </div>
+                    <div class="recharge-content">
+                        <ul>
+                            <li class="flex-box" v-for="item in rechargeMsg.list">
+                                <div class="charge-img">
+                                    <img style="margin-top: 0.1rem" src="/static/images/index/zuanshi_icon.png" v-show="!rechargeMsg.auto_zh" alt="">
+                                    <img style="margin-top: 0.1rem; width: 1.5rem;" src="/static/images/index/common_jd.png" v-show="rechargeMsg.auto_zh" alt="">
+                                </div>
+                                <div class="charge-info flex">
+                                    <p>
+                                        <span class="text-color-light" v-show="rechargeMsg.auto_zh">{{item.coin}}金豆</span>
+                                        <span class="text-color-light" v-show="!rechargeMsg.auto_zh">{{item.diamonds}}钻石</span>
+                                    </p>
+                                    <p v-if="">
+                                        <span class="giving">额外赠送{{item.award}}金豆</span>
+                                    </p>
+                                </div>
+                                <div class="charge-pay">
+                                    <button class="btn" @click="doRecharge(item.money)">¥{{item.money}} 购买</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+    <!--充值弹窗 结束-->
+</div>
+<template id="actionList">
+    <div class="card card-line ext_bg" :style="{backgroundImage: 'url(' + item.ext_info.logo +')'}">
+        <div class="card-header ext_head">
+            来自: {{item.ext_info.title}}
+        </div>
+        <div class="card-content">
+            <div class="card-content-inner" v-html="item.content"></div>
+        </div>
+        <div>
+            <div class="card-footer massage_info border-t">
+                <div class="user">
+                    <a class="username">{{item.user_info.nickname}}</a>
+                    <span class="datetime">{{item.friend_time}}</span>
+                </div>
+                <div class="reply_good">
+                    <span><i class="iconfont icon-dianzan"></i> {{item.good_count}}</span>
+                    <!-- <a :href="'/index/message/send?userid='+item.send_userid" data-no-cache="true">评论({{item.reply_count}})</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<template id="bbsList">
+    <div class="card card-line">
+        <div class="card-content" @click="toDetail">
+            <div class="user">
+                <i class="icon-svg" :style="{backgroundImage: 'url(' + item.userinfo.photo +')'}"></i>
+                <div class="info">
+                    <div>
+                        <a class="username">{{item.userinfo.nickname}}</a>
+                    </div>
+                    <div>
+                        <span class="datetime">发表于: {{item.create_time}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content-inner">
+                <div class="bbs-content" v-html="contents"></div>
+                <div v-for="img in imgArr" v-if="img.length!==0 ">
+                    <div v-if="item.imginfo.imgnum == 1">
+                        <div class="img1" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                    </div>
+                    <div v-if="item.imginfo.imgnum == 2">
+                        <div class="img2" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                    </div>
+                    <div v-if="item.imginfo.imgnum == 3">
+                        <div class="img3" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="card-footer massage_info border-t">
+                <div class="reply_good">
+                    <span><i class="iconfont icon-pinglun"></i> <em>{{item.takenum}}</em></span>
+                </div>
+                <!--<div>-->
+                    <!--<span><i class="icon-svg icon-share"></i> 分享</span>-->
+                <!--</div>-->
+                <div class="reply_good">
+                    <span @click="replayGood"><i :class="['iconfont','icon-dianzan',{ 'blue': code == 1 }]"></i> <em :class="{ 'blue': code == 1 }">{{num}}</em></span>
+                     <!--<a :href="'/index/message/send?userid='+item.send_userid" data-no-cache="true">评论({{item.reply_count}})</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<template id="myList">
+    <a :href="item.href || 'javascript:;'">
+        <span :class="['icon',item.color]"><i :class="['iconfont',item.icon]"></i></span>
+        <span class="title">{{item.title}}</span>
+    </a>
+</template>
+
+<script>
+    $(function () {
+        Vue.component('action-list', {
+            props: ['item'],
+            template: '#actionList'
+        });
+        Vue.component('bbs-list', {
+            props: ['item'],
+            template: '#bbsList',
+            data:function(){
+                return {
+                    imgArr:this.item.imginfo.images,  //缩略图组
+                    num:this.item.goodnum, //点赞数
+                    code:this.item.good,    //点赞状态
+                    contents:replace_em(this.item.content)//文章内容
+                }
+            },
+            methods:{
+                toDetail:function(){    //进入详情页
+                    window.location.href="/index/bbs/detail/id/"+this.item.id;
+                },
+                replayGood:function(){    //点赞
+                    var _this = this;
+                    $.post("/index/bbs/gooder",{
+                        id:this.item.id
+                    },function(res){
+                        if(res.code == 1){
+                            $.msg(res.msg);
+                            _this.num = _this.num + 1;
+                            _this.code = 1;
+                        }else if(res.code == 0){
+                            $.msg(res.msg);
+                            _this.num = _this.num - 1;
+                            _this.code = 0;
+                        }
+                    });
+                },
+            }
+        });
+        Vue.component('my-list', {
+            props: ['item'],
+            template: '#myList'
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                info: {
+                    'nickname': '', //昵称
+                    'photo': '', //头像
+                    'userid': '', //用户ID
+                    'level': 0, //等级
+                    'explan': '', //签名
+                    'flower': 0, //鲜花
+                    'charm': 0, //魅力值
+                    'fansCount':''
+                },
+                actionUrl:'', //动态地址
+                bbsUrl:'', //圈子地址
+                list: [],
+                list3: [], //游戏列表
+                rechargeMsg:{   //充值属性
+                    isShow: false,
+                    auto_zh: true,
+                    list: []
+                },
+                nav: [
+                        {title: '我的背包',href: '/index/user/userBag',icon: 'icon-xinfeng',color:' i-red'},
+                        {title: '账户明细',href: '/index/detail', icon: 'icon-mingxi',color:' i-blue'},
+                        {title: '我的兑换',href: '/index/shop_order/index',icon: 'icon-asmkticon0104',color:' i-purple'},
+                        {title: '收货地址',href: '/index/address/index',icon: 'icon-dizhi',color:' i-green'},
+//                      {title: '每日任务',href: '/index/user/task',icon: '/static/theme/default/svg/工作动态.svg'},
+                    //   {title: '个人资料',href: '/index/user/info',icon: '/static/theme/default/svg/百香果.svg'},
+                    //   {title: '退出登录',href: '/index/login/logout',icon: '/static/theme/default/svg/蓝莓.svg'}
+                    ]
+            },
+            methods: {
+                care: function () {  //关注
+                    var _this = this;
+                    $.get('/index/fans/care/?to_userid=' + _this.info.userid, function (res) {
+                        $.toast(res.msg);
+                        if (res.code) {
+                            _this.info.care_status = !_this.info.care_status;
+                        }
+                    }, 'json');
+                },
+                changeRecharge: function() {
+                    this.rechargeMsg.auto_zh = !this.rechargeMsg.auto_zh;
+                },
+                modalRecharge: function modalRecharge(auto_zh) {
+                    //充值弹窗
+                    this.rechargeMsg.isShow = !this.rechargeMsg.isShow;
+                    this.rechargeMsg.auto_zh = auto_zh;
+                    $('body').css('overflow', 'hidden');
+                    $('html').css('overflow', 'hidden');
+                },
+                hideRecharge: function hideRecharge() {
+                    this.rechargeMsg.isShow = !this.rechargeMsg.isShow;
+                    $('body').css('overflow', 'auto');
+                    $('html').css('overflow', 'auto');
+                },
+                doRecharge: function doRecharge(m) {
+                    //充值
+                    $.post('/pay/pay/index', { 'num': m }, function () {
+                        var type = 1;
+                        if (!vm.rechargeMsg.auto_zh) {
+                            type = 2;
+                        }
+                        window.location.href = '/pay/pay/index/num/' + m + '/type/' + type;
+                    });
+                },
+            },
+            created: function () {
+                var _this = this;
+                var userid = $.urlGet()['userid'] || '';
+                setTimeout(function () {
+                    var userid = $.urlGet()['userid'] || '';
+                    $.get('/index/user/getinfo/?userid=' + userid, function (res) {
+                        _this.$set(_this, 'info', res.data);
+                        if(res.data.charm == null){
+                            _this.info.charm = 0;
+                        }
+                        $('#app').removeClass('app_init');
+                    });
+                    $.get('/index/user/getAction/?userid=' + userid, function(res) {
+                        _this.$set(_this, 'list', res.data);
+                    }, 'json');
+                    $.get('/index/user/getExt/?userid=' + userid, function(res) {
+                            _this.$set(_this, 'list3', res);
+                    }, 'json');
+                }, 0);
+                $.get('/index/Recharge/getRechargeList',function(res){  //充值列表获取
+                    _this.rechargeMsg.list = res.data;
+                });
+                _this.actionUrl = '/index/user/getAction/?userid='+userid;
+                _this.bbsUrl = '/index/bbs/mainData/userid/'+userid;
+            }
+        });
+        var vms = new Vue({
+            el:'#header',
+            data:{
+                count: 0,
+                countSystem:0, //未读系统消息数
+            },
+            created: function(){
+                var _this = this;
+                $.get('/index/user/newMsgNum',function(res){
+                    if(res.data){
+                        _this.count = res.data;
+                    }
+                })
+                $.get('/index/user/getInformNum',function(res){  //系统消息数量
+                    if(res.data){
+                        _this.countSystem = res.data;
+                    }
+                });
+            }
+        })
+    });
+    //替换表情
+var replace_em = function(str) {
+    str = str.replace(/\</g,'&lt;');
+    str = str.replace(/\>/g,'&gt;');
+    str = str.replace(/\n/g,'<br/>');
+    str = str.replace(/\[em_([0-9]*)\]/g,'<img src="/static/images/emoji/$1.gif" border="0" />');
+    return str;
+}
+	
+//选项卡JS
+function setTab(name,cursel,n){
+    for(i=1;i<=n;i++){
+        var menu=document.getElementById(name+i);
+        var con=document.getElementById("con_"+name+"_"+i);
+        menu.className=i==cursel?"tab-link tab-active":"tab-link";
+        con.style.display=i == cursel?"block":"none";
+    }
+}
+
+</script>
+{include file='common@common/foot' /}

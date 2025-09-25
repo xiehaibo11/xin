@@ -1,0 +1,444 @@
+{include file='web@common/login_head' title='找回密码'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<style>
+    .form{width: 450px}
+    html {min-width: 1200px;}
+    .l-concise-hd .steps-2 li{
+        width: 33%;
+    }
+    .cont{width:60%;margin:15px auto;}
+    .chose{font-size: 15px}
+</style>
+<div class="border-top">
+    <div id="app" class="web" v-cloak>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <el-breadcrumb>
+                    <el-breadcrumb-item>找回密码</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <reset-pwd  style="width: 80%;margin: 10px auto"></reset-pwd>
+        </el-card>
+    </div>
+</div>
+
+<!--更改手机-->
+<template id="resetPwd">
+    <div>
+        <div class="l-concise-hd">
+            <div class="steps steps-2">
+                <ol>
+                    <li :class="{'active' : steps1}"><span><i>1</i>验证账号</span></li>
+                    <li :class="{'active' : steps2}"><span><i>2</i>安全验证</span></li>
+                    <li :class="{'active' : steps3}"><span><i>3</i>重置密码</span></li>
+                </ol>
+            </div>
+        </div>
+        <template v-if="steps1">
+            <reset-pwd-steps1 @yz-suc="changeStep1"></reset-pwd-steps1><!--验证账号-->
+        </template>
+        <template v-if="steps2">
+            <reset-pwd-steps2 :tel="tel" :email="email" :do-chose="doChose" @yz-suc="changeStep2"></reset-pwd-steps2><!--安全验证-->
+        </template>
+        <template v-if="steps3">
+            <reset-pwd-steps3></reset-pwd-steps3><!--重置密码-->
+        </template>
+    </div>
+</template>
+<!--账号验证-->
+<template id="resetPwdSteps1">
+    <div class="cont">
+    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="150px" class="ruleForm form login">
+        <el-form-item prop="username"  label="您需要找回的帐号" :error="error">
+            <el-input v-model="ruleForm.username" type="text" placeholder="请输入用户名/手机号/邮箱" @focus="error=''"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button  type="danger" @click="submitForm('ruleForm')" :loading="loading">下一步</el-button>
+        </el-form-item>
+    </el-form>
+    </div>
+</template>
+<!--安全验证-->
+<template id="resetPwdSteps2">
+    <div class="cont">
+        <!--选择验证方式-->
+        <div v-if="doChose == 0 && chose == 0" class="flex-box bg" style="padding: 10px 0 10px 10px;border: 1px solid #dcdfe6;border-radius: 4px;">
+            <a class="chose flex tc" @click="check(1)"  style="border-right: 1px solid #dcdfe6"><el-button type="success" size="mini" icon="el-icon-mobile-phone" circle ></el-button> 短信验证</a>
+            <a class="chose flex tc"  @click="check(2)"><el-button type="warning" size="mini" icon="el-icon-message" circle></el-button> 邮箱验证</a>
+        </div>
+        <div v-if="doChose == -1" class="tc">该账号未绑定手机或邮箱，无法找回密码，请联系客服！</div>
+        <el-form v-else :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="ruleForm form login">
+            <template v-if="doChose == 1 || changeWay == 1">
+                <div class="tr yz-way" v-if="doChose == 0"><a class="link" @click="choseBack">更改验证方式</a></div>
+                <el-form-item prop="tel" label="已绑定手机：">
+                    <el-input v-model="tel" type="tel" placeholder="已绑定手机" disabled></el-input>
+                </el-form-item>
+                <el-form-item prop="yzm" label="验证码" :error="telErr">
+                    <el-input v-model="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码" @focus="telErr=''"></el-input>
+                    <el-button type="primary" class="btn-yzm" plain @click.native="sendsms" v-if="smsState">{{text}}</el-button>
+                    <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button  type="danger" @click="submitForm('ruleForm')"  :loading="loading">下一步</el-button>
+                </el-form-item>
+            </template>
+            <template v-if="doChose == 2 || changeWay == 2">
+                <div class="tr yz-way" v-if="doChose == 0"><a class="link" @click="choseBack">更改验证方式</a></div>
+                <el-form-item  prop="email" label="已绑定邮箱">
+                    <el-input v-model="email" type="text" placeholder="请已绑定邮箱" disabled></el-input>
+                </el-form-item>
+                <el-form-item prop="emailYzm"  label="验证码" :error="emailErr">
+                    <el-input v-model="ruleForm.emailYzm" type="tel" class="yzm" placeholder="请输入验证码"  @focus="emailErr=''" ></el-input>
+                    <el-button type="primary" plain @click.native="sendEmail" class="btn-yzm" v-if="smsState2" :loading="loadingEmail">{{text2}}</el-button>
+                    <el-button type="info" class="btn-yzm" plain disabled v-else>{{text2}}</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button  type="danger" @click="submitForm('ruleForm')"  :loading="loading">下一步</el-button>
+                </el-form-item>
+            </template>
+        </el-form>
+    </div>
+</template>
+<!--重置密码-->
+<template id="resetPwdSteps3">
+    <div class="cont">
+    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+        <el-form-item prop="pwd"  label="新密码">
+            <el-input v-model="ruleForm.pwd" type="password" placeholder="请输入密码(长度6-25)"></el-input>
+        </el-form-item>
+        <el-form-item prop="pwd2"  label="确认密码">
+            <el-input v-model="ruleForm.pwd2" type="password" placeholder="请再次输入密码(长度6-25)"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button  type="danger" @click="submitForm('ruleForm')" :loading="loading">保存</el-button>
+        </el-form-item>
+    </el-form>
+    </div>
+</template>
+
+{include file='web@common/foot' /}
+<script>
+    'use strict';
+
+    $(function () {
+        //重置密码
+        Vue.component('reset-pwd-steps3', {
+            template: '#resetPwdSteps3',
+            data: function data() {
+                var _this = this;
+
+                var validatePass = function validatePass(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请输入密码'));
+                    } else {
+                        if (_this.ruleForm.pwd !== '') {
+                            _this.$refs.ruleForm.validateField('pwd2');
+                        }
+                        callback();
+                    }
+                };
+                var validatePass2 = function validatePass2(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请再次输入密码'));
+                    } else if (value !== _this.ruleForm.pwd) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return {
+                    loading: false,
+                    ruleForm: {
+                        pwd: '',
+                        pwd2: ''
+                    },
+                    rules: {
+                        pwd: [{ required: true, validator: validatePass, trigger: 'blur' }, { min: 5, max: 13, message: '长度在 6 到 25 个字符', trigger: 'blur' }],
+                        pwd2: [{ required: true, validator: validatePass2, trigger: 'blur' }, { min: 5, max: 13, message: '长度在 6 到 25 个字符', trigger: 'blur' }]
+                    }
+                };
+            },
+
+            methods: {
+                submitForm: function submitForm(formName) {
+                    var _this2 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            $.post('{:url("resetPwd")}', {
+                                pwd: _this2.ruleForm.pwd,
+                                pwd2: _this2.ruleForm.pwd2
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this2.$alert(res.msg + '!', '提示', {
+                                        type: 'success',
+                                        center: true,
+                                        showClose: false,
+                                        confirmButtonText: '立即去登录',
+                                        callback: function callback(action) {
+                                            location.href = '{:url("./login")}';
+                                        }
+                                    });
+                                    _this2.loading = false;
+                                    return;
+                                }
+                                _this2.loading = false;
+                                _this2.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //安全验证
+        Vue.component('reset-pwd-steps2', {
+            template: '#resetPwdSteps2',
+            props: ['tel', 'email', 'doChose'],
+            data: function data() {
+                return {
+                    telErr: '',
+                    emailErr: '',
+                    chose: 0, //改变验证选择是否显示
+                    changeWay: this.doChose ? this.doChose : -1, //初始化0验证方式选择 1 手机 2邮箱 -1联系客服
+
+                    loading: false,
+                    loadingEmail: false,
+                    ruleForm: {
+                        yzm: '',
+                        emailYzm: ''
+                    },
+                    rules: {
+                        yzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                        emailYzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+                    },
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120,
+                    text2: '获取验证码',
+                    smsState2: true,
+                    countDown2: 120
+                };
+            },
+
+            methods: {
+                //选择验证方式
+                check: function check(n) {
+                    this.changeWay = n;
+                    this.chose = n;
+                },
+
+                //切换验证方式
+                choseBack: function choseBack() {
+                    this.changeWay = 0;
+                    this.chose = 0;
+                },
+
+                //发送手机短信验证码
+                sendsms: function sendsms() {
+                    var _this3 = this;
+
+                    if (this.countDown != 120) return false;
+                    $.get('{:url("sendTelMsg")}', function (res) {
+                        if (!res.err) {
+                            _this3.smsState = false;
+                            _this3.text = "已发送(" + _this3.countDown + "秒)";
+                            var interval = setInterval(function () {
+                                _this3.countDown = _this3.countDown - 1;
+                                if (_this3.countDown == 0) {
+                                    _this3.text = '获取验证码';
+                                    _this3.countDown = 120;
+                                    clearInterval(interval);
+                                    _this3.smsState = true;
+                                    return;
+                                }
+                                _this3.text = "已发送(" + _this3.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this3.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //发送邮箱验证码
+                sendEmail: function sendEmail() {
+                    var _this4 = this;
+
+                    this.loadingEmail = true;
+                    if (this.countDown2 != 120) return false;
+                    $.get('{:url("sendEmailMsg")}', function (res) {
+                        if (!res.err) {
+                            _this4.smsState2 = false;
+                            _this4.text2 = "已发送(" + _this4.countDown2 + "秒)";
+                            _this4.loadingEmail = false;
+                            var interval = setInterval(function () {
+                                _this4.countDown2 = _this4.countDown2 - 1;
+                                if (_this4.countDown2 == 0) {
+                                    _this4.text2 = '获取验证码';
+                                    _this4.countDown2 = 120;
+                                    clearInterval(interval);
+                                    _this4.smsState2 = true;
+                                    return;
+                                }
+                                _this4.text2 = "已发送(" + _this4.countDown2 + "秒)";
+                            }, 1000);
+                        } else {
+                            _this4.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this4.loadingEmail = false;
+                        }
+                    });
+                },
+
+                //提交
+                submitForm: function submitForm(formName) {
+                    var _this5 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        var data;
+                        if (_this5.changeWay == 1) {
+                            _this5.telErr = '';
+                            if (!_this5.ruleForm.yzm.length) {
+                                _this5.telErr = '请输入验证码';
+                                return false;
+                            }
+                            data = {
+                                changeWay: 1,
+                                yzm: _this5.ruleForm.yzm
+                            };
+                        }
+                        if (_this5.changeWay == 2) {
+                            _this5.emailErr = '';
+                            if (!_this5.ruleForm.emailYzm.length) {
+                                _this5.emailErr = '请输入验证码';
+                                return false;
+                            }
+                            data = {
+                                changeWay: 2,
+                                yzm: _this5.ruleForm.emailYzm
+                            };
+                        }
+                        if (valid) {
+                            _this5.loading = true;
+                            $.post('{:url("checkYzm")}', data, function (res) {
+                                if (!res.err) {
+                                    _this5.$emit('yz-suc');
+                                    _this5.loading = false;
+                                    return;
+                                }
+                                _this5.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                                _this5.loading = false;
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //账号验证
+        Vue.component('reset-pwd-steps1', {
+            template: '#resetPwdSteps1',
+            data: function data() {
+                return {
+                    error: '',
+                    loading: false,
+                    ruleForm: {
+                        username: ''
+                    },
+                    rules: {
+                        username: [{ required: true, message: '账号不能为空', trigger: 'blur' }]
+                    }
+                };
+            },
+
+            methods: {
+                submitForm: function submitForm(formName) {
+                    var _this6 = this;
+
+                    this.error = '';
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            _this6.loading = true;
+                            $.post('{:url("checkName")}', {
+                                username: _this6.ruleForm.username
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this6.loading = false;
+                                    _this6.$emit('yz-suc', res.data);
+                                    return;
+                                }
+                                _this6.loading = false;
+                                _this6.error = res.msg;
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //找回密码步骤
+        Vue.component('reset-pwd', {
+            template: '#resetPwd',
+            data: function data() {
+                return {
+                    steps1: 1,
+                    steps2: 0,
+                    steps3: 0,
+                    doChose: 0, //验证选项是否显示
+                    tel: '', //绑定手机号
+                    email: '' //绑定邮箱
+                };
+            },
+
+            methods: {
+                changeStep1: function changeStep1(emitVal) {
+                    //账号验证成功
+                    this.steps1 = 0;
+                    this.steps2 = 1;
+                    this.tel = emitVal.tel ? emitVal.tel : '';
+                    this.email = emitVal.email ? emitVal.email : '';
+                    if (this.tel && this.email) {
+                        this.doChose = 0; //手机、邮箱都可验证
+                    } else if (this.tel && !this.email) {
+                        this.doChose = 1; //手机验证
+                    } else if (!this.tel && this.email) {
+                        this.doChose = 2; //邮箱验证
+                    } else {
+                        this.doChose = -1; //无法验证
+                    }
+                },
+                changeStep2: function changeStep2() {
+                    //安全验证成功
+                    this.steps2 = 0;
+                    this.steps3 = 1;
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {}
+        });
+    });
+</script>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SetPanelSkin" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillAlpha="0"/>
+	<e:Group width="200" height="300" top="100" right="20">
+		<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xd37d20" ellipseWidth="10" x="-303" y="-167" scaleX="1" scaleY="1"/>
+		<e:Rect left="5" right="5" top="5" bottom="5" ellipseWidth="10" fillColor="0x5d3f36" x="-298" y="-162" scaleX="1" scaleY="1"/>
+		<e:Group left="5" right="5" bottom="5" top="5" x="-298" y="-162" scaleX="1" scaleY="1">
+			<e:Group id="betHistory" x="5" y="6">
+			<e:Label text="投注记录" verticalAlign="middle" textAlign="center" horizontalCenter="0" verticalCenter="0" textColor="0xc19251" width="180" height="50"/>
+			<e:Rect width="80%" height="2" horizontalCenter="0" bottom="0" fillAlpha="0.5"/>
+			</e:Group>
+			<e:Group id="help" x="15" y="16">
+			<e:Label text="玩法介绍" verticalAlign="middle" textAlign="center" horizontalCenter="0" verticalCenter="0" textColor="0xC19251" width="180" height="50"/>
+			<e:Rect width="80%" height="2" horizontalCenter="0" bottom="0" fillAlpha="0.5"/>
+			</e:Group>
+			<e:Group x="25" y="26" width="180">
+			<e:Label text="音乐" verticalAlign="middle" textAlign="center" verticalCenter="0" textColor="0xC19251" width="90" height="50" left="10"/>
+			<e:Rect width="80%" height="2" horizontalCenter="0" bottom="0" fillAlpha="0.5"/>
+				<e:ToggleSwitch id="sound" label="" verticalCenter="0" right="15" skinName="SelectSkin" scaleX="0.7" scaleY="0.7"/>
+			</e:Group>
+			<e:Group id="backHome" x="35" y="36">
+			<e:Label text="返回首页" verticalAlign="middle" textAlign="center" horizontalCenter="0" verticalCenter="0" textColor="0xC19251" width="180" height="50"/>
+			<e:Rect width="80%" height="2" horizontalCenter="0" bottom="0" fillAlpha="0.5"/>
+			</e:Group>
+			<e:layout>
+			<e:VerticalLayout horizontalAlign="center" verticalAlign="top" gap="15" paddingTop="15"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

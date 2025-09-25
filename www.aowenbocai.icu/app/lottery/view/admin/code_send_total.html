@@ -1,0 +1,20 @@
+{include file='admin@common/head' /}
+
+<style media="screen">
+    .form{
+      margin:20px;
+      width: 400px;
+    }
+</style>
+
+<ol class="breadcrumb">
+  <li><a href="/gd11/admin/code">开奖号码管理</a></li>
+  <li class="active">发奖明细</li>
+</ol>
+<div>
+  <p><i>期数：</i>{$info.expect}</p>
+  <p><i>投注数量：</i>{$send_num}</p>
+  <p><i>未发奖数量：</i>{$no_send_num}</p>
+  <p><i>已发奖数量：</i>{$send_num - $no_send_num}</p>
+</div>
+{include file='admin@common/foot' /}

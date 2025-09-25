@@ -1,0 +1,62 @@
+{include file='common/head' /}
+
+<nav class="plugin_nav">
+  <a  href="{:url('admin/SystemSet/index')}">基础设置</a>
+  <a href="{:url('admin/SystemSet/')}">充值设置</a>
+  <a  class="nav_active">会员设置</a>
+  <a href="{:url('admin/SystemSet/user')}">联系方式</a>
+  <a href="{:url('admin/OtherSet/index')}">API接口</a>
+</nav>
+<div class="box-padding">
+  <div class="breadcrumb">
+    <ol>
+      <li class="active">
+        <i class="glyphicon glyphicon-link"></i> 系统设置</li>
+      <li>用户设置</li>
+    </ol>
+  </div>
+  <div class="form-horizontal form_max">
+    <!-- <div class="form_title">基础</div> -->
+    <div class="form-group">
+      <label for="inputEmail3" class="col-sm-2 control-label">等级设置</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control text-center" placeholder="等级" name="reg_award" value="{$setting.reg_award}">
+      </div>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" placeholder="等级名称" name="reg_award" value="{$setting.reg_award}">
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default btn_save">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $('.reg_msg_open').click(function () {
+    var $this = $(this);
+    if ($this.is(':checked')) {
+      $('.reg_msg').show();
+      return;
+    }
+    $('.reg_msg').hide();
+  });
+
+  $('.btn_save').click(function() {
+    $.post('{:url("set")}', {
+      data: JSON.stringify({
+        reg_award: $('input[name=reg_award]').val(),
+        reg_msg_status: $('input[name=reg_msg_status]:checked').length ? 1 : 0,
+        reg_msg: $('textarea[name=reg_msg]').val(),
+        login_award: $('input[name=login_award]').val(),
+        sign_in_award: $('input[name=sign_in_award]').val(),
+        action_award: $('input[name=action_award]').val()
+      })
+    }, function() {
+      $.modal.alert('修改成功');
+    });
+  });
+</script> {include file='common/foot' /}

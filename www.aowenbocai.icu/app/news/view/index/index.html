@@ -1,0 +1,76 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<script src="/static/plugin/news/index.js"></script>
+<style>
+
+.list {
+    padding-left: .5rem;
+    background: #FFF;
+}
+.list .list-item-text {
+    padding: .25rem .5rem;
+    padding-right: 1rem;
+    color: #777;
+    font-size: .6rem;
+}
+.list .list-item-text div {
+    text-align: left;
+}
+.list .list-item-text .memo {
+    line-height: .8rem;
+    height: 1.6rem;
+}
+.list .list-item-text .title {
+    font-weight: 700;
+
+    color: #333;
+    font-size: .75rem;
+}
+.list .list-item-image {
+    padding: .15rem;
+}
+</style>
+<header class="header">
+    <a class="header-nav" href="/index/user">
+      <i class="icon-svg icon_left"></i>
+  </a>
+    <div class="header-title">新闻资讯</div>
+    <div class="header-nav">
+        <i class="icon-svg icon_email"></i>
+    </div>
+</header>
+<div id="app" class="content">
+    <list-group url="/news/index/list/"></list-group>
+</div>
+
+<template id="list-group">
+    <div>
+        <!-- <div class="input-search search flex-box">
+            <input type="text" class="input flex" placeholder="请输入关键字" v-model="word">
+            <button @click="search" type="button" class="btn btn-fill" name="button"><i class="icon-search"></i></button>
+        </div> -->
+        <div class="list fans_list">
+            <div class="list-group list-arrow">
+                <a v-for="item of list" class="list-item list-item-image-text border-b" :href="'/news/index/view/?id=' + item.id">
+                    <list-line :item="item"></list-line>
+                </a>
+            </div>
+        </div>
+        <loading-btn @click.native="loadMore()" class="list_more" :class="{'btn btn-lg': status == 0, 'load_gray': status != 0}" :status="loadStatus">{{loadStr}}</loading-btn>
+    </div>
+</template>
+
+<template id="list-line">
+    <div>
+        <div class="list-item-image">
+            <img :src="item.pic || '/static/plugin/news/bg.svg'" alt="">
+
+        </div>
+        <div class="list-item-text">
+            <div class="title ellipsis">{{item.title}}</div>
+            <div class="memo ellipsis-2">{{item.content_index}}</div>
+        </div>
+    </div>
+</template>
+{include file='common@common/foot' /}

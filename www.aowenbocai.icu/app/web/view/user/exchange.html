@@ -1,0 +1,548 @@
+{include file='web@common/link' title="兑换中心"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    .el-dialog__body{
+        padding:10px 20px;
+    }
+    .order-info {
+         line-height: 2;
+    }
+    .el-button.is-circle{
+        padding: 4px;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card inform">
+        <div slot="header" class="clearfix">
+            <span class="title">兑换中心</span>
+            <a class="link fr" href="{:url('dexchange')}" style="font-size: 15px;font-weight: bold">我的兑换</a>
+        </div>
+        <el-tabs v-model="tabs" type="card" v-if="isTel">
+            <el-tab-pane label="兑换中心" name="first">
+                <exchange-calls></exchange-calls>
+            </el-tab-pane>
+        </el-tabs>
+    </el-card>
+</div>
+<template id="exchangeCalls">
+    <div class="exchange-calls">
+        <div class="box-light">
+           <p class="tel-num">{$data.tel.number} <a href="{:url('setTel')}" target="_blank" class="link" style="text-decoration: underline;font-size: 13px">修改</a></p>
+           <p class="info">账号绑定号码（{{mobileInfo}}）</p>
+           <p class="org" style="font-size: 12px"><i class="el-icon-warning"></i> 请确保绑定的手机号码为正确的号码，由于号码不正确而造成的损失,本网站不承担任何责任</p>
+        </div>
+        <div class="change-list">
+            <ul>
+                <li v-for="(item,index) in listData">
+                    <div class="list" :class="[{'active':active == index} , {'disabled': item.has_num == 0}]"  @click="choseEx(index)">
+                        <p class="title">{{item.name}}</p>
+                        <p class="money">兑换: {{item.integral}} {$company['lottery_unit']}</p>
+                        <i v-if="active == index" class="iconfont icon-anonymous-iconfont"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="submit tc mt15 bg" style="padding: 15px 0">
+            <div class="num"> </em>兑换内容 <strong class="red">{{name || '请选择'}}</strong>，兑换数量：<el-input-number class="exchange-num" v-model="num"  :min="1"  label="兑换数量" @keydown.native="channelInputLimit"></el-input-number>
+                需消耗 <strong class="red"> {{money * num}}</strong> {$company['lottery_unit']}<em v-if="accountMoney < Number(money) * Number(num)" class="tips" style="padding: 0 0 0 5px">账户余额不足</em>
+                <!--，共兑换<strong class="red"> {{value * num}}</strong> 元-->
+            </div>
+            <div class="tc gray" style="font-size: 13px;padding: 5px 0">兑换时间：{{startTime}}-{{endTime}}
+                <em style="margin-left: 10px">最低兑换金额<b class="red"> {{getmoney_low}} </b>{$company['lottery_unit']}</em>
+                <em style="padding-left: 10px">今日剩余兑换次数<b class="red"> {{ureNum}} </b>次</em>
+            </div>
+            <div class="btn tc">
+                <el-button type="primary" @click="orderInfo">提交订单</el-button>
+            </div>
+        </div>
+        {if condition = "!empty($company['getmoney_info'])"}
+        <div class="tips">兑换说明:{$company['getmoney_info']}</div>
+        {/if}
+        <el-dialog
+                title="兑换信息确认"
+                :visible.sync="orderVisible"
+                top="0"
+                :lock-scroll = "false"
+                width="470px"
+        >
+            <div class="order-info">
+                <div class="bg" style="padding:5px 20px">
+                    <div>
+                        <span class="name">兑换内容:</span>
+                        <span>{{name}}</span>
+                    </div>
+                    <div>
+                        <span class="name">兑换数量:</span>
+                        <span>{{num}}</span>
+                    </div>
+                    <div>
+                        <span class="name">兑换总额:</span>
+                        <span><b class="red">{{money * num}}</b> {$company['lottery_unit']}</span>
+                    </div>
+                    <div>
+                        <span class="name">账户余额:</span>
+                        <span><em>{{accountMoney}}</em> {$company['lottery_unit']}</span>
+                    </div>
+                </div>
+                <div  v-if="accountMoney < money * num" class="tips tc" style="font-size: 14px;color: #333">
+                    您的<b class="red">账户余额不足</b>，请先充值!
+                </div>
+                <div v-else>
+                    <div>
+                        <div class="input-tips tl red"><b>*</b> 安全验证</div>
+                        <div class="tl" v-if="isChose && changeWay == 0">
+                            <a v-if="isYzm" @click="checkTel" style="padding-right: 10px"><el-button type="success" icon="el-icon-mobile-phone" circle ></el-button> 验证已绑定手机</a>
+                            <a v-if="isEmail"  @click="checkEmail"><el-button type="warning" icon="el-icon-message" circle></el-button> 验证已绑定邮箱</a>
+                            <a @click="checkPwd"><el-button type="warning" icon="iconfont icon-denglu_mima" circle></el-button> 验证安全密码</a>
+                        </div>
+                    </div>
+                    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100" class="ruleForm form login" style="width:430px">
+                        <!--选择验证方式-->
+                        <template v-if="changeWay == 1">
+                            <div class="tr yz-way"><a class="link" @click="choseBack">更改验证方式</a></div>
+                            <el-form-item prop="tel"  label="已绑定手机：">
+                                <el-input v-model="ruleForm.showTel" type="tel" placeholder="已绑定手机" disabled></el-input>
+                            </el-form-item>
+                            <el-form-item prop="yzm"  label="验证码" :error="telErr">
+                                <el-input v-model="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码" @focus="telErr=''"></el-input>
+                                <el-button type="primary" class="btn-yzm" plain @click.native="sendSms" v-if="smsState">{{text}}</el-button>
+                                <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+                            </el-form-item>
+                        </template>
+                        <template v-if="changeWay == 2">
+                            <div class="tr yz-way"><a class="link" @click="choseBack">更改验证方式</a></div>
+                            <el-form-item  prop="email" label="已绑定邮箱">
+                                <el-input v-model="ruleForm.email" type="text" placeholder="已绑定邮箱" disabled></el-input>
+                            </el-form-item>
+                            <el-form-item prop="yzmEmail" label="验证码" :error="emailErr">
+                                <el-input v-model="ruleForm.yzmEmail" type="tel" class="yzm" placeholder="请输入验证码"  @focus="emailErr=''" ></el-input>
+                                <el-button type="primary" plain @click.native="sendEmail" class="btn-yzm" v-if="smsState2" :loading="loadingEmail">{{text2}}</el-button>
+                                <el-button type="info" class="btn-yzm" plain disabled v-else>{{text2}}</el-button>
+                            </el-form-item>
+                        </template>
+                        <template v-if="changeWay == 3">
+                            <div class="tr yz-way" v-if="isChose && changeWay"><a class="link" @click="choseBack">更改验证方式</a></div>
+                            <template v-if="isPwd">
+                                <el-form-item prop="safePwd" label="安全密码">
+                                    <el-input v-model="ruleForm.safePwd" type="password" placeholder="请输入安全密码"  @focus="pwdErr=''"></el-input>
+                                    <div class="tr" style="line-height: 1;margin-top: 5px"><a href="{:url('setSafePwd')}" target="_blank">忘记密码?</a></div>
+                                </el-form-item>
+                            </template>
+                            <template v-else>
+                                <div>您还没有设置安全密码 <a href="{:url('setSafePwd')}" target="_blank"><el-button size="small">立即去设置</el-button></a></div>
+                                <div class="org f13">设置后需刷新页面重新提交</div>
+                            </template>
+                        </template>
+                    </el-form>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="orderVisible = false">取消</el-button>
+                <el-button type="primary" v-if="accountMoney < money * num">立即充值</el-button>
+                <el-button type="primary" v-else @click="submitOrder">立即兑换</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+    $(function () {
+        var isChinaMobile = /^134[0-8]\d{7}$|^(?:13[5-9]|147|15[0-27-9]|178|1703|1705|1706|18[2-478])\d{7,8}$/; //移动
+        var isChinaUnion = /^(?:13[0-2]|145|15[56]|176|1704|1707|1708|1709|171|18[56])\d{7,8}$/; //联通
+        var isChinaTelcom = /^(?:133|153|1700|1701|1702|177|173|18[019])\d{7,8}$/; // 电信
+        var checkMobile = function (telphone) {
+            if (telphone.toString().length !== 11) {
+                return '未检测到正确的手机号码';
+            } else {
+                if (isChinaMobile.test(telphone)) {
+                    return '移动';
+                } else if (isChinaUnion.test(telphone)) {
+                    return '联通';
+                } else if (isChinaTelcom.test(telphone)) {
+                    return '电信';
+                } else {
+                    return '未检测到相关运营商';
+                }
+            }
+        };
+        //话费兑换
+        Vue.component('exchange-calls', {
+            template: '#exchangeCalls',
+            data: function () {
+                return{
+                    mobileInfo:checkMobile('{$user.tel}'),
+                    listData:[],//数据
+                    active:0,//选中话费,
+                    num:'',//兑换数量
+                    orderVisible:false,
+                    accountMoney:'{$user.money}', //账号余额
+
+                    telErr:'',
+                    emailErr:'',
+                    pwdErr:'',
+                    chose:true,
+                    changeWay:!parseInt('{$data.tel.isOpen}') && !parseInt('{$data.email.isOpen}') ? 3 : 0,//验证方式选择 1 手机 2邮箱 3安全密码
+                    isYzm :parseInt('{$data.tel.isOpen}') , //是否开启短信接口
+                    isEmail :parseInt('{$data.email.isOpen}')  , //是否开启邮箱验证
+                    isPwd:{$isPwd}, //是否已经设置了安全密码
+                    loading:false,
+                    loadingEmail:false,
+                    ruleForm: {
+                        showTel:'{$data.tel.number}',
+                        email:'{$data.email.number}',
+                        yzm:'',
+                        yzmEmail:'',
+                    },
+                    rules: {
+                        nickname: [
+                            { required: true, message: '请输入昵称', trigger: 'blur' },
+                        ],
+                        explan:[
+                            { required: true, message: '请输入个性签名', trigger: 'blur' },
+                        ],
+                        yzm: [
+                            { required: true, message: '请输入验证码', trigger: 'blur' },
+                        ],
+                        yzmEmail: [
+                            { required: true, message: '请输入验证码', trigger: 'blur' },
+                        ],
+                        safePwd:[
+                            { required: true, message: '请输入安全密码', trigger: 'blur' },
+                        ]
+                    },
+                    text:'获取验证码',
+                    smsState:true,
+                    countDown:120,
+                    text2:'获取验证码',
+                    countDown2:120,
+                    smsState2:true,
+
+                    startTime:'{$getMoneyInfo.getmoney_startime}', //兑换开始时间
+                    endTime:'{$getMoneyInfo.getmoney_endtime}', //兑换结束时间
+                    isTochange:'{$getMoneyInfo.isTochange}', //是否可兑换
+                    ureNum:'{$getMoneyInfo.ure_times}', //今日剩余兑换次数
+                    getmoney_low:'{$getMoneyInfo.getmoney_low}' //最低兑换金额
+                }
+            },
+            computed:{
+                money:function(){
+                    return this.listData.length ? this.listData[this.active].integral : ''
+                },//兑换金额
+                name:function(){
+                    return this.listData.length ?this.listData[this.active].name: ''
+                },//兑换内容
+                id:function(){
+                    return this.listData.length ?this.listData[this.active].id: ''
+                },//兑换id
+                isChose:function(){
+                    var n = 0
+                    if(this.isYzm){
+                        n += 1
+                    }
+                    if(this.isEmail){
+                        n += 1
+                    }
+                    return n ? true : false
+                },
+            },
+            methods: {
+                channelInputLimit :function(e) {
+                    let key = e.key
+                    // 不允许输入'e'和'.'
+                    if (key === 'e' || key === '.') {
+                        e.returnValue = false
+                        return false
+                    }
+                    return true
+                },
+                //兑换选择
+                choseEx: function (n) {
+                    this.active = n;
+                },
+                //提交订单
+                orderInfo: function () {
+                    if(Number(this.money * this.num) < Number(this.getmoney_low)){
+                        this.$alert('最低兑换金额为'+ this.getmoney_low + "{$company['lottery_unit']}", '提示', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    }
+                    if (this.ureNum < 1) {
+                        this.$alert('今日剩余兑换次数已用完！', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    }
+                    if (!parseInt(this.isTochange)) {
+                        this.$alert('兑换时间为 ' + this.startTime + ' - ' + this.endTime, '提示', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    }
+                    if (this.active == -1) {
+                        this.$alert('请选择兑换内容!', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    }
+                    this.orderVisible = true;
+                },
+
+                //发送手机验证码
+                sendSms: function () {
+                    var _this = this;
+
+                    if (this.countDown != 120) return false;
+                    $.get('{:url("sendExchangeMsg")}', {
+                        tel: this.ruleForm.tel
+                    }, function (res) {
+                        if (!res.err) {
+                            _this.smsState = false;
+                            _this.text = "已发送(" + _this.countDown + "秒)";
+                            var interval = setInterval(function () {
+                                _this.countDown = _this.countDown - 1;
+                                if (_this.countDown == 0) {
+                                    _this.text = '获取验证码';
+                                    _this.countDown = 120;
+                                    clearInterval(interval);
+                                    _this.smsState = true;
+                                    return;
+                                }
+                                _this.text = "已发送(" + _this.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //发送邮箱验证码
+                sendEmail: function () {
+                    var _this2 = this;
+
+                    this.loadingEmail = true;
+                    if (this.countDown2 != 120) return false;
+                    $.get('{:url("sendExchangeEmail")}', function (res) {
+                        if (!res.err) {
+                            _this2.smsState2 = false;
+                            _this2.text2 = "已发送(" + _this2.countDown2 + "秒)";
+                            _this2.loadingEmail = false;
+                            var interval = setInterval(function () {
+                                _this2.countDown2 = _this2.countDown2 - 1;
+                                if (_this2.countDown2 == 0) {
+                                    _this2.text2 = '获取验证码';
+                                    _this2.countDown2 = 120;
+                                    clearInterval(interval);
+                                    _this2.smsState2 = true;
+                                    return;
+                                }
+                                _this2.text2 = "已发送(" + _this2.countDown2 + "秒)";
+                            }, 1000);
+                        } else {
+                            _this2.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this2.loadingEmail = false;
+                        }
+                    });
+                },
+
+                //选择验证方式
+                choseBack: function () {
+                    this.changeWay = 0;
+                    this.chose = true;
+                },
+
+                //验证是否绑定手机
+                checkTel: function () {
+                    if (!parseInt('{$data.tel.islock}')) {
+                        this.$confirm('您还未绑定手机！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setTel")}');
+                        }).catch(function () {});
+                    } else {
+                        this.chose = false;
+                        this.changeWay = 1;
+                    }
+                },
+
+                //验证是否绑定邮箱
+                checkEmail: function() {
+                    if (!parseInt('{$data.email.islock}')) {
+                        this.$confirm('您还未绑定邮箱！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setEmail")}');
+                        }).catch(function () {});
+                    } else {
+                        this.chose = false;
+                        this.changeWay = 2;
+                    }
+                },
+                //安全密码
+                checkPwd:function () {
+                    if(this.isPwd){
+                        this.chose = false;
+                        this.changeWay = 3;
+                    }else {
+                        this.$confirm('您还未设置安全密码！', '提示', {
+                            confirmButtonText: '立即去设置',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setSafePwd")}');
+                        }).catch(function () {});
+                    }
+                },
+                //确认兑换
+                submitOrder: function () {
+                    var _this3 = this;
+                    var yzm, changeWay;
+//                    if (this.isYzm || this.isEmail) {
+                        if (this.changeWay == 0) {
+                            this.$alert('请选择1种安全验证方式', '提示', {
+                                confirmButtonText: '确定',
+                                type: 'warning',
+                                center: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                            return;
+                        } else if (this.changeWay == 1) {
+                            if (!this.ruleForm.yzm) {
+                                this.telErr = '请输入验证码';
+                                return false;
+                            }
+                            changeWay = 1; //短信验证
+                            yzm = this.ruleForm.yzm;
+                        } else if (this.changeWay == 2) {
+                            if (!this.ruleForm.yzmEmail) {
+                                this.emailErr = '请输入验证码';
+                                return false;
+                            }
+                            changeWay = 2; //邮箱验证
+                            yzm = this.ruleForm.yzmEmail;
+                        } else if (this.changeWay == 3) {
+                            if(this.isPwd){
+                                if (!this.ruleForm.safePwd) {
+                                    this.pwdErr = '请输入安全密码';
+                                    return false;
+                                }
+                                changeWay = 3; //安全验证
+                                yzm = this.ruleForm.safePwd;
+                            }else {
+                                this.$alert('请先设置您的安全密码', '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'warning',
+                                    center: true,
+                                    lockScroll: false,
+                                    showClose: false
+                                });
+                                return
+                            }
+                        }
+//                    }
+                    $.post('{:url("exchangeGift")}', {
+                        changeWay: changeWay,
+                        yzm: yzm,
+                        num: this.num,
+                        id: this.id
+                    }, function (res) {
+                        if (!res.err) {
+                            _this3.active = 0;
+                            _this3.num = 1;
+                            _this3.chose = parseInt('{$data.tel.isOpen}') || parseInt('{$data.email.isOpen}') ? true : false;
+                            _this3.yzm = '';
+                            _this3.yzmEmail = '';
+                            _this3.changeWay = 0;
+                            _this3.orderVisible = false;
+                            _this3.accountMoney = _this3.accountMoney - _this3.money * _this3.num;
+                            _this3.ureNum = parseInt(_this3.ureNum) - 1;
+                            setTimeout(function () {
+                                _this3.$alert('兑换成功!', '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    lockScroll: false,
+                                    showClose: false
+                                });
+                            }, 400);
+                        } else {
+                            _this3.$alert(res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                        }
+                    });
+                }
+            },
+            created: function() {
+                var _this4 = this;
+
+                $.get("{:url('getExchangeType')}" + "?type=1", function (res) {
+                    _this4.$set(_this4, 'listData', res.data);
+                });
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                tabs: 'first',
+                isTel: '{$data.tel.islock}'
+            },
+            created: function() {
+                //判断是否绑定手机
+                if (!this.isTel) {
+                    this.$confirm('您还未绑定手机,不能进行兑换！', '提示', {
+                        confirmButtonText: '立即去绑定',
+                        type: 'warning',
+                        lockScroll: false
+                    }).then(function () {
+                        window.open('{:url("setTel")}');
+                    }).catch(function () {});
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="AutoGameSkin" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" width="640"  states="auto,createRoom,joinRoom" >
+	<w:Declarations>
+	</w:Declarations>
+	<e:Group top="0" left="0" right="0" bottom="0">
+		<e:Rect id="back1" left="0" right="0" top="0" bottom="0" fillAlpha="0" left.createRoom="268" right.createRoom="-268" top.createRoom="450" bottom.createRoom="-450"/>
+		<e:Group id="sc" width="600" top="250" scaleX="1" scaleY="1" horizontalCenter="0" bottom="150">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xb4712f" ellipseWidth="10"/>
+			<e:Rect fillColor="0xf1d193" left="3" right="3" top="3" bottom="3" ellipseWidth="10"/>
+			<e:Rect left="10" right="10" top="10" bottom="10" fillColor="0xf2debc" ellipseWidth="30"/>
+			<e:Rect left="10" right="10" top="60" bottom="10" fillColor="0xe2b891"/>
+		</e:Group>
+		<e:Image source="sprite-dialog_json.sprite-dialog001" scaleX="1" scaleY="1" horizontalCenter="0" top="150"/>
+		<e:Label text="自动战斗" top="210" horizontalCenter="0" text.createRoom="创建房间" text.joinRoom="加入房间"/>
+		<e:Group id="back" width="40" height="40" right="70" top="210">
+			<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="40" fillColor="0xf78d02" strokeWeight="3" strokeColor="0x845625"/>
+			<e:Image source="sprite-dialog_json.sprite-dialog000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Group width="580" horizontalCenter="0" top="359" bottom="285">
+			<e:Group id="plunder" width="100%" height="80" x="180" y="295">
+				<e:Label text="掠夺金豆：" textColor="0xce7939" scaleX="1" scaleY="1" left="5%" verticalCenter="0" text.createRoom="房间号：" text.joinRoom="输入房间号："/>
+				<e:Label id="room" text="房间号：" scaleX="1" scaleY="1" left="5%" verticalCenter="0" includeIn="createRoom" textColor="0xf22a18" bold="true" size="40"/>
+				<e:TextInput id="joinRoom" includeIn="joinRoom" x="237" y="23" skinName="InputSkin" textColor="0xce7939"/>
+				<e:TextInput x="217" y="20" skinName="InputSkin" includeIn="auto" text="输入数量"/>
+				<e:Image source="question_png" x="506" y="30" includeIn="auto"/>
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30"/>
+				</e:layout>
+				<e:layout.createRoom>
+					<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="50"/>
+				</e:layout.createRoom>
+			</e:Group>
+			<e:Button id="join" label="加入房间" includeIn="joinRoom" x="227" y="411">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="btn1_png" source.down="btn2_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Group width="100%" height="80" x="200" y="315" includeIn="createRoom">
+				<e:Button id="createSure" label="确定" x="112" y="29">
+					<e:skinName>
+						<e:Skin states="up,down,disabled">
+						<e:Image width="100%" height="100%" source="btn1_png" source.down="btn2_png"/>
+						<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+						</e:Skin>
+					</e:skinName>
+				</e:Button>
+				<e:Button id="createCancel" label="取消" x="228" y="33">
+					<e:skinName>
+						<e:Skin states="up,down,disabled">
+						<e:Image width="100%" height="100%" source="btn1_png" source.down="btn2_png"/>
+						<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+						</e:Skin>
+					</e:skinName>
+				</e:Button>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" paddingLeft="30" gap="50"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="Beplunder" width="100%" height="80" x="190" y="305" includeIn="auto">
+				<e:Label text="被掠夺金豆：" textColor="0xCE7939" scaleX="1" scaleY="1" left="5%" verticalCenter="0" size="25"/>
+				<e:TextInput x="217" y="20" skinName="InputSkin" text="输入数量"/>
+				<e:Image source="question_png" x="495" y="35" includeIn="auto"/>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="Single" width="100%" height="80" x="200" y="315" includeIn="auto">
+				<e:Label text="单局出兵：" textColor="0xCE7939" scaleX="1" scaleY="1" left="5%" verticalCenter="0"/>
+				<e:TextInput x="217" y="20" skinName="InputSkin" text="输入数量"/>
+				<e:Image source="question_png" x="507" y="24" includeIn="auto"/>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="autoSoldier" width="100%" height="80" x="200" y="315" includeIn="auto">
+				<e:Label text="自动出兵：" textColor="0xCE7939" scaleX="1" scaleY="1" left="5%" verticalCenter="0"/>
+				<e:Group id="auto_selected" x="209" y="10" width="300">
+					<e:RadioButton label="随机" x="-74" y="-6" scaleX="1" scaleY="1" selected="true">
+					</e:RadioButton>
+					<e:RadioButton label="矛兵" x="-222" y="-11" scaleX="1" scaleY="1"/>
+					<e:RadioButton label="盾兵" x="-148" y="-11" scaleX="1" scaleY="1"/>
+					<e:RadioButton label="弓兵" x="-74" y="-11" scaleX="1" scaleY="1"/>
+					<e:layout>
+						<e:HorizontalLayout/>
+					</e:layout>
+				</e:Group>
+				<e:Image source="question_png" x="504" y="29" includeIn="auto"/>
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30" gap="6"/>
+				</e:layout>
+			</e:Group>
+			<e:Button id="auto_go" label="" x="245" y="540" scaleX.createRoom="1" scaleY.createRoom="1" includeIn="auto" scaleX="1.5" scaleY="1.5">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="read_fight_png" source.down="read_fight2_png" source.disabled="read_fight3_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:layout>
+				<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap.joinRoom="6" gap.auto="6" verticalAlign.createRoom="top" paddingTop.createRoom="100" gap.createRoom="100"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

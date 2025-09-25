@@ -1,0 +1,288 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<style media="screen">
+    .add-botton {
+        float: right;
+        margin-right: 30px;
+    }
+    .box-padding-bottom {
+        padding-bottom: 15px;
+    }
+    .box-padding {
+        padding: 20px;
+    }
+    .form-group-left {
+        margin-left: 15px;
+    }
+    .stats-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .stat-item {
+        text-align: center;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+    }
+    .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .stat-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+    }
+    .takeover-btn {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        border: none;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+    .takeover-btn:hover {
+        background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+        color: white;
+    }
+</style>
+
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-user"></i> 代理系统管理</li>
+        </ol>
+        
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">{$stats.total_agents}</div>
+                <div class="stat-label">总代理数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{$stats.level1_agents}</div>
+                <div class="stat-label">一级代理</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{$stats.active_agents}</div>
+                <div class="stat-label">活跃代理</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{$stats.today_new}</div>
+                <div class="stat-label">今日新增</div>
+            </div>
+        </div>
+        
+        <form class="form-inline" action="">
+            <div class="form-group form-group-left">
+                <label>时间</label>
+                <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="starttime" value="{$query.starttime}" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <label>到</label>
+                <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="endtime" value="{$query.endtime}" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group form-group-left">
+                <label>代理等级:</label>
+                <select name="level" class="form-control">
+                    <option value="">全部</option>
+                    <option value="0" {if condition="$query.level == '0'"}selected{/if}>一级代理</option>
+                    <option value="1" {if condition="$query.level == '1'"}selected{/if}>下级代理</option>
+                </select>
+            </div>
+            <div class="form-group form-group-left">
+                <label>关键字:</label>
+                <input type="text" name="words" class="form-control" value="{$query.words}" placeholder="用户名/昵称/手机/邮箱">
+            </div>
+            <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+            <div class="add-botton">
+                <a href="{:url('create')}" class="btn btn-success btn-sm" role="button">
+                    <i class="glyphicon glyphicon-plus"></i> 创建代理
+                </a>
+                <a href="{:url('hierarchy')}" class="btn btn-info btn-sm" role="button">
+                    <i class="glyphicon glyphicon-tree-deciduous"></i> 层级结构
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="table_box">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th width="60" class="tc"><input type="checkbox" id="checkAll"></th>
+                    <th width="80" class="tc">ID</th>
+                    <th width="60" class="tc">头像</th>
+                    <th width="120" class="tc">用户名</th>
+                    <th width="120" class="tc">昵称</th>
+                    <th width="100" class="tc">上级代理</th>
+                    <th width="100" class="tc">余额</th>
+                    <th width="100" class="tc">游戏币</th>
+                    <th width="120" class="tc">注册时间</th>
+                    <th width="120" class="tc">最后活动</th>
+                    <th width="80" class="tc">状态</th>
+                    <th class="tc" width="280">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $list as $item}
+                <tr>
+                    <td class="tc"><input type="checkbox" class="item-check" value="{$item.id}"></td>
+                    <td class="tc">{$item.id}</td>
+                    <td class="tc">
+                        <img src="{$item.photo|default='/static/admin/images/default_avatar.png'}" alt="" width="30" height="30" class="img-circle">
+                    </td>
+                    <td class="tc">
+                        <strong>{$item.username}</strong>
+                        {if condition="$item.agents == 0"}
+                        <span class="label label-primary">一级</span>
+                        {else /}
+                        <span class="label label-info">下级</span>
+                        {/if}
+                    </td>
+                    <td class="tc">{$item.nickname}</td>
+                    <td class="tc">
+                        {if condition="$item.agents_name"}
+                        <a href="{:url('index')}?words={$item.agents_name}" title="查看上级代理">
+                            {$item.agents_name}
+                        </a>
+                        {else /}
+                        <span class="text-muted">无</span>
+                        {/if}
+                    </td>
+                    <td class="tc"><span class="user_money">{$item.money}</span></td>
+                    <td class="tc"><span class="user_money">{$item.game_money}</span></td>
+                    <td class="tc">{$item.create_time}</td>
+                    <td class="tc">{$item.action_time}</td>
+                    <td class="tc">
+                        {if condition="$item.status == 1"}
+                        <span class="label label-success">正常</span>
+                        {else /}
+                        <span class="label label-danger">冻结</span>
+                        {/if}
+                    </td>
+                    <td class="tc">
+                        <div class="btn-group-vertical" role="group">
+                            <button type="button" class="btn takeover-btn btn-xs" onclick="takeoverAgent({$item.id})">
+                                <i class="glyphicon glyphicon-log-in"></i> 接管登录
+                            </button>
+                            <a href="{:url('admin/User/edit')}?id={$item.id}" class="btn btn-primary btn-xs">
+                                <i class="glyphicon glyphicon-edit"></i> 编辑
+                            </a>
+                            <a href="{:url('admin/User/agent_list')}?userid={$item.id}" class="btn btn-info btn-xs">
+                                <i class="glyphicon glyphicon-list"></i> 下级
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- 批量操作 -->
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-md-6">
+            <div class="btn-group">
+                <button type="button" class="btn btn-warning btn-sm" onclick="batchAction('freeze')">
+                    <i class="glyphicon glyphicon-pause"></i> 批量冻结
+                </button>
+                <button type="button" class="btn btn-success btn-sm" onclick="batchAction('unfreeze')">
+                    <i class="glyphicon glyphicon-play"></i> 批量解冻
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6 text-right">
+            {$list->render()}
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript' src="__STATIC__/admin/list_base.js"></script>
+<script>
+$(function () {
+    // 全选功能
+    $('#checkAll').change(function() {
+        $('.item-check').prop('checked', $(this).prop('checked'));
+    });
+    
+    // 日期选择器
+    $('#begintime,#endtime').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        endDate: new Date(),
+        minView: 2,
+        forceParse: 0
+    });
+});
+
+// 代理接管功能
+function takeoverAgent(agentId) {
+    $.modal.confirm('确认要接管此代理账号吗？接管后将直接登录到该代理的后台系统。', function() {
+        $.post('{:url("takeover")}', {agentId: agentId}, function(res) {
+            if (res.err == 0) {
+                $.modal.alert(res.msg, function() {
+                    window.open(res.redirect, '_blank');
+                });
+            } else {
+                $.modal.alert(res.msg);
+            }
+        });
+    });
+}
+
+// 批量操作
+function batchAction(action) {
+    var checkedIds = [];
+    $('.item-check:checked').each(function() {
+        checkedIds.push($(this).val());
+    });
+    
+    if (checkedIds.length == 0) {
+        $.modal.alert('请选择要操作的代理');
+        return;
+    }
+    
+    var actionText = action == 'freeze' ? '冻结' : '解冻';
+    $.modal.confirm('确认要' + actionText + '选中的 ' + checkedIds.length + ' 个代理吗？', function() {
+        $.post('{:url("batchAction")}', {
+            action: action,
+            ids: checkedIds.join(',')
+        }, function(res) {
+            if (res.err == 0) {
+                $.modal.alert(res.msg, function() {
+                    location.reload();
+                });
+            } else {
+                $.modal.alert(res.msg);
+            }
+        });
+    });
+}
+</script>
+{include file='common/foot' /}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ExplainSkin" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group left="0" right="0" top="0" bottom="0" width="640">
+		<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillAlpha="0" x="0" y="0" scaleX="1" scaleY="1"/>
+        <e:Group id="sc" width="600" horizontalCenter="0" top="250" x="0" scaleX="1" scaleY="1" bottom="150" locked="true">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xb4712f" ellipseWidth="10"/>
+			<e:Rect fillColor="0xf1d193" left="3" right="3" top="3" bottom="3" ellipseWidth="10"/>
+			<e:Rect left="10" right="10" top="10" bottom="10" fillColor="0xf2debc" ellipseWidth="30"/>
+			<e:Rect left="10" right="10" top="60" bottom="10" fillColor="0xe2b891"/>
+		</e:Group>
+		<e:Image source="sprite-dialog_json.sprite-dialog001" horizontalCenter="0" top="150"/>
+		<e:Label text="玩法说明" horizontalCenter="0" top="210"/>
+        <e:Group id="back1" width="40" height="40" top="210" right="70" locked="true">
+			<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="40" fillColor="0xf78d02" strokeWeight="3" strokeColor="0x845625"/>
+			<e:Image source="sprite-dialog_json.sprite-dialog000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Scroller id="scroller" width="580" horizontalCenter="0" top="320" bottom="160">
+			<e:Group>
+				<e:Image source="sprite-dialog_json.sprite-dialog003" horizontalCenter="0" top="0"/>
+				<e:Group width="520" x="186" y="206">
+					<e:Group left="0" top="0">
+						<e:Rect width="20" height="20" ellipseWidth="20" ellipseHeight="0" fillColor="0xd17727" scaleX="1" scaleY="1" top="5" left="0"/>
+						<e:Label text="玩法说明：" scaleX="1" scaleY="1" top="0" left="40" bold="true" size="35" textColor="0x487227"/>
+					</e:Group>
+					<e:Label text="选择兵种和人数，招募士兵出战，\n每招募100士兵消耗100金豆粮草,\n战胜或者打平获得一定数量奖励，\n打输没有奖励。" left="50" top="50" textColor="0xd17727"/>
+				</e:Group>
+				<e:Group width="520" x="196" y="216">
+					<e:Group left="0" top="0">
+					<e:Rect width="20" height="20" ellipseWidth="20" ellipseHeight="0" fillColor="0xD17727" scaleX="1" scaleY="1" top="5" left="0"/>
+					<e:Label text="自动战斗：" scaleX="1" scaleY="1" top="0" left="40" textColor="0x487227" size="35"/>
+					</e:Group>
+					<e:Label text="掠夺金豆：自动战斗时，当掠夺的\n金豆数量大于等于你设置的掠夺数\n量时,退出自动战斗。" left="50" top="50" textColor="0xD17727"/>
+					<e:Label text="被掠夺金豆：自动战斗时，当被掠\n夺的金豆数量大于等于你设置的金\n豆数量时，退出自动战斗。" left="50" top="150" textColor="0xd17727"/>
+					<e:Label text="单局出兵：自动战斗时，每局出兵\n的数量。" left="50" top="250" textColor="0xD17727"/>
+					<e:Label text="自动出兵：随机，每局随机选择一\n种士兵出战。不随机则每局出战士\n兵为你选择的士兵。" left="50" top="320" textColor="0xD17727"/>
+				</e:Group>
+				<e:layout>
+					<e:VerticalLayout horizontalAlign="center" verticalAlign="top" gap="20"/>
+				</e:layout>
+			</e:Group>
+		</e:Scroller>
+	</e:Group>
+</e:Skin>

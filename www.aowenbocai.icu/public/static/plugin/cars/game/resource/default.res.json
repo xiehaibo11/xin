@@ -1,0 +1,477 @@
+{
+	"groups": [
+		{
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,loading-mask000_png,loadingMask_png,sprite-loading000_png,sprite-loading001_png,sprite-loading002_png,sprite-loading003_png,bet_bg_png,bg_banker_png,bg_game_png,bg_header_png,enter_json,bet_json,header_json,add_png,icon_cars_json,result (1)_json,font_draw_json,yellowFont_png,yellowFont_fnt,draw_json,other_json,setup_json,setup01_png,setup02_png,help272_png,help271_png,help1_json,slot_stop_mp3,slot_draw_mp3,slot_start_mp3,data_config_json,play2_json,times_png,times_fnt,operate_setup_json,alert (3)_png,girl_json,time_json,common_flower_png,modal_btn_close_png,redTime_png,redTime_fnt,start_ani (1)_json,play_json,coin_mp3,starttime_mp3,bgm_mp3,bet_mp3,slot_loop_mp3,result_json,win_json,dialog_panel_png,dialog_cancel_png,dialog_bg_png,dialog_zhunbei_png,sure_png,btFonts_fnt,btFonts_png,checkbox_select_up2_png,checkbox_unselect2_png,common_jd_png,modal_bg_top_png,zuanshi_icon_png",
+			"name": "preload"
+		},
+		{
+			"keys": "start_ani (1)_json",
+			"name": "load"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/CheckBox/checkbox_select_disabled.png",
+			"type": "image",
+			"name": "checkbox_select_disabled_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_down.png",
+			"type": "image",
+			"name": "checkbox_select_down_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_up.png",
+			"type": "image",
+			"name": "checkbox_select_up_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_unselect.png",
+			"type": "image",
+			"name": "checkbox_unselect_png"
+		},
+		{
+			"url": "assets/ItemRenderer/selected.png",
+			"type": "image",
+			"name": "selected_png"
+		},
+		{
+			"url": "assets/Panel/border.png",
+			"type": "image",
+			"name": "border_png"
+		},
+		{
+			"url": "assets/Panel/header.png",
+			"type": "image",
+			"name": "header_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_disabled.png",
+			"type": "image",
+			"name": "radiobutton_select_disabled_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_down.png",
+			"type": "image",
+			"name": "radiobutton_select_down_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_up.png",
+			"type": "image",
+			"name": "radiobutton_select_up_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_unselect.png",
+			"type": "image",
+			"name": "radiobutton_unselect_png"
+		},
+		{
+			"url": "assets/ScrollBar/roundthumb.png",
+			"type": "image",
+			"name": "roundthumb_png"
+		},
+		{
+			"url": "assets/Slider/thumb.png",
+			"type": "image",
+			"name": "thumb_png"
+		},
+		{
+			"url": "assets/Slider/track.png",
+			"type": "image",
+			"name": "track_png"
+		},
+		{
+			"url": "assets/Slider/tracklight.png",
+			"type": "image",
+			"name": "tracklight_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/handle.png",
+			"type": "image",
+			"name": "handle_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/off.png",
+			"type": "image",
+			"name": "off_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/on.png",
+			"type": "image",
+			"name": "on_png"
+		},
+		{
+			"url": "assets/Button/button_down.png",
+			"type": "image",
+			"name": "button_down_png"
+		},
+		{
+			"url": "assets/Button/button_up.png",
+			"type": "image",
+			"name": "button_up_png"
+		},
+		{
+			"url": "assets/ProgressBar/thumb_pb.png",
+			"type": "image",
+			"name": "thumb_pb_png"
+		},
+		{
+			"url": "assets/ProgressBar/track_pb.png",
+			"type": "image",
+			"name": "track_pb_png"
+		},
+		{
+			"url": "assets/ScrollBar/track_sb.png",
+			"type": "image",
+			"name": "track_sb_png"
+		},
+		{
+			"url": "assets/bg.jpg",
+			"type": "image",
+			"name": "bg_jpg"
+		},
+		{
+			"url": "assets/egret_icon.png",
+			"type": "image",
+			"name": "egret_icon_png"
+		},
+		{
+			"url": "config/description.json",
+			"type": "json",
+			"name": "description_json"
+		},
+		{
+			"url": "assets/Loading/loading-mask000.png",
+			"type": "image",
+			"name": "loading-mask000_png"
+		},
+		{
+			"url": "assets/Loading/loadingMask.png",
+			"type": "image",
+			"name": "loadingMask_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading000.png",
+			"type": "image",
+			"name": "sprite-loading000_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading001.png",
+			"type": "image",
+			"name": "sprite-loading001_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading002.png",
+			"type": "image",
+			"name": "sprite-loading002_png"
+		},
+		{
+			"url": "assets/Loading/sprite-loading003.png",
+			"type": "image",
+			"name": "sprite-loading003_png"
+		},
+		{
+			"url": "assets/Bg/bet_bg.png",
+			"type": "image",
+			"name": "bet_bg_png"
+		},
+		{
+			"url": "assets/Bg/bg_banker.png",
+			"type": "image",
+			"name": "bg_banker_png"
+		},
+		{
+			"url": "assets/Bg/bg_game.png",
+			"type": "image",
+			"name": "bg_game_png"
+		},
+		{
+			"url": "assets/Bg/bg_header.png",
+			"type": "image",
+			"name": "bg_header_png"
+		},
+		{
+			"url": "assets/Bg/enter.json",
+			"type": "sheet",
+			"name": "enter_json",
+			"subkeys": "enter0,enter1,enter10,enter11,enter12,enter13,enter14,enter15,enter16,enter17,enter18,enter19,enter2,enter20,enter21,enter22,enter23,enter24,enter25,enter26,enter27,enter28,enter29,enter3,enter30,enter31,enter32,enter33,enter34,enter35,enter4,enter5,enter6,enter7,enter8,enter9"
+		},
+		{
+			"url": "assets/Bg/bet.json",
+			"type": "sheet",
+			"name": "bet_json",
+			"subkeys": "bet0,bet1,bet10,bet11,bet12,bet13,bet14,bet15,bet16,bet17,bet18,bet19,bet2,bet20,bet21,bet22,bet23,bet24,bet25,bet26,bet27,bet28,bet29,bet3,bet30,bet31,bet32,bet33,bet34,bet35,bet4,bet5,bet6,bet7,bet8,bet9"
+		},
+		{
+			"url": "assets/UI/header.json",
+			"type": "sheet",
+			"name": "header_json",
+			"subkeys": "header0,header1,header10,header11,header12,header13,header2,header3,header4,header5,header6,header7,header8,header9"
+		},
+		{
+			"url": "assets/UI/add.png",
+			"type": "image",
+			"name": "add_png"
+		},
+		{
+			"url": "assets/Car/icon_cars.json",
+			"type": "sheet",
+			"name": "icon_cars_json",
+			"subkeys": "icon_cars0,icon_cars1,icon_cars10,icon_cars11,icon_cars12,icon_cars13,icon_cars14,icon_cars15,icon_cars2,icon_cars3,icon_cars4,icon_cars5,icon_cars6,icon_cars7,icon_cars8,icon_cars9"
+		},
+		{
+			"url": "assets/Result/result (1).json",
+			"type": "sheet",
+			"name": "result (1)_json",
+			"subkeys": "result (1)0,result (1)1,result (1)10,result (1)11,result (1)12,result (1)13,result (1)14,result (1)15,result (1)16,result (1)17,result (1)18,result (1)19,result (1)2,result (1)20,result (1)21,result (1)22,result (1)23,result (1)24,result (1)25,result (1)26,result (1)27,result (1)28,result (1)29,result (1)3,result (1)30,result (1)31,result (1)32,result (1)33,result (1)34,result (1)35,result (1)36,result (1)37,result (1)38,result (1)39,result (1)4,result (1)40,result (1)41,result (1)42,result (1)43,result (1)44,result (1)45,result (1)46,result (1)47,result (1)48,result (1)49,result (1)5,result (1)50,result (1)51,result (1)52,result (1)53,result (1)54,result (1)55,result (1)56,result (1)57,result (1)58,result (1)59,result (1)6,result (1)60,result (1)61,result (1)62,result (1)63,result (1)7,result (1)8,result (1)9"
+		},
+		{
+			"url": "assets/Result/font_draw.json",
+			"type": "sheet",
+			"name": "font_draw_json",
+			"subkeys": "font_draw0,font_draw1,font_draw10,font_draw2,font_draw3,font_draw4,font_draw5,font_draw6,font_draw7,font_draw8,font_draw9"
+		},
+		{
+			"url": "assets/BtLabel/yellowFont.png",
+			"type": "image",
+			"name": "yellowFont_png"
+		},
+		{
+			"url": "assets/BtLabel/yellowFont.fnt",
+			"type": "font",
+			"name": "yellowFont_fnt"
+		},
+		{
+			"url": "assets/UI/draw.json",
+			"type": "sheet",
+			"name": "draw_json",
+			"subkeys": "draw0,draw1,draw2,draw3,draw4,draw5,draw6,draw7"
+		},
+		{
+			"url": "assets/UI/other.json",
+			"type": "sheet",
+			"name": "other_json",
+			"subkeys": "other0,other1,other2,other3,other4,other5"
+		},
+		{
+			"url": "assets/UI/setup.json",
+			"type": "sheet",
+			"name": "setup_json",
+			"subkeys": "setup0,setup1,setup2,setup3,setup4,setup5,setup6,setup7,setup8,setup9"
+		},
+		{
+			"url": "assets/UI/setup01.png",
+			"type": "image",
+			"name": "setup01_png"
+		},
+		{
+			"url": "assets/UI/setup02.png",
+			"type": "image",
+			"name": "setup02_png"
+		},
+		{
+			"url": "assets/help/help272.png",
+			"type": "image",
+			"name": "help272_png"
+		},
+		{
+			"url": "assets/help/help271.png",
+			"type": "image",
+			"name": "help271_png"
+		},
+		{
+			"url": "assets/help/help1.json",
+			"type": "sheet",
+			"name": "help1_json",
+			"subkeys": "help10,help11,help110,help111,help112,help113,help114,help115,help116,help117,help118,help119,help12,help13,help14,help15,help16,help17,help18,help19"
+		},
+		{
+			"url": "assets/Music/slot_stop.mp3",
+			"type": "sound",
+			"name": "slot_stop_mp3"
+		},
+		{
+			"url": "assets/Music/slot_draw.mp3",
+			"type": "sound",
+			"name": "slot_draw_mp3"
+		},
+		{
+			"url": "assets/Music/slot_start.mp3",
+			"type": "sound",
+			"name": "slot_start_mp3"
+		},
+		{
+			"url": "config/data_config.json",
+			"type": "json",
+			"name": "data_config_json"
+		},
+		{
+			"url": "assets/UI/play.json",
+			"type": "sheet",
+			"name": "play2_json",
+			"subkeys": "play0,play1,play2,play3,play4,play5,play6"
+		},
+		{
+			"url": "assets/BtLabel/times.png",
+			"type": "image",
+			"name": "times_png"
+		},
+		{
+			"url": "assets/BtLabel/times.fnt",
+			"type": "font",
+			"name": "times_fnt"
+		},
+		{
+			"url": "assets/UI/operate_setup.json",
+			"type": "sheet",
+			"name": "operate_setup_json",
+			"subkeys": "operate_setup0,operate_setup1,operate_setup10,operate_setup2,operate_setup3,operate_setup4,operate_setup5,operate_setup6,operate_setup7,operate_setup8,operate_setup9"
+		},
+		{
+			"url": "assets/UI/alert (3).png",
+			"type": "image",
+			"name": "alert (3)_png"
+		},
+		{
+			"url": "assets/Girl/girl.json",
+			"type": "sheet",
+			"name": "girl_json",
+			"subkeys": "girl0,girl1,girl10,girl11,girl12,girl13,girl14,girl15,girl16,girl17,girl18,girl19,girl2,girl20,girl21,girl22,girl23,girl24,girl25,girl26,girl27,girl3,girl4,girl5,girl6,girl7,girl8,girl9"
+		},
+		{
+			"url": "assets/Time/time.json",
+			"type": "sheet",
+			"name": "time_json",
+			"subkeys": "time0,time1,time2,time3,time4,time5,time6,time7,time8,time9"
+		},
+		{
+			"url": "assets/pay/common_flower.png",
+			"type": "image",
+			"name": "common_flower_png"
+		},
+		{
+			"url": "assets/pay/modal_btn_close.png",
+			"type": "image",
+			"name": "modal_btn_close_png"
+		},
+		{
+			"url": "assets/BtLabel/redTime.png",
+			"type": "image",
+			"name": "redTime_png"
+		},
+		{
+			"url": "assets/BtLabel/redTime.fnt",
+			"type": "font",
+			"name": "redTime_fnt"
+		},
+		{
+			"url": "assets/Loading/start_ani (1).json",
+			"type": "sheet",
+			"name": "start_ani (1)_json",
+			"subkeys": "start_ani (1)0,start_ani (1)1,start_ani (1)10,start_ani (1)11,start_ani (1)12,start_ani (1)13,start_ani (1)14,start_ani (1)15,start_ani (1)2,start_ani (1)3,start_ani (1)4,start_ani (1)5,start_ani (1)6,start_ani (1)7,start_ani (1)8,start_ani (1)9"
+		},
+		{
+			"url": "assets/Car/play.json",
+			"type": "sheet",
+			"name": "play_json",
+			"subkeys": "play0,play1,play10,play11,play12,play13,play14,play15,play16,play17,play18,play19,play2,play20,play21,play22,play23,play24,play25,play26,play27,play28,play29,play3,play30,play31,play32,play33,play34,play35,play36,play37,play38,play39,play4,play40,play41,play42,play43,play44,play45,play46,play47,play48,play49,play5,play50,play51,play52,play53,play54,play55,play56,play57,play58,play59,play6,play60,play61,play62,play63,play64,play65,play66,play67,play7,play8,play9"
+		},
+		{
+			"name": "coin_mp3",
+			"type": "sound",
+			"url": "assets/Music/coin.mp3"
+		},
+		{
+			"name": "starttime_mp3",
+			"type": "sound",
+			"url": "assets/Music/starttime.mp3"
+		},
+		{
+			"name": "bgm_mp3",
+			"type": "sound",
+			"url": "assets/Music/bgm.mp3"
+		},
+		{
+			"name": "bet_mp3",
+			"type": "sound",
+			"url": "assets/Music/bet.mp3"
+		},
+		{
+			"name": "slot_loop_mp3",
+			"type": "sound",
+			"url": "assets/Music/slot_loop.mp3"
+		},
+		{
+			"name": "result_json",
+			"type": "sheet",
+			"url": "assets/ShowImg/result.json",
+			"subkeys": "result9,result11,result6,result1,result5,result10,result15,result14,result17,result13,result12,result0,result2,result8,result7,result16,result4,result3"
+		},
+		{
+			"name": "win_json",
+			"type": "sheet",
+			"url": "assets/ShowImg/win.json",
+			"subkeys": "win41,win44,win46,win35,win42,win43,win45,win33,win47,win39,win2,win1,win3,win5,win9,win30,win13,win17,win31,win32,win19,win21,win14,win40,win4,win0,win11,win6,win10,win27,win15,win16,win23,win20,win18,win12,win29,win8,win25,win26,win22,win34,win28,win37,win38,win36,win24,win7"
+		},
+		{
+			"name": "dialog_panel_png",
+			"type": "image",
+			"url": "assets/UI/dialog_panel.png"
+		},
+		{
+			"name": "dialog_cancel_png",
+			"type": "image",
+			"url": "assets/UI/dialog_cancel.png"
+		},
+		{
+			"name": "dialog_bg_png",
+			"type": "image",
+			"url": "assets/UI/dialog_bg.png"
+		},
+		{
+			"name": "dialog_zhunbei_png",
+			"type": "image",
+			"url": "assets/UI/dialog_zhunbei.png"
+		},
+		{
+			"name": "sure_png",
+			"type": "image",
+			"url": "assets/UI/sure.png"
+		},
+		{
+			"name": "btFonts_fnt",
+			"type": "font",
+			"url": "assets/BtLabel/btFonts.fnt"
+		},
+		{
+			"name": "btFonts_png",
+			"type": "image",
+			"url": "assets/BtLabel/btFonts.png"
+		},
+		{
+			"name": "checkbox_select_up2_png",
+			"type": "image",
+			"url": "assets/pay/checkbox_select_up.png"
+		},
+		{
+			"name": "checkbox_unselect2_png",
+			"type": "image",
+			"url": "assets/pay/checkbox_unselect.png"
+		},
+		{
+			"name": "common_jd_png",
+			"type": "image",
+			"url": "assets/pay/common_jd.png"
+		},
+		{
+			"name": "modal_bg_top_png",
+			"type": "image",
+			"url": "assets/pay/modal_bg_top.png"
+		},
+		{
+			"name": "zuanshi_icon_png",
+			"type": "image",
+			"url": "assets/pay/zuanshi_icon.png"
+		}
+	]
+}

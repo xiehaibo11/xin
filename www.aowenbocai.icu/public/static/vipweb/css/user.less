@@ -1,0 +1,707 @@
+/**
+ * 用户中心
+ */
+@charset "UTF-8";
+@import "./variables";
+html {min-width: 929px;}
+.border-b(@b-color){
+      border-bottom: 1px solid @b-color
+}
+.border-top{
+    border-top: 2px solid @color-base;
+    padding-top: 30px;
+    min-height: 450px;
+}
+@color-b:lighten(@gray-base,90%);
+.el-submenu .el-menu{
+    background-color: lighten(@gray-bg,2%);
+}
+.el-menu-item:focus, .el-menu-item:hover , .el-submenu__title:focus, .el-submenu__title:hover{
+    background-color:darken(@gray-bg,4%);
+}
+.el-menu-item, .el-submenu__title{
+    height: 40px;
+    line-height: 40px;
+    color: #000000;
+}
+.el-submenu__title,.nav-a{
+    ////.gradient(#f56c6c, #f98888,#f56c6c);
+    //background-color: #f4f4f4;
+    //color: #ffffff;
+    color: #000000;
+    font-size: 17px;
+}
+.el-menu-item.is-active{
+    color: @color-base;
+}
+.el-submenu .el-menu-item{
+    height: 30px;
+    line-height: 30px;
+    color: #666666;
+    &.is-active{
+        color: @color-base;
+    }
+}
+.white{
+    background: white;
+}
+.el-table--small td{
+    //padding: 15px 0;
+    height: 50px;
+}
+.el-table--small th{
+    padding: 8px 0;
+}
+    //用户信息
+.user-info{
+    text-align: center;
+    height: 170px;
+    background-color: @white;
+    padding: 20px;
+    border: 1px solid rgb(230, 230, 230);
+    margin-top: 15px;
+    .borderRadius(15px);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    align-items: flex-start;
+    .user-photo{
+        position: relative;
+        margin-right: 15px;
+        .photo-img{
+            width: 100px;
+            height: 100px;
+            .borderRadius(50%);
+            background-size: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 0 10px #868686;
+    }
+        .vip-value{
+            position: absolute;
+            bottom: -16px;
+            width: 100px;
+            text-align: center;
+            left: 0;
+            height: 20px;
+            line-height: 20px;
+            em{
+                padding: 0 5px;
+                background-color: #FFC107;
+                color: #fff;
+                display: inline-block;
+                height: 20px;
+                line-height: 20px;
+                .borderRadius(10px);
+                font-size: 13px;
+                box-shadow: 0 2px 4px darkgrey;
+            }
+        }
+    }
+    .user-d{
+        font-size: @font-size-small;
+        text-align: left;
+        .name{
+            font-size: 20px;
+            color: #000000;
+            margin-bottom: 5px;
+        }
+        p{
+            line-height: 1.6;
+            font-size: 13px;
+            color: #888;
+            &.light{
+                color:darken(@white,40%) ;
+            }
+        }
+    }
+    .account-info{
+        .el-button--mini, .el-button--small{
+            font-size: 14px;
+        }
+        width: 420px;
+        .account-btn{
+            margin-top: 10px;
+        }
+        .money-value{
+            font-size: 24px;
+        }
+        .account-item{
+            border: 1px solid #eee;
+            border-radius: 15px;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #f4f4f4;
+            line-height: 1;
+            .game-money{
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+//左侧导航
+.aside-box{
+    .boxshadow(4px,2px,10px,#e4e4e4);
+    z-index: 1;
+}
+.el-menu-item i,.el-submenu__title .iconfont{
+    font-size: @font-size-large;
+    color: @color-base;
+}
+//卡片样式重定义
+.el-card.is-always-shadow, .el-card.is-hover-shadow:focus, .el-card.is-hover-shadow:hover{-webkit-box-shadow:none;box-shadow:none}
+.el-card{
+    border:none;
+    .el-card__header{
+        padding: 0px 0px 10px 0;
+        color: #000000;
+        span{
+            font-size: @font-size-base + 1;
+            font-weight: 500;
+            a{
+                font-size: @font-size-base + 1;
+                font-weight: 500;}
+            &.title{
+                font-size: 19px;
+                color: #000000;
+                font-weight: bold;
+            }
+        }
+    }
+    .el-card__body{
+        padding: 10px 0;
+    }
+}
+//个人中心主页面
+.award-box{
+    background-color: #f4f4f4;
+    padding: 20px;
+    .borderRadius(6px);
+}
+.award-item{
+    border: 1px solid #ddd;
+    .borderRadius(6px);
+    padding:15px;
+    margin: 15px 0;
+    line-height: 28px;
+    align-items: flex-start;
+    .icon{
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        line-height: 60px;
+        background-color: @color-base;
+        color: #ffffff;
+        .borderRadius(6px);
+        margin-right: 15px;
+        i{
+            font-size: 28px;
+        }
+    }
+    .money{
+        font-size: 26px;
+    }
+}
+.award-des{
+    padding: 20px 0;
+    text-align: center;
+    border: 1px solid #ddd;
+    .borderRadius(6px);
+    color: #888888;
+    .el-col{
+        border-right: 1px solid #e2e2e2;
+        border-left: 1px solid #fff;
+        width: 14.28%;
+        &:first-child{
+            border-left: none;
+        }
+        &:last-child{
+            border-right: none;
+        }
+    }
+    .num{
+        font-size: 20px;
+        color: #333333;
+    }
+}
+//推荐游戏
+.guess-you-like{
+    .list{
+        display:block;
+        border:1px solid @color-b;
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px 0 8px;
+        .name-type{
+            padding: 0 5px 5px 5px;
+            .u-gm-name{
+                font-size: @font-size-base;
+                color: @color-secondary;
+            }
+            .u-gm-type{
+                color: @gray-light;
+                font-size: @font-size-small;
+            }
+        }
+        img{
+            padding-bottom: 8px;
+        }
+    }
+}
+//个人中心主页面 end
+
+//游戏记录
+.select-mt{margin-left: 10px}
+.options{
+    padding: 10px;
+    background-color: @gray-bg;
+    display: flex;
+}
+.el-select{
+    width: 140px;
+    margin-right: 10px;
+}
+.el-input__inner{
+    margin-right: 10px;
+}
+.el-button--text{
+    padding: 0;
+}
+
+//个人资料
+.form{
+    width: 50%;
+    .yzm{
+        width: 210px;
+        margin-right: 3px;
+    }
+    .input-title{
+        padding: 10px 0 5px;
+        margin-bottom: 20px;
+        border-bottom: 1px dashed @gray-lighter;
+        color: @gray-light;
+    }
+}
+.grade-info{
+    line-height: 2.2;
+    .userGrade{
+        padding-right: 5px;
+    }
+    .nextGrade{
+        padding-left: 5px;
+    }
+}
+.level-cont{
+    .cont-title{
+        padding: 0 10px;
+        height: 40px;
+        line-height: 40px;
+    }
+    table{
+        border:solid #efefef;
+        border-width: 1px 0px 0px 1px;
+        color: #666666;
+        background-color: #ffffff;
+        th{
+            background-color: #f2f4f7;
+            text-align: center;
+            line-height: 38px;
+            border:solid #ebebeb;
+            border-width: 0 1px 1px 0;
+        }
+        td{
+            text-align: center;
+            line-height: 38px;
+            border:solid #efefef;
+            border-width: 0 1px 1px 0;
+        }
+    }
+}
+
+//安全中心
+.safe-center{
+    width: 90%;
+    margin: 10px auto;
+    ul>li{
+        padding:10px 0;
+        .border-b(lighten(@gray-base,95%));
+        i{
+            font-size: @font-size-large + 30;
+            color: @gray-light;
+            &.red{
+                color: @color-base;
+            }
+        }
+        .el-row{
+            display: flex;
+            align-items: center;
+            line-height: 1.7;
+        }
+        .sub-desc{
+            font-size: @font-size-small;
+            color: @gray-light;
+        }
+    }
+}
+
+//系统消息
+.inform{
+    .control{padding-bottom: 10px}
+}
+
+//实名认证
+.id-card{
+    .title{
+        padding: 10px 0;
+        border-bottom: 1px dashed @gray-lighter;
+    }
+    .info{
+        color: @gray-light;
+        line-height: 40px;
+        .n_left{
+            display: inline-block;
+            width: 150px;
+            color: @gray-darker;
+        }
+    }
+}
+.yz-way{
+    padding-bottom: 10px;
+}
+
+//兑换中心
+.exchange-calls{
+    .tel-num{
+        font-size: 25px;
+    }
+    .info{
+        color: #ab5b06;
+    }
+    .change-list{
+        padding-top: 20px;
+        ul {
+            overflow: hidden;
+            li{
+                width: 200px;
+                float: left;
+                display: inline-block;
+                margin: 15px;
+                text-align: center;
+                .list{
+                    border:1px solid #dddddd;
+                    .borderRadius(4px);
+                    padding: 15px 0;
+                    cursor: pointer;
+                    position: relative;
+                    i{
+                        position: absolute;
+                        right: 0;
+                        bottom: -14px;
+                        font-size: 30px;
+                    }
+                    .title{
+                        font-size: 16px;
+                        font-weight: 600;
+                    }
+                    .money{
+                        font-size: 13px;
+                    }
+                    &.active, &:hover{
+                        border:1px solid @color-base;
+                        color: @color-base;
+                    }
+                    &.disabled {
+                        pointer-events: none;
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+                }
+
+                .lost{
+                    font-size: 13px;
+                    color: #999999;
+                }
+
+            }
+        }
+    }
+    .exchange-num [class*=" el-icon-"],.exchange-num [class^=el-icon-]{
+        line-height: 38px;
+    }
+}
+
+//游戏道具
+.props{
+    .props-list{
+        ul{
+            overflow: hidden;
+            li{
+                padding:10px 15px;
+                float: left;
+                display: inline-block;
+                overflow: hidden;
+                width: 44%;
+                margin: 10px;
+                display: flex;
+                justify-content: flex-start;
+                background-color: #fffdf6;
+                border: 1px solid #fdeed7;
+                height:91px;
+                .img{
+                    padding-right: 15px;
+                }
+                .info{
+                    line-height: 1.7;
+                    font-size: 12px;
+                    .name{
+                        color: #000000;
+                        font-size: 13px;
+                        font-weight: 500;
+                    }
+                    .desc{
+                        color: #888888;
+                    }
+                    .num{
+                        padding-bottom: 5px;
+                    }
+                }
+            }
+        }
+    }
+    .el-button--mini, .el-button--mini.is-round{
+        padding: 5px 10px;
+    }
+}
+
+//代理中心*************
+.article-detail{
+    img{
+        margin-bottom: 15px;
+    }
+    width: 818px;
+    margin-left: 30px;
+    font-size: 15px;
+    line-height: 2;
+}
+//代理报表
+.report-table{
+    border: 1px solid #e2e2e2;
+    margin-top: 20px;
+    ul>li{
+        float: left;
+        width: 16.56%;
+        padding:30px 0;
+        height: 70px;
+        line-height: 1.8;
+        text-align: center;
+        border-bottom: 1px solid #e2e2e2;
+        border-right: 1px solid #e2e2e2;
+        span{
+            display: block;
+            color: #ff6818;
+            font-size: 20px;
+        }
+        &:nth-child(6),&:nth-child(12){
+            border-right: none;
+        }
+        &.border-none{
+            border-bottom: none;
+        }
+    }
+}
+//下级开户
+.invite-box{
+    padding: 10px 20px;
+    .invite-head{
+        padding: 5px 15px;
+        margin-bottom: 20px;
+        line-height: 2.5;
+    }
+    .invite-cont{
+        .el-form-item__label{
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .el-input{
+            width: 220px;
+            .el-input__inner{
+                padding-right:0 ;
+            }
+        }
+        .input-tips{
+            color: #888888;
+        }
+    }
+}
+.invite-code{
+    .inviteCode-cont{
+        .code-input-1{
+            width: 80px;
+            margin-right: 5px;
+        }
+        .code-input-2{
+            width: 130px;
+            margin-right: 5px;
+        }
+    }
+    .invite-code-img{
+        width: 180px;height: 180px;margin: 40px auto 100px;padding: 0;line-height: 1
+    }
+}
+.info-c{
+    color: #3a6fbd;
+    padding: 0 2px;
+    cursor: pointer;
+    &:hover{
+        color: @color-base;
+    }
+}
+
+//转账
+.transform-cont{
+    padding-left: 30px;
+    line-height: 2.5;
+    .label{
+        display: inline-block;
+        width: 85px;
+    }
+    .input{
+        width: 250px;
+    }
+    span.input{
+        border:1px solid #dcdfe6;
+        .borderRadius(4px);
+        height: 32px;
+        line-height: 32px;
+        padding: 0 15px;
+        box-sizing: border-box;
+        color: #606266;
+        font-size: 14px;
+    }
+    .transform-item{
+        margin-bottom: 10px;
+        position: relative;
+        &.change-btn{
+            &:after{
+                content: "";
+                display: inline-block;
+                position: absolute;
+                width: 24px;
+                height: 45px;
+                border: 1px solid #dcdfe6;
+                border-left: 0;
+                top: 43px;
+                margin-top: -26px;
+                left: 335px;
+            }
+        }
+        a.a-btn{
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 26px;
+            text-align: center;
+            background-color: @color-base;
+            .borderRadius(50%);
+            color: #ffffff;
+            position: absolute;
+            left: 347px;
+            top: 28px;
+            z-index: 20;
+            &:hover{
+                background-color: darken(@color-base,8%);
+            }
+        }
+    }
+}
+
+//返点赔率表
+.odds-head{
+    background-color: #000000;
+    width: 100%;
+    ul{
+        white-space: nowrap;
+        overflow-x: auto;
+        li{
+            height: 45px;
+            line-height: 45px;
+            background-color: #232323;
+            color: #999999;
+            padding: 0 20px;
+            display: inline-block;
+            cursor: pointer;
+            &.active,&:hover{
+                background-color: #000000;
+            }
+        }
+    }
+}
+.odds-title{font-size: 16px;
+    line-height: 2;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.odds-layout{
+    position: absolute;
+    top: 115px;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.46);
+    z-index: 100;
+    ul.list-B{
+        background-color: #ffffff;
+        padding: 10px;
+        line-height: 1;
+        .boxshadow(0, 5px, 10px, #c1c1c1);
+        li{
+            width: 120px;
+            height: 32px;
+            line-height: 32px;
+            margin: 2px 0;
+            background:none;
+            padding: 0;
+            text-align: center;
+            cursor: pointer;
+            &.active{
+                background-color:@color-base;
+                color: #ffffff;
+                 .borderRadius(4px);
+            }
+            &:hover{
+              color: @color-base;
+          }
+        }
+    }
+}
+.odds-cont{
+    align-items: flex-start;
+    border:1px solid #eeeeee;
+    .cont-left{
+        .boxshadow(6px,0px,6px, #d3d3d3);
+        min-width: 140px;
+        z-index: 1;
+    }
+    .cont-right{
+        white-space: nowrap;
+        overflow-x: scroll;
+        ul{
+            float: left;
+        }
+    }
+    .odds-item-list{
+        li{
+            height: 42px;
+            line-height: 42px;
+            font-size: 14px;
+            min-width: 113px;
+            text-align: center;
+            &:nth-child(odd){
+                background-color: #eeeeee;
+            }
+            &:first-child{
+                background-color: #e3e3e3;
+            }
+        }
+    }
+}
+

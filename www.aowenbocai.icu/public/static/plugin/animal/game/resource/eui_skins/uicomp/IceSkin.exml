@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="IceSkin" width="117" height="117" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image id="cd_full" source="zoo_sheet3_json.zoo_sheet3012" horizontalCenter="0" verticalCenter="0" visible="false"/>
+	<e:Group id="all_group" height="80" anchorOffsetY="0" anchorOffsetX="0" width="80" horizontalCenter="0" verticalCenter="0">
+		<e:Rect left="0" right="0" top="0" bottom="0" alpha="1" ellipseWidth="20" ellipseHeight="20" fillColor="0xf59103"/>
+		<e:Image id="cd_bing" source="zoo_sheet3_json.zoo_sheet3013" left="0" right="0" top="0" bottom="0"/>
+		<e:Image source="zoo_sheet3_json.zoo_sheet3013" x="5" y="5"/>
+		<e:Image id="shadow_bing" source="zoo_sheet3_json.zoo_sheet3014" width="70" height="70" alpha="0.7" left="5" top="5" visible="false"/>
+	</e:Group>
+</e:Skin>

@@ -1,0 +1,96 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+    <a href="{:url('fish50/setting/index')}">基本设置</a>
+    <a href="{:url('fish50/admin/index')}">玩家道具</a>
+    <a class="nav_active" href="#">鱼种列表</a>
+</nav>
+<style>
+  .icon_box {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;
+
+    width: 80px;
+    height: 80px;
+    background: #C6EAFF;
+    overflow: hidden;
+    border: 1px solid #9ED3FF;
+    border-radius: 3px;
+  }
+  .dis {
+    background: #FFCCCC;
+    border: 1px solid #FF9E9E;
+  }
+  .fish_info {
+    padding: 10px;
+  }
+  .right {
+    margin-left: 88px;
+    line-height: 26px;
+  }
+  .hit, .sp {
+    color: #C32AD6;
+    font-weight: 700;
+  }
+  .sp {
+    color: #23AB92;
+  }
+  .edit {
+    max-width: 900px;
+  }
+  .title{ 
+    line-height: 45px;
+  }
+</style>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li><i class="glyphicon glyphicon-link"></i> 欢乐捕鱼</li>
+            <li class="active">鱼种设置</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+    <div class="alert alert-success" role="alert">
+      小提示：命中率和赔率的计算公式为 <span class="text-danger">预期奖金 / 命中 = 赔率</span>（以1000分率为参考），例如预期奖金为 950（期望奖金） / 950（命中） = 1（赔率）
+    </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="exampleInputEmail1">鱼图</label>
+            <div class="col-sm-3">
+                <img src="/static/plugin/fish50/fishimg/fish_{$info.name}.png" alt="" width="54">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="exampleInputEmail1">鱼名</label>
+            <div class="col-sm-3">
+                <input type="text" disabled class="form-control" value="{$info.title}">
+            </div>
+        </div>
+    <form class="edit" method="post" action="{:url('edit', ['id' => $info.id])}">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="exampleInputEmail1">命中率</label>
+            <div class="col-sm-3">
+                    <input name="hit" type="text" class="form-control" id="exampleInputEmail1" value="{$info.hit}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="exampleInputPassword1">赔率</label>
+            <div class="col-sm-3">
+                <input name="sp" type="text" class="form-control" id="exampleInputEmail1" value="{$info.sp}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-8">
+                <button type="submit" class="btn btn-primary btn_save">修改</button>
+            </div>
+        </div>
+      </form>
+    </div>
+</div>
+{include file='admin@common/foot' /}

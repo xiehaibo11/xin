@@ -1,0 +1,61 @@
+{
+    "local_url": "https://www.aowenbocai.icu/",
+    "server_url": "https://www.aowenbocai.icu:8926",
+    "animal":[
+            {
+                "name":"熊猫",
+                "odds":100,
+                "scale": 0.7
+            }, 
+            {
+                "name":"炸弹人",
+                "odds":100,
+                "scale": 1.1
+            }, 
+            {
+                "name":"恐龙走",
+                "odds":50,
+                "scale": 1.1
+            }, 	
+            {
+                "name":"鸵鸟",
+                "odds":8,
+                "scale": 0.7
+            }, 
+            {
+                "name":"长颈鹿",
+                "odds":20,
+                "scale": 0.7
+            },	
+            {
+                "name":"企鹅",
+                "odds":4,
+                "scale": 0.7
+            }, 	
+            {
+                "name":"猫",
+                "odds":2,
+                "scale": 0.7
+            }, 
+            {
+                "name":"羊",
+                "odds":3,
+                "scale": 0.7
+            }, 
+            {
+                "name":"狐狸",
+                "odds":8,
+                "scale": 0.7
+            }, 
+            {
+                "name":"斑马",
+                "odds":20,
+                "scale": 0.7
+            }, 
+            {
+                "name":"鳄鱼",
+                "odds":100,
+                "scale": 1.1
+            }
+        ]
+}

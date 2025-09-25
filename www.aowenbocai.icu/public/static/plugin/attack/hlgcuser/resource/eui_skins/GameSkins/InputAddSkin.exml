@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="InputAddSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  states="normal,disabled,normalWithPrompt,disabledWithPrompt" >
+	<e:Image id="bgImg" source="inputImg_png" horizontalCenter="0" verticalCenter="0"/>
+	<e:EditableText id="textDisplay" text="" left="50" right="50" top="10" bottom="10" verticalAlign="middle" textAlign="center"/>
+	<e:Label id="promptDisplay" text="" left="50" right="50" top="10" bottom="10" verticalAlign="middle" textAlign="center" visible.normal="false" visible.disabled="false"/>
+</e:Skin>

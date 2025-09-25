@@ -1,0 +1,540 @@
+{include file='web@common/login_head' title='登录密码管理'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<style>
+    .form{
+        width: 430px;
+    }
+    html {min-width: 1200px;}
+</style>
+<div class="border-top">
+    <div id="app" class="web" v-cloak class="loading">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <el-breadcrumb>
+                    <el-breadcrumb-item>密码管理</el-breadcrumb-item>
+                    <el-breadcrumb-item v-if="!{$isBind}">绑定用户名</el-breadcrumb-item>
+                    <el-breadcrumb-item v-else>修改登录密码</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <template v-if="!{$isBind}">
+                <bind-username style="width: 50%;margin: 10px auto"></bind-username>
+            </template>
+            <template v-else>
+                <change-pwd :is-yzm="isYzm" :is-email="isEmail" style="width: 50%;margin: 10px auto"></change-pwd>
+            </template>
+        </el-card>
+    </div>
+</div>
+<!--绑定用户名-->
+<template id="bindUsername">
+    <div>
+        <div class="tips">设置的用户名，可以使用用户名+密码进行登录哦，请牢记!</div>
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+            <el-form-item prop="username"  label="用户名">
+                <el-input v-model="ruleForm.username" type="text" autocomplete="off" placeholder="请输入用户名"></el-input>
+            </el-form-item>
+            <el-form-item prop="pwd"  label="密码">
+                <el-input v-model="ruleForm.pwd" type="password" auto-complete="new-password" placeholder="请输入密码(长度6-25)"></el-input>
+            </el-form-item>
+            <el-form-item prop="pwd2"  label="确认密码">
+                <el-input v-model="ruleForm.pwd2" type="password" auto-complete="new-password" placeholder="请再次输入密码(长度6-25)"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button  type="danger" @click="submitForm('ruleForm')">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+<!--更改登录密码-->
+<template id="changePwd">
+    <div>
+        <el-tabs v-model="type">
+            <el-tab-pane label="通过原密码修改" name="1">
+                <change-pwd-old></change-pwd-old>
+            </el-tab-pane>
+            <el-tab-pane label="通过已绑定手机修改" name="2"  v-if="isYzm && parseInt('{$data.tel.islock}')">
+                <change-pwd-tel></change-pwd-tel>
+            </el-tab-pane>
+            <el-tab-pane label="通过已绑定邮箱修改" name="3"  v-if="isEmail && parseInt('{$data.email.islock}')">
+                <change-pwd-email></change-pwd-email>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</template>
+<!--更改登录密码***通过已绑定手机-->
+<template id="changePwdTel">
+    <div style="padding-top: 20px">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+            <el-form-item  prop="showTel" label="已绑定手机">
+                <el-input v-model="ruleForm.showTel" type="tel" placeholder="请输入已绑定手机" disabled></el-input>
+            </el-form-item>
+            <el-form-item prop="yzm"  label="验证码">
+                <el-input v-model.number="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码 "></el-input>
+                <el-button type="primary" class="btn-yzm" plain @click.native="sendsms" v-if="smsState">{{text}}</el-button>
+                <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+            </el-form-item>
+            <el-form-item prop="pwd" label="新密码">
+                <el-input v-model="ruleForm.pwd" type="password" auto-complete="new-password" placeholder="请输入新密码"></el-input>
+            </el-form-item>
+            <el-form-item prop="pwd2" label="确认新密码">
+                <el-input v-model="ruleForm.pwd2" type="password" auto-complete="new-password" placeholder="请再次输入新密码"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button  type="danger" @click="submitForm('ruleForm')" :loading="loading">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+<!--更改登录密码***通过原密码-->
+<template id="changePwdOld">
+    <div style="padding-top: 20px">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+            <el-form-item prop="oldpwd"  label="原密码">
+                <el-input v-model="ruleForm.oldpwd" type="password" auto-complete="new-password" placeholder="请输入原密码"></el-input>
+            </el-form-item>
+            <el-form-item prop="pwd"  label="新密码">
+                <el-input v-model="ruleForm.pwd" type="password" auto-complete="off" placeholder="请输入新密码(长度6-25)"></el-input>
+            </el-form-item>
+            <el-form-item prop="pwd2"  label="确认新密码">
+                <el-input v-model="ruleForm.pwd2" type="password" auto-complete="new-password" placeholder="请再次输入新密码(长度6-25)"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button  type="danger" @click="submitForm('ruleForm')">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+<!--更改登录密码***通过已绑定邮箱-->
+<template id="changePwdEmail">
+    <div style="padding-top: 20px">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+            <el-form-item  prop="email" label="已绑定邮箱">
+                <el-input v-model="ruleForm.email" type="text" placeholder="请输入已绑定邮箱" disabled></el-input>
+            </el-form-item>
+            <el-form-item prop="yzm"  label="验证码">
+                <el-input v-model.number="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码 "></el-input>
+                <el-button type="primary" class="btn-yzm" plain @click.native="sendsms" v-if="smsState" :loading="loadingEmail">{{text}}</el-button>
+                <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+            </el-form-item>
+            <el-form-item prop="pwd" label="新密码">
+                <el-input v-model="ruleForm.pwd" type="password" auto-complete="new-password" placeholder="请输入新密码"></el-input>
+            </el-form-item>
+            <el-form-item prop="pwd2" label="确认新密码">
+                <el-input v-model="ruleForm.pwd2" type="password" auto-complete="new-password" placeholder="请再次输入新密码"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button  type="danger" @click="submitForm('ruleForm')" :loading="loading">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+{include file='web@common/foot'/}
+<script>
+    'use strict';
+
+    $(function () {
+        //更改登录密码***通过已绑定邮箱
+        Vue.component('change-pwd-email', {
+            template: '#changePwdEmail',
+            data: function data() {
+                var _this = this;
+
+                var validatePass = function validatePass(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请输入新密码'));
+                    } else {
+                        if (_this.ruleForm.pwd !== '') {
+                            _this.$refs.ruleForm.validateField('pwd2');
+                        }
+                        callback();
+                    }
+                };
+                var validatePass2 = function validatePass2(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请再次输入新密码'));
+                    } else if (value !== _this.ruleForm.pwd) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return {
+                    ruleForm: {
+                        pwd: '',
+                        pwd2: '',
+                        email: '{$data.email.number}',
+                        yzm: ''
+                    },
+                    rules: {
+                        yzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                        pwd: [{ required: true, validator: validatePass, trigger: 'blur' }, { min: 6, max: 25, message: '长度在 6 到 25 个字符', trigger: 'blur' }],
+                        pwd2: [{ required: true, validator: validatePass2, trigger: 'blur' }, { min: 6, max: 25, message: '长度在 6 到 25 个字符', trigger: 'blur' }]
+                    },
+                    loading: false,
+                    loadingEmail: false,
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120
+                };
+            },
+
+            methods: {
+                //发送验证码
+                sendsms: function sendsms() {
+                    var _this2 = this;
+
+                    this.loadingEmail = true;
+                    if (this.countDown != 120) return false;
+                    $.get('{:url("sendPwdEmail")}', function (res) {
+                        if (!res.err) {
+                            _this2.smsState = false;
+                            _this2.text = "已发送(" + _this2.countDown + "秒)";
+                            _this2.loadingEmail = false;
+                            var interval = setInterval(function () {
+                                _this2.countDown = _this2.countDown - 1;
+                                if (_this2.countDown == 0) {
+                                    _this2.text = '获取验证码';
+                                    _this2.countDown = 120;
+                                    clearInterval(interval);
+                                    _this2.smsState = true;
+                                    return;
+                                }
+                                _this2.text = "已发送(" + _this2.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this2.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this2.loadingEmail = false;
+                        }
+                    });
+                },
+                submitForm: function submitForm(formName) {
+                    var _this3 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            _this3.loading = true;
+                            $.post('{:url("checkPwdEmail")}', {
+                                yzm: _this3.ruleForm.yzm,
+                                password: _this3.ruleForm.pwd,
+                                password2: _this3.ruleForm.pwd2
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this3.loading = false;
+                                    _this3.$message({
+                                        showClose: true,
+                                        message: res.msg,
+                                        type: 'success'
+                                    });
+                                    setTimeout(function () {
+                                        location.href = "{:url('./index')}";
+                                    }, 1500);
+                                    return;
+                                }
+                                _this3.loading = false;
+                                _this3.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //更改登录密码***通过已绑定手机
+        Vue.component('change-pwd-tel', {
+            template: '#changePwdTel',
+            data: function data() {
+                var _this4 = this;
+
+                var validatePass = function validatePass(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请输入新密码'));
+                    } else {
+                        if (_this4.ruleForm.pwd !== '') {
+                            _this4.$refs.ruleForm.validateField('pwd2');
+                        }
+                        callback();
+                    }
+                };
+                var validatePass2 = function validatePass2(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请再次输入新密码'));
+                    } else if (value !== _this4.ruleForm.pwd) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return {
+                    ruleForm: {
+                        pwd: '',
+                        pwd2: '',
+                        showTel: '{$data.tel.number}',
+                        tel: '{$user.tel}',
+                        yzm: ''
+                    },
+                    rules: {
+                        yzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                        pwd: [{ required: true, validator: validatePass, trigger: 'blur' }, { min: 6, max: 25, message: '长度在 6 到 25 个字符', trigger: 'blur' }],
+                        pwd2: [{ required: true, validator: validatePass2, trigger: 'blur' }, { min: 6, max: 25, message: '长度在 6 到 25 个字符', trigger: 'blur' }]
+                    },
+                    loading: false,
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120
+                };
+            },
+
+            methods: {
+                //发送验证码
+                sendsms: function sendsms() {
+                    var _this5 = this;
+
+                    if (this.countDown != 120) return false;
+                    $.get('/index/user/sendSmsPassword', {
+                        tel: this.ruleForm.tel
+                    }, function (res) {
+                        if (!res.err) {
+                            _this5.smsState = false;
+                            _this5.text = "已发送(" + _this5.countDown + "秒)";
+                            var interval = setInterval(function () {
+                                _this5.countDown = _this5.countDown - 1;
+                                if (_this5.countDown == 0) {
+                                    _this5.text = '获取验证码';
+                                    _this5.countDown = 120;
+                                    clearInterval(interval);
+                                    _this5.smsState = true;
+                                    return;
+                                }
+                                _this5.text = "已发送(" + _this5.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this5.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+                submitForm: function submitForm(formName) {
+                    var _this6 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            _this6.loading = true;
+                            $.post('/index/user/editByTel', {
+                                yzm: _this6.ruleForm.yzm,
+                                password: _this6.ruleForm.pwd,
+                                password2: _this6.ruleForm.pwd2
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this6.loading = false;
+                                    _this6.$message({
+                                        showClose: true,
+                                        message: res.msg,
+                                        type: 'success'
+                                    });
+                                    setTimeout(function () {
+                                        location.href = "{:url('./index')}";
+                                    }, 1500);
+                                    return;
+                                }
+                                _this6.loading = false;
+                                _this6.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //更改登录密码***通过原密码
+        Vue.component('change-pwd-old', {
+            template: '#changePwdOld',
+            data: function data() {
+                var _this7 = this;
+
+                var validatePass = function validatePass(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请输入新密码'));
+                    } else {
+                        if (_this7.ruleForm.pwd !== '') {
+                            _this7.$refs.ruleForm.validateField('pwd2');
+                        }
+                        callback();
+                    }
+                };
+                var validatePass2 = function validatePass2(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请再次输入新密码'));
+                    } else if (value !== _this7.ruleForm.pwd) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return {
+                    ruleForm: {
+                        oldpwd: '',
+                        pwd: '',
+                        pwd2: ''
+                    },
+                    rules: {
+                        oldpwd: [{ required: true, message: '请输入旧密码', trigger: 'blur' }],
+                        pwd: [{ required: true, validator: validatePass, trigger: 'blur' }, { min: 6, max: 25, message: '长度在 6 到 25 个字符', trigger: 'blur' }],
+                        pwd2: [{ required: true, validator: validatePass2, trigger: 'blur' }, { min: 6, max: 25, message: '长度在 6 到 25 个字符', trigger: 'blur' }]
+                    }
+                };
+            },
+
+            methods: {
+                submitForm: function submitForm(formName) {
+                    var _this8 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            $.post('/index/user/editByName', {
+                                oldpwd: _this8.ruleForm.oldpwd,
+                                password: _this8.ruleForm.pwd,
+                                password2: _this8.ruleForm.pwd2
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this8.loading = false;
+                                    _this8.$message({
+                                        showClose: true,
+                                        message: res.msg,
+                                        type: 'success'
+                                    });
+                                    setTimeout(function () {
+                                        location.href = "{:url('./index')}";
+                                    }, 1500);
+                                    return;
+                                }
+                                _this8.loading = false;
+                                _this8.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //更改登录密码
+        Vue.component('change-pwd', {
+            template: '#changePwd',
+            props: ['isYzm', 'isEmail'],
+            data: function data() {
+                return {
+                    type: '1'
+                };
+            }
+        });
+        //绑定用户名
+        Vue.component('bind-username', {
+            template: '#bindUsername',
+            data: function data() {
+                var _this9 = this;
+
+                var validatePass = function validatePass(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请输入密码'));
+                    } else {
+                        if (_this9.ruleForm.pwd !== '') {
+                            _this9.$refs.ruleForm.validateField('pwd2');
+                        }
+                        callback();
+                    }
+                };
+                var validatePass2 = function validatePass2(rule, value, callback) {
+                    if (value === '') {
+                        callback(new Error('请再次输入密码'));
+                    } else if (value !== _this9.ruleForm.pwd) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return {
+                    ruleForm: {
+                        username: '',
+                        pwd: '',
+                        pwd2: ''
+                    },
+                    rules: {
+                        username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }, { min: 5, max: 13, message: '长度在 5 到 13 个字符', trigger: 'blur' }],
+                        pwd: [{ required: true, validator: validatePass, trigger: 'blur' }, { min: 5, max: 13, message: '长度在 6 到 25 个字符', trigger: 'blur' }],
+                        pwd2: [{ required: true, validator: validatePass2, trigger: 'blur' }, { min: 5, max: 13, message: '长度在 6 到 25 个字符', trigger: 'blur' }]
+                    }
+                };
+            },
+
+            methods: {
+                submitForm: function submitForm(formName) {
+                    var _this10 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            _this10.loading = true;
+                            $.get('/index/user/lockName', {
+                                name: _this10.ruleForm.username,
+                                pwd: _this10.ruleForm.pwd,
+                                pwd2: _this10.ruleForm.pwd2
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this10.loading = false;
+                                    _this10.$message({
+                                        showClose: true,
+                                        message: res.msg,
+                                        type: 'success'
+                                    });
+                                    setTimeout(function () {
+                                        location.href = "{:url('./index')}?ac=5";
+                                    }, 1500);
+                                    return;
+                                }
+                                _this10.loading = false;
+                                _this10.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        new Vue({
+            el: "#app",
+            data: {
+                isYzm: parseInt('{$data.tel.isOpen}'), //是否开启短信接口
+                isEmail: parseInt('{$data.email.isOpen}') //是否开启邮箱验证
+            }
+        });
+    });
+</script>

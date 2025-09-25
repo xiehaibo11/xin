@@ -1,0 +1,372 @@
+{include file='common@common/head' /}
+<script type='text/javascript' src="__JS__/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__CSS__/upload/cropper.min.css">
+<script type='text/javascript' src="__JS__/upload/lrz.all.bundle.js"></script>
+<script type='text/javascript' src="__JS__/upload/cropper.js"></script>
+<!--绑定信息提示-->
+<script src="/static/vue-component/red-point-component.js"></script>
+
+<style>
+    .user_info {
+        position: relative;
+        padding: 1rem;
+    }
+    .user_photo {
+        width: 3.2rem;
+        height: 3.2rem;
+        border-radius: 50%;
+        /*border:3px solid #ffffff;*/
+    }
+    .edit_img span{
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        border: 3px solid #ffffff;overflow: hidden;display: inline-block
+    }
+    .user_memo {
+        flex: 1;
+        line-height: 1rem;
+        padding:0 .5rem;
+    }
+    .user_lv {
+        padding: .2rem .2rem;
+        border-radius: .2rem;
+        font-size: .6rem;
+        background: #09f;
+        color: #fff;
+    }
+    .user_name {
+        font-size:0.9rem;
+    }
+    .user_explan {
+        color: #78789e;
+        font-size: 0.7rem;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    .fans_nav {
+        padding: .3rem;
+        background: #fff;
+    }
+    .fans_nav_link {
+        position: relative;
+        text-align: center;
+        flex: 1;
+        font-size: .6rem;
+        color: #777;
+    }
+    .fans_nav_num {
+        color: #333;
+        font-size: .8rem;
+    }
+    .edit_dom{
+        display: none;
+    }
+    .edit_photo img{
+        max-width: 15rem;
+        max-height: 15rem;
+        width: 100%;
+        height: 100%;
+    }
+    .modal .modal-content {
+        padding: 0.2rem;
+        min-height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .showEdit {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 999999;
+    }
+    .list-arrow a{color:#fff;}
+    a{color: #fff;}
+    .set-edit{
+        text-align: center;
+        padding: 0.1rem 0.2rem;
+        border-radius: 0.2rem;
+        background-color: #cccccc;
+        color: #777;
+    }
+    .set-p{margin-left: 0.5rem}
+    .list.list-border-bottom .list-group .list-item.list-item-icon {
+        padding-left: 1.0rem;
+    }
+    .list-arrow i{
+        font-size: 1.0rem;
+        padding-right: 0.2rem;
+        color: #afb0d0;
+    }
+    .color1{ color: #f29a29; }
+    .color2{ color: #32b942; }
+    .color3{color: #f7f7f7;font-weight: bold;font-size: .9rem}
+    .color4{ color: #fd4b4b; }
+    .color5{color:#2fb4f9 }
+    .exit{
+        padding: 0.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        width: 100%;
+    }
+    .edit_img, #cancleBtn, #confirmBtn, #image{
+        cursor:pointer
+    }
+</style>
+
+<header class="header">
+    <div class="header-nav">
+        <a class="nav-word"  href="/index/user"><i class="icon-svg icon_left"></i> </a>
+    </div>
+    <div class="header-center">设置</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init" v-cloak>
+    <div>
+        <div class="user_info flex-box border-b">
+            <div class="edit_img">
+                <span><img class="user_photo" :src="info.photo"></span>
+                <p class="set-edit">更改头像</p>
+            </div>
+            <div class="user_memo">
+                <div class="user_name"><a href="/index/user/show">{{info.nickname}}</a> <span class="user_lv">lv.{{info.lv.level}} {{info.lv.level_name}}</span></div>
+                <a class="user_explan">签名：{{info.explan || '您还没有设置签名!'}}</a>
+            </div>
+        </div>
+        <div class="list list-border-bottom list-lg">
+            <div class="list-group list-arrow">
+                <p>
+                    <a class="list-item ellipsis list-item-icon" href="/index/user/setExplan" >
+                        <i class="iconfont icon-xiugai"></i>
+                        个性签名
+                    </a>
+                    <a class="list-item ellipsis list-item-icon" @click="editInfo">
+                        <i class="iconfont icon-gerenzhongxin"></i>
+                        个人资料
+                    </a>
+                    <a class="list-item ellipsis list-item-icon" href="/index/user/editPassword" >
+                        <i class="iconfont icon-mima2"></i>
+                        密码修改
+                    </a>
+                    <a class="list-item ellipsis list-item-icon" @click="changeTel">
+                        <i class="iconfont icon-icon--"></i>
+                        更改手机号
+                    </a>
+                    <a class="list-item ellipsis list-item-icon" href="/index/user/lockinfo">
+                        <i class="iconfont icon-security-setting color5"  style="position: relative">
+                            <red-point style="top: -.1rem;right: -.1rem;"></red-point>
+                        </i>
+                        账号安全设置
+                    </a>
+                </p>
+                <p>
+                    <a class="list-item ellipsis list-item-icon" href="{:url('realName')}">
+                        <i class="iconfont icon-shimingzhirenzhengjihuo"></i>
+                        实名认证
+                    </a>
+                    <a class="list-item ellipsis list-item-icon" href="{:url('bank')}">
+                        <i class="iconfont icon-yinhangqia"></i>
+                        银行卡管理
+                    </a>
+                    <a class="list-item ellipsis list-item-icon" @click="goAlipay">
+                        <i class="iconfont icon-zhifubaozhifu"></i>
+                        支付宝账号管理
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="exit" style="margin-top: 0.5rem">
+            <a style="color:#a2a2a2;" href="/index/login/logout" data-no-cache="true" class="list-item ellipsis list-item-icon"><i class="iconfont icon-weibiaoti-- color3"></i>
+                退出登录
+            </a>
+        </div>
+        <input id="image" type="file"  style="display: none"/>
+        <div class="edit_dom">
+            <div class="edit_photo">
+                <img :src="info.photo">
+            </div>
+        </div>
+        <div id="showEdit" class="showEdit">
+            <header class="header">
+                <div class="header-nav">
+                    <a class="nav-word" id="cancleBtn">取消</a>
+                </div>
+                <div class="header-center">更改头像</div>
+                <div class="header-nav">
+                    <a class="nav-word" id="confirmBtn">保存</a>
+                </div>
+            </header>
+            <div id="report" style="position: relative;height: 100%;">
+                <img src="">
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        $(document).on('click','.edit_img',function () {
+            $(".edit_img>img").attr({src:this.src});
+            Zepto.modal({
+                content: $(".edit_dom").html(),
+                btn: [
+                    function($btn) {
+                        $btn.text('更改头像');
+                        $btn.click(function() {
+                            $("#image").trigger("click");
+                        });
+                    },
+                    function($btn) {
+                        $btn.text('取消');
+                    }
+                ]
+            });
+        });
+        // 取消按钮
+        $(document).on('click','#cancleBtn', function() {
+            $("#showEdit").fadeOut();
+        });
+        // 确定裁剪按钮
+        $(document).on('click','#confirmBtn', function() {
+            $("#showEdit").fadeOut();
+            var $image = $('#report > img');
+            var dataURL = $image.cropper("getCroppedCanvas");
+            var imgurl = dataURL.toDataURL("image/jpeg", 0.5);
+            $.post("/index/user/setPhoto",{photo:imgurl},function (data) {
+                Zepto.msg(data.msg);
+                if (data.code) {
+                    $(".user_photo").attr("src", imgurl);
+                }
+            });
+        });
+        $(document).on('change', '#image',function() {
+            // 利用的 lrz.all.bundle 插件读取本机图片信息
+            lrz(this.files[0], {
+                width: 800,
+                height: 800,
+                quality: 0.7
+            }).then(function(rst) {
+                $("#report").html('<img src="' + rst.base64 + '">');
+                $("#showEdit").fadeIn();
+                // 利用的 jqery cropper 裁剪图片插件 打开裁剪画面
+                $("#report > img").cropper({
+                    'aspectRatio' : 1/1,// 图片宽高比例
+                    // 裁剪图片大小,0.7 = 原图片的70%
+                    'autoCropArea': 0.7,
+                    'strict': true,
+                    'guides': true,
+                    'center': true,
+                    'highlight': false,
+                    'dragCrop': false,
+                    'cropBoxMovable': true,
+                    'cropBoxResizable': false,
+                    'zoom': -0.2,
+                    'checkImageOrigin': true,
+                    'background': false,
+                    'movable ':true
+                });
+                return rst;
+            }).catch(function(err) {
+                // 万一出错了，这里可以捕捉到错误信息
+                // 而且以上的then都不会执行
+                alert(err);
+            }).always(function() {
+                // 不管是成功失败，这里都会执行
+            });
+            this.value = "";
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                info:{
+                    nickname: '- -',
+                    photo: '/static/images/photo.jpeg',
+                    lv: {level: 1, level_name: '--'},
+                    money: 0.00,
+                    grade: 0,
+                    explain: '你没有设置个性签名',
+                    flower: '0',
+                },
+                isTel:'',
+            },
+            methods:{
+                editInfo:function editInfo(){
+                    if(this.isTel == 1){
+                        Zepto.modal({
+                            content: '您还未绑定手机！',
+                            btn: [
+                                function($btn) {
+                                    $btn.text('立即去绑定');
+                                    $btn.click(function() {
+                                        location.href = '/index/user/lockInfo'
+                                    });
+                                },
+                                function($btn) {
+                                    $btn.text('取消');
+                                }
+                            ]
+                        });
+                        return false
+                    }
+                    location.href = '/index/user/info'
+                },
+                changeTel:function changeTel(){
+                    if(this.isTel == 1){
+                        Zepto.modal({
+                            content: '您还未绑定手机！',
+                            btn: [
+                                function($btn) {
+                                    $btn.text('立即去绑定');
+                                    $btn.click(function() {
+                                        location.href = '/index/user/lockInfo'
+                                    });
+                                },
+                                function($btn) {
+                                    $btn.text('取消');
+                                }
+                            ]
+                        });
+                        return false
+
+                    }
+                    location.href = '/index/user/changeTel'
+                },
+                goAlipay:function goAlipay() {
+                    $.get('{:url("getTrueInfo")}', function(res) {
+                        if(res.err){
+                            Zepto.modal({
+                                content: '您还未做实名制认证！',
+                                btn: [function ($btn) {
+                                    $btn.text('立即去认证');
+                                    $btn.click(function () {
+                                        location.href = '{:url("realName")}';
+                                    });
+                                }, function ($btn) {
+                                    $btn.text('取消');
+                                }]
+                            });
+                        }else {
+                            location.href = '{:url("alipay")}';
+                        }
+                    });
+                }
+            },
+            created: function() {
+                var _this = this;
+                $.get('/index/User/index', function(data) {
+                    _this.$set(_this, 'info',data.data);
+                    $('#app').removeClass('app_init');
+                })
+                $.get('/index/User/lockInfo', function(res) {
+                    _this.$set(_this, 'isTel',res.data.tel);
+                })
+            }
+        });
+    });
+</script>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BeforeAnimalSkin" width="640" height="300" currentState="zhadanren" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" states="daxiang,zhadanren" >
+	<w:Declarations>
+		<tween:TweenGroup id="daxiang">
+			<tween:TweenItem target="{image0}">
+				<tween:To duration="350">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="350">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="350">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1650"/>
+				<tween:Set/>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{dx_image}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}" x="{-200}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1350"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{-200}" alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="400">
+					<tween:props>
+						<e:Object x="{20}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1250"/>
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{dx_image1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}" x="{740}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{640}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="350">
+					<tween:props>
+						<e:Object x="{258.5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1150"/>
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{dx_image2}">
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{840}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1700"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{740}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object x="{343}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1000"/>
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="zhadanren">
+			<tween:TweenItem target="{image0}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1800"/>
+				<tween:Set/>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image}">
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{-200}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1200"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{-200}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object x="{20}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1500"/>
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{740}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1350"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{740}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object x="{226}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1350"/>
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image2}">
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{840}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="1500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{740}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="300">
+					<tween:props>
+						<e:Object x="{402.5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="1200"/>
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image id="image0" left="0" right="0" top="0" bottom="0" touchEnabled.daxiang="false" touchEnabled.zhadanren="false" source.daxiang="pic1_json.zoo_elep_come_sheet1002" source.zhadanren="pic1_json.zoo_elep_come_sheet1002" source="pic1_json.zoo_elep_come_sheet1002"/>
+	<e:Image id="image" includeIn="zhadanren" x="17" y="50" touchEnabled="false" source="pic1_json.图层 0 (2)"/>
+	<e:Image id="image2" includeIn="zhadanren" x="415" y="153" touchEnabled="false" source="pic1_json.zoo_elep_come_sheet1006"/>
+	<e:Image id="image1" includeIn="zhadanren" x="207.5" y="76" touchEnabled="false" source="pic1_json.zoo_elep_come_sheet1004"/>
+	<e:Image id="dx_image1" includeIn="daxiang" x="257" y="62" touchEnabled="false" source="pic1_json.熊猫"/>
+	<e:Image id="dx_image" includeIn="daxiang" x="21.5" y="40.5" touchEnabled="false" source="pic1_json.图层 0" anchorOffsetX="0" width="174.8" anchorOffsetY="0" height="207"/>
+	<e:Image id="dx_image2" includeIn="daxiang" x="351" y="144" touchEnabled="false" source="pic1_json.zoo_elep_come_sheet1003"/>
+</e:Skin>

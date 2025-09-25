@@ -1,0 +1,612 @@
+{include file='web@common/islogin_head' title="合买订单详情"/}
+<link rel="stylesheet" type="text/css" href="/static/vipweb/css/game_lottery.css" xmlns="http://www.w3.org/1999/html">
+<!--<script src="/static/vipweb/js/jquery.zclip.js"></script>-->
+<script src="/static/vipweb/js/clipboard.min.js"></script>
+<script src="/static/vipweb/vue-component/module-login.js"></script>
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    .el-table .cell{
+        font-size: 12px;
+    }
+    .el-table--mini td{
+        height: 41px;
+    }
+</style>
+<div class="web mt15 page-orders orders-jion" id="app" v-cloak>
+    <!--logindialog start-->
+    <login-info site-name="{$site_name}" @login-success="loginSuccess" @login-out="loginOut" msg-num="{$msgNum}" :nickname="nickname" :money="accountMoney" :login-visible="loginVisible"
+                reg-url="{:url('reg/index')}" my-url="{:url('user/my')}" @open-dialog="loginVisible = true" @close-dialog="loginVisible = false" @refresh="refreshMoney">
+    </login-info>
+    <!--logindialog end-->
+    <div class="head bg flex-box">
+        <div class="logo">
+            <img :src="order.image" alt="" class="game-icon">
+        </div>
+        <div class="info flex">
+            <div class="top flex-box">
+                <div class="flex tl">
+                    <span class="title">{{order.title}}</span>
+                    <span class="time issue">发起时间：{{order.create_time}}</span>
+                    <span class="time" style="padding-left: 10px">订单编号：{{order.lottery_id}}</span>
+                </div>
+                <input id="copy" type="text" v-model="copyUrl" autocomplete="off" class="el-input__inner" readonly style="position: absolute;width: 100px;height: 20px;top: -100px;right: 0;
+                z-index: -10;border: none;">
+                <a class="copy-btn link" data-clipboard-action="copy" data-clipboard-target="#copy">点击复制链接</a>
+            </div>
+            <div class="fq-user">
+                <p class="nickname">
+                    <span>发起人：</span>
+                    <span>{{order.nickname}}</span>
+                </p>
+                <p class="declaration">
+                    <span>合买宣言：{{order.declaration || '这个家伙很懒，只想中大奖！'}}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="cont">
+        <div class="jion-detail-left">
+            <div class="order-d">
+                <ul>
+                    <li>
+                        <span class="tit">截止时间：</span>
+                        <span class="con">{{order.end_time}}</span>
+                    </li>
+                    <li class="flex-box">
+                        <span class="tit">合买进度：</span>
+                        <span class="con flex"><el-progress :text-inside="true" :stroke-width="15" :percentage="progress" :status="progress==100 ? 'success' : 'exception'"></el-progress></span>
+                        <span style="padding-left: 5px"><i class="iconfont icon-bao1" style="color: red"></i>{{order.progress.assure_progress}}%</span>
+                    </li>
+                    <li>
+                        <span class="tit">方案金额：</span>
+                        <span class="con"><b class="red">{{order.total_money}}</b> {$company['lottery_unit']}</span>
+                    </li>
+                    <li class="flex-box">
+                        <span class="tit">总份数：</span>
+                        <span class="con"><b class="red">{{order.total_share}}</b> 份</span>
+                    </li>
+                    <li class="flex-box">
+                        <span class="tit">剩余份数：</span>
+                        <span class="con"><b class="red">{{order.progress.lost_num}}</b> 份</span>
+                        <a class="flex" @click="refresh" v-if="jionStatus" style="padding-left: 10px;cursor: pointer;font-size: 13px"><i class="el-icon-refresh"></i>刷新</a>
+                    </li>
+                    <li class="flex-box">
+                        <span class="tit">每份金额：</span>
+                        <span class="con"><b class="red">{{getPerMoney}}</b> {$company['lottery_unit']}</span>
+                    </li>
+                    <li>
+                        <span class="tit">我要认购：</span>
+                        <span class="con input-short">
+                            <el-input @change="checkVal" :disabled="!order.joinStatus" size="mini" v-model="buy"  placeholder="金额" style="width: 50px"></el-input> 份
+                            （共<em class="red">{{buyMoney(buy)}}</em>{$company['lottery_unit']}）
+                        </span>
+                    </li>
+                    <li class="btn tc">
+                        <el-button v-if="order.joinStatus && parseInt(order.progress.progress) !== 100" type="primary" @click.native="orderSure">立即认购</el-button>
+                        <el-button v-if="order.joinStatus && parseInt(order.progress.progress) == 100" type="info" disabled>方案已满员</el-button>
+                        <el-button v-if="order.status_num !== 7 && !order.joinStatus" type="info" disabled>合买已截止</el-button>
+                        <el-button v-if="order.status_num == 7 && !order.joinStatus" type="info" disabled>系统撤单</el-button>
+                    </li>
+                </ul>
+            </div>
+            <div class="plan-d">
+                <ul>
+                    <li>中奖状态：
+                        <em v-html="order.status_txt"></em>
+                    </li>
+                    <li v-if="{$system['isGain']}">盈利佣金：{{order.gain}}%</li>
+                    <!--<li>发起人买：{{order.progress.buy_num}} {$company['lottery_unit']}</li>-->
+                    <li>承诺保底：{{order.assure_money}} 份 (占{{order.progress.assure_progress}}%)</li>
+                    <li>是否公开：<em v-if="order.show == 0">完全公开</em><em v-if="order.show == 1">截止后公开</em><em v-if="order.show == 3">完全保密</em><em v-if="order.show == 2">仅跟单人可见</em></li>
+                </ul>
+            </div>
+        </div>
+        <div class="jion-detail-rig flex">
+            <div class="jion-order">
+                <el-tabs v-model="activeName" @tab-click="handleClick">
+                    <el-tab-pane label="方案内容" name="1">
+                        <!--方案详情-->
+                        <div>
+                            <h5 class="nav-tit">方案内容</h5>
+                            <!--完全公开-->
+                            <div v-if="order.show == 0 || order.isShow || order.fristBuy" v-for="item in order.betting" v-html="item" class="order-cont-list"></div>
+                            <!--截止后公开-->
+                            <div v-if="order.show == 1 && !order.isShow && !order.fristBuy" class="show-not">
+                                <i class="el-icon-view"></i> 截止后公开
+                            </div>
+                            <!--仅跟单人可见-->
+                            <div v-if="order.show == 2 && !order.isShow && !order.fristBuy"  class="show-not">
+                                <i class="el-icon-view"></i> 仅跟单人可见
+                            </div>
+                            <!--完全保密-->
+                            <div v-if="order.show == 3 && !order.isShow && !order.fristBuy"  class="show-not">
+                                <i class="el-icon-view"></i> 完全保密
+                            </div>
+                        </div>
+                        <!--方案详情 end-->
+                        <!--期号详情-->
+                        <div class="table-tc">
+                            <h5 class="nav-tit" style="margin-bottom: 0">
+                                期号详情 <em v-if="order.ischase">（追号合买 共追号 <b class="red">{{chaseIssue}}</b> 期</em>）
+                                <span class="fr" style="padding-right: 10px;font-weight: normal;font-size: 14px;line-height: 32px;color: #985945" v-if="order.ischase">追号设置：
+                                    <em v-if="order.is_stop">中奖后停止追号</em>
+                                    <em v-else>中奖后继续追号</em>
+                                </span>
+                            </h5>
+                            <el-table
+                                    :data="order.expect" size="mini"
+                                    border
+                                    style="width: 100%" class="tc">
+                                <el-table-column prop="expect" label="期号" width="120"></el-table-column>
+                                <el-table-column prop="multiple" label="倍数" width="60"> </el-table-column>
+                                <el-table-column prop="multiple" label="方案金额" width="110">
+                                    <template slot-scope="scope">
+                                        <span>{{order.total_money/mulTotal*scope.row.multiple}} {$company['lottery_unit']}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="code" label="开奖号码">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.code.length">
+                                            <span  v-for="code in scope.row.code"><b>{{code}} </b></span>
+                                        </span>
+                                        <span v-else class="prize_not">--</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="status" label="方案进度" width="80">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.newStatus==0">未出票</span>
+                                        <span v-if="scope.row.newStatus==1">已出票</span>
+                                        <span v-if="scope.row.newStatus==2" class="green">已完成</span>
+                                        <span v-if="scope.row.newStatus==3" class="c-3">中奖停止</span>
+                                        <span v-if="scope.row.newStatus==4">进行中</span>
+                                        <span v-if="scope.row.newStatus==5" class="c-3">停止追号</span>
+                                        <span v-if="scope.row.newStatus==6" class="c-3">流产撤单</span>
+                                        <span v-if="scope.row.newStatus==7" class="c-3">系统撤单</span>
+                                        <span v-if="scope.row.newStatus==8" class="c-3">用户撤单</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="status" label="中奖信息" width="90">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.status==2">
+                                            <em v-if="scope.row.bonus>0" class="red">已中奖</em>
+                                            <em v-else>未中奖</em>
+                                        </span>
+                                        <span v-else>--</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="bonus" label="奖金" width="110">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.status==2"><b :class="{'red':scope.row.bonus>0}">{{scope.row.bonus}}</b> {$company['lottery_unit']}</span>
+                                        <span v-else>--</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" v-if="order.fristBuy && order.ischase" width="100">
+                                    <template slot-scope="scope">
+                                        <chase-stop :id="scope.row.id" :lottery_id="order.lottery_id" :status="scope.row.newStatus" :order-id="order.id" @reload-expect="reloadExpect"></chase-stop>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                        <!--期号详情 end-->
+                    </el-tab-pane>
+                    <el-tab-pane label="参与用户" name="2">
+                        <div class="table-tc" v-if="url.length">
+                            <div class="tips" style="color: #666666;font-size: 13px;margin: 0">已有<b class="red">{{order.joinNum}}</b>人参与，共认购<b class="red">{{order.progress.buy_num}}</b>份</div>
+                            <page-nation :url="url">
+                                <el-table-column type="index" label="序号" width="100"></el-table-column>
+                                <el-table-column property="username" label="用户名">
+                                    <template slot-scope="scope">
+                                        {if condition="$Think.session.admin_sid"}
+                                        {{scope.row.username}} 
+                                        {else /}
+                                        {{scope.row.username.substring(0,1)}}***
+                                        {/if}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column property="create_time" label="认购时间"></el-table-column>
+                                <el-table-column property="money" label="认购份数 | 总金额">
+                                    <template slot-scope="scope"><em class="red">{{scope.row.money}}</em>份 | <em class="red">{{scope.row.user_buy}}</em>{$company['lottery_unit']}</template>
+                                </el-table-column>
+                                <el-table-column property="bonus" label="奖金">
+                                    <template slot-scope="scope">
+                                        <em><em :class="{'red': scope.row.bonus > 0}">{{scope.row.bonus}}</em> {$company['lottery_unit']}</em>
+                                        <!--<em v-if="order.status == 0" class="prize_wait">等待开奖</em>-->
+                                        <!--<em v-if="order.status == 1" class="prize_win"><b :class="{'red': scope.row.bonus > 0}">{{scope.row.bonus}}</b> {$company['lottery_unit']}</em>-->
+                                        <!--<em v-if="order.status == 2" class="prize_not">未中奖</em>-->
+                                        <!--<em v-if="order.status == 7" class="prize_cancel">系统撤单</em>-->
+                                        <!--<em v-if="order.status == 6" class="prize_cancel">流产撤单</em>-->
+                                        <!--<em v-if="order.status == 8" class="prize_cancel">用户撤单</em>-->
+                                    </template>
+                                </el-table-column>
+                            </page-nation>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="我的参与" name="3">
+                        <template v-if="isLogin">
+                            <el-table v-if="myJoin.length && show" :data="myJoin" size="small">
+                                <el-table-column property="create_time" label="认购时间"></el-table-column>
+                                <el-table-column property="money" label="认购份数 | 总金额">
+                                    <template slot-scope="scope"><em class="red">{{scope.row.money}}</em>份 | <em class="red">{{scope.row.user_buy}}</em>{$company['lottery_unit']}</template>
+                                </el-table-column>
+                                <el-table-column property="bonus" label="奖金">
+                                    <template slot-scope="scope">
+                                        <em><em :class="{'red': scope.row.bonus > 0}">{{scope.row.bonus}}</em> {$company['lottery_unit']}</em>
+                                        <!--<em v-if="order.status == 0" class="prize_wait">等待开奖</em>-->
+                                        <!--<em v-if="order.status == 1" class="prize_win"><b class="red">{{scope.row.bonus}}</b> {$company['lottery_unit']}</em>-->
+                                        <!--<em v-if="order.status == 2" class="prize_not">未中奖</em>-->
+                                        <!--<em v-if="order.status_num == 7" class="prize_cancel">系统撤单</em>-->
+                                        <!--<em v-if="order.status_num == 6" class="prize_cancel">流产撤单</em>-->
+                                        <!--<em v-if="order.status_num == 8" class="prize_cancel">用户撤单</em>-->
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div v-if="!myJoin.length && show" style="padding: 30px;font-size: 16px;color: #888888" class="tc">您未参与该合买方案!</div>
+                        </template>
+                        <template v-else>
+                            <div style="padding: 30px;font-size: 16px;color: #888888" class="tc">请先登录</div>
+                        </template>
+                    </el-tab-pane>
+                </el-tabs>
+                <span class="jion-num">{{order.joinNum}}</span>
+            </div>
+        </div>
+    </div>
+    <!--购买信息确认-->
+    <el-dialog
+            title="订单信息确认"
+            :visible.sync="orderVisible"
+            top="0"
+            :lock-scroll = "false"
+            width="450px"
+    >
+        <div class="order-info">
+            <div>
+                <span class="name">投注彩种:</span>
+                <span class="info">{{order.title}}</span>
+            </div>
+            <div>
+                <span class="name">投注方式:</span>
+                <span class="info">参与合买</span>
+            </div>
+            <div>
+                <span class="name">认购份数:</span>
+                <span class="info"><b class="red">{{buy}}</b> 份（共<b class="red">{{buyMoney(buy)}}</b>{$company['lottery_unit']})</span>
+            </div>
+            <div>
+                <span class="name">账户余额:</span>
+                <span class="info"><em>{{formatMoney}}</em> {$company['lottery_unit']}</span>
+            </div>
+            </div>
+            <div class="tips tc" style="font-size: 14px;color: #333" v-if="accountMoney < buyMoney(buy)">
+                您的<b class="red">账户余额不足</b>，请先充值!
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="orderVisible = false">取消</el-button>
+                <el-button type="primary" v-if="accountMoney < buyMoney(buy)" @click="goPay">立即充值</el-button>
+                <el-button type="primary" v-else @click="submitOrder">确定购买</el-button>
+            </span>
+    </el-dialog>
+</div>
+<template id="chaseStop">
+    <div>
+        <template v-if="status==0">
+            <el-popover
+                    placement="top"
+                    width="130"
+                    v-model="visible">
+                <p>确定对该期停止追号吗？</p>
+                <div style="text-align: right; margin: 0">
+                    <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                    <el-button type="primary" size="mini" @click="stopLottery">确定</el-button>
+                </div>
+                <el-button slot="reference" size="mini" type="success" round>停止追号</el-button>
+            </el-popover>
+        </template>
+        <template v-else>
+            <span > -- </span>
+        </template>
+    </div>
+</template>
+{include file='web@common/foot'/}
+<script>
+    'use strict';
+
+    $(function () {
+        //停止追号
+        Vue.component('chase-stop', {
+            template: '#chaseStop',
+            props: ['id', 'lottery_id', 'status', 'orderId'],
+            data: function data() {
+                return {
+                    visible: false
+                };
+            },
+
+            methods: {
+                stopLottery: function stopLottery() {
+                    var _this = this;
+
+                    $.post('{:url("stopLottery")}', {
+                        lottery_id: this.lottery_id,
+                        id: this.id
+                    }, function (res) {
+                        var type = res.err ? 'warning' : 'success';
+                        _this.visible = false;
+                        _this.$alert(res.msg, '提示', {
+                            confirmButtonText: '确定',
+                            type: type,
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        $.post('{:url("reloadExpect")}', {
+                            lottery_id: _this.lottery_id,
+                            id: _this.orderId
+                        }, function (res) {
+                            _this.$emit('reload-expect', res.data);
+                        });
+                    });
+                }
+            }
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                order: {$data},
+                isChase: 0,
+                jionStatus: 1,
+                isShow: 0, //方案详情是否可见 1可见 0不可见
+                buy: '1', //认购金额
+                activeName: '1', //tabs
+                accountMoney: '{$user.money}',
+                nickname: '{present name="$user.sid"} {$user.nickname}{/present}', //登录昵称
+                loginVisible: false, //登录弹窗
+                orderVisible: false, //订单弹窗
+                loginType: -1, //检测登录 -1 顶部登录 1 点击立即认购 2 点击我的参与
+
+                url: '', //获取参与用户列表url
+                myJoin: [], //我的参与
+                show:false
+            },
+            computed: {
+                //是否登录
+                isLogin: function isLogin() {
+                    if (this.nickname.length) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+
+                //合买进度
+                progress: function progress() {
+                    return parseFloat(this.order.progress.progress);
+                },
+
+                //账户余额显示格式化
+                formatMoney: function (_formatMoney) {
+                    function formatMoney() {
+                        return _formatMoney.apply(this, arguments);
+                    }
+
+                    formatMoney.toString = function () {
+                        return _formatMoney.toString();
+                    };
+
+                    return formatMoney;
+                }(function () {
+                    return formatMoney(this.accountMoney);
+                }),
+
+                //追号总期数
+                chaseIssue: function chaseIssue() {
+                    return this.order.expect.length;
+                },
+
+                //追号总倍数
+                mulTotal: function mulTotal() {
+                    var mul = 0;
+                    for (var i in this.order.expect) {
+                        mul = mul + this.order.expect[i].multiple;
+                    }
+                    return mul;
+                },
+                copyUrl:function () {
+                    return document.location.href
+                },
+                //计算每份金额
+                getPerMoney:function () {
+                    return accDiv(Number(this.order.total_money),Number(this.order.total_share),3) ? accDiv(Number(this.order.total_money),Number(this.order.total_share),3) : '1'
+                },
+            },
+            methods: {
+                //刷新余额
+                refreshMoney:function () {
+                    var _this = this;
+                    _this.$set(_this,'accountMoney','...')
+                    $.get('/index/user/getinfo', function (res) {
+                        _this.$set(_this,'accountMoney',res.data.money)
+                    });
+                },
+                //认购金额计算
+                buyMoney:function (buyShare) {
+                    return accMul(this.getPerMoney,Number(buyShare),3)
+                },
+                //监听购买金额输入
+                checkVal: function checkVal(val) {
+                    if (val <= 0) {
+                        this.buy = 1;
+                    } else if (val > this.order.progress.lost_num) {
+                        this.buy = this.order.progress.lost_num;
+                    } else {
+                        this.buy = parseInt(val);
+                    }
+                },
+
+                //登录成功
+                loginSuccess: function loginSuccess(v) {
+                    var _this2 = this;
+
+                    this.nickname = v[0];
+                    this.accountMoney = v[1];
+                    this.loginVisible = false;
+                    if (this.loginType == 1) {
+                        setTimeout(function () {
+                            _this2.orderSure();
+                            _this2.loginType = -1;
+                        }, 500);
+                    } else if (this.loginType == 2) {
+                        this.myJion();
+                        this.loginType = -1;
+                    }
+                },
+
+                //退出登录
+                loginOut: function loginOut() {
+                    $.get('{:url("login/logout")}', function () {
+                        window.location.reload();
+                    });
+                },
+
+                //订单信息确认
+                orderSure: function orderSure() {
+                    var _this3 = this;
+
+                    $.get('{:url("login/checkLogin")}', function (res) {
+                        if (!res.err) {
+                            _this3.nickname = res.nickname;
+                            _this3.accountMoney = res.money;
+                            _this3.orderVisible = true;
+                        } else {
+                            _this3.loginVisible = true;
+                            _this3.loginType = 1;
+                        }
+                    });
+                },
+
+                //购买
+                submitOrder: function submitOrder() {
+                    var _this4 = this;
+
+                    $.post('{:url("orders/buyJoin")}', {
+                        buy_id: this.order.id,
+                        lottery_id: this.order.lottery_id,
+                        money: this.buy
+                    }, function (res) {
+                        _this4.orderVisible = false;
+                        if (!res.err) {
+                            setTimeout(function () {
+                                _this4.$alert(res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    lockScroll: false
+                                });
+                                _this4.accountMoney = _this4.accountMoney - _this4.buy;
+                            }, 300);
+                            _this4.refresh();
+                        } else {
+                            _this4.$alert(res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: 'warning',
+                                center: true,
+                                lockScroll: false
+                            });
+                        }
+                    });
+                },
+
+                //跳转至充值页面
+                goPay: function goPay() {
+                    location.href = '{:url("./pay")}';
+                },
+
+                //我的参与
+                handleClick: function handleClick(tab) {
+                    if (tab.name == 2) {
+                        this.url = '{:url("orders/joinList")}' + '?name=' + this.order.name + '&buyid=' + this.order.id;
+                    }
+                    if (tab.name == 3) {
+                        this.url = '';
+                        this.mine();
+                    }
+                    if (tab.name == 1) {
+                        this.url = '';
+                    }
+                },
+                mine: function mine() {
+                    var _this5 = this;
+
+                    if (!this.isLogin) {
+                        $.get('{:url("login/checkLogin")}', function (res) {
+                            if (!res.err) {
+                                _this5.nickname = res.nickname;
+                                _this5.accountMoney = res.money;
+                                _this5.myJion();
+                            } else {
+                                _this5.loginVisible = true;
+                                _this5.loginType = 2;
+                            }
+                        });
+                    } else {
+                        this.myJion();
+                    }
+                },
+                myJion: function myJion() {
+                    var _this6 = this;
+                    var arr = [];
+                    $.get('{:url("orders/joinList")}' + '?name=' + this.order.name + '&buyid=' + this.order.id, function (res) {
+                        if(res.first.hasOwnProperty('buy_id')){
+                            arr.push(res.first);
+                            _this6.$set(_this6,'myJoin',arr)
+                        }
+                        _this6.show = true
+                    });
+                },
+
+                //刷新
+                refresh: function refresh() {
+                    var _this7 = this;
+
+                    $.get('{:url("orders/reIndex")}' + '?lottery_id=' + this.order.lottery_id + '&id=' + this.order.id, function (res) {
+                        if (!res.err) {
+                            //                            this.$notify({
+                            //                                message: '刷新成功！',
+                            //                                type: 'success'
+                            //                            });
+                            _this7.order.joinNum = res.data.joinNum;
+                            _this7.order.progress = res.data.progress;
+                            _this7.order.assure = res.data.assure;
+                            _this7.order.joinStatus = res.data.joinStatus;
+                            _this7.order.status_num = res.data.status_num;
+                        } else {
+                            _this7.$notify({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+                //更新期号状态
+                reloadExpect: function reloadExpect(emitVal) {
+                    this.$set(this.order, 'expect', emitVal);
+                }
+            },
+            created: function() {
+                var _this = this;
+                var clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function(e) {
+                    _this.$alert( '复制成功', '提示', {
+                        confirmButtonText: '确定',
+                        type: 'success',
+                        center: true
+                    });
+                });
+                clipboard.on('error', function(e) {
+                    alert('请选择“拷贝”进行复制!')
+                });
+            },
+        });
+    });
+
+</script>

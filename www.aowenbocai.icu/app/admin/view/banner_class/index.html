@@ -1,0 +1,130 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<nav class="plugin_nav">
+    <a href="{:url('admin/Banner/index')}">广告管理</a>
+    <a class="nav_active" href="{:url('admin/BannerClass/index')}">分类管理</a>
+</nav>
+<div id="app" class="box-padding">
+    <div class="breadcrumb">
+        <div class="add-botton fl">
+            <a href="{:url('add')}" class="btn btn-danger" role="button"><i class="glyphicon glyphicon-plus"></i> 添加广告分类</a>
+        </div>
+        <form class="form-inline fr" action="">
+            <div class="form-group form-group-left">
+                <label>时间</label>
+                <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="starttime" v-model="starttime"/>
+                    <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+                </div>
+                <label>到</label>
+                <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="endtime" v-model="endtime"/>
+                    <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+                </div>
+            </div>
+            <div class="form-group form-group-left">
+                <label>关键字:</label>
+                <input type="text" name="words" v-model="words" class="form-control" placeholder="分类名称">
+            </div>
+            <button type="button" class="btn btn-default btn-sm" @click="serchQ">搜索</button>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="table_box">
+        <table class="table table-striped table-bordered table-hover tc">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>分类名称</th>
+                <th>宽</th>
+                <th>高</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr v-for="item in list" v-cloak>
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.width}}</td>
+                <td>{{item.height}}</td>
+                <td>{{item.remark}}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a :href="'{:url('edit')}?id=' + item.id" class="btn btn-primary btn-sm btn_install" title="修改"><i
+                                class="glyphicon glyphicon-pencil"></i></a>
+                        <a href="#" class="btn btn-danger btn-sm delete" @click="mdelete(item.id)" title="删除"><i
+                                class="glyphicon glyphicon-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="tr" v-cloak v-html="render"></div>
+</div>
+</div>
+</div>
+
+<script>
+    $(function () {
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: [],
+                render: '',
+                words: '',
+                endtime: '',
+                starttime: ''
+            },
+            mounted: function () {
+                this.$nextTick(function () {
+                    $.post('{:Url("getList")}', function (data) {
+                        vm.list = data.list.data;
+                        vm.render = data.render;
+                    })
+                })
+            },
+            methods: {
+                serchQ: function () {
+                    $.post('{:Url("getList")}', {
+                        words: vm.words,
+                        endtime: vm.endtime,
+                        starttime: vm.starttime
+                    }, function (data) {
+                        vm.list = data.list.data;
+                        vm.render = data.render;
+                    })
+                },
+                mdelete: function (id) {
+                    var _url = '{:url("delete")}?id=' + id;
+                    $.modal.confirm('你是否确定删除', function () {
+                        location.href = _url;
+                    });
+                }
+            }
+
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>
+
+{include file='common/foot' /}

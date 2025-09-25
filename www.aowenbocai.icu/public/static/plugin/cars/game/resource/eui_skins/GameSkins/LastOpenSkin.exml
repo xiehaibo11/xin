@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="LastOpenSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+	</w:Declarations>
+	<e:Image source="other_json.other5" horizontalCenter="0" top="0"/>
+	<e:Group horizontalCenter="0" top="41">
+		<e:Image source="other_json.other3" scale9Grid="10,7,63,24" top="0" bottom="0" left="0" right="0"/>
+		<e:Scroller id="car_scoller" width="83" height="405" horizontalCenter="0" top="0">
+			<e:Group id="car_box" width="83" height="405">
+				<e:layout>
+					<e:VerticalLayout horizontalAlign="center" verticalAlign="top" gap="2" paddingTop="5"/>
+				</e:layout>
+			</e:Group>
+		</e:Scroller>
+		<e:Image id="newImg" source="other_json.other2" right="0" top="3" visible="false"/>
+		<e:Group id="txt" left="0" right="0" top="0" bottom="0" visible="false">
+			<e:Label text="暂" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" size="50" textColor="0x504fc1" bold="true"/>
+			<e:Label text="无" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" size="50" textColor="0x504FC1" bold="true"/>
+			<e:Label text="记" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" size="50" textColor="0x504FC1" bold="true"/>
+			<e:Label text="录" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" size="50" textColor="0x504FC1" bold="true"/>
+			<e:layout>
+			<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="20"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

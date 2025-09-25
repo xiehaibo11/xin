@@ -1,0 +1,582 @@
+{include file='web@common/head' title="充值"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/pay.css">
+<script src="/static/vipweb/js/clipboard.min.js"></script>
+<style>
+    .el-switch__core:after {
+        content: "";
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        border-radius: 100%;
+        transition: all .3s;
+        width: 16px;
+        height: 16px;
+        background-color: #fff;
+    }
+    .el-switch.is-checked .el-switch__core:after{
+        left: 100%;
+        margin-left: -17px;
+    }
+    .el-slider__button{
+        user-select: none;
+        border-color: rgb(255, 255, 255);
+        background-color: rgb(255, 255, 255);
+        box-shadow: rgba(143, 143, 143, 0.68) 0px 1px 4px 0px;
+    }
+</style>
+<div class="page-title">
+    <div class="web"><span>充值中心</span></div>
+</div>
+<div class="web pay mt15" id="app">
+    <div class="pay-info">
+        <span>用户名：{$user.nickname}</span>
+        <span>账户余额：<em class="red">{$user.money}</em> {$company['lottery_unit']}</span>
+        <span v-if="{$company['game_status']}">游戏账户：<em class="red">{$user.game_money}</em> {$company['game_unit']}</span>
+    </div>
+    <div class="pay-cont-tabs border">
+        <div class="head">
+            <ul class="flex-box">
+                {if condition = "$paysetting.other_alipay eq 1 OR $paysetting.other_wx eq 1  OR $select_other_pay neq 0"}
+                <li :class="{'active': activeTab == 0}" @click="tabs(0)">三方在线充值</li>
+                {/if}
+                {if condition = "$paysetting.pay_alipay eq 1"}
+                <li :class="{'active': activeTab == 1}" @click="tabs(1)">支付宝扫码支付</li>
+                {/if}
+                {if condition = "$paysetting.pay_wx eq 1"}
+                <li :class="{'active': activeTab == 2}" @click="tabs(2)">微信扫码支付</li>
+                {/if}
+                {if condition = "$paysetting.bank_open eq 1"}
+                <li :class="{'active': activeTab == 3}" @click="tabs(3)">银行卡转账</li>
+                {/if}
+            </ul>
+        </div>
+        <div class="cont" v-cloak>
+            <div style="padding: 5px;background-color: #fffaec;font-size: 16px;font-weight: bold;">
+                <span>充值{{isChange ? '{$setting['game_unit']}' : '{$setting['lottery_unit']}'}}</span>
+                <span class="red" style="font-size:14px; font-weight: normal; margin-left:20px;">每日充值赠送{$recharge_send_times}次，今日剩余{$has_recharge_times}次</span>
+                <span v-if="{$company['game_status']}" class="recharge-checkbox fr">转换成游戏币<el-switch v-model="isChange"></el-switch></span>
+            </div>
+            <div class="row flex-box">
+                <div>
+                    <label>充值金额:</label>
+                </div>
+                <div class="rechage-list flex">
+                    <ul>
+                        <li v-for="(item,index) in listData" :class="{'active':cur == index}" @click="choseRechage(item.money,index)">
+                            <div class="coin">
+                                <p v-if="isChange">{{item.coin}}<em class="gray">{$company['game_unit']}</em></p>
+                                <p v-else>{{item.lottery_money}}<em class="gray">{$company['lottery_unit']}</em></p>
+                                <p class="award" v-if="item.award >=1 && {$has_recharge_times} > 0">额外赠送{{item.award}}{$company['lottery_unit']}</p>
+                            </div>
+                            <div><b style="color: #000000">{{item.money}}元</b></div>
+                            <i class="icon-gou" v-if="index == cur"></i>
+                        </li>
+                        <!--三方支付 可输入金额 v-if="activeTab == 0"-->
+                        <li  :class="[{'active':cur == -1},{'error':state}]" @click="otherRecharge">
+                            <div class="coin">
+                                <p style="height: 35px">
+                                    <el-input class="other-rechage" size="small" placeholder="其他数量" v-model="other" @focus="otherRecharge" @blur="checkMoney"></el-input><em class="gray">{{isChange ? '{$setting['game_unit']}' : '{$setting['lottery_unit']}'}}</em>
+                                </p>
+                                <p class="award" style="height: 18px" v-if="otherAward > 0 && {$has_recharge_times} > 0"><em>额外赠送{{otherAward}}{$company['lottery_unit']}</em></p>
+                                <p class="red recharge-tip" v-if="state">请输入充值数量!</p>
+                            </div>
+                            <div><b style="color: #000000">{{otherMoney}}元</b></div>
+                            <i class="icon-gou" v-if="cur == -1"></i>
+                        </li>
+                        <!--三方支付 可输入金额 end-->
+                    </ul>
+                </div>
+            </div><!--充值金额列表 end-->
+            <!--在线充值-->
+            <div v-if="activeTab == 0">
+                <div class="row flex-box">
+                    <label>支付方式:</label>
+                    <div class="flex">
+                        <div>
+                            <el-radio v-model="wayRadio" label="alipay" border  v-if="otherAlipay">支付宝支付</el-radio>
+                            <el-radio v-model="wayRadio" label="wx" border v-if="otherWei">微信支付</el-radio>
+                            <template v-for="(item,index) in third_pay">
+                                <el-radio v-model="wayRadio" :label="item.id" border>{{item.title}}</el-radio>
+                            </template>
+                        </div>
+                        <!--其他支付下级选项-->
+                        <template v-for="(item,index) in third_pay">
+                            <div v-if="item.children">
+                                <ul class="cf childer-list" v-if="wayRadio == item.id" style="background-color: #f9f9f9;border: 1px solid #f1f1f1;padding: 10px;margin-top: 10px">
+                                    <el-radio-group v-model="wayRadiochildren">
+                                        <li v-for="(child,i) in item.children" class="fl" style="margin: 0 10px 10px 0">
+                                            <el-radio :label="child.id">{{child.title}}</el-radio>
+                                        </li>
+                                    </el-radio-group>
+                                </ul>
+                            </div>
+                        </template>
+                        <!--其他支付下级选项 end-->
+                    </div>
+                </div>
+                <div>需支付 <b class="red" style="font-size: 22px"><em v-if="cur >= 0">{{money}}</em><em v-else>{{otherMoney || 0}}</em></b> 元</div>
+                <div class="tc submit">
+                    <el-button type="primary" @click="submitOrder">下一步</el-button>
+                </div>
+            </div>
+            <!--在线充值 end-->
+            <!--支付宝扫码充值-->
+            <div v-if="activeTab == 1">
+                <div class="row flex-box">
+                    <label>支付方式:</label>
+                    <div class="flex">
+                        <div class="pay-sm">
+                            <div><img :src="imgAlipayData" alt=""></div>
+                            <div class="rig-info">
+                                <div class="money"><i class="iconfont icon-zhifubaozhifu" style="font-size: 20px;color: #00aaee"></i> 支付宝扫码，支付
+                                    <b class="money-val red" v-if="cur==-1">{{otherMoney || 0}}</b>
+                                    <b class="money-val red" v-else>{{money}}</b> 元
+                                </div>
+                                <div class="remark">
+                                    支付成功后请填写备注信息
+                                    <el-tooltip placement="bottom">
+                                        <div slot="content">
+                                            可填写交易订单号后6位或<br>
+                                            转账时的备注等相关信息
+                                        </div>
+                                        <i class="el-icon-question"></i>
+                                    </el-tooltip>
+                                </div>
+                                <div class="input"><el-input size="small" v-model="orderAlipay" placeholder="请填写备注信息"></el-input></div>
+                                <div class="btn mt15"><el-button type="primary" size="small" @click="submitNum">提交</el-button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--支付宝扫码充值 end-->
+            <!--微信扫码充值-->
+            <div v-if="activeTab == 2">
+                <div class="row flex-box">
+                    <label>支付方式:</label>
+                    <div class="flex">
+                        <div class="pay-sm">
+                            <div><img :src="imgWeiData" alt=""></div>
+                            <div class="rig-info">
+                                <div class="money"><i class="iconfont icon-weixinzhifu" style="font-size: 20px;color: #41b035"></i> 微信扫码，支付
+                                    <b class="money-val red" v-if="cur==-1">{{otherMoney || 0}}</b>
+                                    <b class="money-val red" v-else>{{money}}</b> 元
+                                </div>
+                                <div class="remark">
+                                    支付成功后请填写备注信息
+                                    <el-tooltip placement="bottom">
+                                        <div slot="content">
+                                            可填写交易订单号后6位或<br>
+                                            转账时的备注等相关信息
+                                        </div>
+                                        <i class="el-icon-question"></i>
+                                    </el-tooltip>
+                                </div>
+                                <div class="input"><el-input size="small" v-model="orderWei" placeholder="请填写备注信息"></el-input></div>
+                                <div class="btn mt15"><el-button type="primary" size="small" @click="submitNum">提交</el-button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--微信扫码充值 end-->
+            <!--银行卡转账充值-->
+            <div v-if="activeTab == 3">
+                <div class="row">
+                    <div class="bank-pay-title"><em class="tip-num">1</em><label>入款银行选择:</label></div>
+                    <div>
+                        <ul class="bank-list cf">
+                            <li v-for="(item,index) in bankList" :class="{'active': bankCur == index}" @click="bankCur=index">
+                                <div><span class="label">开户银行：</span>
+                                    <input id="bank_name" type="text" v-model="item.bank_name" type="text" autocomplete="off" readonly></div>
+                                <div>
+                                    <span class="label">开户网点：</span>
+                                    <input id="bank_area" type="text" v-model="item.bank_area" type="text" autocomplete="off" readonly>
+                                    <a class="copy-btn link" data-clipboard-action="copy" data-clipboard-target="#bank_area">复制</a>
+                                </div>
+                                <div>
+                                    <span class="label">收款账号：</span>
+                                    <input id="bank_num" type="text" v-model="item.bank_num" type="text" autocomplete="off" readonly>
+                                    <a class="copy-btn link" data-clipboard-action="copy" data-clipboard-target="#bank_num">复制</a>
+                                </div>
+                                <div>
+                                    <span class="label">收款人：</span>
+                                    <input id="name" type="text" v-model="item.name" type="text" autocomplete="off" readonly>
+                                    <a class="copy-btn link" data-clipboard-action="copy" data-clipboard-target="#name">复制</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt15">* 您目前选择的是<b class="red">{{curSelectBank}}</b></div>
+                    <div>
+                        <p class="money">需转账金额
+                            <b class="money-val red" v-if="cur==-1">{{otherMoney || 0}}</b>
+                            <b class="money-val red" v-else>{{money}}</b> 元
+                            <em class="red f12"> (<i class="iconfont icon-jinggao"></i>仅限于使用银行卡转账，您实际支付金额必须与此处的金额一致，若不一致，将无法到账。)</em>
+                        </p>
+                    </div>
+                    <div class="bank-pay-title"><em class="tip-num">2</em><label>填写转账资料：</label></div>
+                    <div class="input mt15" style="width: 550px">
+                        <el-form :model="ruleForm" :rules="rules" size="small" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+                            <el-form-item label="付款人姓名" prop="name">
+                                <el-input v-model="ruleForm.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="付款银行名称" prop="bank_name">
+                                <el-input v-model="ruleForm.bank_name"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <div class="acc-txt tips">
+                        <p class="pay-ico"><i class="iconfont icon-jinggao red"></i> 转账须知：</p>
+                        <p>* 转账方式仅限于您使用<em style="color: #333333">银行卡</em>进行转账，请勿使用其他方式。</p>
+                        <p>* 所填写转账资料必须与您实际支付信息一致，若不一致，将无法到账。</p>
+                        <p>* 以上银行账号仅限本次使用，账号不定期更换！请您根据本页面所提供的收款账号进行转账，若存款至过期账号，本网站恕不负责！</p>
+                    </div>
+                </div>
+            </div>
+            <!--银行卡转账充值 end-->
+            <div class="tip">
+                <h6>充值说明:</h6>
+                <p>{$paysetting.recharge_info}</p>
+            </div>
+        </div>
+    </div>
+    <el-dialog
+            title="提示"
+            :visible.sync="payDialogVisible"
+            width="20%"
+            top="0"
+            center>
+        <span>请在新开页面完成付款!</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click.native="finishPay">已完成付款</el-button>
+        </span>
+    </el-dialog>
+</div>
+{include file='web@common/foot'/}
+<script>
+    'use strict';
+
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                third_pay:{$third_pay}, //三方支付列表
+                listData: {$rechargeList }, //充值金额列表
+                activeTab: '0',
+                cur: '0',
+                money: '',
+                other: '',
+                state: false,
+                scaleCoin: parseInt('{$paysetting.recharge_award}'), //游戏币比值
+                isChange: false, //转换成游戏币
+                imgAlipayData: '', //支付宝充值二维码图片
+                imgWeiData: '', //微信充值二维码图片
+                orderAlipay: '', //支付宝充值订单号
+                orderWei: '', //微信充值订单号
+                wayRadio: '{$select_other_pay}', //默认三方支付方式 alipay 支付宝 wx 微信 + 其他三方支付
+                wayRadiochildren: '',
+                payWay: '',
+                payDialogVisible: false,
+
+                otherAlipay: parseInt('{$paysetting.other_alipay}'), //三方支付-支付宝
+                otherWei: parseInt('{$paysetting.other_wx}'), //三方支付-微信
+                otherPay: '{$select_other_pay}', //三方支付-新增
+                payAlipay: parseInt('{$paysetting.pay_alipay}'), //扫码支付-支付宝
+                payWei: parseInt('{$paysetting.pay_wx}'), //扫码支付-微信
+
+                payAlipayUrl: {$payAlipayUrl}, //支付宝扫码图片
+                payWeiUrl: {$payWeiUrl}, //微信扫码图片
+                award: {$award}, //赠送比例
+
+                otherAward: 0,
+
+                bankList:{$bank_config},
+                bankCur:0,
+                ruleForm: {
+                    name: '',
+                    bank_name: ''
+                },
+                rules: {
+                    name: [
+                        { required: true, message: '请输入付款人姓名', trigger: 'blur' }
+                    ],
+                    bank_name: [
+                        { required: true, message: '请输入付款银行名称', trigger: 'blur' }
+                    ]
+                }
+            },
+            computed: {
+                //其他充值金额计算
+                otherMoney: function() {
+                    var reg = /^[0-9]+.?[0-9]*$/;
+                    var res = reg.test(this.other);
+                    if(res) {
+                        return this.isChange ? this.other / this.scaleCoin : this.other
+                    } else {
+                        return '';
+                    }
+                },
+                curSelectBank:function () {
+                    return this.bankList.length ? this.bankList[this.bankCur].bank_name : ''
+                }
+            },
+            watch: {
+                other: function(val) {
+                    this.state = false
+                    //计算额外赠送值
+                    if (this.otherMoney < 1) {
+                        this.otherAward = 0;
+                    } else {
+                        for (var i in this.listData) {
+                            if (parseInt(this.otherMoney) >= this.listData[i].money) {
+                                //充值游戏币
+                                if (this.isChange) {
+                                    this.otherAward = Math.floor(this.award[parseInt(this.listData[i].money)] * (val / this.scaleCoin) * 100 / 100);
+                                }else {
+                                    this.otherAward = Math.floor(this.award[parseInt(this.listData[i].money)] * val * 100 / 100);
+                                }
+                            }
+                        }
+                    }
+                },
+                isChange: function(val) {
+                    this.checkMoney();
+                },
+                wayRadio:function (val) {
+                    this.wayRadiochildren = ''
+                    if(val !== 'alipay' && val !== 'wx'){
+                        for(var i = 0 ;i < this.third_pay.length ; i ++){
+                            if(val == this.third_pay[i].id && this.third_pay[i].children){
+                                this.wayRadiochildren = this.third_pay[i].children[0].id
+                            }
+                        }
+                    }
+                }
+            },
+            methods: {
+                finishPay:function () {
+                    location.reload();
+                },
+                tabs: function(n) {
+                    this.activeTab = n;
+                    if (this.cur > -1) {
+                        this.money = this.listData[parseInt(this.cur)].money;
+                        this.imgAlipayData = this.payAlipayUrl[parseInt(this.listData[parseInt(this.cur)].money)];
+                        this.imgWeiData = this.payWeiUrl[parseInt(this.listData[parseInt(this.cur)].money)];
+                    } else {
+                        this.imgAlipayData = this.payAlipayUrl.other;
+                        this.imgWeiData = this.payWeiUrl.other;
+                    }
+                },
+                //获取焦点时输入其他数量
+                otherRecharge: function() {
+                    this.cur = -1;
+                    if (this.cur == -1) {
+                        this.imgAlipayData = this.payAlipayUrl.other;
+                        this.imgWeiData = this.payWeiUrl.other;
+                    }
+                },
+                //失去焦点时检查输入数量、赠送值
+                checkMoney: function() {
+                    var other = parseInt(this.other);
+                    var scaleCoin = parseInt(this.scaleCoin);
+                    if (!this.other) {
+                        this.state = true;
+                        return
+                    }else {
+                        this.state = false;
+                        if (this.isChange) { //充值游戏币
+                            this.state = false;
+                            if (other < scaleCoin) {
+                                this.other = this.scaleCoin;
+                            } else {
+                                this.other = Math.ceil(other / scaleCoin * 100 / 100) * scaleCoin;
+                            }
+                        }else {
+                            this.other = parseInt(other);
+                        }
+                    }
+                },
+                //选择金额
+                choseRechage: function(m, index) {
+                    this.money = m;
+                    this.state = false;
+                    this.cur = index;
+                    if (this.activeTab == 1) {
+                        this.imgAlipayData = this.payAlipayUrl[parseInt(m)];
+                    }
+                    if (this.activeTab == 2) {
+                        this.imgWeiData = this.payWeiUrl[parseInt(m)];
+                    }
+                },
+
+                //在线充值提交订单
+                submitOrder: function() {
+                    var money, type;
+                    if (this.cur >= 0) {
+                        money = this.money;
+                    } else {
+                        money = this.otherMoney;
+                    }
+                    var val = this.isChange ? 1 : 2
+                    type = '&type=' +  val
+                    if (money < 1) {
+                        this.$alert('请输入充值数量!', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'warning',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    };
+                    this.payDialogVisible = true;
+                    //支付宝充值跳转
+                    if (this.wayRadio == 'alipay') {
+                        window.open('/pay/pay/pcAlipay?total_amount=' + money + type);
+                    }else if(this.wayRadio == 'wx') { //微信充值跳转
+                        window.open('/pay/pay/wxqrcodepay?total_amount=' + money + type);
+                    }else{
+                        var third_id = '&third_id='+  this.wayRadio ;
+                        var third_type = this.wayRadiochildren ?  '&third_type='+  this.wayRadiochildren : '' ;
+                        window.open('/pay/pay/payToThird?total_amount=' + money + type + third_id + third_type);
+                    }
+                },
+                //扫码支付--提交订单
+                submitNum: function() {
+                    var _this = this;
+                    var type, num, way, total_amount;
+                    type = _this.isChange ? 1 : 2 //1转换为游戏币 2充值彩金
+                    if (_this.activeTab == 1) {
+                        way = 3;
+                        num = _this.orderAlipay;
+                    }
+                    if (_this.activeTab == 2) {
+                        way = 2;
+                        num = _this.orderWei;
+                    }
+                    if (!num.length) {
+                        _this.$alert('请输入备注信息!', '提示', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        return;
+                    }
+                    if (_this.cur == -1) {
+                        total_amount = _this.otherMoney;
+                    } else {
+                        total_amount = _this.money;
+                    }
+                    $.get('/pay/pay/saoToPay', {
+                        way: way,
+                        total_amount: total_amount,
+                        type: type,
+                        info: num
+                    }, function (res) {
+                        if (!res.err) {
+                            _this.$alert('提交成功，请等待管理员审核!', '提示', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                            _this.orderAlipay = '';
+                            _this.orderWei = '';
+                        } else {
+                            _this.$alert(res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                lockScroll: false,
+                                showClose: false
+                            });
+                        }
+                    });
+                },
+                //银行卡转账提交订单
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            var _this = this;
+                            var type, total_amount;
+                            type = _this.isChange ? 1 : 2 //1转换为游戏币 2充值彩金
+                            if (_this.cur == -1) {
+                                total_amount = _this.otherMoney;
+                            } else {
+                                total_amount = _this.money;
+                            }
+                            $.get('/pay/pay/saoToPay', {
+                                way: 4,
+                                total_amount: total_amount,
+                                type: type,
+                                re_bank_suffix : _this.bankCur,
+                                name: _this.ruleForm.name,
+                                bank_name : _this.ruleForm.bank_name
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this.$alert('提交成功，请等待管理员审核!', '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        center: true,
+                                        lockScroll: false,
+                                        showClose: false
+                                    });
+                                    _this.ruleForm.name = ''
+                                    _this.ruleForm.bank_name = ''
+                                } else {
+                                    _this.$alert(res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'error',
+                                        center: true,
+                                        lockScroll: false,
+                                        showClose: false
+                                    });
+                                }
+                            });
+                        } else {
+                            return false;
+                        }
+                    });
+                }
+            },
+            created: function() {
+                if (!this.otherAlipay && !this.otherWei && this.otherPay == 0) {
+                    //三方支付未开启
+                    this.activeTab = this.payAlipay ? '1' : this.payWei ? '2' : '{$paysetting.bank_open}' == 1 ? '3' : '';
+                    this.imgAlipayData = this.payAlipayUrl[parseInt(this.listData[0].money)];
+                    this.imgWeiData = this.payWeiUrl[parseInt(this.listData[0].money)];
+                }
+                this.money = this.listData[0].money;
+                this.wayRadiochildren = ''
+                if(this.wayRadio !== 'alipay' && this.wayRadio !== 'wx'){
+                    for(var i = 0 ;i < this.third_pay.length ; i ++){
+                        if(this.wayRadio == this.third_pay[i].id && this.third_pay[i].children){
+                            this.wayRadiochildren = this.third_pay[i].children[0].id
+                        }
+                    }
+                }
+
+                var _this = this
+                var clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function(e) {
+                    _this.$alert( '复制成功', '提示', {
+                        confirmButtonText: '确定',
+                        type: 'success',
+                        center: true
+                    });
+                });
+                clipboard.on('error', function(e) {
+                    alert('请选择“拷贝”进行复制!')
+                });
+            }
+        });
+    });
+</script>

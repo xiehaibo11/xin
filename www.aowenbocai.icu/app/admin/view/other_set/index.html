@@ -1,0 +1,120 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+
+<nav class="plugin_nav">
+    <a href="{:url('admin/SystemSet/index')}">基础设置</a>
+    <a href="{:url('admin/SystemSet/setRecharge')}">充值兑换</a>
+    <a href="{:url('admin/SystemSet/user')}">会员设置</a>
+    <a href="{:url('admin/SystemSet/company')}">联系方式</a>
+    <!--<a class="nav_active"  href="#">API接口</a>-->
+	<div role="presentation" class="dropdown nav_active" style="display: inline-block">
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"  style="color: #39aef5;">
+			API接口<span class="caret"></span>
+		</a>
+		<ul class="dropdown-menu">
+			<li><a href="{:url('index')}">短信验证接口</a></li>
+			<li><a href="{:url('emails')}">邮箱验证接口</a></li>
+			<li><a href="{:url('qqConnect')}">快速登录接口</a></li>
+			<li><a href="{:url('shareImg')}">微信分享接口</a></li>
+		</ul>
+	</div>
+
+</nav>
+<div class="box-padding">
+	<div class="breadcrumb">
+		<ol>
+			<li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+			<li>短信接口</li>
+		</ol>
+	</div>
+    <div class="form-horizontal form_max">
+		<div class="form-group">
+				<label class="col-sm-2 control-label">手机号验证</label>
+				<div  class="col-sm-5">
+					<input id="yzm-state" type="checkbox" name="tel_checked"/>
+				</div>
+		</div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">主帐号</label>
+		  <div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="网站名" name="accountSid" value="{$setting['accountSid']}">
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">主帐号Token</label>
+		  <div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="网站名" name="accountToken" value="{$setting['accountToken']}">
+		  </div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">应用Id</label>
+			<div class="col-sm-5">
+			  <input type="text" class="form-control" placeholder="网站名" name="appId" value="{$setting['appId']}">
+			</div>
+		  </div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">请求地址</label>
+		  <div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="网站名" name="serverIP" value="{$setting['serverIP']}">
+		  </div>
+		  <div class="col-sm-2"  style="padding-top:7px;float:left">
+			<span>地址不带http://</span>
+		  </div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">模板ID</label>
+			<div class="col-sm-5">
+				<input type="text" class="form-control"  placeholder="网站名" name="tempId" value="{$setting['tempId']}">
+			</div>
+		</div>
+		<div class="form-group" style="display: none">
+			<label class="col-sm-2 control-label">请求端口</label>
+			<div class="col-sm-5">
+				<input type="text" class="form-control" disabled placeholder="网站名"  value="{$setting['serverPort']}">
+			</div>
+		</div>
+		<div class="form-group" style="display: none">
+		  <label class="col-sm-2 control-label">版本号</label>
+		  <div class="col-sm-5">
+			<input type="text" class="form-control" disabled placeholder="网站名" value="{$setting['softVersion']}">
+		  </div>
+		  
+		</div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary btn_save">保存设置</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch-init.js"></script>
+<script>
+$(function(){
+    //短信验证是否开启
+    var yzmState = '{$setting["tel_checked"]}' == 1 ? true : false;
+    var yzmValue;
+    $('#yzm-state').bootstrapSwitch('state', yzmState);
+    $('#yzm-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        yzmValue = state ? '1' : '0';
+    });
+
+	$('.btn_save').click(function() {
+      $.post('{:url("set")}', {
+        data: JSON.stringify({
+					tel_checked : yzmValue,
+					accountSid: $('input[name=accountSid]').val(),
+					accountToken: $('input[name=accountToken]').val(),
+					appId: $('input[name=appId]').val(),
+					serverIP: $('input[name=serverIP]').val(),
+					tempId: $('input[name=tempId]').val(),
+        })
+      }, function() {
+        $.modal.alert('修改成功');
+      });
+    });
+})
+</script>
+{include file='common/foot' /}

@@ -1,0 +1,303 @@
+{
+	"groups": [
+		{
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,description_json,1_json,2_json,4_json,btn-1_png,btn-2_png,doll-ef1_png,BGG_png,bg3-s_png,alert_lanel_png,btn_png,btnJ1_png,btnJ2_png,inpu_png,common_jd_png,inpu2_png,common_jd2_png,modal_bg_top_png,checkbox_select_up2_png,checkbox_unselect2_png,zuanshi_icon_png,btnJ1_no_png,btn-1_no_png,zu9_png,zu10_png,nwk2_b_png,nwk1_png,nwk2_png,tianchong_png",
+			"name": "preload"
+		},
+		{
+			"keys": "loading_bar_png,load_bg_png,load_ui_box_png,load_ui_bg_png,loading_msg_png",
+			"name": "loading"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/CheckBox/checkbox_select_disabled.png",
+			"type": "image",
+			"name": "checkbox_select_disabled_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_down.png",
+			"type": "image",
+			"name": "checkbox_select_down_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_up.png",
+			"type": "image",
+			"name": "checkbox_select_up_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_unselect.png",
+			"type": "image",
+			"name": "checkbox_unselect_png"
+		},
+		{
+			"url": "assets/ItemRenderer/selected.png",
+			"type": "image",
+			"name": "selected_png"
+		},
+		{
+			"url": "assets/Panel/border.png",
+			"type": "image",
+			"name": "border_png"
+		},
+		{
+			"url": "assets/Panel/header.png",
+			"type": "image",
+			"name": "header_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_disabled.png",
+			"type": "image",
+			"name": "radiobutton_select_disabled_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_down.png",
+			"type": "image",
+			"name": "radiobutton_select_down_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_up.png",
+			"type": "image",
+			"name": "radiobutton_select_up_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_unselect.png",
+			"type": "image",
+			"name": "radiobutton_unselect_png"
+		},
+		{
+			"url": "assets/ScrollBar/roundthumb.png",
+			"type": "image",
+			"name": "roundthumb_png"
+		},
+		{
+			"url": "assets/Slider/thumb.png",
+			"type": "image",
+			"name": "thumb_png"
+		},
+		{
+			"url": "assets/Slider/track.png",
+			"type": "image",
+			"name": "track_png"
+		},
+		{
+			"url": "assets/Slider/tracklight.png",
+			"type": "image",
+			"name": "tracklight_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/handle.png",
+			"type": "image",
+			"name": "handle_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/off.png",
+			"type": "image",
+			"name": "off_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/on.png",
+			"type": "image",
+			"name": "on_png"
+		},
+		{
+			"url": "assets/Button/button_down.png",
+			"type": "image",
+			"name": "button_down_png"
+		},
+		{
+			"url": "assets/Button/button_up.png",
+			"type": "image",
+			"name": "button_up_png"
+		},
+		{
+			"url": "assets/ProgressBar/thumb_pb.png",
+			"type": "image",
+			"name": "thumb_pb_png"
+		},
+		{
+			"url": "assets/ProgressBar/track_pb.png",
+			"type": "image",
+			"name": "track_pb_png"
+		},
+		{
+			"url": "assets/ScrollBar/track_sb.png",
+			"type": "image",
+			"name": "track_sb_png"
+		},
+		{
+			"url": "config/description.json",
+			"type": "json",
+			"name": "description_json"
+		},
+		{
+			"url": "assets/LoadingUi/loading_bar.png",
+			"type": "image",
+			"name": "loading_bar_png"
+		},
+		{
+			"url": "assets/LoadingUi/load_bg.png",
+			"type": "image",
+			"name": "load_bg_png"
+		},
+		{
+			"url": "assets/LoadingUi/load_ui_box.png",
+			"type": "image",
+			"name": "load_ui_box_png"
+		},
+		{
+			"url": "assets/LoadingUi/load_ui_bg.png",
+			"type": "image",
+			"name": "load_ui_bg_png"
+		},
+		{
+			"url": "assets/LoadingUi/loading_msg.png",
+			"type": "image",
+			"name": "loading_msg_png"
+		},
+		{
+			"url": "assets/egU/1.json",
+			"type": "sheet",
+			"name": "1_json",
+			"subkeys": "+字,-字,100,1000,200,300,500,btn-s-normal,btn-s-plus,余额bg,免费 2次,圆,圆角矩形 2,圆角矩形 4,奖品名称bg,按钮GO,按钮GO 按,数字调整屏,标题,菜单bg,菜单icon,豆子"
+		},
+		{
+			"url": "assets/egU/2.json",
+			"type": "sheet",
+			"name": "2_json",
+			"subkeys": "中心,吊绳,夹子右上,夹子右下,夹子左上,夹子左下"
+		},
+		{
+			"url": "assets/egU/4.json",
+			"type": "sheet",
+			"name": "4_json",
+			"subkeys": "猫箱-iphone,猫箱1,猫箱上,猫箱下,箱子,箱阴影"
+		},
+		{
+			"url": "assets/egU/btn-1.png",
+			"type": "image",
+			"name": "btn-1_png"
+		},
+		{
+			"url": "assets/egU/btn-2.png",
+			"type": "image",
+			"name": "btn-2_png"
+		},
+		{
+			"url": "assets/egU/doll-ef1.png",
+			"type": "image",
+			"name": "doll-ef1_png"
+		},
+		{
+			"url": "assets/egU/BGG.png",
+			"type": "image",
+			"name": "BGG_png"
+		},
+		{
+			"url": "assets/egU/bg3-s.png",
+			"type": "image",
+			"name": "bg3-s_png"
+		},
+		{
+			"url": "assets/egU/alert_lanel.png",
+			"type": "image",
+			"name": "alert_lanel_png"
+		},
+		{
+			"url": "assets/egU/btn.png",
+			"type": "image",
+			"name": "btn_png",
+			"scale9grid": "12,0,55,47"
+		},
+		{
+			"name": "btnJ1_png",
+			"type": "image",
+			"url": "assets/egU/btnJ1.png"
+		},
+		{
+			"name": "btnJ2_png",
+			"type": "image",
+			"url": "assets/egU/btnJ2.png"
+		},
+		{
+			"name": "inpu_png",
+			"type": "image",
+			"url": "assets/newimg/inpu.png"
+		},
+		{
+			"name": "common_jd_png",
+			"type": "image",
+			"url": "assets/newimg/common_jd.png"
+		},
+		{
+			"name": "inpu2_png",
+			"type": "image",
+			"url": "assets/newimg/inpu2.png"
+		},
+		{
+			"name": "common_jd2_png",
+			"type": "image",
+			"url": "assets/pay/common_jd.png"
+		},
+		{
+			"name": "modal_bg_top_png",
+			"type": "image",
+			"url": "assets/pay/modal_bg_top.png"
+		},
+		{
+			"name": "checkbox_select_up2_png",
+			"type": "image",
+			"url": "assets/pay/checkbox_select_up.png"
+		},
+		{
+			"name": "checkbox_unselect2_png",
+			"type": "image",
+			"url": "assets/pay/checkbox_unselect.png"
+		},
+		{
+			"name": "zuanshi_icon_png",
+			"type": "image",
+			"url": "assets/pay/zuanshi_icon.png"
+		},
+		{
+			"name": "btnJ1_no_png",
+			"type": "image",
+			"url": "assets/egU/btnJ1_no.png"
+		},
+		{
+			"name": "btn-1_no_png",
+			"type": "image",
+			"url": "assets/egU/btn-1_no.png"
+		},
+		{
+			"name": "zu9_png",
+			"type": "image",
+			"url": "assets/egU/zu9.png"
+		},
+		{
+			"name": "zu10_png",
+			"type": "image",
+			"url": "assets/egU/zu10.png"
+		},
+		{
+			"name": "nwk2_b_png",
+			"type": "image",
+			"url": "assets/egU/nwk2_b.png"
+		},
+		{
+			"name": "nwk1_png",
+			"type": "image",
+			"url": "assets/egU/nwk1.png"
+		},
+		{
+			"name": "nwk2_png",
+			"type": "image",
+			"url": "assets/egU/nwk2.png"
+		},
+		{
+			"name": "tianchong_png",
+			"type": "image",
+			"url": "assets/egU/tianchong.png"
+		}
+	]
+}

@@ -1,0 +1,94 @@
+{include file='common/head' /}
+<link rel="stylesheet" href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+	.box-padding {
+		padding: 20px;
+	}
+	.isdelete{
+		float:right;
+		margin-left: 50px;
+	}
+</style>
+<div id="app" class="box-padding">
+	<div class="form-group form-group-left" style="margin:-10px 0 0 -10px;display:inline-block">
+		<div class="btn-group" data-toggle="buttons" style="margin:1rem">
+		<a href="{:url('admin/Log/delete')}?day=30" class="btn btn-primary isdelete">清除30天前日志</a>
+		<a href="{:url('admin/Log/delete')}?day=15" class="btn btn-primary isdelete">清除15天前日志</a>
+		<a href="{:url('admin/Log/delete')}?day=7" class="btn btn-primary isdelete">清除7天前日志</a>
+		<a href="{:url('admin/Log/delete')}?day=3" class="btn btn-primary isdelete">清除3天前日志</a>
+		<a href="{:url('admin/Log/delete')}" class="btn btn-primary isdelete">全部清除</a>
+		</div>
+	</div>
+	<div class="breadcrumb">
+		<ol class="">
+			<li class="active"><i class="glyphicon glyphicon-link"></i> 日志列表</li>
+		</ol>
+		<form class="form-inline" action="">
+			<div class="form-group">
+				时间
+				<input type="text" name="starttime" class="form-control form_datetime" placeholder="开始时间" data-date-format="yyyy-mm-dd">
+			</div>
+			<div class="form-group">
+				到
+				<input type="text" name="endtime" class="form-control form_datetime" placeholder="结束时间" data-date-format="yyyy-mm-dd">
+			</div>
+			<div class="form-group">
+				- 关键字
+				<input type="text" name="words" class="form-control" value="{$query.words}" placeholder="关键字/用户名/操作/IP/地址">
+			</div>
+			<button type="submit" class="btn btn-default btn-sm">搜索</button>
+		</form>
+	</div>
+	<div class="table_box">
+		<table class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>用户ID</th>
+					<th>昵称(用户名)</th>
+					<th>操作</th>
+					<th>IP</th>
+					<th>地区</th>
+					<th>终端信息</th>
+					<th>链接</th>
+					<th>时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $list as $item}
+				<tr>
+					<td>{$item.id}</td>
+					<td>{$item.username.nickname} <span>({$item.username.username})</span></td>
+					<td>{$item.remark}</td>
+					<td>{$item.create_ip}</td>
+					<td>{$item.city}</td>
+					<td>{$item.terminal}</td>
+					<td>{$item.url}</td>
+					<td>{$item.create_time}</td>
+				</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	</div>
+	<div class="text-right">{$list->render()}</div>
+</div>
+
+<script>
+	$('#ts').click(function() {
+		$.modal.confirm('提示内容', function() {
+			console.log('确认按钮');
+		});
+	});
+	$('.form_datetime').datetimepicker({
+		language: 'zh-CN',
+		weekStart: 1,
+		todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+	});
+</script>
+{include file='common/foot' /}

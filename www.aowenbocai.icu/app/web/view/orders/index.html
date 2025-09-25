@@ -1,0 +1,294 @@
+{include file='web@common/head' title="订单详情"/}
+<link rel="stylesheet" type="text/css" href="/static/vipweb/css/game_lottery.css" xmlns="http://www.w3.org/1999/html">
+<style>
+    .el-table .cell{
+        font-size: 12px;
+    }
+    .el-table th>.cell{
+        text-align: center;
+    }
+    .el-table th{
+        background-color: #fff7ea;
+    }
+    .el-table--mini td{
+        height: 41px;
+    }
+</style>
+<div class="web mt15 border page-orders" id="app" v-cloak>
+    <div class="head bg flex-box">
+        <div class="logo">
+            <img :src="order.image" alt="" class="game-icon">
+        </div>
+        <div class="info flex">
+            <div class="name flex-box">
+                <span class="flex">{{order.title}}</span>
+                <el-button v-if="order.status < 1" plain type="danger" @click.native="cancelOrder(order.lottery_id)">撤销订单</el-button>
+            </div>
+            <div class="flex-box">
+                <div class="orders">订单号：{{order.lottery_id}}</div>
+                <div class="orders tr flex" style="padding-left: 15px">时间：{{order.create_time}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="cont">
+        <div class="part01 flex-box">
+            <div v-if="order.ischase" class="flex-box">
+                <div class="is-jion">自购追号</div>
+                <div>共追号 <b class="red">{{chaseIssue}}</b> 期</div>
+                <div style="padding-left: 15px">追号设置：<em v-if="order.is_stop">中奖后停止追号</em><em v-else>中奖后继续追号</em></div>
+            </div>
+            <div v-else class="flex-box">
+                <div>第 <b class="red">{{order.expect[0].expect}}</b> 期</div>
+                <div class="is-jion">自购</div>
+            </div>
+            <div class="flex tr state">
+                <span class="name">中奖状态</span><span class="result"><em v-html="winStatus"></em></span>
+            </div>
+        </div>
+        <table border="0" cellspacing="0" cellpadding="0" class="part02">
+            <tr v-if="!order.ischase">
+                <td class="left bt">方案进度</td>
+                <td class="progress bt">
+                    <el-steps :active="active" align-center  finish-status="success" size="mini" >
+                        <el-step title="提交方案"></el-step>
+                        <el-step title="已投注"></el-step>
+                        <el-step title="进行中"></el-step>
+                        <el-step title="已完成"></el-step>
+                    </el-steps>
+                </td>
+            </tr>
+            <tr>
+                <td class="left bt">方案总金额</td>
+                <td class="bt"><b class="red">{{order.total_money}}</b> {$company['lottery_unit']} <i style="margin-left:10px;" v-if="order.show_expect && !order.ischase">倍数：{{order.multiple}}</i></td>
+            </tr>
+            <tr v-if="!order.ischase">
+                <td class="left bt">本期开奖号码</td>
+                <td class="bt">
+                    <span v-if="!order.expect[0].code.length">--</span>
+                    <span v-else v-for="item in order.expect[0].code" class="ball ball-red">{{item}}</span>
+                </td>
+            </tr>
+            <tr v-if="!order.ischase">
+                <td class="left bt">中奖信息</td>
+                <td class="bt"><b v-html="winStatus"></b> <b v-if="this.order.status  == 1" class="red">({{order.expect[0].bonus}} {$company['lottery_unit']})</b></td>
+            </tr>
+            <tr>
+                <td class="left bt">方案内容</td>
+                <td class="bt">
+                    <ul>
+                        <li v-for="item in order.betting" v-html="item" class="order-cont-list"></li>
+                    </ul>
+                </td>
+            </tr>
+            <tr v-if="order.ischase">
+                <td class="left bt">追号详情</td>
+                <td class="bt">
+                    <el-table
+                        :data="order.expect" size="mini"
+                        border
+                        style="width: 100%" class="tc">
+                    <el-table-column prop="expect" label="期号" width="100"></el-table-column>
+                    <el-table-column prop="multiple" label="倍数" width="50"> </el-table-column>
+                    <el-table-column prop="multiple" label="方案金额" width="100">
+                        <template slot-scope="scope">
+                            <span>{{order.total_money/mulTotal*scope.row.multiple}} {$company['lottery_unit']}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="code" label="开奖号码" width="250">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.code.length">
+                                <span v-for="code in scope.row.code"><b>{{code}} </b></span>
+                            </span>
+                            <span v-else class="prize_not">--</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="status" label="方案进度">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.newStatus==0">未出票</span>
+                            <span v-if="scope.row.newStatus==1">已出票</span>
+                            <span v-if="scope.row.newStatus==2" class="green">已完成</span>
+                            <span v-if="scope.row.newStatus==3" class="c-3">中奖停止</span>
+                            <span v-if="scope.row.newStatus==4">进行中</span>
+                            <span v-if="scope.row.newStatus==5" class="c-3">停止追号</span>
+                            <span v-if="scope.row.newStatus==6" class="c-3">流产撤单</span>
+                            <span v-if="scope.row.newStatus==7" class="c-3">系统撤单</span>
+                            <span v-if="scope.row.newStatus==8" class="c-3">用户撤单</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="status" label="中奖信息">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.status==2">
+                                <em v-if="scope.row.bonus>0" class="red">已中奖</em>
+                                <em v-else>未中奖</em>
+                            </span>
+                            <span v-else>--</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="bonus" label="奖金">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.status==2"><b :class="{'red':scope.row.bonus>0}">{{scope.row.bonus}}</b> {$company['lottery_unit']}</span>
+                            <span v-else>--</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" v-if="order.fristBuy">
+                        <template slot-scope="scope">
+                            <chase-stop :id="scope.row.id" :lottery_id="order.lottery_id" :status="scope.row.newStatus" :order-id="order.id" @reload-expect="reloadExpect"></chase-stop>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                </td>
+            </tr>
+            <!--<tr>-->
+                <!--<td class="left bt"></td>-->
+                <!--<td class="service bt">-->
+                <!--</td>-->
+            <!--</tr>-->
+        </table>
+    </div>
+</div>
+<template id="chaseStop">
+    <div>
+        <template v-if="status==0">
+            <el-popover
+                    placement="top"
+                    width="130"
+                    v-model="visible">
+                <p>确定对该期停止追号吗？</p>
+                <div style="text-align: right; margin: 0">
+                    <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                    <el-button type="primary" size="mini" @click="stopLottery">确定</el-button>
+                </div>
+                <el-button slot="reference" size="mini" type="success" round >停止追号</el-button>
+            </el-popover>
+        </template>
+        <template v-else>
+            <span > -- </span>
+        </template>
+    </div>
+</template>
+{include file='web@common/foot'/}
+<script>
+    'use strict';
+
+    $(function () {
+        //停止追号
+        Vue.component('chase-stop', {
+            template: '#chaseStop',
+            props: ['id', 'lottery_id', 'status', 'orderId'],
+            data: function () {
+                return {
+                    visible: false
+                };
+            },
+
+            methods: {
+                stopLottery: function () {
+                    var _this = this;
+
+                    $.post('{:url("stopLottery")}', {
+                        lottery_id: this.lottery_id,
+                        id: this.id
+                    }, function (res) {
+                        var type = res.err ? 'warning' : 'success';
+                        _this.visible = false;
+                        _this.$alert(res.msg, '提示', {
+                            confirmButtonText: '确定',
+                            type: type,
+                            center: true,
+                            lockScroll: false,
+                            showClose: false
+                        });
+                        $.post('{:url("reloadExpect")}', {
+                            lottery_id: _this.lottery_id,
+                            id: _this.orderId
+                        }, function (res) {
+                            _this.$emit('reload-expect', res.data);
+                        });
+                    });
+                }
+            }
+        });
+        new Vue({
+            el: '#app',
+            data: {
+                order: {$data},
+                visible: false,
+                show: ''
+            },
+            computed: {
+                //中奖状态
+                winStatus: function () {
+                    return this.order.status_txt
+                },
+
+                //追号总期数
+                chaseIssue: function chaseIssue() {
+                    return this.order.expect.length;
+                },
+
+                //追号总倍数
+                mulTotal: function mulTotal() {
+                    var mul = 0;
+                    for (var i in this.order.expect) {
+                        mul = mul + this.order.expect[i].multiple;
+                    }
+                    return mul;
+                },
+
+                //进度显示
+                active: function active() {
+                    if (this.order.expect[0].status == 0) {
+                        return 2;
+                    } else if (this.order.expect[0].status == 1) {
+                        return 3;
+                    } else if (this.order.expect[0].status == 2) {
+                        return 4;
+                    }
+                }
+            },
+            methods: {
+                //更新期号状态
+                reloadExpect: function reloadExpect(emitVal) {
+                    this.$set(this.order, 'expect', emitVal);
+                },
+                //撤销订单
+                cancelOrder:function (id) {
+                    var _this = this
+                    _this.$confirm('确定要撤销该订单吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        lockScroll: false
+                    }).then(function(){
+                        $.get('{:url("orders/returnTicket")}', {
+                            lottery_id:id,
+                        }, function (res) {
+                            if(!res.err){
+                                _this.$alert(res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    center: true,
+                                    type: 'success',
+                                    lockScroll: false,
+                                    callback: function(action){
+                                        location.reload()
+                                    }
+                                })
+                            }else {
+                                _this.$alert(res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    center: true,
+                                    type: 'error',
+                                    lockScroll: false
+                                });
+                            }
+                        });
+                    }).catch(function(){
+                    });
+                }
+            },
+//            created: function created() {
+//                console.log(this.order);
+//            }
+        });
+    });
+</script>

@@ -1,0 +1,131 @@
+<div class="foot mt15 bg" style="padding-bottom: 0"  id="foot">
+    <div class="web">
+        <ul class="note flex-box">
+            <li>
+                <i class="iconfont icon-zhanghuanquan"></i>
+                <span>账户安全</span>
+            </li>
+            <li>
+                <i class="iconfont icon-fuwu"></i>
+                <span>金牌服务</span>
+            </li>
+            <li>
+                <i class="iconfont icon-youxi1"></i>
+                <span>游戏丰富</span>
+            </li>
+            <li>
+                <i class="iconfont icon-xinyu"></i>
+                <span>品牌信誉</span>
+            </li>
+        </ul>
+        <div class="flex-box help">
+            <div class="qrcode">
+                <p class="tc" style="font-size: 13px;font-weight: normal">{$company['company_wx']}</p>
+                <img src="{$company['company_img']}" alt="" width="110">
+            </div>
+            <dl>
+                <dt>新手教程</dt>
+                <dd>
+                    {volist name="footArticle.course" id="vo"}
+                        <a href="{:url('news/help')}/id/{$vo.id}/navid/{$vo.nav_id}" target="_blank">{$vo.title}</a>
+                    {/volist}
+                </dd>
+            </dl>
+            <dl>
+                <dt>彩票投注</dt>
+                <dd>
+                    {volist name="footArticle.betting" id="vo"}
+                    <a href="{:url('news/help')}/id/{$vo.id}/navid/{$vo.nav_id}" target="_blank">{$vo.title}</a>
+                    {/volist}
+                </dd>
+            </dl>
+            <dl>
+                <dt>充值兑换</dt>
+                <dd>
+                    {volist name="footArticle.recharge" id="vo"}
+                    <a href="{:url('news/help')}/id/{$vo.id}/navid/{$vo.nav_id}" target="_blank">{$vo.title}</a>
+                    {/volist}
+                </dd>
+            </dl>
+            <dl>
+                <dt>玩法介绍</dt>
+                <dd>
+                    {volist name="footArticle.playinfo" id="vo"}
+                    <a href="{:url('news/help')}/id/{$vo.id}/navid/{$vo.nav_id}" target="_blank">{$vo.title}</a>
+                    {/volist}
+                </dd>
+            </dl>
+            <dl class="last">
+                <dt>服务条款</dt>
+                <dd>
+                    <a @click="ysVisible=true">隐私保护协议</a>
+                    <a @click="gameVisible=true">游戏服务协议</a>
+                    <a @click="regVisible=true">用户注册协议</a>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="tips tc" style="padding-bottom: 0;margin-bottom: 0;">
+            <p class="tc">
+                <em class="red">适龄提示：本站游戏适合18岁以上玩家</em><em style="color: green;padding-left: 5px">未满18岁的玩家需在家长监督下进行游戏</em>
+                <a href="{:url('index/custody')}" class="link" target="_blank" style="padding-right: 25px;">家长监护工程</a>
+            </p>
+            <p>
+                健康游戏公告：拒绝盗版游戏 抵制不良游戏 注意自我保护 谨防受骗上当 适度游戏益脑 沉迷游戏伤身 合理安排时间 享受健康生活
+            </p>
+            <div>{$company['web_bottom']}</div>
+        </div>
+    </div>
+    <!--注册协议-->
+    <el-dialog v-cloak
+            title="用户注册协议"
+            :visible.sync="regVisible"
+            :lock-scroll = false :center="true"
+            top = 0
+            width="60%">
+        <div class="service-cont">{$company.user_web}</div>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="regVisible = false">我知道了</el-button>
+         </span>
+    </el-dialog>
+    <!--隐私保护协议-->
+    <el-dialog v-cloak
+            title="隐私保护协议"
+            :visible.sync="ysVisible"
+            :lock-scroll = false :center="true"
+            top = 0
+            width="60%">
+        <div class="service-cont">{$company.user_service}</div>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="ysVisible = false">我知道了</el-button>
+         </span>
+    </el-dialog>
+    <!--游戏服务协议-->
+    <el-dialog v-cloak
+            title="游戏服务协议"
+            :visible.sync="gameVisible"
+            :lock-scroll = false :center="true"
+            top = 0
+            width="60%">
+        <div class="service-cont">{$company.web_service}</div>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="gameVisible = false">我知道了</el-button>
+         </span>
+    </el-dialog>
+</div>
+{present name="$company['web_online_qq']"}
+{$company['web_online_qq']}
+{/present}
+{include file='web@common/end'/}
+<script type="text/javascript">
+    $(function () {
+        new Vue({
+            el: '#foot',
+            data: {
+                regVisible:false,
+                ysVisible:false,
+                gameVisible:false
+            }
+        });
+    });
+</script>

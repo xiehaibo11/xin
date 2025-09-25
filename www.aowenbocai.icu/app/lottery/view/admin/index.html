@@ -1,0 +1,28 @@
+{include file='admin@common/head' /}
+
+<style>
+  html,body{
+    height: 100%;
+  }
+  .iframe{
+    width: 100%;
+    height: 95%;
+  }
+</style>
+
+<nav class="plugin_nav" id="myTab">
+  <a href="#betting" class="nav_active" data-toggle="tab" data-url="{:url('betting',['name' => $name])}">会员投注方案管理</a>
+  <a href="#code" data-toggle="tab" data-url="{:url('code',['name' => $name])}">开奖号码管理</a>
+  <!-- <a href="#prize" data-toggle="tab" data-url="{:url('prize',['name' => $name])}">中奖匹配</a> -->
+</nav>
+<iframe src="{:url('betting',['name' => $name])}" class="iframe" id="iframe"></iframe>
+<script>
+    $(function () {
+        $('#myTab').on('click', 'a', function () {
+            $('#myTab a').removeClass('nav_active');
+            $(this).addClass('nav_active');
+            $("#iframe").attr({src: $(this).data('url')});
+        });
+    });
+</script>
+{include file='admin@common/foot' /}

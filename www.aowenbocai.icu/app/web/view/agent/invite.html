@@ -1,0 +1,151 @@
+{include file='web@common/link' title="下级开户"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<script src="/static/vipweb/js/clipboard.min.js"></script>
+
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">下级开户</span>
+        </div>
+        <div class="el-tabs el-tabs--card el-tabs--top">
+            <div class="el-tabs__header is-top">
+                <div class="el-tabs__nav-wrap is-top">
+                    <div class="el-tabs__nav-scroll">
+                        <div role="tablist" class="el-tabs__nav" style="transform: translateX(0px);">
+                            <div @click="toInvite(1)" id="tab-1" aria-controls="pane-1" role="tab" tabindex="-1" class="el-tabs__item is-top is-active">下级开户</div>
+                            <div @click="toInvite(2)" id="tab-2" aria-controls="pane-2" role="tab" tabindex="0" class="el-tabs__item is-top" aria-selected="true">邀请码管理</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <invite-set :lottery-show="lotteryShow" :user-rebate="userRebate"></invite-set>
+    </el-card>
+</div>
+<!--下级开户-->
+<template id="inviteSet">
+    <div class="invite-box">
+        <div class="invite-head bg">
+            <div>
+                开户类型：
+                <el-radio-group v-model="type">
+                    <el-radio :label="2">代理类型</el-radio>
+                    <el-radio :label="1">玩家类型</el-radio>
+                </el-radio-group>
+            </div>
+            <div>
+                返点设置：请先为下级设置返点。 <a href="{:url('agent/rebateOdds')}" class="link" target="_blank">点击查看返点赔率表</a>
+            </div>
+        </div>
+        <el-form class="invite-cont" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px">
+            <template v-for="(item,index) in lotteryShow">
+                <el-form-item :label="item.label" :prop="item.type">
+                    <el-input size="small" v-model="ruleForm[item.type]" type="number" :max="userRebate[item.type]" min="0" step="0.1" @change="change(item.type,ruleForm[item.type],userRebate[item.type])"></el-input>
+                    <span class="input-tips">（自身返点{{userRebate[item.type]}}，可为下级设置返点范围 <em class="org">0.0~{{userRebate[item.type]}}</em> ）</span>
+                </el-form-item>
+            </template>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm')">生成邀请码</el-button>
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+        </el-form>
+        <div class="tips">
+            <p>※ 温馨提示：</p>
+            <p>1、不同的返点赔率不同，返点越高赔率越高。</p>
+            <p>2、代理可获得的佣金等于代理自身返点与下级返点的差值，如代理自身返点6，下级返点4，代理可获得下级投注金额的2%，即下级下注100元，代理可获得2元。</p>
+            <p>3、下级返点值设得越低，下级的奖金或赔率就越低，建议给下级设置的返点不要过低。</p>
+        </div>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        //下级开户
+        Vue.component('invite-set', {
+            template: '#inviteSet',
+            props:['lotteryShow','userRebate'],
+            data: function() {
+                return{
+                    type : 2,//开户类型
+                    ruleForm: {
+                        ssc: '',
+                        ks: '',
+                        syxw: '',
+                        pk10: '',
+                        pc28: ''
+                    },
+                    rules: {
+                        ssc: [{ required: true, message: '请输入正确的时时彩返点值', trigger: 'blur' }],
+                        ks: [{ required: true, message: '请输入正确的快3返点值', trigger: 'blur' }],
+                        syxw: [{ required: true, message: '请输入正确的11选5返点值', trigger: 'blur' }],
+                        pk10: [{ required: true, message: '请输入正确的pk10返点值', trigger: 'blur' }],
+                        pc28: [{ required: true, message: '请输入正确的幸运28返点值', trigger: 'blur' }],
+                    }
+                };
+            },
+            methods: {
+                change:function(t,v,m){
+                    if(Number(v) > Number(m)){
+                        this.ruleForm[t] = m
+                    }else {
+                        this.ruleForm[t] = formateSmallNumber(v,1) //保留一位小数
+                    }
+                },
+                submitForm:function(formName) {
+                    var _this = this;
+                    _this.$refs[formName].validate(function(valid){
+                        if (valid) {
+                            $.post('{:Url("add_invite")}',{
+                                'type' : _this.type,
+                                'rebate' : JSON.stringify(_this.ruleForm)
+                            },function (res) {
+                                if (!res.err) {
+                                    _this.$alert( '生成成功', '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        center: true,
+                                        callback: function(){
+                                            _this.resetForm(formName);
+                                            window.location.href = "{:url('inviteCode')}"
+                                        }
+                                    });
+                                }else {
+                                    _this.$alert( res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'error',
+                                        center: true
+                                    });
+                                }
+                            })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm:function(formName) {
+                    this.$refs[formName].resetFields();
+                }
+            },
+            created:function () {
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                //用户对应返点
+                userRebate:{$rebate},
+                //彩票分类列表
+                lotteryShow: {$navList},
+            },
+            methods: {
+                toInvite:function(n){
+                    var url = n == 1 ? "{:url('invite')}" : "{:url('inviteCode')}"
+                    window.location.href = url
+                }
+            }
+        });
+    });
+</script>

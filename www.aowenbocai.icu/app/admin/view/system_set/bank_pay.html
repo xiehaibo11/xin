@@ -1,0 +1,162 @@
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">银行卡账号信息</h4>
+            </div>
+            <div class="modal-body" style="padding-bottom:0;">
+                <button type="button" id="bank_btn_add_item" class="btn btn-primary">添加一个</button>
+            </div>
+            <div class="modal-body">
+                <div class="table_box">
+                    <table class="table table-striped" id="bank_table">
+                        <thead>
+                        <tr>
+                            <th>银行卡名称</th>
+                            <th>银行卡号码</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {volist name="$setting.bank_config" id="item"}
+                        <tr>
+                            <td data-area="{$item.bank_area}">{$item.bank_name}</td>
+                            <td data-name="{$item.name}">{$item.bank_num}</td>
+                            <td>
+                                <a href="#" class="btn btn-info btn-xs edit_bank">
+                                    修改
+                                </a>
+                                <span class="btn btn-info delete_bank btn-xs " >删除</span>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal_son" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加银行卡账号</h4>
+            </div>
+            <div class="modal-body" id="bank_add_form">
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">银行卡名称</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="银行卡名称" name="bank_name" value="">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">开户行区域</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="开户行区域" name="bank_area" value="">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">银行卡号码</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="银行卡号码" name="bank_num" value="">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">持卡人</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="持卡人" name="name" value="">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="bank_btn_submit" class="btn btn-primary" data-dismiss="modal">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var edit_key = -1;
+    $("#bank_btn_add").click(function () {
+        $('#myModal3').modal({size:'sm'});
+    });
+    $("#bank_btn_add_item").click(function () {
+        $('#myModal_son').modal({size:'sm'});
+        edit_key = -1;
+        clear_form();
+    });
+    $(document).on("click", ".delete_bank", function () {
+        $(this).closest('tr').remove();
+        ajax_sub();
+    });
+    $(document).on("click", ".edit_bank", function () {
+        $('#myModal_son').modal({size:'sm'});
+        var index = $(this).closest('tr').index();
+        edit_key = index;
+        $('#bank_add_form').find('input[name=bank_name]').val($(this).closest('tr').find('td:eq(0)').text());
+        $('#bank_add_form').find('input[name=bank_area]').val($(this).closest('tr').find('td:eq(0)').data('area'));
+        $('#bank_add_form').find('input[name=bank_num]').val($(this).closest('tr').find('td:eq(1)').text());
+        $('#bank_add_form').find('input[name=name]').val($(this).closest('tr').find('td:eq(1)').data('name'));
+    });
+    function clear_form() {
+        $('#bank_add_form').find('input[name=bank_name]').val('');
+        $('#bank_add_form').find('input[name=bank_area]').val('');
+        $('#bank_add_form').find('input[name=bank_num]').val('');
+        $('#bank_add_form').find('input[name=name]').val('');
+    }
+    $(document).on('click','#bank_btn_submit',function () {
+        var bank_name = $('#bank_add_form').find('input[name=bank_name]').val();
+        var bank_area = $('#bank_add_form').find('input[name=bank_area]').val();
+        var bank_num = $('#bank_add_form').find('input[name=bank_num]').val();
+        var name = $('#bank_add_form').find('input[name=name]').val();
+        if (edit_key == -1) {
+            var html = '<tr>\n' +
+                '                            <td data-area="' + bank_area + '">' + bank_name + '</td>\n' +
+                '                            <td data-name="' + name + '">' + bank_num + '</td>\n' +
+                '                            <td>\n' +
+                '                                <a href="#" class="btn btn-info btn-xs edit_bank" data-key="">\n' +
+                '                                    修改\n' +
+                '                                </a>\n' +
+                '                                <span class="btn btn-info delete_bank btn-xs" >删除</span>\n' +
+                '                            </td>\n' +
+                '                        </tr>';
+            $('#bank_table tbody').append(html);
+        } else {
+            $('#bank_table tbody').find('tr:eq(' + edit_key + ')').find('td:eq(0)').text(bank_name);
+            $('#bank_table tbody').find('tr:eq(' + edit_key + ')').find('td:eq(0)').data('area', bank_area);
+            $('#bank_table tbody').find('tr:eq(' + edit_key + ')').find('td:eq(1)').text(bank_num);
+            $('#bank_table tbody').find('tr:eq(' + edit_key + ')').find('td:eq(1)').data('name', name);
+        }
+        ajax_sub();
+
+    });
+    function ajax_sub() {
+        var bank_config = [];
+        $('#bank_table tbody tr').each(function(e){
+            var obj = {};
+            obj['bank_name'] = $(this).find('td:eq(0)').text();
+            obj['bank_area'] = $(this).find('td:eq(0)').data('area');
+            obj['bank_num'] = $(this).find('td:eq(1)').text();
+            obj['name'] = $(this).find('td:eq(1)').data('name');
+            bank_config.push(obj);
+        });
+
+        var bank_config = JSON.stringify(bank_config);
+
+        $.post('{:url("set")}', {
+            data: JSON.stringify({
+                bank_config: bank_config,
+            })
+        }, function() {
+            $.modal.alert('操作成功');
+        });
+    }
+
+</script>

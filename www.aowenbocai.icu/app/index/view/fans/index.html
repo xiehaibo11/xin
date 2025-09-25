@@ -1,0 +1,99 @@
+{include file='common@common/head' /}
+
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<link rel="stylesheet" href="__STATIC__/css/fans.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<script src="/static/plugin/index/fans.js"></script>
+<link rel="stylesheet" href="/static/font/iconfont.css"/>
+<style>
+    .search input{padding: .2rem;border-radius: .2rem}
+</style>
+<header class="header"  id = 'header'>
+    <a class="header-nav" href="/index/user">
+      <i class="icon-svg icon_left"></i>
+  </a>
+    <div class="header-title">关注 / 粉丝</div>
+    <div class="header-r">
+        <a  class="iconfont icon-xinfeng1 msg_box" style="color: #d1ecff;font-size: 0.9rem" href="/index/user/message">
+            <span class="newmsg" :class="{'msg_show': count > 0}">{{count}}</span>
+        </a>
+    </div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <div id="fans">
+        <div class="tab">
+            <div class="tab-header">
+                <div class="tab-link tab-active" id="tab1" onclick="setTab('tab',1,2)">我的关注</div>
+                <div class="tab-link" id="tab2" onclick="setTab('tab',2,2)">我的粉丝</div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-page tab1 tab-active" id="con_tab_1">
+                    <list-group url="/index/fans/careList/"></list-group>
+                </div>
+                <div class="tab-page tab2" id="con_tab_2">
+                    <list-group url="/index/fans/fansList/"></list-group>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<template id="list-group">
+    <div>
+        <div class="input-search search flex-box" style="position:relative;">
+            <input type="text" class="input flex" placeholder="请输入关键字" v-model="word">
+			<i @click="search" class="iconfont icon-sousuo" style="color:#999;font-size:1.2rem;position:absolute;right: 0.9rem;top: 0.9rem;"></i>
+        </div>
+        <div class="list fans_list">
+            <div class="list-group">
+                <div v-for="item of list" class="list-item list-item-image-text border-b">
+                    <fans-list :item="item"></fans-list>
+                </div>
+            </div>
+        </div>
+        <loading-btn @click.native="loadMore()" class="list_more" :class="{'btn btn-lg': status == 0, 'load_gray': status != 0}" :status="loadStatus">{{loadStr}}</loading-btn>
+    </div>
+</template>
+<template id="fansList">
+    <div>
+        <div class="list-item-image">
+            <a :href="'/index/user/ushow?userid=' + (item.userid || item.to_userid)"><img :src="item.user.photo" alt=""></a>
+        </div>
+        <div class="list-item-text">
+            <div class="title">
+                <a :href="'/index/user/ushow?userid=' + (item.userid || item.to_userid)">{{item.user.nickname}}
+                <span class="user_lv">lv.{{item.user.lv.level}} {{item.user.lv.level_name}}</span>
+                </a>
+            </div>
+            <div class="memo ellipsis">签名:{{item.user.explan || 'Ta还没有设置签名！'}}</div>
+        </div>
+        <button class="btn btn_right" @click="care">{{care_str}}</button>
+    </div>
+</template>
+<script>
+    var vms = new Vue({
+        el:'#header',
+        data:{
+            count: 0,
+        },
+        created: function(){
+            var _this = this;
+            $.get('/index/user/newMsgNum',function(res){
+                _this.count = res.data;
+            })
+        }
+    })
+    //选项卡JS
+    function setTab(name,cursel,n){
+        for(i=1;i<=n;i++){
+            var menu=document.getElementById(name+i);
+            var con=document.getElementById("con_"+name+"_"+i);
+            menu.className=i==cursel?"tab-link tab-active":"tab-link";
+            con.style.display=i == cursel?"block":"none";
+        }
+    }
+</script>
+{include file='common@common/foot' /}

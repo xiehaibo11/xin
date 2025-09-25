@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ButtonRedSkin" width="100" height="56" currentState="disabled" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="up,disabled,down" >
+	<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xff433d" ellipseWidth="20" ellipseHeight="20" fillColor.disabled="0x726e6e" top.down="1" bottom.down="1" left.down="1" right.down="1"/>
+	<e:Label id="labelDisplay" text="确认" verticalAlign="middle" textAlign="center" left="0" right="0" size="28" verticalCenter="0" text.disabled="确认" size.disabled="28"/>
+</e:Skin>

@@ -1,0 +1,31 @@
+{include file='common/head' /}
+<style>
+    body {
+        background: #238BAB;
+    }
+
+    .top-center {
+        position: absolute;
+        padding: 20px;
+        width: 360px;
+        margin: auto;
+        top: 30%;
+        left: 50%;
+        margin-left: -180px;
+        background: #ddd;
+        border-radius: 4px;
+    }
+</style>
+<form class="top-center" action="{:url('admin/login/login')}" method="post">
+    <h3>
+        后台管理
+    </h3>
+    <div class="form-group">
+    <input type="text" class="form-control" placeholder="账号" name="username">
+    </div>
+    <div class="form-group">
+    <input type="password" class="form-control" placeholder="密码" name="password">
+    </div>
+    <button type="submit" class="btn btn-default btn-block">登录后台</button>
+</form>
+{include file='common/foot' /}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HistorySkin" width="40" height="40" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group width="40" height="40" horizontalCenter="0" verticalCenter="0">
+		<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="10" fillColor="0x5E5034"/>
+		<e:Label id="txt" text="弓" scaleX="1" scaleY="1" verticalAlign="middle" textAlign="center" textColor="0xD8994E" width="40" height="40" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+</e:Skin>

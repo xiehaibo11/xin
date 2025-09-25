@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<e:Skin class="skins.SoundOffButtonSkin" states="up,down" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" width="136" height="117">
+	<e:Image x="0" y="0" source="dt_json.声音-禁止" source.up="dt_json.声音-禁止" source.down="dt_json.声音-禁止 - 副本"/>
+</e:Skin>

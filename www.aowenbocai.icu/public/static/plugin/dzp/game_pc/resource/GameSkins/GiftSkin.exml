@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GiftSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="606" height="606">
+	<e:Group width="606" height="606" anchorOffsetX="303" anchorOffsetY="303" y="303" x="303">
+		<e:Image id="gift_img" source="poker_png" anchorOffsetX="58" anchorOffsetY="60" scaleX="1" scaleY="1" horizontalCenter="10" top="30" rotation="-90"/>
+	</e:Group>
+</e:Skin>

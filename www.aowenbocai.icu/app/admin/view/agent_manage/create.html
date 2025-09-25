@@ -1,0 +1,240 @@
+{include file='common/head' /}
+
+<style>
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 14px;
+}
+.form-control:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+.btn-create {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn-create:hover {
+    background: linear-gradient(135deg, #45a049, #4CAF50);
+    transform: translateY(-1px);
+}
+.help-text {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+.required {
+    color: #e74c3c;
+}
+</style>
+
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li><a href="{:url('index')}">代理管理</a></li>
+            <li class="active">创建代理</li>
+        </ol>
+    </div>
+    
+    <div class="form-container">
+        <h3 style="text-align: center; margin-bottom: 30px; color: #333;">
+            <i class="glyphicon glyphicon-user"></i> 创建新代理
+        </h3>
+        
+        <form id="createAgentForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="username">用户名 <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="help-text">用于登录的用户名，3-20个字符</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="password">密码 <span class="required">*</span></label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="help-text">登录密码，至少6位字符</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="nickname">昵称</label>
+                        <input type="text" class="form-control" id="nickname" name="nickname">
+                        <div class="help-text">显示名称，不填则使用用户名</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="agents">上级代理</label>
+                        <select class="form-control" id="agents" name="agents">
+                            <option value="0">无上级（一级代理）</option>
+                            {foreach $parentAgents as $agent}
+                            <option value="{$agent.id}">{$agent.username} ({$agent.nickname})</option>
+                            {/foreach}
+                        </select>
+                        <div class="help-text">选择上级代理，不选则为一级代理</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="money">初始余额</label>
+                        <input type="number" class="form-control" id="money" name="money" value="0" step="0.01" min="0">
+                        <div class="help-text">代理的初始资金余额</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="game_money">初始游戏币</label>
+                        <input type="number" class="form-control" id="game_money" name="game_money" value="0" step="0.01" min="0">
+                        <div class="help-text">代理的初始游戏币余额</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="email" class="form-control" id="email" name="email">
+                <div class="help-text">用于接收通知和找回密码</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="tel">手机号</label>
+                <input type="tel" class="form-control" id="tel" name="tel">
+                <div class="help-text">用于接收短信通知</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="remark">备注</label>
+                <textarea class="form-control" id="remark" name="remark" rows="3"></textarea>
+                <div class="help-text">代理的备注信息</div>
+            </div>
+            
+            <div class="text-center" style="margin-top: 30px;">
+                <button type="submit" class="btn btn-create">
+                    <i class="glyphicon glyphicon-plus"></i> 创建代理
+                </button>
+                <a href="{:url('index')}" class="btn btn-default" style="margin-left: 15px;">
+                    <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+$(function() {
+    $('#createAgentForm').submit(function(e) {
+        e.preventDefault();
+        
+        // 基础验证
+        var username = $('#username').val().trim();
+        var password = $('#password').val().trim();
+        
+        if (!username) {
+            $.modal.alert('请输入用户名');
+            return;
+        }
+        
+        if (username.length < 3 || username.length > 20) {
+            $.modal.alert('用户名长度应为3-20个字符');
+            return;
+        }
+        
+        if (!password) {
+            $.modal.alert('请输入密码');
+            return;
+        }
+        
+        if (password.length < 6) {
+            $.modal.alert('密码至少需要6位字符');
+            return;
+        }
+        
+        // 提交数据
+        var formData = $(this).serialize();
+        
+        $.post('{:url("create")}', formData, function(res) {
+            if (res.err == 0) {
+                $.modal.alert(res.msg, function() {
+                    location.href = '{:url("index")}';
+                });
+            } else {
+                $.modal.alert(res.msg);
+            }
+        }).fail(function() {
+            $.modal.alert('网络错误，请重试');
+        });
+    });
+    
+    // 用户名输入验证
+    $('#username').on('input', function() {
+        var username = $(this).val();
+        var regex = /^[a-zA-Z0-9_]{3,20}$/;
+        
+        if (username && !regex.test(username)) {
+            $(this).css('border-color', '#e74c3c');
+            $(this).next('.help-text').html('<span style="color: #e74c3c;">用户名只能包含字母、数字和下划线，3-20个字符</span>');
+        } else {
+            $(this).css('border-color', '#ddd');
+            $(this).next('.help-text').html('用于登录的用户名，3-20个字符');
+        }
+    });
+    
+    // 密码强度检查
+    $('#password').on('input', function() {
+        var password = $(this).val();
+        var strength = 0;
+        
+        if (password.length >= 6) strength++;
+        if (password.match(/[a-z]/)) strength++;
+        if (password.match(/[A-Z]/)) strength++;
+        if (password.match(/[0-9]/)) strength++;
+        if (password.match(/[^a-zA-Z0-9]/)) strength++;
+        
+        var strengthText = ['很弱', '弱', '一般', '强', '很强'];
+        var strengthColor = ['#e74c3c', '#f39c12', '#f1c40f', '#2ecc71', '#27ae60'];
+        
+        if (password.length > 0) {
+            $(this).next('.help-text').html(
+                '密码强度: <span style="color: ' + strengthColor[strength-1] + '">' + 
+                strengthText[strength-1] + '</span>'
+            );
+        } else {
+            $(this).next('.help-text').html('登录密码，至少6位字符');
+        }
+    });
+});
+</script>
+
+{include file='common/foot' /}

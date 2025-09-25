@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="OverPlanSkin" width="577" height="577" currentState="win" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" states="win,sign"  height.sign="80" width.win="577" height.win="577">
+	<w:Declarations>
+		<tween:TweenGroup id="zhuan">
+			<tween:TweenItem target="{image}">
+				<tween:To duration="4000">
+					<tween:props>
+						<e:Object rotation="{90}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{gift_box}">
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object rotation="{5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{-5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{-5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object rotation="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image source="组 10_png" horizontalCenter="0" verticalCenter="0" visible="false"/>
+	<e:Image id="image" includeIn="win" horizontalCenter="0" verticalCenter="0" source="zu10_png"/>
+	<e:Image includeIn="win" verticalCenter="0" horizontalCenter="0" source="zu9_png"/>
+	<e:Group id="gift_box" width="200" height="200" includeIn="win" x="288" y="336" anchorOffsetX="99" anchorOffsetY="190"/>
+	<e:Rect fillAlpha="0.7" ellipseWidth="32" left.sign="0" right.sign="0" top.sign="0" bottom.sign="0" anchorOffsetY.win="0" anchorOffsetX.win="0" fillAlpha.win="1" fillColor.win="0x112549" height.win="45" width.win="369" y.win="384" horizontalCenter.win="0"/>
+	<e:Label id="msg" text="恭喜获得[金币 200]！" anchorOffsetY="0" left="0" right="0" height="102" verticalAlign="middle" textAlign="center" verticalCenter="0" textColor="0xffdc47" textColor.sign="0xffffff" size.sign="26" left.sign="0" right.sign="0" top.sign="0" bottom.sign="0" text.sign="呀，是不是姿势没对！" left.win="0" right.win="0" verticalCenter.win="117.5"/>
+</e:Skin>

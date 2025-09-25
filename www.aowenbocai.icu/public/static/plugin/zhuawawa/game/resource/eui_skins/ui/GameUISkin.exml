@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameUISkin" width="750" height="1356" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing">
+	<w:Config id="160340070b9"/>
+	<e:Image source="BGG_png" horizontalCenter="0" verticalCenter="0"/>
+	<e:Image id="guang" source="doll-ef1_png" horizontalCenter="0" top="0" visible="false"/>
+	<e:Image scaleX="1" scaleY="1" source="bg3-s_png" horizontalCenter="0" bottom="150"/>
+	<ns1:Jia id="jia" skinName="JiaSkin" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" top="0"/>
+	<e:Group anchorOffsetY="0" bottom="240" horizontalCenter="0">
+		<ns1:Gift id="gift_box" skinName="GiftSkin" scaleX="1" scaleY="1" anchorOffsetY="0" y="-8"/>
+	</e:Group>
+	<e:Image id="kuang_top" horizontalCenter="0" top="0" source="nwk2_b_png"/>
+	<e:Group horizontalCenter="0" bottom="0" anchorOffsetY="0" height="212.97">
+		<e:Image id="kuang_bottom" horizontalCenter="0" bottom="-115.03" x="0" y="1012.0000000000001" scaleX="1" scaleY="1" source="nwk1_png"/>
+		<e:Group height="212" left="0" right="0" anchorOffsetY="0" bottom="38.97">
+			<e:Image source="1_json.数字调整屏" x="160" scaleX="1" scaleY="1" verticalCenter="0"/>
+			<e:Button id="btn_left" label="" x="65" scaleX="1" scaleY="1" verticalCenter="0">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="btn-1_png" source.down="btn-2_png" source.disabled="btn-1_no_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="btn_right" label="" x="349" scaleX="1" scaleY="1" verticalCenter="0">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="btnJ1_png" source.down="btnJ2_png" source.disabled="btnJ1_no_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="go" label="" x="466.73" scaleX="1" scaleY="1" bottom="8">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="1_json.按钮GO" source.down="1_json.按钮GO 按"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Label id="bet_money" text="200" x="173.57" rotation="359.01" anchorOffsetX="0" width="160.81" anchorOffsetY="0" height="91.85" textAlign="center" verticalAlign="middle" size="45" textColor="0xf7eec3" scaleX="1" scaleY="1" verticalCenter="0"/>
+			<e:Image source="1_json.圆角矩形 2" y="326.70000000000005" horizontalCenter="0" x="288" scaleX="1" scaleY="1" visible="false"/>
+			<e:Label text="免费2次" x="295.27" y="331.48" anchorOffsetX="0" width="163.91" anchorOffsetY="0" height="40.61" verticalAlign="middle" textAlign="center" size="30" bold="true" fontFamily="SimHei" textColor="0x204977" scaleX="1" scaleY="1" visible="false"/>
+		</e:Group>
+	</e:Group>
+	<e:Image id="menu" source="1_json.菜单bg" x="620.73" y="116"/>
+	<e:Image source="1_json.菜单icon" x="638" y="136" touchEnabled="false"/>
+	<e:Image x="39.76" y="120" anchorOffsetX="0" width="248" anchorOffsetY="0" height="65" source="inpu2_png" scale9Grid="41,15,25,3"/>
+	<e:Image x="59" y="133.4" anchorOffsetX="0" anchorOffsetY="0" source="common_jd_png" width="44" height="38.6"/>
+	<e:Image id="btn_pay" source="1_json.圆" x="237" y="136" anchorOffsetX="0" width="33" anchorOffsetY="0" height="33"/>
+	<e:Image source="1_json.标题" y="20" horizontalCenter="0"/>
+	<e:Label id="money_label" text="- -" x="111" y="142.5" anchorOffsetX="0" width="126" size="24" textColor="0xd86c43" bold="true"/>
+	<e:Group id="menu_panel" left="0" top="0" width="100%" height="100%" visible="false">
+		<e:Rect id="menu_bg" anchorOffsetX="0" anchorOffsetY="0" fillAlpha="0.48" ellipseWidth="20" scaleX="1" scaleY="1" left="0" top="0" width="100%" height="100%"/>
+		<e:Rect width="20" height="20" x="632.18" y="199.72" anchorOffsetX="0" anchorOffsetY="0" fillColor="0xa03131" rotation="45"/>
+		<e:Rect width="216" height="240" x="492.73" y="214" anchorOffsetX="0" anchorOffsetY="0" fillColor="0xa03131" ellipseWidth="21"/>
+		<e:Label id="game_his" text="游戏记录" x="519.82" y="226.4" height="70" verticalAlign="middle" width="160" textAlign="center"/>
+		<e:Label id="game_help" text="玩法介绍" x="519.82" y="300" height="70" verticalAlign="middle" width="160" textAlign="center"/>
+		<e:Label id="home" text="大厅首页" x="519.82" y="373.12" height="70" verticalAlign="middle" width="160" textAlign="center"/>
+		<ns1:BetHisPanel id="his_panel" skinName="BetHisPanelSkin" horizontalCenter="0" verticalCenter="0" visible="false"/>
+		<ns1:HelpPanel id="help_panel" skinName="HelpPlanSkin" horizontalCenter="0" verticalCenter="0" visible="false"/>
+	</e:Group>
+</e:Skin>

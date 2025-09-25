@@ -1,0 +1,640 @@
+{include file='web@common/islogin_head' title="合买大厅"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/columns.css">
+<script src="/static/vipweb/vue-component/page-nation-list.js"></script>
+<script src="/static/vipweb/vue-component/module-login.js"></script>
+
+<div id="app" v-cloak>
+    <div class="web jion-hall">
+        <div class="join-record box-light mt15">
+            <div class="head flex-box">
+                <span class="title"><i class="iconfont icon-hongren org"></i> 合买红人</span>
+                <span class="flex tr"><img src="/static/vipweb/images/lv/popular-active.gif" alt=""> 表示有方案可参与！</span>
+            </div>
+            <join-record></join-record>
+        </div>
+        <el-card class="mt15">
+            <div slot="header">
+                <span>热门方案</span>
+            </div>
+            <div class="jion-tabs flex-box">
+                <el-radio-group v-model="tabs">
+                    <el-radio-button label="0" @click.native="tab(0,'')">全部彩种</el-radio-button>
+                    <template v-for="(item,index) in gameNav">
+                        <el-radio-button :label="index+1"  @click.native="tab(index+1,item.id)" v-if="index<8">{{item.title}}</el-radio-button>
+                    </template>
+                </el-radio-group>
+                <el-select v-model="activeIndex" placeholder="其他更多彩种" class="other-join flex">
+                    <el-option @click.native="otherTab('',item.id)"
+                            v-for="(item,index) in gameNav" v-if="index>=8"
+                            :key="index"
+                            :label="item.title"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
+            <div class="jion-cont">
+                <jion-all :url="url" @change-url="changeUrl" @sort="sortChange" :tabs="tabs"></jion-all>
+            </div>
+        </el-card>
+    </div>
+</div>
+<!--合买**-->
+<template id="jionAll">
+    <div>
+        <!--logindialog start-->
+        <login-info site-name="{$site_name}" @login-success="loginSuccess" @login-out="loginOut" msg-num="{$msgNum}" :money="accountMoney" :nickname="nickname" :login-visible="loginVisible"
+                    reg-url="{:url('reg/index')}" my-url="{:url('user/my')}" @open-dialog="loginVisible = true" @close-dialog="loginVisible = false" @refresh="refreshMoney">
+        </login-info>
+        <!--logindialog end-->
+        <div class="options flex-box">
+            <div class="mr10">
+                <el-select
+                        @change="doSearch(search.money)"
+                        size="mini"
+                        v-model="search.money"
+                        placeholder="方案总金额">
+                    <el-option
+                            v-for="item in moneyOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <div class="mr10" v-if="{$system.isGain}">
+                <el-select
+                        @change="doSearch(search.tc)"
+                        size="mini"
+                        v-model="search.tc"
+                        placeholder="方案佣金">
+                    <el-option
+                            v-for="item in tcOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <div class="mr5">
+                <el-input v-model="user" placeholder="发起人" size="mini" style="display: inline-block;width: 140px" @keyup.enter.native="doSearch"></el-input>
+            </div>
+           <div class="mr10"><el-button @click.native="doSearch" size="mini">搜索</el-button></div>
+            <a class="gray" @click="recover">恢复默认</a>
+            <div class="flex tr">
+                <span style="cursor: pointer" @click="refresh"><i class="el-icon-refresh"></i> 刷新</span>
+            </div>
+        </div>
+        <page-nation :url="url" :list="jionData" :total-count="totalCount" :current-page="currentPage" :pagesize="pagesize" @change-page="loadData" @change-sort="sortChange">
+            <el-table-column property="title" label="游戏" width="110"></el-table-column>
+            <el-table-column property="issue" label="期号" width="150"></el-table-column>
+            <el-table-column property="nickname" label="发起人" width="120"></el-table-column>
+            <el-table-column property="record" label="合买战绩" width="120">
+                <template slot-scope="scope">
+                    <span class="join-level">
+                        <span v-if="scope.row.queen>0">
+                            <i class="hg"><sub :class="'lv'+ scope.row.queen"></sub></i>
+                        </span>
+                        <span v-if="scope.row.sunNum>0">
+                            <i class="ty"><sub :class="'lv'+ scope.row.sunNum"></sub></i>
+                        </span>
+                        <span v-if="scope.row.MoonNum>0">
+                            <i class="yl"><sub :class="'lv'+ scope.row.MoonNum"></sub></i>
+                        </span>
+                        <span v-if="scope.row.starNum>0">
+                            <i class="xx"><sub :class="'lv'+ scope.row.starNum"></sub></i>
+                        </span>
+                    </span>
+                </template>
+            </el-table-column>
+            <el-table-column property="total_money" label="方案金额" width="130">
+                <template slot-scope="scope">
+                    {{scope.row.total_money}}{$company['lottery_unit']}
+                </template>
+            </el-table-column>
+            <el-table-column  property="ure" label="剩余份数 | 每份金额" width="150">
+                <template slot-scope="scope">
+                    <span><em :class="{'red' : scope.row.ure > 0}">{{scope.row.ure}}</em>份 <em class="gray" style="padding-right: 5px;">|</em> <em class="red">{{getPerMoney(scope.row.total_share,scope.row.total_money)}}</em>{$company['lottery_unit']}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="进度 + 保底" property="buyprecent">
+                <template slot-scope="scope">
+                    {{scope.row.buyprecent}}%+{{scope.row.bdprecent}}%  <i class="iconfont icon-bao1" style="color: red"></i>
+                </template>
+            </el-table-column>
+            <el-table-column label="认购金额" property="create_time" width="175">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.ure_finsh == 0">
+                        <em style="color: #b7b7b7;">已满员</em>
+                    </template>
+                    <template v-if="scope.row.ure_finsh == -1">
+                        <!--合买截止-->
+                        <em style="color: #b7b7b7; " v-if="scope.row.status == 0">等待开奖</em>
+                        <em class="red" v-if="scope.row.status == 1">已中奖</em>
+                        <em style="color: #b7b7b7; " v-if="scope.row.status == 2">未中奖</em>
+                        <em style="color: #b7b7b7; " v-if="scope.row.status == 6">流产撤单</em>
+                        <em style="color: #b7b7b7; " v-if="scope.row.status == 7">系统撤单</em>
+                    </template>
+                    <template v-if="scope.row.ure_finsh > 0">
+                        <buy-input :item="scope.row" @orders="orderInfo"></buy-input>
+                    </template>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="60">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="text" @click.native="toDetail(scope.row.lottery_id,scope.row.id)">详情</el-button>
+                </template>
+            </el-table-column>
+        </page-nation>
+        <!--订单信息确认-->
+        <div class="orders-info" v-if="orderVisible">
+            <el-dialog
+                    title="订单信息确认"
+                    :visible.sync="orderVisible"
+                    top="0"
+                    :lock-scroll = "false"
+                    width="460px"
+            >
+                <div class="order-info">
+                    <div>
+                        <span class="name">投注彩种:</span>
+                        <span class="info">{{orders.title}}</span>
+                    </div>
+                    <div>
+                        <span class="name">投注方式:</span>
+                        <span class="info">参与合买</span>
+                    </div>
+                    <div>
+                        <span class="name">认购份数:</span>
+                        <span class="info"><b class="red">{{money}}</b> 份（共<b class="red">{{buyMoney(orders.total_share,orders.total_money,money)}}</b>{$company['lottery_unit']})</span>
+                    </div>
+                    <div>
+                        <span class="name">账户余额:</span>
+                        <span class="info"><em>{{formatMoney}}</em> {$company['lottery_unit']}</span>
+                    </div>
+                </div>
+                <div class="tips tc" style="font-size: 14px;color: #333" v-if="accountMoney < buyMoney(orders.total_share,orders.total_money,money)">
+                    您的<b class="red">账户余额不足</b>，请先充值!
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="orderVisible = false">取消</el-button>
+                    <el-button type="primary" v-if="accountMoney < buyMoney(orders.total_share,orders.total_money,money)" @click="goPay">立即充值</el-button>
+                    <el-button type="primary" v-else @click="submitOrder">确定购买</el-button>
+                </span>
+            </el-dialog>
+        </div>
+    </div>
+</template>
+<!--购买-->
+<template id="buyInput">
+    <div>
+        <el-input size="mini"  placeholder="金额" v-model="money" @blur="checkMoney" class="input-short" style="display: inline-block;width: 50px" :controls="false"></el-input> 份
+        <el-button type="danger" size="mini" @click="orderInfo">购买</el-button>
+    </div>
+</template>
+<!--合买红人-->
+<template id="joinRecord">
+    <div>
+        <ul>
+            <template v-for="(item,index) in list">
+                <li>
+                    <a :class="{'red':item.playNum>0}" @mouseenter="showMore(index)" @mouseleave="hide" @click="searchOrder(item.id,item.nickname)">{{item.nickname}}</a>
+                    <img v-if="item.playNum>0" src="/static/vipweb/images/lv/popular-active.gif">
+                    <div class="more-cont" v-show="show==index">
+                        <p>战绩：<span class="join-level">
+                        <span v-if="item.queen>0">
+                            <i class="hg"><sub :class="'lv'+ item.queen"></sub></i>
+                        </span>
+                        <span v-if="item.sunNum>0">
+                            <i class="ty"><sub :class="'lv'+ item.sunNum"></sub></i>
+                        </span>
+                        <span v-if="item.MoonNum>0">
+                            <i class="yl"><sub :class="'lv'+ item.MoonNum"></sub></i>
+                        </span>
+                        <span v-if="item.starNum>0">
+                            <i class="xx"><sub :class="'lv'+ item.starNum"></sub></i>
+                        </span>
+                     </span>
+                        </p>
+                        <p>战绩值：<b class="red">{{item.record}}</b> {$company['lottery_unit']}</p>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </div>
+</template>
+{include file='web@common/foot'/}
+<style>
+    .el-table th>.cell{
+        display: flex;
+        align-items: center;
+    }
+</style>
+<script>
+    'use strict';
+
+    $(function () {
+        //合买红人
+        Vue.component('join-record', {
+            template: '#joinRecord',
+            data: function () {
+                return {
+                    list: {$record},
+                    show: -1
+                };
+            },
+
+            methods: {
+                showMore: function (i) {
+                    this.show = i;
+                },
+                hide: function () {
+                    this.show = -1;
+                },
+
+                //方案查看
+                searchOrder: function (id, nickname) {
+                    bus.$emit('record-search', [id, nickname]);
+                }
+            }
+        });
+        //购买
+        Vue.component('buy-input', {
+            template: '#buyInput',
+            props: ['item'],
+            data: function () {
+                return {
+                    money: 1
+                };
+            },
+
+            methods: {
+                //监听购买金额
+                checkMoney: function () {
+                    if (this.money > parseInt(this.item.ure)) {
+                        this.money = parseInt(this.item.ure);
+                    } else if (this.money <= 0) {
+                        this.money = 1;
+                    } else {
+                        this.money = parseInt(this.money);
+                    }
+                },
+
+                //订单信息确认
+                orderInfo: function () {
+                    this.$emit('orders', [this.item, this.money]);
+                }
+            }
+        });
+        //合买列表
+        Vue.component('jion-all', {
+            template: '#jionAll',
+            props: ['url', 'tabs'],
+            data: function () {
+                return {
+                    jionData: [],
+                    pagesize: 14,
+                    totalCount: 0,
+                    currentPage: 1,
+
+                    proOptions: [//进度
+                        { value: '0', label: '全部订单' },
+                        { value: '1', label: '未满员' },
+                        { value: '2', label: '已满员' }],
+                    moneyOptions: [//方案金额
+                        { value: '0', label: '不限金额' },
+                        { value: '1', label: '100以下' },
+                        { value: '2', label: '101-500' },
+                        { value: '3', label: '500-1000' },
+                        { value: '4', label: '1000以上' }],
+                    tcOptions: [//佣金
+                        { value: '0', label: '不限佣金' },
+                        { value: '1', label: '=0%' },
+                        { value: '2', label: '<=1%' },
+                        { value: '3', label: '<=2%' },
+                        { value: '4', label: '<=3%' },
+                        { value: '5', label: '<=4%' },
+                        { value: '6', label: '<=5%' },
+                        { value: '7', label: '<=6%' },
+                        { value: '8', label: '<=7%' },
+                        { value: '9', label: '<=8%' },
+                        { value: '10', label: '<=9%' },
+                        { value: '11', label: '<=10%' }],
+                    search: { //搜索
+                        progress: '',
+                        money: '',
+                        tc: '',
+                    },
+                    user: '',
+
+                    orderVisible: false,
+                    loginVisible: false, //登录弹窗
+                    nickname: '{present name="$user.sid"} {$user.nickname}{/present}', //登录昵称
+                    accountMoney: '{$user.money}', //账户余额
+                    loginType: -1, //判断登录后应执行的操作
+                    orders: [], //订单数据
+                    money: '' //购买金额
+                };
+            },
+
+            computed: {
+                isLogin: function isLogin() {
+                    if (this.nickname.length) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+
+                //账户余额显示格式化
+                formatMoney: function (_formatMoney) {
+                    function formatMoney() {
+                        return _formatMoney.apply(this, arguments);
+                    }
+
+                    formatMoney.toString = function () {
+                        return _formatMoney.toString();
+                    };
+
+                    return formatMoney;
+                }(function () {
+                    return formatMoney(this.accountMoney);
+                }),
+                isIndexOf: function isIndexOf() {
+                    if (this.url.indexOf("?") != -1) {
+                        return "&";
+                    } else {
+                        return "?";
+                    }
+                },
+                uMoney: function uMoney() {
+                    if (this.search.money > 0) {
+                        return this.isIndexOf + 'money=' + this.search.money;
+                    } else {
+                        return '';
+                    }
+                },
+                uGain: function uGain() {
+                    if (this.search.tc > 0) {
+                        return this.isIndexOf + 'gain=' + this.search.tc;
+                    } else {
+                        return '';
+                    }
+                },
+                uWords: function uWords() {
+                    if (this.user.length) {
+                        return this.isIndexOf + 'words=' + this.user;
+                    } else {
+                        return '';
+                    }
+                },
+                uTime: function uTime() {
+                    if (this.search.create_time) {
+                        return this.isIndexOf + +'&sort=' + this.search.create_time;
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            watch: {
+                url: function url() {
+                    this.loadData(1);
+                }
+            },
+            methods: {
+                //计算每份金额
+                getPerMoney:function (totalShare,totalMoney) {
+                    return accDiv(totalMoney,totalShare,3) ? accDiv(totalMoney,totalShare,3) : '1'
+                },
+                //认购金额计算
+                buyMoney:function (totalShare,totalMoney,buyShare) {
+                    var perMoney = accDiv(totalMoney,totalShare,3) ? accDiv(totalMoney,totalShare,3) : '1'
+                    return accMul(perMoney,buyShare,3)
+                },
+                //刷新余额
+                refreshMoney:function () {
+                    var _this = this;
+                    _this.$set(_this,'accountMoney','...')
+                    $.get('/index/user/getinfo', function (res) {
+                        _this.$set(_this,'accountMoney',res.data.money)
+                    });
+                },
+                //按条件查询
+                doSearch: function doSearch() {
+                    this.$emit('change-url', this.uMoney + this.uGain + this.uWords);
+                },
+
+                //恢复默认
+                recover: function recover() {
+                    this.search.money = this.moneyOptions[0].value;
+                    this.search.tc = this.tcOptions[0].value;
+                    this.user = '';
+                    this.doSearch();
+                },
+
+                //跳转至详情页
+                toDetail: function toDetail(orderid, id) {
+                    var url = '{:url("./orders")}';
+                    window.open(url + '?lottery_id=' + orderid + '&id=' + id);
+                },
+
+                //刷新
+                refresh: function refresh() {
+                    this.loadData(1);
+                    this.$message({
+                        message: '刷新成功！',
+                        type: 'success'
+                    });
+                },
+
+                //加载数据
+                loadData: function loadData(page) {
+                    var _this = this;
+
+                    $.get(this.url + this.isIndexOf + 'page=' + page, function (res) {
+                        _this.$set(_this, 'jionData', res.data);
+                        _this.$set(_this, 'totalCount', res.total);
+                        _this.$set(_this, 'pagesize', res.per_page);
+                    });
+                    this.currentPage = page;
+                },
+
+                //排序条件
+                sortChange: function sortChange(val) {
+                    this.$emit('sort', val);
+                },
+
+                //订单信息确认 判断是否登录
+                orderInfo: function orderInfo(v) {
+                    var _this2 = this;
+
+                    this.orders = v[0];
+                    this.money = v[1];
+                    $.get('{:url("login/checkLogin")}', function (res) {
+                        if (!res.err) {
+                            _this2.nickname = res.nickname;
+                            _this2.accountMoney = res.money;
+                            _this2.orderVisible = true;
+                        } else {
+                            _this2.loginVisible = true;
+                            _this2.loginType = 0;
+                        }
+                    });
+                },
+
+                //登录成功
+                loginSuccess: function loginSuccess(v) {
+                    var _this3 = this;
+
+                    this.nickname = v[0];
+                    this.accountMoney = v[1];
+                    this.loginVisible = false;
+                    if (this.loginType == 0) {
+                        setTimeout(function () {
+                            _this3.orderVisible = true;
+                            _this3.loginType = -1;
+                        }, 500);
+                    }
+                },
+
+                //退出登录
+                loginOut: function loginOut() {
+                    $.get('{:url("login/logout")}', function () {
+                        //                        this.nickname = ''
+                        //                        this.accountMoney = ''
+                        window.location.href = '/web/login/index';
+                    });
+                },
+
+                //确认购买
+                submitOrder: function submitOrder() {
+                    var _this4 = this;
+
+                    $.post('{:url("orders/buyJoin")}', {
+                        buy_id: this.orders.id,
+                        lottery_id: this.orders.lottery_id,
+                        money: this.money
+                    }, function (res) {
+                        _this4.orderVisible = false;
+                        if (!res.err) {
+                            setTimeout(function () {
+                                _this4.$alert(res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    lockScroll: false
+                                });
+                                _this4.accountMoney = _this4.accountMoney - _this4.money;
+                            }, 300);
+                        } else {
+                            _this4.$alert(res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: 'warning',
+                                center: true,
+                                lockScroll: false
+                            });
+                        }
+                        _this4.loadData(1);
+                    });
+                },
+
+                //跳转至充值页面
+                goPay: function goPay() {
+                    location.href = '{:url("./pay")}';
+                }
+            },
+            created: function created() {
+                var _this5 = this;
+
+                this.search.money = this.moneyOptions[0].value;
+                this.search.tc = this.tcOptions[0].value;
+                this.loadData(1);
+                //点击合买红人搜索
+                bus.$on('record-search', function (eVal) {
+                    _this5.search.money = _this5.moneyOptions[0].value;
+                    _this5.search.tc = _this5.tcOptions[0].value;
+                    _this5.user = eVal[1];
+                });
+                //恢复
+                bus.$on('hf-search', function () {
+                    _this5.search.money = _this5.moneyOptions[0].value;
+                    _this5.search.tc = _this5.tcOptions[0].value;
+                    _this5.user = '';
+                });
+            }
+        });
+        var bus = new Vue();
+        new Vue({
+            el: "#app",
+            data: {
+                urls: '{:url("index/game")}', //合买地址
+                gameid: '', //彩种id
+                search: '', //搜索条件
+                sort: '', //排序条件
+                tabs: 0,
+                gameNav: {$gameInfo},
+                userid: '',
+                activeIndex: ''
+            },
+            computed: {
+                url: function() {
+                    var search, sort,userid,gameid;
+                    search = this.search.length ? this.search : ''
+                    sort = this.sort.length ? this.sort : ''
+                    userid = this.userid.toString().length ? '&userid=' + this.userid : ''
+                    gameid = '?gameid=' + this.gameid
+                    return this.urls + gameid + userid +search + sort;
+                }
+            },
+            methods: {
+                tab: function (index, action) {
+                    this.activeIndex = '';
+                    this.userid = '';
+                    this.tabs = index;
+                    this.gameid = action;
+                    bus.$emit('hf-search');
+                },
+                otherTab: function (index, action) {
+                    this.userid = '';
+                    this.tabs = index;
+                    this.gameid = action;
+                    bus.$emit('hf-search');
+                },
+
+                //搜索条件更改
+                changeUrl: function (val) {
+                    this.userid = '';
+                    this.search = val;
+                },
+
+                //排序条件
+                sortChange: function (val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 0; //降序
+                        } else {
+                            s = 1; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                }
+            },
+            created: function () {
+                var _this6 = this;
+
+                //点击合买红人搜索
+                bus.$on('record-search', function (emitVal) {
+                    _this6.tabs = 0;
+                    _this6.gameid = '';
+                    _this6.userid = emitVal[0];
+                });
+                //恢复列表上相关
+                bus.$on('hf-search', function () {
+                    _this6.userid = '';
+                });
+            }
+        });
+    });
+</script>

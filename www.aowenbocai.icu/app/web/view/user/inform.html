@@ -1,0 +1,366 @@
+{include file='web@common/link' title="消息中心"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+
+<div id="app" v-cloak>
+    <el-card class="box-card inform">
+        <div slot="header" class="clearfix">
+            <span class="title">消息中心</span>
+        </div>
+        <el-tabs v-model="tabs" type="card">
+            <el-tab-pane label="未读消息" name="first">
+                <inform-new></inform-new>
+            </el-tab-pane>
+            <el-tab-pane label="全部消息" name="second">
+                <inform-all></inform-all>
+            </el-tab-pane>
+        </el-tabs>
+    </el-card>
+</div>
+<!--全部消息-->
+<template id="informAll">
+    <div>
+        <div class="list_tl">
+            <div class="control">
+                <el-button type="danger" size="mini" @click.navtive="deleteAllread" plain>删除全部已读</el-button>
+                <el-button type="danger" size="mini" @click.navtive="deleteAll" plain>删除全部</el-button>
+                <el-button type="danger" size="mini" @click.native="setAllState" plain>标记全部为已读</el-button>
+            </div>
+            <page-nation :url="url">
+                <el-table-column property="create_time" label="时间" width="185">
+                    <template slot-scope="scope">
+                        <sup class="el-badge__content is-dot" v-if="scope.row.read == 'noread'"></sup>{{scope.row.create_time}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="content" label="内容"></el-table-column>
+                <el-table-column property="read" label="状态" width="80">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="text"  class="gray" v-if="scope.row.read == 'read'">已读</el-button>
+                        <el-button size="mini" type="text"  class="red" v-else>未读</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column property="create_time" label="操作" width="180">
+                    <template slot-scope="scope">
+                        <el-button size="mini" @click="setState(scope.row.id)" v-if="scope.row.read == 'noread'">标为已读</el-button>
+                        <el-button size="mini" @click="handleDelete(scope.row.id)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </page-nation>
+        </div>
+    </div>
+</template>
+<!--//未读消息-->
+<template id="informNew">
+    <div>
+        <div class="list_tl">
+            <div class="control">
+                <el-button type="danger" size="mini" @click.navtive="deleteAll" plain>删除全部未读</el-button>
+                <el-button type="danger" size="mini" @click.native="setAllState" plain>标记全部为已读</el-button>
+            </div>
+            <page-nation :url="url">
+                <el-table-column property="create_time" label="时间" width="185">
+                    <template slot-scope="scope">
+                        <sup class="el-badge__content is-dot" v-if="scope.row.read == 'noread'"></sup>{{scope.row.create_time}}
+                    </template>
+                </el-table-column>
+                <el-table-column property="content" label="内容"></el-table-column>
+                <el-table-column property="read" label="状态" width="80">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="text"  class="gray" v-if="scope.row.read == 'read'">已读</el-button>
+                        <el-button size="mini" type="text"  class="red" v-else>未读</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column property="create_time" label="操作" width="180">
+                    <template slot-scope="scope">
+                        <el-button size="mini" @click="setState(scope.row.id)" v-if="scope.row.read == 'noread'">标为已读</el-button>
+                        <el-button size="mini" @click="handleDelete(scope.row.id)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </page-nation>
+        </div>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        //全部消息
+        Vue.component('inform-all', {
+            template: '#informAll',
+            data: function data() {
+                return {
+                    url: '{:url("getMessage")}'
+                };
+            },
+
+            methods: {
+                //删除单条
+                handleDelete: function handleDelete(row) {
+                    var _this = this;
+
+                    $.post('{:url("messageDelete")}', {
+                        id: row
+                    }, function (res) {
+                        if (!res.err) {
+                            _this.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'success'
+                            });
+                            setTimeout(function () {
+                                location.href = '{:url("inform")}';
+                            }, 500);
+                            return;
+                        } else {
+                            _this.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //删除全部
+                deleteAll: function deleteAll() {
+                    var _this2 = this;
+
+                    this.$confirm('此操作将删除全部消息, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        $.post('{:url("messageDelete")}', { id: 'all' }, function (res) {
+                            if (!res.err) {
+                                _this2.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'success'
+                                });
+                                setTimeout(function () {
+                                    location.href = '{:url("inform")}';
+                                }, 500);
+                            } else {
+                                _this2.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            }
+                        });
+                    }).catch(function () {});
+                },
+
+                //删除全部已读
+                deleteAllread: function deleteAllread() {
+                    var _this3 = this;
+
+                    this.$confirm('此操作将删除全部已读消息, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        $.post('{:url("messageDelete")}', { id: 'all', type: 2 }, function (res) {
+                            if (!res.err) {
+                                _this3.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'success'
+                                });
+                                setTimeout(function () {
+                                    location.href = '{:url("inform")}';
+                                }, 500);
+                            } else {
+                                _this3.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            }
+                        });
+                    }).catch(function () {});
+                },
+
+                //标记为已读
+                setState: function setState(id) {
+                    var _this4 = this;
+
+                    $.post('{:url("setStatus")}', {
+                        id: id
+                    }, function (res) {
+                        if (!res.err) {
+                            _this4.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'success'
+                            });
+                            setTimeout(function () {
+                                location.href = '{:url("inform")}';
+                            }, 500);
+                        } else {
+                            _this4.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //标记全部为已读
+                setAllState: function setAllState() {
+                    var _this5 = this;
+
+                    $.post('{:url("setStatus")}', {
+                        id: 'all'
+                    }, function (res) {
+                        if (!res.err) {
+                            _this5.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'success'
+                            });
+                            setTimeout(function () {
+                                location.href = '{:url("inform")}';
+                            }, 500);
+                        } else {
+                            _this5.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                }
+            }
+        });
+        //未读消息
+        Vue.component('inform-new', {
+            template: '#informNew',
+            data: function data() {
+                return {
+                    url: '{:url("getMessage",["type" => 1])}'
+                };
+            },
+
+            methods: {
+                //删除单条
+                handleDelete: function handleDelete(row) {
+                    var _this6 = this;
+
+                    $.post('{:url("messageDelete")}', {
+                        id: row
+                    }, function (res) {
+                        if (!res.err) {
+                            _this6.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'success'
+                            });
+                            setTimeout(function () {
+                                location.href = '{:url("inform")}';
+                            }, 500);
+                            return;
+                        } else {
+                            _this6.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //删除全部
+                deleteAll: function deleteAll() {
+                    var _this7 = this;
+
+                    this.$confirm('此操作将删除全部消息, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        $.post('{:url("messageDelete")}', { id: 'all', type: 1 }, function (res) {
+                            if (!res.err) {
+                                _this7.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'success'
+                                });
+                                setTimeout(function () {
+                                    location.href = '{:url("inform")}';
+                                }, 500);
+                            } else {
+                                _this7.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            }
+                        });
+                    }).catch(function () {});
+                },
+
+                //标记为已读
+                setState: function setState(id) {
+                    var _this8 = this;
+
+                    $.post('{:url("setStatus")}', {
+                        id: id
+                    }, function (res) {
+                        if (!res.err) {
+                            _this8.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'success'
+                            });
+                            setTimeout(function () {
+                                location.href = '{:url("inform")}';
+                            }, 500);
+                        } else {
+                            _this8.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //标记全部为已读
+                setAllState: function setAllState() {
+                    var _this9 = this;
+
+                    $.post('{:url("setStatus")}', {
+                        id: 'all'
+                    }, function (res) {
+                        if (!res.err) {
+                            _this9.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'success'
+                            });
+                            setTimeout(function () {
+                                location.href = '{:url("inform")}';
+                            }, 500);
+                        } else {
+                            _this9.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                tabs: 'first'
+            }
+        });
+    });
+</script>

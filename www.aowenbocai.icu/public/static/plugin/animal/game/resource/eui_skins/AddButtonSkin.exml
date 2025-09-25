@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<e:Skin class="skins.AddButtonSkin" states="up,down,disabled" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" width="50" height="50">
+	<e:Rect width="50" height="50" anchorOffsetX="0" anchorOffsetY="0" fillColor="0xd82929" ellipseWidth="60" left="0" top="0" fillColor.up="0xf43a3a" fillColor.down="0xce1010"/>
+	<e:Label id="labelDisplay" size="60" textColor="0xFFFFFF" verticalAlign="middle" textAlign="center" text="+" anchorOffsetY="0" left="0" right="0" top="-4" bottom="4"/>
+</e:Skin>

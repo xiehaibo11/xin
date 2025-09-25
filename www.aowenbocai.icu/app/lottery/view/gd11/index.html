@@ -1,0 +1,115 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+  <a class="nav_active">奖金设置</a>
+  <a href="{:url('site')}">期号配置</a>
+</nav>
+<div class="box-padding">
+<ol class="breadcrumb">
+       <li><a href="/{$loginName}.php/extend">扩展管理</a></li>
+  <li class="active">奖金设置</li>
+</ol>
+<style>
+  .form-group  a:hover{text-decoration:none}
+  .control-label{text-align: center !important}
+  .btn-radio-p, .btn-radio{width: 100%}
+  .btn-info.active.radio_checked{background-color: red;border-color:red}
+</style>
+<div class="box-padding">
+  <div class="alert alert-success" role="alert">
+    小提示：奖金请务必填写数字,只有时时彩五星通选奖金按照英文逗号分隔，填写错误将影响派奖！！！
+  </div>
+    <div class="form-horizontal form_max">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-3 control-label">玩法名称</label>
+        <label for="inputEmail3" class="col-sm-3 control-label">玩法奖金</label>
+        <label for="inputEmail3" class="col-sm-2 control-label">开关</label>
+        <label for="inputEmail3" class="col-sm-2 control-label">默认选择</label>
+      </div>
+      {volist name="list" id ="item"}
+        <div class="form-group data-from">
+            <div class="col-sm-3">
+            <input type="text" class="form-control"  disabled value="{$item.name}">
+            </div>
+            <div class="col-sm-3">
+            <input type="text" class="form-control"  name="gain" value="{$item.gain}">
+            </div>
+            <div class="col-sm-2">
+              <input type="hidden" class="form-control"  name="isOpen"  value="{$item.isOpen}">
+              <button data-open = "{$item.isOpen}" class="btn btn-start {eq name='$item.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name='$item.isOpen' value='1'}已关闭{else /}已开启{/eq}</button>
+            </div>
+            {if condition="isset($item.type) and $item.type != ''"}
+            <div class="col-sm-2">
+              <div class="btn-radio-p" data-toggle="buttons">
+                <label class="btn btn-radio btn-info {if condition='$item.type == $selected'}active radio_checked{/if}">
+                  <input type="radio" name="options" value="{$item.type}" {if condition="$item.type == $selected"}checked{/if}> <span class="radio_text"> {if condition="$item.type == $selected"}默认选中{else /} 设置默认{/if}</span>
+                </label> 
+              </div>	
+            </div>
+            {/if}
+        </div>
+      {/volist}
+      <div class="form-group">
+        <!-- <div class="col-sm-offset-2 col-sm-1"><button type="submit" class="btn btn-add btn-default">添加玩法</button></div> -->
+        <div class="col-sm-offset-1 col-sm-3"><button type="submit" class="btn btn-post btn-default">保存</button></div>
+      </div>
+    </div>
+</div>
+</div>
+<script>
+  $("[data-toggle='tooltip']").tooltip();
+  $(".btn-add").click(function(){
+      var formGroup = $(".form-group");
+      var fromLength = formGroup.length;
+      var html = '<div class="form-group  data-from">\
+            <div class="col-sm-3">\
+            <input type="text" class="form-control"  name="name">\
+            </div>\
+            <div class="col-sm-3">\
+            <input type="text" class="form-control"  name="gain">\
+            </div>\
+            <div class="col-sm-1">\
+              <input type="hidden" class="form-control"  name="isOpen"  value="0">\
+              <button data-open = "" class="btn btn-start btn-success">已开启</button>\
+            </div>\
+        </div>';
+      //formGroup.eq(fromLength-2).after(html);
+  })
+
+  $(".btn-start").click(function(){
+    var _this = $(this);
+    _this.removeClass();
+    var before = _this.data('open');
+    var newOpen = before !== 0 ? 0 : 1;
+    var text = before !== 0 ? '已开启' : '已关闭';
+    var classname = before !== 0 ? 'btn btn-start btn-success' : 'btn btn-start btn-danger';
+    _this.addClass(classname)
+    _this.data('open',newOpen)
+    _this.text(text);
+    _this.parent().find('input[name=isOpen]').val(newOpen)
+  })
+  $(".btn-radio").click(function(){
+    var _this = $(this); 
+    $(".btn-radio").removeClass('radio_checked');
+    _this.addClass('radio_checked');
+    $(".radio_text").text('设置默认');
+    _this.find('.radio_text').text('默认选中')
+  })
+
+  $(".btn-post").click(function(){
+      var dataGroup = $(".data-from");
+      var data = [];
+      var setPrimary = $("input[name=options]:checked").val();
+      dataGroup.each(function(index,e){
+          var _e = $(e);
+          var obj = {};
+          obj.gain = _e.find('input[name=gain]').val();
+          obj.isOpen = _e.find('input[name=isOpen]').val();
+          data.push(obj);
+      })
+
+    $.post('{:url("edit")}', {data: data,'selected': setPrimary},function(res){
+        $.modal.alert(res.msg)
+    })
+  })
+ </script>
+{include file='admin@common/foot' /}

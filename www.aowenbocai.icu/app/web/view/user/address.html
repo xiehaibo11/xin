@@ -1,0 +1,38 @@
+{include file='web@common/link' title="系统通知"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div id="app" v-cloak>
+    <el-card class="box-card inform">
+        <div slot="header" class="clearfix">
+            <span>实名认证</span>
+        </div>
+        <id-card></id-card>
+    </el-card>
+</div>
+<!--全部消息-->
+<template id="idCard">
+    <div>
+
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        //实名认证
+        Vue.component('id-card', {
+            template: '#idCard',
+            data: function data() {
+                return {};
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                tabs: 'first'
+            }
+        });
+    });
+</script>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="PayPanelSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" height="700">
+	<e:Rect id="close_bg" fillAlpha="0.4" left="0" right="0" top="0" bottom="0"/>
+	<e:Group width="661" height="740" horizontalCenter="0" verticalCenter="0" scaleX="0.85" scaleY="0.85" anchorOffsetY="0">
+		<e:Group anchorOffsetY="0" left="0" right="0" bottom="0" top="56" x="0" y="56" scaleX="1" scaleY="1">
+			<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="40" fillColor="0x262932"/>
+			<e:Group id="loading_group" y="285.08" anchorOffsetX="0" anchorOffsetY="0" height="62" horizontalCenter="0.5">
+				<e:Rect height="50" anchorOffsetY="0" anchorOffsetX="0" x="0" width="528" verticalCenter="0" ellipseWidth="23" fillAlpha="0.2" fillColor="0xFFFFFF"/>
+				<e:Label id="tips0" text="数据加载中..." x="201" verticalCenter="0" size="18"/>
+			</e:Group>
+			<e:Scroller id="scroller" anchorOffsetY="0" top="269" bottom="38.66999999999996" anchorOffsetX="0" width="619.66" scrollPolicyH="off" horizontalCenter="0.5">
+			<e:Group id="scroller_box" anchorOffsetY="0" height="308.53">
+				<e:layout>
+				<e:VerticalLayout horizontalAlign="justify" verticalAlign="top"/>
+				</e:layout>
+			</e:Group>
+			</e:Scroller>
+			<e:Group height="82" y="52.7" anchorOffsetY="0" left="0" right="0">
+			<e:Group width="236" height="59" x="58" y="10" anchorOffsetX="0" anchorOffsetY="0">
+				<e:Rect left="43" right="8" anchorOffsetX="0" anchorOffsetY="0" height="33" verticalCenter="0" ellipseWidth="33" fillColor="0x181e2d" strokeWeight="2" strokeColor="0x646e84"/>
+				<e:Image source="common_jd_png" x="13.76" scaleX="1" scaleY="1" verticalCenter="0.5" anchorOffsetX="0" width="47.59" anchorOffsetY="0" height="41.75"/>
+				<e:Label id="coin" text="- -" x="68.5" size="26" scaleX="1" scaleY="1" verticalCenter="0.5"/>
+			</e:Group>
+			<e:Group width="236" height="59" y="10" anchorOffsetX="0" anchorOffsetY="0" x="364">
+				<e:Rect left="43" right="8" anchorOffsetX="0" anchorOffsetY="0" height="33" verticalCenter="0" ellipseWidth="33" fillColor="0x181E2D" strokeWeight="2" strokeColor="0x646E84"/>
+				<e:Image x="17.3" scaleX="1" scaleY="1" verticalCenter="0.5" source="datin_json.钻石图标"/>
+				<e:Label id="diamonds" text="- -" x="68.5" size="26" scaleX="1" scaleY="1" verticalCenter="0.5"/>
+			</e:Group>
+			</e:Group>
+			<e:Group y="136.17" anchorOffsetY="0" left="0" right="0">
+			<e:Rect ellipseWidth="40" fillColor="0x1f2025" anchorOffsetX="0" height="50" width="580" top="0" anchorOffsetY="0" horizontalCenter="0"/>
+			<e:Label text=" 适度娱乐，理性消费！" textColor="0x727890" horizontalCenter="0" size="26" verticalCenter="0"/>
+			</e:Group>
+		</e:Group>
+		<e:Image source="modal_bg_top_png" x="0" y="0" scaleX="1" scaleY="1"/>
+		<e:Label id="title" text="充值金币" y="52.34" horizontalCenter="0.5" size="34" x="263" scaleX="1" scaleY="1"/>
+		<e:Group id="pay_group" width="580" height="54" y="255.1" horizontalCenter="0.5">
+			<e:CheckBox id="auto_zh" label="购买钻石转换金币" x="53" y="15.5" skinName="skins.PayCheckBoxSkin" selected="true"/>
+			<e:layout>
+				<e:HorizontalLayout gap="0" paddingRight="0" paddingLeft="0" horizontalAlign="left" verticalAlign="middle"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

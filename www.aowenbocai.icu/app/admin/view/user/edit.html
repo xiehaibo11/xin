@@ -1,0 +1,357 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style media="screen">
+  .form {
+    width: 100%;
+  }
+    .radio label{width:20%; height: 25px;line-height: 25px}
+    .save_btn{    float: right; position: relative;margin-right: 10%;margin-top: 10px}
+    .tab-pane {
+        padding:20px 0;
+    }
+</style>
+<div class="box-padding">
+    <ol class="breadcrumb">
+        <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('index')}">会员列表</a></li>
+        <li class="active"> 修改用户信息</li>
+    </ol>
+<input type="file" class="hidden select_photo">
+  <form class="form margin-center" action="{:url('admin/User/edit')}" method="post">
+      <ul id="myTab" class="nav nav-tabs">
+          <li class="active"><a href="#A" data-toggle="tab">基本资料</a></li>
+          <li><a href="#B" data-toggle="tab">联系方式</a></li>
+          <li><a href="#C" data-toggle="tab">绑定账号</a></li>
+          <li><a href="#D" data-toggle="tab">彩票返点</a></li>
+      </ul>
+
+      <div id="myTabContent" class="tab-content user_table">
+          <div class="tab-pane fade in active" id="A">
+
+              <div class="user_tr" style="height: 80px;">
+                  <span class="user_l_text">头像</span>
+                  <span class="user_r_text center-center" style="height: 80px;justify-content: flex-start;">
+                    <img class="user_photo" width="60" height="60" src="{$info.photo}" alt="">
+                    <input type="hidden" name="photo" value="{$info.photo}">
+                    <button type="button" class="btn btn-success btn_select_photo">更换头像</button>
+                  </span>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">用户名</span>
+                  <span class="user_r_text">{$info.username}</span>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">昵称</span>
+                  <div class="user_r_text center-center"><input type="text" class="form-control" placeholder="输入昵称" name="nickname" value="{$info.nickname}"></div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">重置密码</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="重置密码" name="password">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">重复密码</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="重复密码" name="password2">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">重置安全密码</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="重置安全密码" name="safe_password">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">重复安全密码</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="重复安全密码" name="safe_password2">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">会员类型</span>
+                  <input type="hidden" name="type" value="{$info.type}">
+                  <div class="user_r_text">
+                      <!-- <span class="type">{$info.typename}</span> -->
+                      <div class="dropdown">
+                          <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"><span class="select_name">{$info.typename}</span>
+                              <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="min-width:0">
+                              <li class="presentation" role="presentation" data-value = '0'>
+                                  <a>测试会员</a>
+                              </li>
+                              <li class="presentation" role="presentation" data-value = '1'>
+                                  <a >普通会员</a>
+                              </li>
+                              <li class="presentation" role="presentation" data-value = '2'>
+                                  <a >代理会员</a>
+                              </li>
+                               <li class="presentation" role="presentation" data-value = '6'>
+                                  <a >发单会员</a>
+                              </li>
+                               <li class="presentation" role="presentation" data-value = '7'>
+                                  <a >跟单会员</a>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+              <input type="hidden" name="userid" value="{$info.id}">
+              <div class="user_tr">
+                  <span class="user_l_text">选择代理</span>
+                  <div class="input-group user_r_text" style="padding-top:10px;min-height:0;width: 60%; position: absolute;">
+                      <input type="text" class="form-control words" value="{$info.agents_name}" placeholder="模糊查询输入">
+                      <span class="input-group-addon btn btn-serach">搜索用户</span>
+                  </div>
+                  <button type="button" class="btn save_btn btn-success">保存代理</button>
+              </div>
+              <input type="hidden" class="agents">
+              <div class="user_tr form-group serachResult" style="display:none">
+                  <span class="user_l_text">搜索结果:</span>
+                  <div class="col-sm-12" style="margin-left:100px;">
+                      <div style="width:100%">
+                          <span>请选择代理:</span>
+                          <span class="btn btn-success btn-sm close-choice" style="margin-left: 22%;">关闭选项</span>
+                      </div>
+                      <div class="showUser">
+
+                      </div>
+                  </div>
+                  <div class="clear"></div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">注册时间</span>
+                  <span class="user_r_text">{$info.create_time}</span>
+              </div>
+
+              <div class="user_tr">
+                  <span class="user_l_text">活动时间</span>
+                  <span class="user_r_text">{$info.action_time}</span>
+              </div>
+
+              <div class="user_tr">
+                  <span class="user_l_text">注册IP</span>
+                  <span class="user_r_text">{$info.reg_ip}</span>
+              </div>
+
+              <div class="user_tr">
+                  <span class="user_l_text">活动IP</span>
+                  <span class="user_r_text">{$info.last_ip}</span>
+              </div>
+
+              <div class="user_tr">
+                  <span class="user_l_text">数据更新</span>
+                  <span class="user_r_text">{$info.update_time}</span>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">状态</span>
+                  <div class="input-group user_r_text" style="padding-top:8px;min-height:0; position: absolute;">
+                      <select name="status" class="form-control" id="">
+                          {$status_option}
+                      </select>
+                  </div>
+              </div>
+
+          </div>
+          <div class="tab-pane fade" id="B">
+              <div class="user_tr">
+                  <span class="user_l_text">电话号码</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="电话号码" name="tel" value="{$info.tel}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">邮箱地址</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="邮箱地址" name="email" value="{$info.email}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">QQ</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="QQ" name="qq" value="{$info.qq}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">性别</span>
+                  <div class="user_r_text center-center" style="width:100px;min-height:0; position: absolute;">
+                      <select name="sex" class="form-control" >
+                          <option value="3" {if condition="$info.sex == 3"}selected {/if}>不限</option>
+                          <option value="1" {if condition="$info.sex == 1"}selected {/if}>男</option>
+                          <option value="2" {if condition="$info.sex == 2"}selected {/if}>女</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">生日</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="生日" name="birth" value="{$info.birth}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">微信</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="微信" name="wei" value="{$info.wei}">
+                  </div>
+              </div>
+          </div>
+          <div class="tab-pane fade" id="C">
+              <div class="user_tr">
+                  <span class="user_l_text">真实姓名</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="真实姓名" name="idname" value="{$idbank.idname}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">居民身份证</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="居民身份证" name="idnum" value="{$idbank.idnum}">
+                  </div>
+              </div>
+              {empty name="bank_list"}
+              <div class="user_tr">
+                  <span class="user_l_text">选择银行</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="银行名称" name="yh_openname[]" value="{$v.openname}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">银行卡号</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="银行卡号" name="yh_number[]" value="">
+                  </div>
+              </div>
+              {/empty}
+              {volist name="bank_list" id="v"}
+              <div class="user_tr">
+                  <span class="user_l_text">选择银行</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="银行名称" name="yh_openname[]" value="{$v.openname}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">银行卡号</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="银行卡号" name="yh_number[]" value="{$v.yh_number}">
+                  </div>
+              </div>
+              {/volist}
+
+              <div class="user_tr">
+                  <span class="user_l_text">支付宝账号</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="支付宝账号" name="zfb_number" value="{$idbank.zfb_number|default=''}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">微信账号</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="微信账号" name="wx_number" value="{$idbank.wx_number|default=''}">
+                  </div>
+              </div>
+
+          </div>
+          <div class="tab-pane fade" id="D">
+              <div class="user_tr">
+                  <span class="user_l_text">时时彩</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="输入时时彩返点" name="ssc" value="{$info.rebate.ssc|default=0}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">快3</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="输入快3返点" name="ks" value="{$info.rebate.ks|default=0}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">11选5</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="输入11选5返点" name="syxw" value="{$info.rebate.syxw|default=0}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">pk10</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="输入pk10返点" name="pk10" value="{$info.rebate.pk10|default=0}">
+                  </div>
+              </div>
+              <div class="user_tr">
+                  <span class="user_l_text">pc28</span>
+                  <div class="user_r_text center-center">
+                      <input type="text" class="form-control" placeholder="输入pc28返点" name="pc28" value="{$info.rebate.pc28|default=0}">
+                  </div>
+              </div>
+
+              <div class="remark red text-center">（注：返点<={$setting.rebate_max},且返点一旦设置好之后，不能调低）</div>
+
+          </div>
+      </div>
+
+
+    <p></p>
+    <button type="submit" class="btn_save btn btn-lg btn-primary btn-block">提交</button>
+  </form>
+</div>
+</div>
+<script>
+  $(function () {
+    $(".presentation").click(function(){
+      $(".select_name").html($(this).find("a").text());
+      $("input[name=type]").val($(this).data("value"));
+    })
+    $('.btn_select_photo').click(function () {
+      $('.select_photo').click();
+    });
+    $('.select_photo').localResizeIMG({
+      maxSize: 200,
+      success: function (result) {
+        $('.btn_save').attr('disabled', 'disabled');
+        $('.user_photo').attr('src', result.base64);
+        $.post("{:url('base64Upload')}", {'base64_data': result.base64, 'userid': '{$info.id}'}, function(res) {
+          $('input[name=photo]').attr('value', res.data);
+          $('.btn_save').attr('disabled', null);
+        }, 'json');
+      }
+    });
+    $(".btn-serach").click(function(){
+      var words = $(".words").val();
+      $.post('{:Url("agents_serach")}',{'words': words}, function(res){
+          var html = '';
+          if(res.err > 0){
+              html = res.msg;
+          }else{
+              var data = res.data;
+              var length = data.length;
+              for(i = 0; i < length; i++){
+                  if(i%4 == 0 && i != 0) html += '</div>';
+                  if(i%4 == 0) html += '<div class="radio">';
+                  html += '<label><input type="radio" name="agents" value="'+data[i]['id']+'">'+ data[i]['username']+'</label>';
+              }
+              html += '<div><span class="btn btn-success btn-sm check-choice" style="margin-top: 2%;">确认</span></div>';
+          }
+          $(".showUser").html(html);
+          $(".serachResult").show();
+          $(".check-choice").click(function(){
+              var id = $("input[name=agents]:checked").val();
+              $(".agents").val(id);
+              $(".words").val($("input[name=agents]:checked").parent().text());
+              $(".serachResult").hide();
+          })
+
+      })
+      
+      $(".close-choice").click(function(){
+          $(".serachResult").hide();
+      })
+  })
+
+  $(".save_btn").click(function(){
+        $.post('{:Url("agents_edit")}',{agents: $(".agents").val(), userid: "{$info.id}"}, function(res){
+          $.modal.alert(res.msg)
+        })
+      })
+});
+
+</script>
+{include file='common/foot' /}

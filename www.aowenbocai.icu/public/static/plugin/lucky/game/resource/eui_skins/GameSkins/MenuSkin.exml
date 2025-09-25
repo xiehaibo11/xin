@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="MenuSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="750" height="1334">
+	<e:Rect id="back" width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillAlpha="0.5"/>
+	<e:Image source="spxiu_json.spxiu012" x="414" y="118"/>
+	<e:Group width="323" anchorOffsetY="0" height="463" x="414" y="118">
+		<e:Group id="history" width="100%" height="100" horizontalCenter="0" verticalCenter="0">
+			<e:Image y="34" left="0" source="spxiu_json.spxiu002"/>
+			<e:Label text="历史纪录" x="108" y="46" textColor="0xffffff"/>
+			<e:Image source="spxiu_json.spxiu001" x="171" y="38"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" paddingLeft="5" paddingRight="5" gap="25"/>
+			</e:layout>
+		</e:Group>
+		<e:Group id="help" width="100%" height="100" horizontalCenter="0" verticalCenter="0">
+			<e:Image source="spxiu_json.spxiu003" y="34" left="0"/>
+			<e:Label text="帮   助" x="108" y="46" width="90" textColor="0xffffff"/>
+			<e:Image source="spxiu_json.spxiu001" x="171" y="38"/>
+			<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" gap="40"/>
+			</e:layout>
+		</e:Group>
+		<e:Group width="100%" height="100" horizontalCenter="0" verticalCenter="0">
+			<e:Image source="spxiu_json.spxiu007" left="38" verticalCenter="0"/>
+			<e:Label text="音   乐" x="124" width="90" verticalCenter="0" textColor="0xffffff"/>
+			<e:ToggleSwitch id="music" label="ToggleButton" skinName="SelectSkin" right="15" verticalCenter="0" selected="false"/>
+		</e:Group>
+		<e:Group id="home" width="100%" height="100" horizontalCenter="0" verticalCenter="0">
+			<e:Image y="21" left="32" source="home2_png" scaleX="0.8" scaleY="0.8"/>
+			<e:Label text="返回首页" x="108" y="46" textColor="0xffffff"/>
+			<e:Image source="spxiu_json.spxiu001" x="171" y="38"/>
+			<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" gap="30" paddingLeft="10"/>
+			</e:layout>
+		</e:Group>
+		<e:layout>
+			<e:VerticalLayout gap="15" paddingTop="15"/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

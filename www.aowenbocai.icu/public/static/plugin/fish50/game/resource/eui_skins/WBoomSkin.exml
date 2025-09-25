@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="WBoomSkin" xmlns:e="http://ns.egret.com/eui" width="138" height="133">
+	<e:Image horizontalCenter="0" verticalCenter="0" source="wang_png"/>
+</e:Skin>

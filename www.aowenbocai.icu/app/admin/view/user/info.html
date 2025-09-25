@@ -1,0 +1,98 @@
+{include file='common/head' /}
+<ol class="breadcrumb">
+  <li><a href="{:url('admin/User/')}">用户管理列表</a></li>
+  <li class="active">修改用户信息</li>
+</ol>
+<div class="box-padding">
+  <div class="user_table margin-center">
+    <div class="user_tr" style="height: 80px;">
+      <span class="user_l_text">头像</span>
+      <span class="user_r_text center-center" style="height: 80px;justify-content: flex-start;"><img class="user_photo" width="60" height="60" src="{$info.photo}" alt=""></span>
+    </div>
+    <div class="user_tr">
+      <span class="user_l_text">用户名</span>
+      <span class="user_r_text">{$info.username}(ID:{$info.id})</span>
+    </div class="user_tr">
+
+    <div class="user_tr">
+      <span class="user_l_text">昵称</span>
+      <span class="user_r_text">{$info.nickname}</span>
+    </div>
+
+    <div class="user_tr">
+      <span class="user_l_text">注册时间</span>
+      <span class="user_r_text">{$info.create_time}</span>
+    </div>
+
+    <div class="user_tr">
+      <span class="user_l_text">活动时间</span>
+      <span class="user_r_text">{$info.action_time}</span>
+    </div>
+
+    <div class="user_tr">
+      <span class="user_l_text">注册IP</span>
+      <span class="user_r_text">{$info.reg_ip}</span>
+    </div>
+
+    <div class="user_tr">
+      <span class="user_l_text">活动IP</span>
+      <span class="user_r_text">{$info.last_ip}</span>
+    </div>
+    <div class="user_tr">
+      <span class="user_l_text">活动IP</span>
+      <span class="user_r_text">{$info.last_ip}</span>
+    </div>
+    <notempty name="$info.userbank">
+        <div class="user_tr">
+          <span class="user_l_text">实名认证</span>
+          <!-- contenteditable="true" -->
+      {if condition="!empty($info.userbank.idname)"}
+          <span class="user_r_text idchecked idname" contenteditable="true" data-num = "{$info.userbank.id}"> {$info.userbank.idname}</span>
+          <span class="notice">实名认证及身份证点击文字修改,点击身份证后保存按钮进行保存</span>
+        </div>
+        <div class="user_tr">
+          <span class="user_l_text">身份证</span>
+          <!-- contenteditable="true" -->
+          <span class="user_r_text idchecked idnum" contenteditable="true">{$info.userbank.idnum} </span><button class="btn btn-xs btn-success id-change">保存</button>
+          {else /}
+          <span class="user_r_text">该用户还未绑定</span>
+          {/if}
+        </div>
+        <div class="user_tr">
+            <span class="user_l_text">支付信息</span>
+            {if condition="!empty($info.userbank.banks)"}
+            <span class="user_r_text">
+              <ul>
+                <li><span>银行名</span><span>卡号</span></li>
+                {volist name="$info.userbank.banks" id="item"}
+                <li><span>{eq name="$item.type" value="1"}{$item.openname}{else /}{$item.name}{/eq}</span><span>{$item.numbers}</span></li>
+                {/volist}
+              </ul>
+            </span>
+            {/if}
+          </div>
+    </notempty>
+  <p></p>
+  <a href="{:url('edit')}?id={$info.id}" class="btn btn-primary btn-xs"><img height="16" src="/static/admin/svg/editor.svg" alt=""> 修改</a>
+  <a href="{:url('goto', ['userid' => $info.id])}" class="btn btn-primary btn-xs">获取Ta的身份登录》</a>
+  </div>
+</div>
+<style>
+  .user_r_text ul{list-style: none;margin-left: 120px}
+  .user_r_text ul li {border-bottom: 1px dashed #ccc}
+  .user_r_text ul li span{display: inline-block;}
+  .user_r_text ul li span:nth-child(1){width: 25%}
+  .id-change{ margin-left: 20px}
+  .notice{color: red; font-size: 8px;margin-left: 20px}
+</style>
+{include file='common/foot' /}
+<script>
+  $(".id-change").click(function(){
+    var idname = $('.idname').text();
+    var num = $('.idname').data('num');
+    var idnum = $('.idnum').text();
+    $.post('{:url("changeIdcard")}',{idname:idname, idnum:idnum, num:num}, function(res){
+          $.modal.alert(res.msg)
+    });
+  })
+</script>

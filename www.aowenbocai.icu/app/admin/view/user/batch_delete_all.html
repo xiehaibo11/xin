@@ -1,0 +1,161 @@
+{include file='admin@common/head' /}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <i class="fa fa-exclamation-triangle"></i> 
+                        批量删除所有会员 - 危险操作
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h4><i class="fa fa-warning"></i> 严重警告</h4>
+                        <p>此操作将<strong>永久删除</strong>除超级管理员1019683427外的所有用户数据，包括：</p>
+                        <ul>
+                            <li>所有用户账号信息</li>
+                            <li>所有资金记录和流水</li>
+                            <li>所有游戏记录</li>
+                            <li>所有充值记录</li>
+                            <li>所有代理关系</li>
+                            <li>所有关联数据</li>
+                        </ul>
+                        <p><strong>此操作不可逆转！</strong></p>
+                    </div>
+
+                    <!-- 当前数据统计 -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">当前数据统计</div>
+                                <div class="panel-body">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>总用户数</td>
+                                            <td><span class="badge badge-primary">{$stats.total_users}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>总资金</td>
+                                            <td><span class="text-success">¥{$stats.total_money|number_format:2}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>有余额用户</td>
+                                            <td><span class="badge badge-warning">{$stats.users_with_money}</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">用户类型分布</div>
+                                <div class="panel-body">
+                                    <table class="table table-bordered">
+                                        {foreach $stats.type_stats as $type => $count}
+                                        <tr>
+                                            <td>{$type}</td>
+                                            <td><span class="badge badge-info">{$count}</span></td>
+                                        </tr>
+                                        {/foreach}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 保留账号信息 -->
+                    <div class="alert alert-success" role="alert">
+                        <h4><i class="fa fa-shield"></i> 保留账号</h4>
+                        <p>以下账号将被<strong>保留</strong>，不会被删除：</p>
+                        <ul>
+                            <li><strong>1019683427</strong> - 超级管理员</li>
+                        </ul>
+                    </div>
+
+                    <!-- 删除确认表单 -->
+                    <form method="post" action="{:url('batchDeleteAll')}" id="deleteForm">
+                        <div class="form-group">
+                            <label for="confirmation">安全确认</label>
+                            <p class="help-block">请在下方输入框中输入 <code>CONFIRM_DELETE_ALL</code> 来确认删除操作：</p>
+                            <input type="text" class="form-control" id="confirmation" name="confirmation" 
+                                   placeholder="请输入: CONFIRM_DELETE_ALL" required>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="understand" required> 
+                                    我完全理解此操作的后果，并确认要删除所有会员数据
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="backup" required> 
+                                    我已经备份了重要数据（如需要）
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-default btn-lg" onclick="history.back()">
+                                <i class="fa fa-arrow-left"></i> 取消操作
+                            </button>
+                            <button type="submit" class="btn btn-danger btn-lg" id="deleteBtn" disabled>
+                                <i class="fa fa-trash"></i> 确认删除所有会员
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // 监听确认输入和复选框状态
+    function checkFormValid() {
+        var confirmation = $('#confirmation').val();
+        var understand = $('#understand').is(':checked');
+        var backup = $('#backup').is(':checked');
+        
+        if (confirmation === 'CONFIRM_DELETE_ALL' && understand && backup) {
+            $('#deleteBtn').prop('disabled', false).removeClass('btn-danger').addClass('btn-danger');
+        } else {
+            $('#deleteBtn').prop('disabled', true);
+        }
+    }
+    
+    $('#confirmation, #understand, #backup').on('change keyup', checkFormValid);
+    
+    // 表单提交确认
+    $('#deleteForm').on('submit', function(e) {
+        var confirmation = $('#confirmation').val();
+        
+        if (confirmation !== 'CONFIRM_DELETE_ALL') {
+            e.preventDefault();
+            alert('请正确输入确认码：CONFIRM_DELETE_ALL');
+            return false;
+        }
+        
+        if (!confirm('最后确认：您确定要删除所有会员数据吗？此操作不可逆转！')) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // 显示处理中状态
+        $('#deleteBtn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> 正在删除中...');
+        
+        return true;
+    });
+});
+</script>
+
+{include file='admin@common/foot' /}

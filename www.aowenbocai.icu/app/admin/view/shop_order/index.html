@@ -1,0 +1,178 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<nav class="plugin_nav">
+    <a href="{:url('admin/Shop/index')}">商品管理</a>
+    <a class="nav_active" href="{:url('admin/ShopOrder/index')}">订单管理</a>
+    <a href="{:url('admin/shop/shopNav')}">分类管理</a>
+    <a href="{:url('admin/shop/add')}">添加商品</a>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('index')}">兑换商城</a></li>
+            <li class="active">订单管理</li>
+        </ol>
+        <form class="form-inline" action="">
+            <div class="form-group form-group-left">
+                <label>时间</label>
+                <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="starttime" value="{$query.starttime}" />
+                    <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <label>到</label>
+                <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="endtime" value="{$query.endtime}" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group form-group-left">
+                <label>关键字:</label>
+                <input type="text" name="words" class="form-control" value="{$query.words}" placeholder="商品名称/用户名/备注">
+            </div>
+            <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+        </form>
+    </div>
+    <div class="table_box">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th class="tc">ID</th>
+                <th>昵称(用户名)</th>
+                <th>商品名称</th>
+                <th>兑换数量</th>
+                <th>消费金豆</th>
+                <th>收货地址</th>
+                <th>状态</th>
+                <th>备注</th>
+                <th width="180">时间</th>
+                <th class="tc">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $list as $item}
+            <tr>
+                <td class="tc">{$item.id}</td>
+                <td>{$item.username.nickname} <a>({$item.username.username})</a> </td>
+                <td>{$item.name}</td>
+                <td>{$item.num}</td>
+                <td>{$item.money}</td>
+                <td><a href="#" class="shop_adr" data-order_id="{$item.id}">查看</a></td>
+                <td>{$item.status}</td>
+                <td>{$item.remark}</td>
+                <td>{$item.create_time}</td>
+                <td class="tc">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <?php if ($item->getData('status')!=7) { ?>
+                        <a href="{:url('edit')}?id={$item.id}" class="btn btn-info btn-xs">编辑处理</a>
+                        <?php } ?>
+                        <a href="#" class="btn btn-info btn-xs isdelete" data-url="{:url('isDelete')}?id={$item.id}">删除订单</a>
+                    </div>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-right">{$list->render()}</div>
+</div>
+</div>
+<style>
+    .form-group {
+        clear: both;
+    }
+</style>
+
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+        $('.shop_adr').click(function(){
+            var order_id = $(this).data('order_id');
+            $.post('{:Url("info")}',{id:order_id},function(res){
+                if (res.code) {
+                    var data = res.data;
+                    var html = '';
+                    if (data.idbank) {
+                        html += '<div class="form-group">\
+                        <label class="col-sm-2">真实姓名</label>\
+                        <div class="col-sm-6">' + data.idbank.idname + '</div>\
+                        </div>\
+                        <div class="form-group">\
+                        <label class="col-sm-2">身份证号</label>\
+                        <div class="col-sm-6">' + data.idbank.idnum + '</div>\
+                        </div>';
+                        if (data.idbank.zfb_number != undefined) {
+                            html += '<div class="form-group">\
+                            <label class="col-sm-2">支付宝号</label>\
+                            <div class="col-sm-6">' + data.idbank.zfb_number + '</div>\
+                            </div>';
+                        }
+                        if (data.idbank.wx_number != undefined) {
+                            html += '<div class="form-group">\
+                            <label class="col-sm-2">微信账号</label>\
+                            <div class="col-sm-6">' + data.idbank.wx_number + '</div>\
+                            </div>';
+                        }
+                        for (var v of data.idbank.bank_list){
+                            html += '<div class="form-group">\
+                            <label class="col-sm-2">银行名称</label>\
+                            <div class="col-sm-6">' + v.openname + '</div>\
+                            </div><div class="form-group">\
+                            <label class="col-sm-2">银行号码</label>\
+                            <div class="col-sm-6">' + v.yh_number + '</div>\
+                            </div>';
+                        }
+                    }
+                    if (data.info) {
+                        html += '<div class="form-group">\
+                            <label class="col-sm-2">收货人</label>\
+                            <div class="col-sm-6">' + res.data.info.name + '</div>\
+                            </div>\
+                            <div class="form-group">\
+                            <label class="col-sm-2">联系电话</label>\
+                            <div class="col-sm-6">' + res.data.info.tel + '</div>\
+                            </div>\
+                            <div class="form-group">\
+                            <label class="col-sm-2">地区</label>\
+                            <div class="col-sm-6">' + res.data.info.city + '</div>\
+                            </div>\
+                            <div class="form-group">\
+                            <label class="col-sm-2">详细地址</label>\
+                            <div class="col-sm-6">' + res.data.info.address + '</div>\
+                            </div>';
+                    }
+                    $.modal({
+                        title: '收货地址',
+                        html: html,
+                    });
+                } else {
+                    $.modal.alert('地址已删除');
+                }
+
+            })
+
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>
+
+{include file='common/foot' /}

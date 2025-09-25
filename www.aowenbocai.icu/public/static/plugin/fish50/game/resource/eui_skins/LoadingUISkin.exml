@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="LoadingUISkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+	</w:Declarations>
+	<e:Image left="0" right="0" bottom="0" top="0" source="LoadingInterface_bg_png"/>
+	<e:Image source="Load_json.LoadingInterface_logo_img_03" y="89" horizontalCenter="0"/>
+	<e:Group height="0" anchorOffsetY="0" horizontalCenter="0" bottom="225">
+		<e:Image source="Load_json.LoadingInterface_LoadingBar_bg" top="0" left="0"/>
+		<e:Group id="loading_jd" y="-5.01" anchorOffsetX="0" left="3">
+			<e:Image source="Load_json.LoadingInterface_LoadingBar_img" scale9Grid="17,19,389,0" y="8" left="0" right="0"/>
+			<e:Image source="Load_json.LoadingInterface_LoadingBar_light" y="0" scaleX="1" scaleY="1" right="-8"/>
+		</e:Group>
+	</e:Group>
+	<e:Label text="如果您是第一次打开游戏，加载文件可能较大，请耐心等待" bottom="160" horizontalCenter="0" size="18" textColor="0x343659"/>
+</e:Skin>

@@ -1,0 +1,92 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+
+<nav class="plugin_nav">
+    <a class="nav_active">基础设置</a>
+    <a href="{:url('admin/SystemSet/setRecharge')}">充值设置</a>
+    <a href="{:url('admin/SystemSet/user')}">会员设置</a>
+    <a href="{:url('admin/SystemSet/company')}">联系方式</a>
+    <a href="{:url('admin/OtherSet/index')}">API接口</a>
+</nav>
+<div class="box-padding">
+  <div class="breadcrumb">
+    <ol>
+      <li class="active"><i class="glyphicon glyphicon-link"></i> 系统设置</li>
+      <li>网站</li>
+    </ol>
+  </div>
+    <div class="form-horizontal form_max">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">网站名</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" placeholder="网站名" name="site_name" value="{$setting['site_name']}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">LOGO</label>
+        <div class="col-sm-10">
+          <img class="user_photo" src="{$setting['logo_url']}" alt="">
+          <input type="file" class="select_photo" style="display: none;">
+          <button type="button" class="btn btn-primary btn_select_photo">更换</button>
+          <!-- <input type="text" class="form-control" placeholder="LOGO" value=""> -->
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">PC站状态</label>
+        <div class="col-sm-10">
+          <input type="radio" name="pc_status" value="1" {if condition = "$setting['pc_status'] == 1"}checked{/if}>开启
+          <input type="radio" name="pc_status" value="0 "{if condition = "$setting['pc_status'] != 1"}checked{/if}>关闭
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">PC站域名</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" placeholder="pc端域名（多个域名以英文分号分隔）" name="pc_domain" value="{$setting['pc_domain']}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">手机版域名</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" placeholder="手机端域名（多个域名以英文分号分隔）" name="moblie_domain" value="{$setting['moblie_domain']}">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default btn_save">保存设置</button>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+  
+  $(function () {
+    $('.btn_select_photo').click(function () {
+      $('.select_photo').click();
+    });
+    $('.select_photo').localResizeIMG({
+      quality : 1,
+      success: function (result) {
+        $('.btn_save').attr('disabled', 'disabled');
+        $('.user_photo').attr('src', result.base64);
+        $.post('{:url("setLogo")}', { 'base64_data': result.base64}, function (res) {
+          $('input[name=photo]').attr('value', res.data);
+          $('.btn_save').attr('disabled', null);
+        }, 'json');
+      }
+    });
+    $('.btn_save').click(function() {
+      $.post('{:url("set")}', {
+        data: JSON.stringify({
+          site_name: $('input[name=site_name]').val(),
+          // pc_domain: $('input[name=pc_domain]').val(),
+          // moblie_domain: $('input[name=moblie_domain]').val(),
+          pc_status : $("input[name=pc_status]:checked").val()
+        })
+      }, function() {
+        $.modal.alert('修改成功');
+      });
+    });
+  });
+</script>
+{include file='common/foot' /}

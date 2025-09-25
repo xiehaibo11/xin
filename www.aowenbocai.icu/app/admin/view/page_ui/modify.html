@@ -1,0 +1,188 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<div class="box-padding">
+	<div class="breadcrumb">
+	<ol>
+		<li class="active">
+			<a class="nav_active" href="{:url('index')}"><i class="glyphicon glyphicon-link"></i> 游戏列表</a>
+		</li>
+		<li>游戏修改</li>
+	</ol>
+	</div>
+ <div class=" content games_list" style="display: block;">
+	 <div class="notice">
+		<div class="alert alert-warning">
+			<a href="#" class="close" data-dismiss="alert1">&times;</a>
+			<strong>警告！</strong><span class="notice-info">您的网络连接有问题。</span>
+		</div>
+	 </div>
+	
+ </div>
+<div class=" content add_games">
+	<form action="{:url('updateData')}" method="post">
+		<table class="add_table">
+			<tr>
+				<td>游戏名称</td>
+				<td><input type="text" name='title' value="{$info.title}" class="form-control"><input type="hidden" name='id' value="{$info.id}"></td>
+			</tr>
+
+			<tr style="display: none;">
+				<td>模 块 名:</td>
+				<td><input type="text" name='name' value="{$info.name}"></td>
+			</tr>
+			<tr>
+				<td>游戏类型</td>
+				<td>
+				<input type="hidden" name="type" value="{$info.type}" >
+					<div class="dropdown ">
+						<button type="button" class="btn dropdown-toggle type_show" id=" " data-toggle="dropdown" >{eq name="$info.type" value="0"}休闲游戏{else /}彩票游戏{/eq}
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu game_type" role="menu" aria-labelledby="dropdownMenu1">
+							<li role="presentation">
+								<a role="menuitem" tabindex="-1" data-logo='0' >休闲游戏</a>
+							</li> 
+							<li role="presentation">
+								<a role="menuitem" tabindex="-1" data-logo='1' >彩票游戏</a>
+							</li> 
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>游戏LOGO</td>
+				<td><input type="file" class="hidden select_photo">
+					<img class="user_photo" width="80" height="80" src="{$info.image}" alt="">
+			        <input type="hidden" name="image" value="{$info.image}">
+			        <button type="button" class="btn btn-success btn_select_photo" style="margin-left:120px">更换LOGO</button></td>
+			</tr>
+			
+			<tr><td>宣传图片</td>
+				<td><input type="file" class="hidden select_photo_img">
+					<img class="img_photo" width="150" height="80" src="{$info.img}" alt="">
+					<input type="hidden"   name="img" id="extlogo_img"  value="{$info.img}">
+					<button  type="button" class="btn btn-success  btn_select_photo_img">更换宣传图</button>
+				</td>
+			<tr>
+				<td>游戏描述</td>
+				<td><textarea name="remark" id="" class="form-control" cols="30" rows="2">{$info.remark}</textarea></td>
+			</tr>
+			<tr>
+				<td>游戏简介</td>
+				<td><textarea name="info" id="" cols="30" rows="2" class="form-control">{$info.info}</textarea></td>
+			</tr>
+			<tr>
+				<td>是否启用</td>
+				<td><input type="hidden" name="status" value="0"><button type="button" data-num='1' class="btn btn-success btn-warning status">禁用</button>  <button type="button" class="btn btn-success status" data-num='0'>启用</button></td>
+			</tr>
+
+			<tr>
+				<td>是否推荐</td>
+				<td><input type="hidden" name="reco" value="{$info.reco}"><button type="button" data-num='1' class="btn btn-success btn-warning reco">推荐</button>  <button type="button" class="btn btn-success reco" data-num='0'>不推荐</button></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td> <button type="submit" class="btn btn-primary btn_save" style="width:100%">保存设置</button></td>
+			</tr>
+		</table>
+	</form>
+</div>
+</div>
+{include file='common/foot' /}
+<style>
+	.notice{display: none;}
+	.add_table{margin-left: 90px;}
+	.add_table td {height: 40px;line-height: 40px;padding: 10px}
+	.add_table td textarea{ height: 80px; width: 400px;overflow-y: hidden;line-height: 20px;padding: 0 5px}
+	.status,.reco{width: 90px;margin-right: 30px}
+	.btn_select_photo,.btn_select_photo_img{width: 90px;margin-left:50px;}
+
+	.input-group {margin: 10px 0;}
+	.dropdown-toggle{
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius:4px;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+		-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; 
+		transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	}
+	ul.dropdown-menu{text-align: center}
+	.dropdown-menu li {height: 30px;line-height: 30px;border-bottom: 1px dashed #ccc;}
+</style>
+<script type="text/javascript">
+$(function() {
+	// 初始化游戏启用状态以及推荐状态
+	var status = '{$info.status_num}';
+	var reco = "{$info.reco}";
+	if(status == '0'){
+		var _sta = $(".status");
+		_sta.removeClass('btn-warning');
+		_sta.eq(1).addClass('btn-warning');
+		$("input[name=status]").val(0);
+	}
+
+	if(reco == 0){
+		var _rec = $(".reco");
+		_rec.removeClass('btn-warning');
+		_rec.eq(1).addClass('btn-warning');
+	}
+	// 初始化游戏结束
+
+	$('.close').click(function(){
+		$('.notice').hide();
+	})
+	$(".status").click(function(){
+		var _this = $(this);
+		$(".status").removeClass('btn-warning');
+		_this.addClass('btn-warning');
+		$("input[name=status]").val(_this.data('num'));
+	})
+	$(".reco").click(function(){
+		var _this = $(this);
+		$(".reco").removeClass('btn-warning');
+		_this.addClass('btn-warning');
+		$("input[name=reco]").val(_this.data('num'));
+	})
+
+	// 上传LOGO
+	$('.btn_select_photo').click(function () {
+     
+      $('.select_photo').click();
+    });
+    $('.select_photo').localResizeIMG({
+		quality :1,
+		maxSize : 2*1024*1024, 
+      success: function (result) {
+        $('.btn_save').attr('disabled', 'disabled');
+        $('.user_photo').attr('src', result.base64);
+        $.post('{:url("base64Upload")}', {'base64_data': result.base64, 'id': "logo{$info.id}"}, function(res) {
+          $('input[name=image]').attr('value', res.data);
+          $('.btn_save').attr('disabled', null);
+        }, 'json');
+      }
+    });
+	
+
+	$('.btn_select_photo_img').click(function () {
+      $('.select_photo_img').click();
+    });
+    $('.select_photo_img').localResizeIMG({
+		quality :1,
+		maxSize : 2*1024*1024, 
+      success: function (result) {
+        $('.img_photo').attr('src', result.base64);
+        $.post("{:url('base64Upload')}", {'base64_data': result.base64, 'id':"{$info.id}"}, function(res) {
+          $('#extlogo_img').attr('value', res.data);
+        }, 'json');
+      }
+	})
+	
+	$(".game_type li").click(function(){
+		var a_this = $(this).find('a');
+		$(".type_show").html(a_this.text()+'<span class="caret"></span>');
+		$("input[name=type]").val(a_this.data('logo'))
+	})
+})
+</script>

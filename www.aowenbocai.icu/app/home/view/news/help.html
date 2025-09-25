@@ -1,0 +1,69 @@
+{include file='home@common/head' title="新闻资讯"/}
+
+<!--顶部主题图-->
+<div class="buy-banner top-banner">
+    <div class="web_ banner-detail">
+        <div class="b_title animated fadeInUp wow column_name">帮助中心</div>
+        <div class="b_info animated fadeInDown wow column_info">解决常见问题，提供购买、支付等相关指南</div>
+    </div>
+</div>
+
+<div class="web_ news-list bg-white hidden" style="min-height: 455px;margin: 20px auto 0">
+    <div class="animated fadeInUp wow"  data-wow-duration="1s">
+        <div class="location c-4"><i class="iconfont icon-dizhi1 c-5"></i><a href="{:url('./')}"> 首页</a> / <span class="column_name">帮助中心</span></div>
+        {volist name="help" id="vo" empty="暂时没有数据"}
+        <a class="list-item cf" href="{:url('news/view')}?id={$vo.id}&amp;navid={$vo.nav_id}" target="_blank">
+            {if condition="!empty($vo.pic)"}
+            <div class="list-item-image fl" style="background: url({$vo.pic}) no-repeat center;background-size: cover"></div>
+            <div class="list-item-text fl" style="width: 66%">
+                <h3 class="title ellipsis">{$vo.title}</h3>
+                <div class="memo ellipsis-2 c-4">
+                    <?php if (mb_strlen($vo['content_index']) > 100){
+                    echo mb_substr($vo['content_index'], 0, 100, 'utf-8')."...";
+                    }else{
+                    echo $vo['content_index'];
+                    }
+                    ?>
+                </div>
+            </div>
+            {else/}
+            <div class="list-item-text fl" style="width: 88%">
+                <h3 class="title ellipsis">{$vo.title}</h3>
+                <div class="memo ellipsis-2 c-4">
+                    <?php if (mb_strlen($vo['content_index']) > 100){
+                    echo mb_substr($vo['content_index'], 0, 100, 'utf-8')."...";
+                    }else{
+                    echo $vo['content_index'];
+                    }
+                    ?>
+                </div>
+                <div class="time c-5"><i class="iconfont icon-shijian"></i> {$vo.create_time}</div>
+            </div>
+            {/if}
+            <div class="fr tr list-item-time">
+            <span>
+                 <em>
+                {$vo.create_time|substr=###, 8, 2}
+                </em>
+                {$vo.create_time|substr=###, 0, 7}
+            </span>
+            </div>
+        </a>
+        {/volist}
+        <div class="page">{$help->render()}</div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.nav-help').addClass('active')
+        $(".list-item").each(function(){
+            $(this).mouseenter(function(){
+                $(this).addClass('active')
+            });
+            $(this).mouseleave(function(){
+                $(this).removeClass('active')
+            });
+        })
+    });
+</script>
+{include file='home@common/foot' /}

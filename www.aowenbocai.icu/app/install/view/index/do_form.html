@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{$title}</title>
+		{include file="common/head" /}
+	<div class="col-xs-10">
+						
+	<form class="form-horizontal" method="post" action="{:Url('installData')}" role="form">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">数据库选项</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">数据库主机</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="text" name="server" value="127.0.0.1">
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="col-sm-2 control-label">数据库用户</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="text" name="database_username" value="root">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">数据库密码</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="text" name="database_password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">数据库名称</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="text" name="database_name" value="kurui">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">管理选项</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">后台文件名</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="text" name="admin_file" value="admin.php">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">授权码</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="text" name="authorization_token" value="">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">管理员账号</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="username" name="user_username">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">管理员密码</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="password" name="user_password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">确认密码</label>
+					<div class="col-sm-4">
+						<input class="form-control" type="password" "="">
+					</div>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="do" id="do">
+		<ul class="pager">
+			<li class="previous"><a href="javascript:;" onclick="$('#do').val('back');$('form')[0].submit();"><span class="glyphicon glyphicon-chevron-left"></span> 返回</a></li>
+			<li class="previous"><a href="javascript:;" onclick="if(check(this)){jQuery('#do').val('continue');$('form')[0].submit();}">继续 <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+		</ul>
+	</form>
+
+	<script>
+		var lock = false;
+		function check(obj) {
+			if(lock) {
+				return;
+			}
+			$('.form-control').parent().parent().removeClass('has-error');
+			var error = false;
+			$('.form-control').each(function(){
+				if($(this).val() == '') {
+					$(this).parent().parent().addClass('has-error');
+					this.focus();
+					error = true;
+				}
+			});
+			if(error) {
+				alert('请检查未填项');
+				return false;
+			}
+			if($(':password').eq(0).val() != $(':password').eq(1).val()) {
+				$(':password').parent().parent().addClass('has-error');
+				alert('确认密码不正确.');
+				return false;
+			}
+            var admin_file = $('input[name="admin_file"]').val();
+            if (admin_file.substring(admin_file.length-4) != '.php') {
+                alert('后台文件名需要以.php为后缀');
+                return false;
+			}
+
+			lock = true;
+			$(obj).parent().addClass('disabled');
+			$(obj).html('正在执行安装');
+			return true;
+		}
+	</script>
+				</div>
+			</div>
+
+			{include file="common/foot" /}
+	
+</body></html>

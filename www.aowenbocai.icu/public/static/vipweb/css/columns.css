@@ -1,0 +1,382 @@
+@charset "UTF-8";
+/**
+ * 独立页面样式文件
+ * 游戏大厅、合买大厅、开奖公告、游戏资讯、网站公告、手机网站介绍、帮助页面
+ */
+/**
+ * 公用变量
+ */
+/*
+盒子阴影
+@right_left 右边阴影为正数 左边负数
+@bottom_top 下边阴影为正数 上边负数
+@box  阴影大小
+@box_color 阴影颜色
+*/
+/*
+文字阴影,可以指定多组阴影
+@right_left1 右边阴影为正数 左边负数
+@bottom_top1 下边阴影为正数 上边负数
+@text  阴影大小
+@text_color 阴影颜色
+*/
+/**
+ * el-card卡片样式重定义
+ */
+.el-card.is-always-shadow,
+.el-card.is-hover-shadow:focus,
+.el-card.is-hover-shadow:hover {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.el-card .el-card__header {
+  padding: 0;
+}
+.el-card .el-card__header span {
+  display: inline-block;
+  padding: 10px 20px 5px;
+  font-size: 15px;
+  border-bottom: 2px solid #de3031;
+  color: #000;
+  font-weight: 500;
+  font-size: 18px;
+}
+.el-card .el-card__body {
+  padding: 20px;
+}
+/**
+ * 游戏大厅
+ */
+.game {
+  height: 200px;
+}
+.pic-slide .swiper-slide a {
+  height: 200px;
+}
+.game-center .game-recommend .list {
+  display: block;
+  box-shadow: 0px 0px 10px #d6d6d6;
+  text-align: center;
+  margin: 10px 0;
+  padding: 10px 0 15px;
+}
+.game-center .game-recommend .list .name-type {
+  padding: 10px;
+}
+.game-center .game-recommend .list .name-type .u-gm-name {
+  font-size: 14px;
+  color: #f47d17;
+}
+.game-center .game-recommend .list .name-type .u-gm-type {
+  color: #888;
+  font-size: 12px;
+}
+.game-center .game-recommend .list a {
+  display: block;
+}
+.game-center .game-recommend .list a img {
+  height: 148px;
+  display: block;
+  background-color: #f1f1f1;
+  margin-bottom: 15px;
+}
+.game-center .game-recommend .game-xx {
+  box-shadow: none;
+  border: 1px solid #e9e9e9;
+}
+.game-center .game-list .list {
+  display: block;
+  border: 1px solid #e9e9e9;
+  text-align: center;
+  margin: 10px 0;
+}
+.game-center .game-list .list .header {
+  padding: 10px;
+  position: relative;
+}
+.game-center .game-list .list .header i.iconfont {
+  position: absolute;
+  right: -5px;
+  top: -37px;
+  color: #ff0000;
+  font-size: 70px;
+}
+.game-center .game-list .list .header img {
+  width: 76px;
+  height: 76px;
+  margin-right: 15px;
+}
+.game-center .game-list .list .header .cont {
+  text-align: left;
+}
+.game-center .game-list .list .header .cont .desc {
+  color: #888;
+  font-size: 12px;
+}
+.game-center .game-list .list .foot {
+  padding: 5px;
+}
+.game-center .game-list .list .foot .summary {
+  color: #888;
+  font-size: 12px;
+}
+/**
+ * 合买大厅
+ */
+.jion-hall .jion-tabs {
+  border-bottom: 2px solid #f4f4f4;
+}
+.jion-hall .jion-cont .options {
+  padding: 10px;
+  background-color: #f4f4f4;
+}
+.jion-hall .join-record .head {
+  padding: 0 5px 3px 5px;
+  margin-bottom: 15px;
+  border-bottom: 1px dashed #dcdada;
+}
+.jion-hall .join-record .head .title {
+  font-size: 16px;
+  font-weight: bold;
+}
+.jion-hall .join-record .head .title i {
+  font-size: 20px;
+}
+.jion-hall .join-record ul {
+  display: inline-block;
+  padding-left: 20px;
+}
+.jion-hall .join-record ul li {
+  float: left;
+  display: inline-block;
+  width: 165px;
+  line-height: 1.9;
+  position: relative;
+}
+.jion-hall .join-record ul li a {
+  font-size: 14px;
+}
+.jion-hall .join-record ul li a:hover {
+  color: #de3031;
+  text-decoration: underline;
+}
+.jion-hall .join-record ul li .more-cont {
+  position: absolute;
+  left: -20px;
+  top: 28px;
+  z-index: 10;
+  background-color: #fbfbfb;
+  border: 1px solid #dedede;
+  padding: 10px;
+  font-size: 13px;
+}
+.jion-hall .other-join {
+  margin-left: 20px;
+}
+/**
+ * 开奖大厅
+ */
+.list_tl th {
+  text-align: left;
+}
+.list_tl .el-table__body td {
+  text-align: left;
+}
+/**
+  * 新闻页
+ */
+.position a {
+  font-size: 14px;
+}
+.news {
+  display: flex;
+  /*php分页*/
+}
+.news .news-left {
+  padding-right: 20px;
+}
+.news .list-item-l {
+  padding: 15px;
+  border-bottom: 1px dashed #eeeeee;
+}
+.news .list-item-l:hover {
+  background-color: #f4f4f4;
+}
+.news .list-item-l .list-item-image {
+  width: 200px;
+  height: 120px;
+  margin-right: 15px;
+  background-size: cover;
+}
+.news .list-item-l .list-item-text .title {
+  font-size: 20px;
+  color: #000;
+  font-weight: 600;
+}
+.news .list-item-l .list-item-text .summary {
+  padding: 5px 0;
+  font-size: 14px;
+  color: #888;
+  line-height: 1.6;
+}
+.news .list-item-l .list-item-text .time {
+  font-size: 14px;
+  color: #555;
+}
+.news .page {
+  overflow: hidden;
+  padding: 20px;
+  text-align: center;
+}
+.news .page ul.pagination {
+  display: inline-block;
+}
+.news .page ul.pagination li {
+  float: left;
+  display: inline-block;
+  padding: 0 5px;
+  font-weight: bold;
+}
+.news .page ul.pagination li.disabled {
+  color: #999999;
+  cursor: not-allowed;
+}
+.news .page ul.pagination li.active {
+  color: #de3031;
+}
+.news .page ul.pagination li.page_total {
+  font-weight: normal;
+}
+.news .page ul.pagination li.page_total .pageInputNum {
+  width: 30px;
+  text-align: center;
+  margin: 0 3px;
+}
+.news .page ul.pagination li.page_total button {
+  background: none;
+  border: 1px solid #999999;
+  padding: 1px 5px;
+  color: #101010;
+  cursor: pointer;
+}
+.news .page ul.pagination li.page_total button:hover {
+  background-color: #f1f1f1;
+}
+.view {
+  display: flex;
+}
+.view .view-detail {
+  width: 75%;
+  padding: 15px 30px 30px 0;
+}
+.view .view-detail .d_title {
+  padding: 10px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+}
+.view .view-detail .d_time {
+  margin-bottom: 15px;
+  font-size: 12px;
+  color: #999;
+}
+.view .view-detail .d_content {
+  font-size: 15px;
+  line-height: 2;
+  text-align: center;
+}
+.view .view-detail .d_content span,
+.view .view-detail .d_content strong,
+.view .view-detail .d_content a,
+.view .view-detail .d_content p {
+  font-size: 15px;
+}
+.view .view-detail .d_content p {
+  padding: 5px 0;
+  text-align: left;
+}
+.view .view-detail .d_content img {
+  max-width: 100%;
+}
+.view .view-news {
+  width: 25%;
+  border-left: 1px solid #e6e6e6;
+  background-color: #f7f7f7;
+  padding-bottom: 30px;
+}
+.view .view-news .nav_title {
+  padding: 0px 15px;
+  margin: 30px 0 10px 0;
+  background: url("/static/vipweb/images/border_left_red.png?t=1234535") no-repeat left center;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #545454;
+}
+.view .view-news .list {
+  padding: 0 5px;
+}
+.view .view-news .list .list-item {
+  display: block;
+  padding: 12px 0;
+  border-bottom: 1px solid #ececec;
+}
+.view .view-news .list .list-item:hover {
+  background-color: #f2f1f1;
+}
+.view .view-news .list .list-item-image img {
+  width: 50px;
+  height: 40px;
+  margin-right: 5px;
+}
+.view .view-news .list .list-item-text {
+  color: #777;
+  font-size: 13px;
+}
+.view .view-news .list .list-item-text div {
+  text-align: left;
+}
+.view .view-news .list .list-item-text .title {
+  color: #333;
+  font-size: 13px;
+}
+.view-news {
+  width: 25%;
+  border-left: 1px solid #e6e6e6;
+  background-color: #f7f7f7;
+  padding-bottom: 30px;
+}
+.view-news .nav_title {
+  padding: 0px 15px;
+  margin: 30px 0 10px 0;
+  background: url("/static/vipweb/images/border_left_red.png?t=1234535") no-repeat left center;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #545454;
+}
+.view-news .list {
+  padding: 0 5px;
+}
+.view-news .list .list-item {
+  display: block;
+  padding: 12px 0;
+  border-bottom: 1px solid #ececec;
+}
+.view-news .list .list-item:hover {
+  background-color: #f2f1f1;
+}
+.view-news .list .list-item-image img {
+  width: 50px;
+  height: 40px;
+  margin-right: 5px;
+}
+.view-news .list .list-item-text {
+  color: #777;
+  font-size: 13px;
+}
+.view-news .list .list-item-text div {
+  text-align: left;
+}
+.view-news .list .list-item-text .title {
+  color: #333;
+  font-size: 13px;
+}

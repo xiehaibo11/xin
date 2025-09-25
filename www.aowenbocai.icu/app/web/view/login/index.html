@@ -1,0 +1,106 @@
+{include file='web@common/login_head' title="用户登录"/}
+<link rel="stylesheet" href="/static/vipweb/css/login.css">
+<script language=javascript src='/static/vipweb/vue-component/login-tel.js'></script>
+<script language=javascript src='/static/vipweb/vue-component/login-name.js'></script>
+<style>
+    .jz{
+        margin: 0 auto;
+    }
+</style>
+<div id="app" class="page-login" style="min-height: 500px" :style="{'height':wHeight + 'px','paddingTop':pdTop + 'px'}">
+    <div style="max-width: 1200px;margin: 0 auto;" class="cf">
+        <div class="login-box" style="padding-right: 0" :class="wWidth > 1024 ? 'fr' : 'jz'">
+            <div class="login-way bg flex-box" v-cloak>
+                <h4 class="flex tc" v-if="isCommon"  @click="show=1" :class="{'red':show==1}">
+                    用户名登录
+                </h4>
+                <h4 class="flex tc" v-if="isTel" @click="show=2" :class="{'red':show==2}">
+                    手机验证码登录
+                </h4>
+            </div>
+            <div class="login-form" v-cloak>
+                <web-login v-if="isCommon && show == 1" @success="loginSuc"></web-login>
+                <tel-login v-if="isTel && show == 2" @success="loginSuc"></tel-login>
+                <!--其他方式登录-->
+                <div class="other flex-box">
+                    <i style="color: #50b674" class="iconfont icon-weixin" v-if="isWei"></i>
+                    <a href="{:url('weilogin')}"  target="_blank" v-if="isWei">微信登录</a>
+                    <i style="color: #1296db" class="iconfont icon-qq" v-if="isQq"></i>
+                    <a href="/web/Login/qq" target="_blank" v-if="isQq">QQ登录</a>
+                </div>
+                <div class="tr link">
+                    <a class="link" href="{:url('./findpwd')}" style="padding-right: 8px">忘记密码</a>
+                    <a href="{:url('reg/index')}" v-if="is_reg" class="link">注册账号</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='web@common/simple_foot' /}
+<style type="text/css">
+    div{
+        background-repeat: no-repeat;
+    }
+</style>
+<script type="text/javascript">
+    'use strict';
+
+    $(function () {
+        //背景图随机
+        var bg = new Array();
+        bg = [
+            { img: '/static/vipweb/images/login/login_bg_sr.png', color: '#dfd5d4', position: '22% center' },
+            { img: '/static/vipweb/images/login/login_bg_dj.png', color: '#a0e5d8', position: '22% center'},
+            { img: '/static/vipweb/images/login/login_bg_cs.png', color: '#ff6455', position: '22% 0'},
+            { img: '/static/vipweb/images/login/login_bg_jcll.png', color: '#00245d', position: '22% center'}
+            ];
+        var bgIdx = Math.floor(Math.random() * bg.length);
+        $('.page-login').css({ 'background-image': 'url(' + bg[bgIdx].img + ')', 'background-repeat': 'no-repeat', 'background-color': bg[bgIdx].color, 'background-position': bg[bgIdx].position });
+
+        var loginWay = '{$company.login_way}'.split(',');
+        var wHeight = $(window).height()
+        var wWidth = $(window).width()
+        var tHeight = $('#top').height()
+        var fHeight = $('#foot').height()//减去的高度
+        var totalHeight = tHeight + fHeight + 35
+        new Vue({
+            el: '#app',
+            data: {
+                is_reg: parseInt('{$company.is_reg}'), //是否开启注册
+                isTel: parseInt('{$data.tel}'),
+                isCommon: parseInt('{$data.common}'),
+                isWei: parseInt('{$data.wxsao}') ? parseInt('{$data.wx}') : 0,
+                isQq: parseInt('{$data.qq}'),
+                show: 1 ,//显示内容
+
+                wHeight:accSub(wHeight,totalHeight,3),//内容高度
+                wWidth: wWidth //内容宽度
+            },
+            computed:{
+                pdTop:function () {
+                    return accDiv(this.wHeight - 388,2,3)
+                }
+            },
+            methods: {
+                loginSuc: function (v) {
+                    var _this = this;
+                    this.$message({
+                        message: '登录成功',
+                        type: 'success'
+                    });
+                    setTimeout(function () {
+                        window.location.href = v[2];
+                        _this.loading = false;
+                    }, 1000);
+                }
+            },
+            created: function () {
+                if (!this.isCommon && this.isTel) {
+                    this.show = 2;
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

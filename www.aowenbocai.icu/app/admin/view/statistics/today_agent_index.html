@@ -1,0 +1,127 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style>
+    .box-padding-bottom{margin-left: 1rem;margin-top:10px}
+    .b_bloder td {font-weight: 700}
+</style>
+<nav class="plugin_nav">
+    <a href="{:url('agent_index')}?is_today=0" >代理数据统计</a>
+    <a class="nav_active">今日数据统计</a>
+</nav>
+
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 代理数据统计</li>
+            {if condition="$userid"}<li><a href="javascript:history.back(-1);" class="btn btn-default form-group-left btn-sm">返回</a></li>{/if}
+        </ol>
+        <form class="form-inline" action="">
+            <div class="form-group form-group-left">
+                <label>用户名:</label>
+                <input type="text" name="words" class="form-control" value="{$query.words}" placeholder="用户名">
+            </div>
+            <input type="hidden" name="userid" class="form-control" value="{$userid}" placeholder="">
+            <input type="hidden" name="is_today" class="form-control" value="{$is_today}" placeholder="">
+            <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="content tasklist table_box">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th width="200">用户昵称（用户名）</span></th>
+                <th width="100">会员类型</th>
+                <th>团队余额</th>
+                <th>团队投注</th>
+                <th>团队中奖</th>
+                <th>游戏币转出</th>
+                <th>游戏币转入</th>
+                <th>团队充值</th>
+                <th>团队兑换</th>
+                <th>团队活动</th>
+                <th>团队提成</th>
+                <th>团队返点</th>
+                <th>团队盈利</th>
+            </tr>
+            </thead>
+            <tbody>
+                {volist name = "list" id = "item"}
+                <tr>
+                    <td>{if condition="$userid == $item.id"} {$item.nickname}（{$item.username}）{else /}<a title="查看下级统计" href="{:url('agent_index')}?userid={$item.id}">{$item.nickname}（{$item.username}）</a>{/if}</td>
+                    <td>{$item.type_name}</td>
+                    <td>{$item.statistics.money ?? 0}</td>
+                    <td>{$item.statistics.spend ?? 0}</td>
+                    <td>{$item.statistics.award ?? 0}</td>
+                    <td>{$item.statistics.game_out ?? 0}</td>
+                    <td>{$item.statistics.game_in ?? 0}</td>
+                    <td>{$item.statistics.recharge ?? 0}</td>
+                    <td>{$item.statistics.change ?? 0}</td>
+                    <td>{$item.statistics.send ?? 0}</td>
+                    <td>{$item.statistics.royalty ?? 0}</td>
+                    <td>{$item.statistics.rebate ?? 0}</td>
+                    <td>{$item.statistics.gain ?? 0}</td>
+                </tr>
+                {/volist}
+                <tr class="b_bloder">
+                  <td colspan="2">当前页总计</td>
+                  <td>{$sum_page.money ?? 0}</td>
+                  <td>{$sum_page.spend ?? 0}</td>
+                  <td>{$sum_page.award ?? 0}</td>
+                    <td>{$sum_page.game_out ?? 0}</td>
+                    <td>{$sum_page.game_in ?? 0}</td>
+                  <td>{$sum_page.recharge ?? 0}</td>
+                  <td>{$sum_page.change ?? 0}</td>
+                  <td>{$sum_page.send ?? 0}</td>
+                  <td>{$sum_page.royalty ?? 0}</td>
+                  <td>{$sum_page.rebate ?? 0}</td>
+                  <td>{$sum_page.gain ?? 0}</td>
+               </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="text-right">{$page_html}</div>
+
+</div>
+
+<script>
+  $(function () {
+
+    $('#begintime,#endtime').datetimepicker({
+      language: 'zh-CN',
+      weekStart: 1,
+      todayBtn: 1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+			endDate : new Date(),
+      minView: 2,
+      forceParse: 0
+    });
+    $('#begintime').on('changeDate',function(e){  
+        var startTime = e.date;  
+        $('#endtime').datetimepicker('setStartDate',startTime);  
+    });
+    $('#endtime').on('changeDate',function(e){  
+        var startTime = e.date;  
+        $('#begintime').datetimepicker('setStartDate',startTime);  
+    });
+
+    $(".choice").click(function(){
+        var _this = $(this).find('a');
+        $(".result").text(_this.text());
+        $("input[name=type]").val(_this.data('value'))
+    })
+    
+    $(".choicesort").click(function(){
+        var _this = $(this).find('a');
+        $(".resultsort").text(_this.text());
+        $("input[name=sort]").val(_this.data('value'))
+    })
+  })
+</script>
+{include file='common/foot' /}

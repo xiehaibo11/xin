@@ -1,0 +1,167 @@
+{include file='web@common/link' title="微信账号绑定"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <el-radio-group v-model="label">
+                <el-radio-button @click.native="checkName(toBank)" label="银行卡"></el-radio-button>
+                <el-radio-button @click.native="checkName(toAlipay)" label="支付宝"></el-radio-button>
+                <el-radio-button @click.native="checkName(toWei)" label="微信"></el-radio-button>
+            </el-radio-group>
+        </div>
+        <div slot="header" class="clearfix" style="margin-top: 15px">
+            <span class="title">微信账号绑定</span>
+        </div>
+        <template v-if="isBind">
+            <div class="info">
+                <h4 style="margin-bottom: 20px">您已绑定微信账号</h4>
+                <div>{{ruleForm.name}}</div>
+                <div>{{ruleForm.num}} <a class="link" @click="edit" style="font-size: 14px;text-decoration: underline">修改</a></div>
+            </div>
+        </template>
+        <template v-else>
+            <div>
+                <h4 style="margin-bottom: 20px" v-if="doEdit">修改已绑定微信账号</h4>
+                <h4 style="margin-bottom: 20px" v-else>绑定微信账号</h4>
+                <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+                    <el-form-item prop="name" label="真实姓名">
+                        <el-input v-model="ruleForm.name" placeholder="请输入真实姓名" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item prop="num"  label="微信账号">
+                        <el-input v-model="ruleForm.num" placeholder="请输入微信账号"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button v-if="doEdit"  type="danger" @click="editForm('ruleForm')">确认修改</el-button>
+                        <el-button v-else type="danger" @click="submitForm('ruleForm')">保存</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </template>
+    </el-card>
+</div>
+
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                isBind: {$banks}.length ? 1 : 0, //是否绑定支付宝
+                label: '微信',
+                doEdit: false, //是否是修改
+                ruleForm: {
+                    name: '{$isname}',
+                    num: {$banks}.length ? {$banks}[0].numbers : ''
+                },
+                rules: {
+                    name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+                    num: [{ required: true, message: '微信账号不能为空', trigger: 'blur' }]
+                }
+            },
+            methods: {
+                submitForm: function submitForm(formName) {
+                    var _this = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            $.post('{:url("lockBank")}', {
+                                type: 3,
+                                name: '微信',
+                                numbers: _this.ruleForm.num
+                            }, function (res) {
+                                if (res.err) {
+                                    _this.$alert(res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'error'
+                                    });
+                                } else {
+                                    _this.$alert(res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        callback: function () {
+//                                            location.href = '{:url("wei")}';
+                                            if (window != top){
+                                                top.location.href = '/web/user/my?ac=0-3';
+                                                return;
+                                            }
+                                            window.location.href = '/web/user/my?ac=0-3';
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                checkName: function checkName(callback) {
+                    if (!'{$isname}'.length) {
+                        this.$confirm('您还未做实名制认证！', '提示', {
+                            confirmButtonText: '立即去认证',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(function () {
+                            location.href = '{:url("idCard")}';
+                        }).catch(function () {});
+                    } else {
+                        callback();
+                    }
+                },
+                toBank: function toBank() {
+                    location.href = '{:url("bank")}';
+                },
+                toAlipay: function toAlipay() {
+                    location.href = '{:url("alipay")}';
+                },
+                toWei: function toWei() {
+                    location.href = '{:url("wei")}';
+                },
+
+                //修改微信账号
+                edit: function edit() {
+                    this.doEdit = true;
+                    this.isBind = false;
+                    this.ruleForm.num = '';
+                },
+                editForm: function editForm(formName) {
+                    var _this2 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            $.post('{:url("editBank")}', {
+                                type: 3,
+                                sign: {$banks}[0].sign,
+                                numbers: _this2.ruleForm.num
+                            }, function (res) {
+                                if (res.err) {
+                                    _this2.$alert(res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'error'
+                                    });
+                                } else {
+                                    _this2.$alert(res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        callback: function callback() {
+                                            location.href = '{:url("wei")}';
+                                        }
+                                    });
+                                    setTimeout(function () {
+                                        location.href = '{:url("wei")}';
+                                    }, 1500);
+                                }
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>

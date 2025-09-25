@@ -1,0 +1,131 @@
+{include file='common@common/head' /}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-c-component.js"></script>
+<link rel="stylesheet" href="/static/font/iconfont.css"/>
+<link rel="stylesheet" href="__STATIC__/plugin/bbs/css/style.css?a=2">
+<body>
+<header class="header">
+    <div class="header-nav">
+        <a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);"><i class="icon-svg icon_left"></i></a>
+    </div>
+    <div class="header-center">评论详情</div>
+    <div class="header-right"><a href="/index/"><i class="iconfont icon-home" style="color:#666;font-size:0.9rem; "></i></a></div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init paddin-top">
+    <div style="overflow: hidden;" class="card-bg">
+        <div class="reply_t flex-box">
+            <input type="hidden" class="tz" :value="rey.id">
+            <input type="hidden" class="pid" :value="rey.pid">
+            <i class="icon-svg hfphoto" :style="{backgroundImage: 'url(' + reyinfo.photo +')'}"></i>
+            <a :class="['d-username username','flex','text-align-left']" style="padding-left: 2px;line-height: 28px;font-size: 0.7rem;">{{reyinfo.nickname}}</a>
+        </div>
+        <div class="r-card-cont">
+            <div class="card-content-inner"><p>{{item.content}}</p></div>
+            <div class="h_re flex-box" @click="rey">
+                <span class="datetime2" style="margin-left: 0">{{item.create_time}}</span>
+                <span class="reply_again" style="margin-left: 5px;">· 回复ta</span>
+            </div>
+        </div>
+    </div>
+    <!--评论 开始-->
+    <div id="comment" class="card-line new_comment" style="margin-top: 0;">
+        <loading-box :url="url" :list="re_list"  class="list-arrow"  load="正在加载"  nodata=" " loaded="没有更多了">
+            <template scope="props">
+                <div class="comment-tit" style="margin-top: 0.5rem"><i class="iconfont icon-pinglun" style="color:#ec522d;font-size:0.8rem; "></i> 全部回复<span></span></div>
+                <template v-for="item of props.list">
+                    <action-list :item="item"></action-list>
+                </template>
+            </template>
+        </loading-box>
+    </div>
+    <!--评论 结束-->
+    <transition name="slide">
+        <div class="gg hide" v-if ="state" id="gg">
+            <textarea style="width:100%" v-model="rContent"  name="content"  :placeholder="'回复'+reyinfo.nickname" rows="4" cols="30" style="resize:none"></textarea>
+            <button class="btn btn-warning btn-fill" @click="oReplay">发布</button>
+            <button class="btn gray"  @click="rey">取消</button>
+        </div>
+     </transition>
+
+</div>
+<template id="actionList">
+    <div class="detail card-bg">
+        <div class="reply_t flex-box">
+            <i class="icon-svg hfphoto" :style="{backgroundImage: 'url(' + item.userinfo.photo +')'}"></i>
+            <a class="d-username flex text-align-left" style="padding-left: 2px;line-height: 28px;font-size: 0.7rem;">{{item.userinfo.nickname}}</a>
+        </div>
+        <div class="r-card-cont">
+            <div class="card-content-inner"><p>{{item.content}}</p></div>
+            <div class="h_re flex-box">
+                <span class="datetime2" style="margin-left: 0">{{item.create_time}}</span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script type="text/javascript" >
+    $(function () {
+        var arr =[];
+        Vue.component('action-list', {
+            props: ['item'],
+            template: '#actionList',
+        });
+
+        new Vue({
+            el: '#app',
+            data: {
+                url:'',  //回复列表路径
+                item:[],
+                re_list:[],
+                reyinfo:[],
+                rContent:'', //回复内容
+                state:false
+            },
+            created:function() {
+                //获取url中的参数
+                var arr=location.href.split('/').pop().split('.');
+                var id = arr[arr.length - 1];
+                this.url ='/index/bbs/replyInfo/id/'+ id;
+                $.get('/index/bbs/reyInfo/id/'+id, (res) => {
+                    this.$set(this, 'item', res[0]);
+                    this.$set(this, 'reyinfo', res[0].userinfo);
+                });
+                $.get('/index/bbs/replyInfo/id/'+id+'?page=1', (res) => {
+                    this.$set(this, 're_list', res.data);
+                });
+                $('#app').removeClass('app_init');
+                $('#gg').removeClass('hide');
+            },
+            methods:{
+                rey:function(){
+                    this.state = this.state == true ? false : true;
+                },
+                oReplay:function(){
+                    var _this = this;
+                    if(_this.rContent==''){
+                        $.msg('回复内容不能为空');
+                    }else{
+                        $.ajax({
+                            type:"POST",
+                            url:"{:Url('index/bbs/reply')}",
+                            data:{pid:_this.item.pid, tid:_this.item.id,content:_this.rContent},
+                            success: function(res) {
+                                var data = res[0];
+                                _this.re_list.unshift(data);
+                                $.msg('回复成功！')
+                                _this.rContent ="";
+                                _this.state = false;
+                                console.log(_this.re_list)
+                            }
+                        })
+                    }
+                }
+
+            }
+        });
+
+    })
+</script>

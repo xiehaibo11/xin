@@ -1,0 +1,166 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style>
+    .input-group{margin-top: 10px}
+    .inline-div{display:inline-table;margin: 0;margin-left: 2%}
+    .flex{flex: 1;display: inline-flex}
+    .awrad span{width:6%}
+    .title{height: 34px; padding: 8px 11px;border-radius: 2px;border-right: 1px solid #ccc !important;} 
+    .awrad .flex span{width: 40%;padding: 8px 10px; margin-left: 5%;}
+    .dropdown-menu{min-width: 94px}
+    .dropdown-menu li{text-align: center;    margin-bottom: 5px;border-bottom: 1px dashed #ccc;}
+    .dropdown-menu li:last-child{border-bottom: none}
+    .title_img{height: 40px;line-height: 40px;display: inline-block;width: 9%;background: #eee; text-align: center;border-radius: 10px;    margin-top: 20px;}
+</style>
+<nav class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav" style="padding-left: 42px">
+        <li id = "tasklist"><a href="{:url('index')}">任务列表</a></li>
+        <li id = "addtask"><a  href="{:url('index',['class' =>addtask])}">添加任务</a></li>
+        <li><a href = "{:url('admin/active/log')}" >任务日志</a></li>
+        <li id = "addtask"  class="active"><a>修改任务信息</a></li>
+    </ul>
+</nav>
+<div class="box-padding">
+    <div class="content addtask"><input type="file" class="hidden select_photo">
+        <form action="{:url('change',[id =>$info.id])}" method="post">
+            <div class="input-group" style="height:80px;width:100%">
+                <span class="title_img">头像</span>
+                <span class="user_r_text center-center" style="height: 80px;justify-content: flex-start;margin-left: 16%;">
+                    <img class="user_photo" width="60" height="60" src="{$info.logo}" alt="">
+                    <input type="hidden" name="logo" value="{$info.logo}">
+                    <button type="button" class="btn btn-success btn_select_photo">更换LOGO</button>
+                </span>
+                
+            </div> 
+            <div class="input-group">
+                <span class="input-group-addon">任 务 名</span>
+                <input type="text" class="form-control" name="content" value="{$info.content}">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">任务介绍</span>
+                <input type="text" class="form-control" name="info" value="{$info.info}">
+            </div>
+            
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        上级任务
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li name = "0"  class="pid"> 优先显示</li>
+                        {volist name="$alltask" id="item"}
+                        <li name = "{$item.id}"  class="pid"> {$item.content}</li>
+                        {/volist}
+                    </ul>
+                </div>
+                <input type="text" class="form-control pidname"  class="" disabled value="{$ext_name.par}">
+                <input type="hidden" name="pid" value="{$info.pid}">
+                
+                <span class="input-group-addon">若选择了上级任务，则要在完成上级任务方可完成当前任务</span>
+            </div>
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        进行模块
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li name = "index/User"  class="ext">用户中心</li>
+                        <li name = "brisk"  class="countext">活跃任务</li>
+                        {volist name="$extshow" id="item"}
+                        <li name = "{$item.name}"  class="ext"> {$item.title}</li>
+                        {/volist}
+                    </ul>
+                </div>
+                <input type="text" class="form-control extname"  class="" disabled value="{$ext_name.exx}">
+                <input type="hidden" name="ext" value="{$info.ext}">
+            </div>
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        所属类型
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <!-- <li name = "game"  class="countext">游戏类</li> -->
+                        <li name = "brisk"  class="countext">活跃任务</li>
+                        <li name = "login"  class="countext">用户登录</li>
+                        <li name = "sign"  class="countext">用户签到</li>
+                        {volist name="$extshow" id="item"}
+                        <li name = "{$item.name}"  class="countext"> {$item.title}</li>
+                        {/volist}
+                    </ul>
+                </div>
+                <input type="text" class="form-control countextname"  class="" disabled value="{$ext_name.type}">
+                <input type="hidden" name="countext" value="{$info.countext}">
+            </div>
+
+            <!-- <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        统计方式
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li name = "times"  class="ways">游戏次数</li>
+                        <li name = "active"  class="ways">游戏消费</li>
+                    </ul>
+                </div>
+                <input type="text" class="form-control waysname"  class="" disabled value="{$ext_name.spend}">
+                <input type="hidden" name="ways"  value="{$info.ways}">
+            </div> -->
+            <div class="input-group">
+                <span class="input-group-addon">完成统计值</span>
+                <input type="text" name="countvalue" class="form-control"  value="{$info.countvalue}">
+            </div>
+    
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        启用状态
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li name="1" class="status">开启</li>
+                        <li name="0" class="status">关闭</li>
+                    </ul>
+                </div>
+                <input type="text" class="form-control statusname"  value="{$info.statuss}" disabled>
+                <input type="hidden" name="status" value="{$info.status}"  >
+            </div>
+            <div class="input-group">
+                <button class="btn btn-success btn-lg" type="submit">修 改</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  $(function () {
+    //下拉选择模式
+    $(".ext,.status,.ways,.countext,.pid").click(function(){
+        var _this = $(this);
+        var classname = _this.attr('class');
+        $("input[name="+classname+"]").val(_this.attr('name'));
+        $("."+classname+"name").val(_this.text()); 
+    })
+    
+    $('.btn_select_photo').click(function () {
+      $('.select_photo').click();
+    });
+    $('.select_photo').localResizeIMG({
+      maxSize: 200,
+      success: function (result) {
+        $('.user_photo').attr('src', result.base64);
+        $.post("{:url('base64Upload')}", {'base64_data': result.base64}, function(res) {
+          $('input[name=logo]').attr('value', res.data);
+        }, 'json');
+      }
+    });
+  })
+</script>
+{include file='common/foot' /}

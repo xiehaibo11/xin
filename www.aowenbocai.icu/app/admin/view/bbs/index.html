@@ -1,0 +1,110 @@
+{include file='common/head' /}
+<link rel="stylesheet" href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+	.box-padding {
+		padding: 20px;
+	}
+	/* .isdelete{
+		float:right;
+		margin-left: 50px;
+	} */
+</style>
+<div class="btn-group fr" style="margin-bottom:20px;">
+    <a href="#" data-url="{:url('admin/Bbs/clear')}?day=30" class="btn btn-info btn-sm isdelete">清除30天前帖子</a>
+    <a href="#" data-url="{:url('admin/Bbs/clear')}?day=15" class="btn btn-info btn-sm isdelete">清除15天前帖子</a>
+    <a href="#" data-url="{:url('admin/Bbs/clear')}?day=7" class="btn btn-info btn-sm isdelete">清除7天前帖子</a>
+    <a href="#" data-url="{:url('admin/Bbs/clear')}?day=3" class="btn btn-info btn-sm isdelete">清除3天前帖子</a>
+    <a href="#" data-url="{:url('admin/Bbs/clear')}" class="btn btn-info btn-sm isdelete">全部清除</a>
+</div>
+<div class="clear"></div>
+
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol >
+            <li class="active">帖子列表</li>
+        </ol>
+
+        <form class="form-inline" action="">
+            <div class="form-group form-group-left">
+                <label>时间</label>
+                <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="starttime" v-model="starttime"  value="{$data.starttime}"/>
+                    <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+                </div>
+                <label>到</label>
+                <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="endtime" v-model="endtime"  value="{$data.endtime}" />
+                    <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+                </div>
+            </div> &nbsp;
+            <div class="form-group">
+                关键字
+                <input type="text" name="words" class="form-control" value="{$data.words}" placeholder="关键字/用户名/帖子内容">
+            </div><input type="hidden" value="{$data.id}" >
+
+
+            <button type="submit" class="btn btn-default">搜索</button>
+        </form>
+    </div>
+    <div class="table_box">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>昵称(用户名)</th>
+                <th>帖子内容</th>
+                <th>状态</th>
+                <th>时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $list as $item}
+            <tr>
+                <td id="id">{$item.id}</td>
+                <td>{$item.userinfo.nickname}<span style="font-size:12px"> ({$item.userinfo.username})</span> </td>
+                <td><a title="{$item.content}">{$item.mincontent}</a></td>
+                <td>{$item.status}</td>
+                <td>{$item.create_time}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="{:url('detail')}?id={$item.id}" class="btn btn-info btn-xs">详情</a>
+                        <a href="{:url('edit')}?id={$item.id}" class="btn btn-info btn-xs">修改</a>
+                        <a href="#" class="btn btn-info btn-xs btn-sm isdelete" data-url="{:url('admin/bbs/del')}?id={$item.id}">删除</a>
+                    </div>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+	<div class="text-right">{$list->render()}</div>
+</div>
+</div>
+{include file='common/foot' /}
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>

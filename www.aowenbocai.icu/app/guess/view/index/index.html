@@ -1,0 +1,400 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="/static/plugin/game/css/guess.css">
+<header class="header">
+    <a class="header-nav" href="javascript:history.go(-1);">
+        <span class="back"><i class="iconfont icon-jiantouzuo"></i></span>
+    </a>
+    <div class="header-center">趣味竞猜</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init" v-cloak>
+    <div class="info-top flex-box">
+        <div class="flex-box top-left">
+            <span class="info-money flex-box" @click="modalRecharge">
+                <img src="/static/images/index/common_jd.png" alt="">
+                <i class="flex">{{info.money}}</i>
+                <img src="/static/images/index/common_add.png" alt="">
+            </span>
+            <span>
+                <a href="/index/shop"  class="flex-box">
+                    <i class="iconfont icon-liwu1"></i>
+                    <i>兑换</i>
+                </a>
+            </span>
+        </div>
+        <div class="flex-box top-right">
+            <span><a href="/guess/index/order">我的竞猜</a></span>
+            <span @click="show(0)">规则</span>
+        </div>
+    </div>
+    <div style="height: 32px"></div>
+    <template v-for="item of list">
+        <guess-list :item="item" :money="info.money" @deduct="changMoney"></guess-list>
+    </template>
+    <!--规则弹窗-->
+    <transition  name="fade">
+        <div class="modal-cont modal-gz" v-if="isShow == 0" @click.self="hide">
+            <div class="gz-cont">
+                <div>
+                    <h5>什么是趣味竞猜？</h5>
+                    <p>趣味竞猜是预测未来事件发生状况的话题竞猜活动，话题涵盖了娱乐、社会、赛事、科技、金融等热门事件</p>
+                </div>
+                <div>
+                    <h5>如何参与活动？</h5>
+                    <p>1、每个话题竞猜至少包含2个答案选项，最多4个答案选项，在事件发生后根据事件的实际情况有且仅有一个选项为正确答案。</p>
+                    <p>2、系统对每一用户参与同一个话题设定了投入金豆的单次最低值及最高值，如您投入豆的数量低于最低或高于最高值（多次投注会被累计计算），您将无法参与
+                        竞猜。具体以系统提示为准。</p>
+                    <p>3、用户选择要投入的金豆的数量并点击"确认"后，即成功参与活动。成功参与活动后，用户不能中途退出、取消或修改金豆的投入数量。</p>
+                    <p>4、同一用户在话题结束前可多次对相同选项进行多次投注，也可对不同选项进行投注。</p>
+                    <p>5、如用户竞猜选项为正确答案，则用户将获得所投入金豆数量n倍（n大于1，如1.1倍）的金豆，具体倍数以用户成功参与竞猜后页面展示为准。</p>
+                    <p>6、除另有说明外，不论用户的竞猜结果如何，用户投入的金豆因参与活动而消耗完毕，不会进行返还。</p>
+                    <p>7、竞猜结果将在话题所涉事件的状况确定后的3个工作日内公布，公布结果后的24小时内系统将把竞猜成功用户获得的金豆发放到用户的账户中。</p>
+                </div>
+                <div>
+                    <h5>注意事项</h5>
+                    <p>1、公司有权根据活动参与情况，结束或提前结束用户参与活动的竞猜（值某轮活动不再接受用户的竞猜）。</p>
+                    <p>2、如遇不可抗力或其他客观原因导致活动竞猜无法继续进行，则用户的投入将会全额返还到用户的淘宝账户，淘宝无需因此而承担任务赔偿或补偿责任。</p>
+                    <p>3、活动期间，如用户存在违规行为（包括但不限于机器作弊），公司将取消用户的竞猜获奖资格。</p>
+                    <p>4、公司可根据活动举办的实际情况，在法律允许的范围内，对本活动规则进行变动或调整，相关变动或调整将公布在活动页面上。</p>
+                </div>
+                <div>
+                    <h5>开奖依据</h5>
+                    <p>1、收视率类竞猜以http://www.tvtv.hk/公布结果为准。</p>
+                    <p>2、股市类竞猜以新浪财经频道公布结果为准。</p>
+                </div>
+            </div>
+        </div>
+    </transition>
+    <!--规则弹窗 -->
+    <!--充值弹窗 开始-->
+    <transition name="modal-opacity">
+        <div class="v-modal-overlay" v-if="rechargeMsg.isShow" @click.self="modalRecharge"></div>
+    </transition>
+    <transition name="modal-zoom">
+        <div class="v-modal-p" v-if="rechargeMsg.isShow" @click.self="modalRecharge">
+            <div class="v-modal">
+                <div class="v-modal-header">
+                    <div class="m-title">
+                        <img src="/static/theme/default/svg/modal_bg_top.png" alt="">
+                        <span class="m-tit-name">· 获取金豆 ·</span>
+                    </div>
+                    <div class="m-close" @click="modalRecharge">
+                        <img src="/static/theme/default/svg/modal_btn_close.png" alt="" width="45">
+                    </div>
+                </div>
+                <div class="v-modal-content">
+                    <div class="recharge-mine flex-box font65">
+                        <div><span>我的金豆：</span>{{info.money}}</div>
+                        <!--<div class="flex"><span>我的鲜花：</span>{{info.flower}}</div>-->
+                        <!--<div class="flex"><a href="/index/detail">账户明细</a></div>-->
+                    </div>
+                    <div class="recharge-msg text-left text-color-light font7">
+                        <i class="iconfont icon-laba1 font95"></i> 适度娱乐，理性消费！
+                    </div>
+                    <div class="recharge-content">
+                        <ul>
+                            <li class="flex-box" v-for="item in rechargeMsg.list">
+                                <div class="charge-img"><img style="margin-top: 0.1rem" src="/static/images/index/common_flower.png" alt=""></div>
+                                <div class="charge-info flex">
+                                    <p>
+                                        <span>{{item.flower}}</span>
+                                        <span class="text-color-light">（送{{item.coin}}金豆）</span>
+                                    </p>
+                                    <p v-if="">
+                                        <span class="giving">额外赠送{{item.award}}金豆</span>
+                                    </p>
+                                </div>
+                                <div class="charge-pay">
+                                    <button class="btn" @click="doRecharge(item.money)">¥{{item.money}} 购买</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+    <!--充值弹窗 结束-->
+</div>
+<template  id="guessList">
+    <div class="guess-list">
+        <!--竞猜主题-->
+        <div class="flex-box list-box">
+            <div class="theme-img" :style="'backgroundImage: url(' + item.img + ')'"></div>
+            <div class="theme-info flex">
+                <p class="title">{{item.title}}</p>
+                <p class="flex-box foot">
+                    <span class="time">开奖时间:{{item.end_time}}</span>
+                    <span class="basis" v-if="item.basis" @click="showBasis(item.id)" :id="'ba'+item.id">开奖依据</span>
+                </p>
+                <!--开奖依据内容-->
+                <transition  name="fade">
+                <div class="modal-cont" v-if="showObj == item.id" @click.self="hideBasis">
+                    <div class="basis-cont" v-if="showObj == item.id" :style="{'marginTop':marginTop + 'px'}">{{item.basis}}</div>
+                </div>
+                </transition >
+                <!--开奖依据内容 end-->
+            </div>
+        </div>
+        <!--竞猜主题 end-->
+        <!--竞猜选项-->
+        <div class="guess-select">
+            <template v-for="(select,i) in planCont">
+            <div class="selct-list"  @click="doBet(i,select.sp)">
+                <span>{{select.title}}</span>
+                <span class="odds">{{select.sp}}</span>
+                <!--竞猜状态显示-->
+                <div class="guess-show" v-if="betPlan.selData[i]" :class="['font3',
+                {'font5':betPlan.selData[i].toString().length>=5},
+                {'font6':betPlan.selData[i].toString().length>=6}]">{{betPlan.selData[i]}}</div>
+                <!--竞猜状态显示 end-->
+            </div>
+            </template>
+        </div>
+        <!--竞猜选项 end-->
+        <!--竞猜确认-->
+        <div class="guess-bet flex-box">
+            <div class="clear"><button @click="clearBet" :class="['radius',{'operability':betPlan.state}]"><i class="iconfont icon-shanchu"></i> 清空</button></div>
+            <div class="set radius" :class="{'icon-rotate':state}">
+                <div  :id="'set'+item.id" @click="showSet(item.id)" :class="{
+                'font4':beansValue.toString().length>=4,
+                'font5':beansValue.toString().length>=5,
+                }">{{beansValue}}<span class="icon-jt"><i class="iconfont icon-jiantoukongup1" :class="{
+                'font4':beansValue.toString().length>=4,
+                'font5':beansValue.toString().length>=5,
+                }"></i></span></div>
+                <!--金豆设置-->
+                <transition  name="fade">
+                <div class="modal-cont" v-if="beansSet.show == item.id" @click.self="hideSet">
+                    <div class="beans-set radius flex-box" :style="{'marginTop':beansSet.marginTop + 'px'}">
+                        <span class="flex" v-for="beans in beansSet.value" @click="setValue(beans)">{{beans}}</span>
+                    </div>
+                </div>
+                </transition>
+                <!--金豆设置 end-->
+            </div>
+            <div class="result radius flex">
+                <div v-if="!betPlan.state">确定</div>
+                <!--投注内容-->
+                <div class="flex-box"  v-if="betPlan.state">
+                    <div class="bet-detail">
+                        <span>投注{{betPlan.sumbean}}金豆</span>
+                        <span>猜中可得<i v-if="betPlan.sumMin !== betPlan.sumMax ">{{betPlan.sumMin}}~</i>{{betPlan.sumMax}}金豆</span>
+                    </div>
+                    <div class="btn-sumbit flex" @click="betConfirm(item.id)">确定</div>
+                </div>
+                <!--投注内容 end-->
+            </div>
+        </div>
+        <!--竞猜确认 end-->
+        <!--提交成功提示-->
+        <transition  name="fade">
+            <div class="modal-cont modal-bet" v-if="betPlan.betSucces == item.id" @click.self="hideConfirm">
+                <div class="bet-succes">
+                    <div class="bet-s">参与成功！</div>
+                    <div class="title">{{item.title}}</div>
+                    <template v-for="(select,i) in planCont">
+                        <div v-if="betPlan.selData[i] > 0">
+                            <span class="cont">{{select.title}}  <span class="ratio">({{select.sp}})</span></span>
+                            <span class="bet"> 投注{{betPlan.selData[i]}}金豆，猜中可得{{betPlan.sumData[i]}}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </transition >
+        <!--提交成功提示 end-->
+    </div>
+</template>
+<script>
+    Vue.component('guess-list', {
+        template: '#guessList',
+        props:['item','money'],
+        data(){
+            return {
+                planCont:this.item.plan, //竞猜选项
+                showObj:-1,  //是否显示开奖依据
+                marginTop:0,  //开奖依据位置
+                beansSet:{  //金豆值设置属性
+                    show:-1,
+                    value:[100,200,500,1000,10000],
+                    marginTop:0
+                },
+                state:false, //箭头状态
+                beansValue:100, //金豆值
+                betPlan:{ //竞猜选项
+                    state:false, //清空状态
+                    selData:{}, //投注
+                    selbeans:[],
+                    sumData:[],//计算
+                    sumbean:0, //金豆总数
+                    sumMin:0,
+                    sumMax:0,
+                    betSucces:-1,
+                },
+            }
+        },
+        methods: {
+            doBet(i,ratio){  //竞猜投注
+                this.betPlan.state = true;
+                var sdt = this.betPlan.selData;
+                var sum = this.betPlan.sumData;
+                var beandt = this.betPlan.selbeans;
+                var beans;
+                if(beandt[i] == undefined){
+                    beans = this.beansValue;
+                }else{
+                    beans = beandt[i] + this.beansValue;
+                }
+                Vue.set(sdt, i, beans);
+                Vue.set(beandt, i, beans);
+                if(beandt[i] == undefined){
+                    beandt[i] = this.beansValue;
+                }
+                //计算投注金豆总数
+                var number = Math.ceil(beandt[i] * ratio);
+                Vue.set(sum, i, number);
+                var a = 0;
+                for(var j = 0; j < beandt.length ; j++){
+                    if(beandt[j] == undefined){
+                        beandt[j] = 0
+                    }
+                    a += beandt[j];
+                }
+                this.betPlan.sumbean = a;
+                //金豆盈利显示
+                for(var m = 0; m < sum.length ; m++){
+                    if(sum[m] == undefined){
+                        sum[m] = 0;
+                    }
+                    if(sum[m] > this.betPlan.sumMax){
+                        this.betPlan.sumMax = sum[m];
+                    }
+                }//最大值
+                for(var n = 0; n < sum.length ; n++){
+                    if(sum[n] !==0){
+                        this.betPlan.sumMin = 300000000;
+                    }
+                }
+                for(var n = 0; n < sum.length ; n++){
+                    if(sum[n] < this.betPlan.sumMin && sum[n] !==0){
+                        this.betPlan.sumMin = sum[n];
+                    }
+                }//最小值
+//                console.log(this.betPlan.sumData);
+//                console.log(this.betPlan.sumMax);
+//                console.log(this.betPlan.sumMin);
+//                console.log(this.betPlan.selData);
+//                console.log(i,ratio);
+            },
+            clearBet(){  //清空
+                this.betPlan.selData = {};
+                this.betPlan.selbeans = [];
+                this.betPlan.sumData = [];
+                this.betPlan.sumMax = 0;
+                this.betPlan.sumMin = 0;
+                this.betPlan.state = false;
+            },
+            betConfirm(d){  //竞猜投注
+               $.post('{:Url("/Guess/index/addBetting")}',{
+                   id:this.item.id,
+                   cont:this.betPlan.selData
+               },(data)=>{
+                   if (data.err == 0) {
+                       this.betPlan.betSucces = d;
+                       $('body').css({'overflow':'hidden'});
+                       $('html').css({'overflow':'hidden'});
+                       this.$emit('deduct',this.betPlan.sumbean);
+                   } else {
+                       $.msg(data.msg);
+                   }
+               })
+            },
+            hideConfirm(){
+                this.betPlan.betSucces = -1;
+                this.clearBet();
+                $('body').css({'overflow':'auto'});
+                $('html').css({'overflow':'auto'});
+            },
+            setValue(val){
+                this.beansValue = val;
+                this.beansSet.show = -1;
+                $('body').css({'overflow':'auto'});
+                $('html').css({'overflow':'auto'});
+                this.state=!this.state;
+            },
+            showBasis(id){ //开奖依据
+                this.showObj = id;
+                this.marginTop = $('#ba'+this.item.id).offset().top - $('body').scrollTop() + 16;
+                $('body').css({'overflow':'hidden'});
+                $('html').css({'overflow':'hidden'});
+            },
+            hideBasis(){ //隐藏依据
+                this.showObj = -1;
+                $('body').css({'overflow':'auto'});
+                $('html').css({'overflow':'auto'});
+            },
+            showSet(n){ //金豆值设置
+                this.beansSet.show = n;
+                this.beansSet.marginTop = $('#set'+this.item.id).offset().top - $('body').scrollTop() - 40;
+                $('body').css({'overflow':'hidden'});
+                $('html').css({'overflow':'hidden'});
+                this.state=!this.state
+            },
+            hideSet(){ //隐藏金豆值设置
+                this.beansSet.show = -1;
+                $('body').css({'overflow':'auto'});
+                $('html').css({'overflow':'auto'});
+                this.state=!this.state;
+            },
+        }
+    });
+    let vm = new Vue({
+        el: '#app',
+        data: {
+            info:{
+                money:500
+            },
+            isShow:-1,
+            list:[],
+            rechargeMsg:{   //充值属性
+                isShow:false,
+                list:[]
+            },
+        },
+        methods:{
+            show(i){ //规则显示
+                this.isShow = i;
+                $('body').css({'overflow':'hidden'});
+                $('html').css({'overflow':'hidden'});
+            },
+            hide(){ //规则隐藏
+                this.isShow = -1;
+                $('body').css({'overflow':'auto'});
+                $('html').css({'overflow':'auto'});
+            },
+            changMoney(evtValue){ //扣除投注金豆数
+                this.info.money = this.info.money - evtValue;
+            },
+            modalRecharge(){ //充值弹窗
+                this.rechargeMsg.isShow = !this.rechargeMsg.isShow;
+            },
+            doRecharge(m){  //充值
+                $.post('/pay/pay/index',{'num':m },()=>{
+                    window.location.href = '/pay/pay/index/num/'+m;
+                })
+            },
+
+        },
+        created() {
+            $.get('{:Url("/guess/index/getGuess")}',(res)=>{
+                this.info.money = res.money;
+                this.$set(this, 'list', res.data);
+                $('#app').removeClass('app_init');
+            });
+            $.get('/index/Recharge/getRechargeList',(res)=>{  //充值列表获取
+                this.rechargeMsg.list = res.data;
+            });
+        }
+    });
+</script>
+{include file='common@common/foot' /}

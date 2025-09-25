@@ -1,0 +1,106 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+
+<style>
+    html,body{
+        height: 100%;
+    }
+    .search {
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    .add-botton {
+        float: right;
+        margin-right: 30px;
+    }
+</style>
+<ol class="breadcrumb">
+         <li><a href="/{$loginName}.php/extend">扩展管理</a></li>
+    <li class="active">猜大小</li>
+</ol>
+<div id="app">
+    <div>
+        <div class="search">
+            <form class="form-inline" id="search">
+                <div class="form-group form-group-left">
+                    <label>期号:</label>
+                    <input type="text" name="expect" class="form-control" value="{$query.expect}" placeholder="期号">
+                </div>
+                <div class="form-group form-group-left">
+                    <label>时间</label>
+                    <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                        <input type='text' class="form-control" name="starttime" value="{$query.starttime}"/>
+                        <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                    </div>
+                    <label>到</label>
+                    <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                        <input type='text' class="form-control" name="endtime" value="{$query.endtime}"/>
+                        <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default form-group-left">搜索</button>
+                <div class="add-botton">
+                    <a href="{:url('addCode')}" class="btn btn-info" role="button">添加开奖号码</a>
+                </div>
+            </form>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>期号</th>
+                <th>开奖号码</th>
+                <th>开奖时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $list as $item}
+            <tr>
+                <td>{$item.id}</td>
+                <td>{$item.expect}</td>
+                <td>{$item.code}</td>
+                <td>{$item.create_time}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="{:url('fa/Admin/editCode')}/id/{$item.id}" class="btn btn-info btn-xs isback">修改</a>
+                        <a href="#" class="btn btn-info btn-xs isdelete" data-url="{:url('fa/Admin/codeDelete')}?id={$item.id}">删除</a>
+                    </div>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        {$list->render()}
+    </div>
+</div>
+
+{include file='admin@common/foot' /}
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>

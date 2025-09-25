@@ -1,0 +1,172 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div id="app" v-cloak>
+    <!--今日信息-->
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">盈亏统计</span>
+        </div>
+        <div class="award-box">
+            <div class="time-box">
+                <el-radio-group v-model="time" size="small" >
+                    <el-radio-button label="1">今天</el-radio-button>
+                    <el-radio-button label="2">昨天</el-radio-button>
+                    <el-radio-button label="3">本月</el-radio-button>
+                    <el-radio-button label="4">上月</el-radio-button>
+                </el-radio-group>
+            </div>
+            <div v-loading="loading" style="height: 232px">
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <div class="flex-box award-item">
+                            <div class="icon"><i class="iconfont icon-zijintuoguan"></i></div>
+                            <div class="flex">
+                                <p class="red money">{{statisInfo.gain}}</p>
+                                <p>盈亏总额({$company['lottery_unit']})</p>
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :span="12">
+                        <div class="flex-box award-item">
+                            <div class="icon"><i class="iconfont icon-gongshizidian-"></i></div>
+                            <div class="flex">
+                                <p class="red">中奖-投注+活动+返点（自身&下级）</p>
+                                <p>盈亏计算公式</p>
+                            </div>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row class="award-des">
+                    <el-col :span="3">
+                        <p class="num">{{statisInfo.spend}}</p>
+                        <p>投注金额</p>
+                    </el-col>
+                    <el-col :span="3">
+                        <p class="num">{{statisInfo.award}}</p>
+                        <p>中奖金额</p>
+                    </el-col>
+                    <el-col :span="3">
+                        <p class="num">{{statisInfo.send}}</p>
+                        <p>活动礼金</p>
+                    </el-col>
+                    <el-col :span="3">
+                        <p class="num">{{statisInfo.recharge}}</p>
+                        <p>充值金额</p>
+                    </el-col>
+                    <el-col :span="3">
+                        <p class="num">{{statisInfo._change}}</p>
+                        <p>兑换金额</p>
+                    </el-col>
+                    <el-col :span="3">
+                        <p class="num">{{statisInfo.rebate}}</p>
+                        <p>返点(自身)</p>
+                    </el-col>
+                    <el-col :span="3" v-if="{$company['join_isOpen']} && {$company['isGain']}">
+                        <p class="num">{{statisInfo.royalty}}</p>
+                        <p>提成(合买提成)</p>
+                    </el-col>
+                </el-row>
+            </div>
+        </div>
+    </el-card>
+    <!--今日信息 end-->
+    <!--砖石统计信息 end-->
+    <!--最近玩过的游戏-->
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">最近玩过的游戏</span>
+        </div>
+        <div class="guess-you-like">
+            <el-row :gutter="20">
+                {volist name='extName' id='v'}
+                <el-col :span="4">
+                    <a v-if="'{$v.info.type}' == 0" @click="link('{$v.info.name}',{$v.info.type})" class="tc" style="display: block">
+                        <p><img src="{$v.info.image}" alt="{$v.info.title}" width="73"></p>
+                        <p style="font-size: 14px;padding: 5px 0"><span title="{$v.info.title}">{$v.info.title}</span></p>
+                    </a>
+                    <a v-if="'{$v.info.type}' == 1" @click="link('{$v.url}',{$v.info.type})" class="tc" style="display: block">
+                        <p><img src="{$v.info.image}" alt="{$v.info.title}" width="73"></p>
+                        <p style="font-size: 14px;padding: 5px 0"><span title="{$v.info.title}">{$v.info.title}</span></p>
+                    </a>
+                </el-col>
+                {/volist}
+            </el-row>
+        </div>
+    </el-card>
+    <!--最近玩过的游戏 end-->
+    <!--推荐游戏-->
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">推荐游戏</span>
+        </div>
+        <div class="guess-you-like">
+            <el-row :gutter="20">
+                {volist name='rec' id='v'}
+                <el-col :span="6">
+                    <div class="list">
+                        <p class="name-type flex-box">
+                            <span class="u-gm-name tl" title="{$v.title}">{$v.title}</span>
+                            <span class="u-gm-type flex tr" v-if="!{$v.type}">休闲游戏</span>
+                            <span class="u-gm-type flex tr" v-else>开奖游戏</span>
+                        </p>
+                        <a  @click="link('{$v.name}',{$v.type})">
+                            <img src="{$v.img}" alt="{$v.title}" width="100%" height="116">
+                            <el-button size="mini"  type="danger" round>进入游戏</el-button>
+                        </a>
+                    </div>
+                </el-col>
+                {/volist}
+            </el-row>
+        </div>
+    </el-card>
+    <!--推荐游戏 end-->
+</div>
+
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                initUrl: '{:url("details/get_self_statistics")}',
+                time:'1',
+                statisInfo: {},
+                loading:true,
+            },
+            computed:{
+                url:function () {
+                    return this.initUrl + '?time=' + this.time
+                }
+            },
+            watch:{
+                url:function () {
+                    this.getData();
+                }
+            },
+            methods: {
+                //获取数据
+                getData:function(){
+                    var _this = this;
+                    _this.loading = true
+                    $.get(_this.url,function (res) {
+                        _this.$set(_this,'statisInfo',res)
+                        _this.loading = false
+                    })
+                },
+                link:function(a,type){
+                    if(!type){
+                        window.open( '{:url("./game")}?ext='+ a) //休闲类游戏跳转路径
+                    }else {
+                        window.open( '{:url("./'+ a + '")}')//开奖类游戏跳转路径
+                    }
+                }
+            },
+            created:function () {
+                this.getData();
+            }
+        });
+    });
+</script>

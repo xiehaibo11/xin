@@ -1,0 +1,352 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<style>
+    .user_info{padding-bottom: 0.75rem}
+    .user_explan{padding-left: 0;padding-bottom: 0}
+    .song{    padding: .0rem .2rem;
+        border-radius: .2rem;
+        background-color: #e48b1c;
+        color: #fff;
+        margin-left: .2rem;}
+    .flower{color: #fffcfc;position: relative;padding-left: 1.5rem;line-height: 1.1rem;margin-top: .7rem;margin-left: 1rem}
+    .flower img{width: 1.1rem;position: absolute;left: 0;top: 0;padding-top: .1rem}
+    .give-box{position: fixed;bottom: 0;left: 0;width: 100%;height: 100%;z-index: 100;background-color: rgba(15, 15, 15, 0.37)
+    }
+    .give-box .cont{position: absolute;bottom: 0;left: 0;width: 100%;}
+    .give-box .self{padding: .5rem;background-color:rgba(215, 88, 82, 0.45);color: #e0dddd  }
+    .close{position: absolute;right: .5rem;bottom: 4.5rem;font-size: 1.2rem;color: #cccccc}
+    .all-modal-foot{height: 2.2rem;background-color: #d75852;padding: 0 .5rem;line-height: 2.2rem;}
+    .all-modal-foot .num{color: #FFFFff;font-size:.75rem}
+    .all-modal-foot .num input{color: #333;background-color: #FFFFff;width:3rem;height:1.2rem;border-radius: .2rem;display: inline-block;line-height: 1.2rem ;
+    border:none;text-align: center}
+    .all-modal-foot i.icon{padding: 0 .5rem;color: #FFFFff;}
+    .all-modal-foot i.icon-gray{color: #bebbbb }
+    .all-modal-foot .btn{flex: 1;text-align: right;padding: 0;background: none}
+    .all-modal-foot .btn span{margin: .35rem;display: inline-block;background-color: #FFFFff;color: #666;padding:0rem .75rem;height: 1.5rem;line-height: 1.5rem;border-radius: .2rem}
+</style>
+<header class="header">
+    <div class="header-nav">
+        <a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);"><i class="icon-svg icon_left"></i></a>
+    </div>
+    <div class="header-center">用户中心</div>
+    <div class="header-nav" style="padding:0;padding-right:0.55rem;">
+        <a href="/index/"><i class="iconfont icon-home" style="color: #c2c3e2;font-size: 1.0rem;"></i></a>
+    </div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <div class="user_my">
+        <div class="show_bg">
+        <div class="user_info flex-box">
+            <div>
+                <p><img class="user_photo" :src="info.photo" alt=""></p>
+                <p><a class="send-message" :href="'/index/message/send?userid='+info.userid" data-no-cache="true">发送消息</a></p>
+            </div>
+            <div class="user_memo flex text-align-left">
+                <div class="user_name">{{info.nickname}} <span class="user_lv">lv.{{info.lv.level}} {{info.lv.level_name}}</span></div>
+                <div class="user_explan">签名：{{info.explan || 'Ta还没有设置签名！'}}</div>
+                <div class="flower">
+                    <span><img src="/static/images/index/common_flower.png" alt=""></span>
+                    {{info.flower}}
+                    <span class="song" @click="showGive">赠送</span>
+                </div>
+                <transition name="fade">
+                <div class="give-box" v-if="givef"  @click.self="showGive">
+                    <div class="cont">
+                        <div class="close" @click.self="showGive">×</div>
+                        <div class="self">我的鲜花：{{self.flower}}</div>
+                        <div class="flex-box all-modal-foot">
+                            <div class="num">赠送数量
+                                <i class="iconfont icon-jianhao icon icon-gray" v-if="num == 1 || num == ''"></i>
+                                <i  v-if="num > 1" @click="countSub"  class="iconfont icon-jianhao icon"></i>
+                                <span><input type="text" v-model="num"></span>
+                                <i @click="countAdd"  class="icon iconfont icon-jiahao1"></i>
+                            </div>
+                            <div class="btn"><span @click="giveFlower">赠送</span></div>
+                        </div>
+                    </div>
+                </div>
+                </transition>
+            </div>
+            <span  class="user_set other-care" @click="care">{{care_str}}</span>
+            <!--赠送鲜花-->
+            <!--赠送鲜花 结束-->
+        </div>
+        <div class="tab">
+            <div class="tab-header">
+                <div class="tab-link tab-active" id="tab1" onclick="setTab('tab',1,3)">TA的动态</div>
+                <div class="tab-link" id="tab2" onclick="setTab('tab',2,3)">TA的圈子</div>
+                <div class="tab-link" id="tab3" onclick="setTab('tab',3,3)">TA的游戏</div>
+            </div>
+         </div>
+        </div>
+        <div class="tab">
+            <div class="tab-content">
+                <div class="tab-page tab1 tab-active" id="con_tab_1">
+                    <loading-box :url="actionUrl"  class="bbs-list-arrow"  nodata="动态里面什么都没有__(；′⌒`)">
+                        <template scope="props">
+                            <template v-for="item of props.list">
+                                <action-list :item="item"></action-list>
+                            </template>
+                        </template>
+                    </loading-box>
+                </div>
+                <div class="tab-page tab2" id="con_tab_2">
+                    <loading-box :url="bbsUrl"  class="bbs-list-arrow"  nodata="圈子是空的__(O_O)?">
+                        <template scope="props">
+                            <template v-for="item of props.list">
+                                <bbs-list :item="item"></bbs-list>
+                            </template>
+                        </template>
+                    </loading-box>
+                </div>
+                <div class="tab-page tab3" id="con_tab_3">
+                    <div class="list">
+                        <div class="list-group">
+                            <div class="newly-game card card-line list-item list-item-image-text border-b" v-for="item of list3">
+                                <div class="list-item-image">
+                                    <img :src="item.image" alt="">
+                                </div>
+                                <div class="list-item-text">
+                                    <div class="title">{{item.title}}</div>
+                                    <div class="memo ellipsis-2">{{item.remark}}</div>
+                                </div>
+                                <a :href="'/' + item.name"><button class="btn btn_right">进入</button></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="list3 == false" class="black_block">去<a href="/index">大厅</a>玩点游戏吧__O(∩_∩)O~~</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="actionList">
+    <div class="card card-line ext_bg" :style="{backgroundImage: 'url(' + item.ext_info.logo +')'}">
+        <div class="card-header ext_head">
+            来自: {{item.ext_info.title}}
+        </div>
+        <div class="card-content">
+            <div class="card-content-inner" v-html="item.content"></div>
+        </div>
+        <div>
+            <div class="card-footer massage_info border-t">
+                <div class="user">
+                    <i class="icon-svg" :style="{backgroundImage: 'url(' + item.user_info.photo +')'}"></i>
+                    <a class="username">{{item.user_info.nickname}}</a>
+                    <span class="datetime">{{item.friend_time}}</span>
+                </div>
+                <div class="reply_good">
+                    <span><i  class="iconfont icon-dianzan"></i> {{item.good_count}}</span>
+                    <!-- <a :href="'/index/message/send?userid='+item.send_userid" data-no-cache="true">评论({{item.reply_count}})</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="bbsList">
+    <div class="card card-line">
+        <div class="card-content" @click="toDetail">
+            <div class="user">
+                <i class="icon-svg" :style="{backgroundImage: 'url(' + item.userinfo.photo +')'}"></i>
+                <div class="info">
+                    <div>
+                        <a class="username">{{item.userinfo.nickname}}</a>
+                    </div>
+                    <div>
+                        <span class="datetime">发表于: {{item.create_time}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content-inner">
+                <div class="bbs-content" v-html="contents"></div>
+                <div v-for="img in imgArr" v-if="img.length!==0 ">
+                    <div v-if="item.imginfo.imgnum == 1">
+                        <div class="img1" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                    </div>
+                    <div v-if="item.imginfo.imgnum == 2">
+                        <div class="img2" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                    </div>
+                    <div v-if="item.imginfo.imgnum == 3">
+                        <div class="img3" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="card-footer massage_info border-t">
+                <div class="reply_good">
+                    <span><i class="iconfont icon-pinglun"></i> <em>{{item.takenum}}</em></span>
+                </div>
+                <!--<div>-->
+                <!--<span><i class="icon-svg icon-share"></i> 分享</span>-->
+                <!--</div>-->
+                <div class="reply_good">
+                    <span @click="replayGood"><i :class="['iconfont','icon-dianzan',{ 'blue': code == 1 }]"></i> <em :class="{ 'blue': code == 1 }">{{num}}</em></span>
+                    <!--<a :href="'/index/message/send?userid='+item.send_userid" data-no-cache="true">评论({{item.reply_count}})</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    $(function () {
+        Vue.component('action-list', {
+            props: ['item'],
+            template: '#actionList'
+        });
+
+        Vue.component('bbs-list', {
+            props: ['item'],
+            template: '#bbsList',
+            data:function(){
+                return {
+                    imgArr:this.item.imginfo.images,  //缩略图组
+                    num:this.item.goodnum, //点赞数
+                    code:this.item.good,    //点赞状态
+                    contents:replace_em(this.item.content)//文章内容
+                }
+            },
+            methods:{
+                toDetail:function(){    //进入详情页
+                    window.location.href="/index/bbs/detail/id/"+this.item.id;
+                },
+                replayGood:function(){    //点赞
+                    var _this = this;
+                    $.post("/index/bbs/gooder",{
+                        id:this.item.id
+                    },function(res){
+                        if(res.code == 1){
+                            $.msg(res.msg);
+                            _this.num = _this.num + 1;
+                            _this.code = 1;
+                        }else if(res.code == 0){
+                            $.msg(res.msg);
+                            _this.num = _this.num - 1;
+                            _this.code = 0;
+                        }
+                    });
+                }
+            }
+        });
+
+        Vue.component('my-list', {
+            props: ['item'],
+            template: '#myList'
+        });
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                info: {
+                    'nickname': '', //昵称
+                    'photo': '', //头像
+                    'userid': '', //用户ID
+                    'lv': 0, //等级
+                    'explan': '', //签名
+                },
+                actionUrl:'', //动态地址
+                bbsUrl:'', //圈子地址
+                list3: [], //游戏列表
+                num:1 , //赠送鲜花数
+                givef:false,
+                self:[],
+            },
+            methods: {
+                care: function () {
+                    var _this = this;
+                    $.get('/index/fans/care/?to_userid=' + _this.info.userid, function (res) {
+                        //$.toast(res.msg);
+						    //console.log(res);
+							$.msg(res.msg);
+                        if (res.code) {
+                            _this.info.care_status = !_this.info.care_status;
+							//console.log(_this.info.care_status);
+                        }
+                    }, 'json');
+                },
+                showGive(){
+                    this.num = 1;
+                    this.givef = ! this.givef
+                },
+                countAdd(){ //添加兑换数量
+                    if(this.num > this.self.flower){
+                        $.msg('您的鲜花数量不够了')
+                    }else {
+                        this.num = parseInt(this.num) + 1;
+                    }
+                },
+                countSub(){ //减少兑换数量
+                    if(this.num >1 ){
+                        this.num = parseInt(this.num) - 1;
+                    }
+                },
+                giveFlower(){
+                    _this = this;
+                    $.get('/index/user/sendFlower',{getid:_this.info.userid,flower:_this.num}, (res) => {
+                        if(res.err==0){
+                            $.msg('成功赠送'+_this.num+'朵鲜花');
+                            _this.info.flower =  parseInt(_this.info.flower) + parseInt(_this.num);
+                            _this.self.flower =  parseInt(_this.self.flower) - parseInt(_this.num);
+                            this.givef = ! this.givef
+                        }else if(res.err == 2001){
+                            $.msg('鲜花余额不足，请先充值')
+                        }else {
+                            $.msg(res.msg);
+                        }
+                    });
+                }
+            },
+            computed: {
+                care_str: function() {
+                    return this.info.care_status ? '已关注' : '+ 关注';
+                }
+            },
+            created: function () {
+                var _this = this;
+                var userid = $.urlGet()['userid'] || '';
+                setTimeout(function () {
+                    $.get('/index/user/show/?userid=' + userid, function (res) {
+                        _this.$set(_this, 'info', res.data);
+                        $('#app').removeClass('app_init');
+                    });
+                $.get('/index/user/getExt/?userid=' + userid, (res) => {
+				     //console.log(res);					 
+                    _this.$set(_this, 'list3', res);
+                     }, 'json');
+                $.get('/index/user/getinfo/?userid=', function (res) {  //用户
+                    _this.$set(_this, 'self', res.data);
+                });
+                 }, 0);
+
+                _this.actionUrl = '/index/user/getAction/?userid='+userid;
+                _this.bbsUrl = '/index/bbs/mainData/userid/'+userid;
+    }
+    });
+    });
+
+    //替换表情
+    var replace_em = (str)=>{
+        str = str.replace(/\</g,'&lt;');
+        str = str.replace(/\>/g,'&gt;');
+        str = str.replace(/\n/g,'<br/>');
+        str = str.replace(/\[em_([0-9]*)\]/g,'<img src="/static/images/emoji/$1.gif" border="0" />');
+        return str;
+    }
+    //选项卡JS
+    function setTab(name,cursel,n){
+        for(i=1;i<=n;i++){
+            var menu=document.getElementById(name+i);
+            var con=document.getElementById("con_"+name+"_"+i);
+            menu.className=i==cursel?"tab-link tab-active":"tab-link";
+            con.style.display=i == cursel?"block":"none";
+        }
+    }
+
+</script>
+{include file='common@common/foot' /}

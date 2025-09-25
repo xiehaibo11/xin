@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<e:Skin class="CodeItemSkin" states="up,down,disabled" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="200" height="65">
+	<e:Group left="0" right="0" top="0" bottom="0">
+		<e:Rect width="80%" height="2" fillColor="0x915128" horizontalCenter="0" bottom="0"/>
+		<e:Image source="gougou_png" verticalCenter="0" left="25" visible.up="false"/>
+		<e:Group verticalCenter="0" right="20">
+			<e:Image width="20" height="20" source="sprite-game_json.sprite-game000" scaleX="1.5" scaleY="1.5" horizontalCenter="0" verticalCenter="0"/>
+			<e:Label id="txt" text="50000" verticalCenter="0" right="0"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+</e:Skin>

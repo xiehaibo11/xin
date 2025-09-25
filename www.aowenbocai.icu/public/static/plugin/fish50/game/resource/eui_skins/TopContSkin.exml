@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="TopContSkin" xmlns:e="http://ns.egret.com/eui" xmlns:ns1="*" xmlns:w="http://ns.egret.com/wing">
+	<ns1:BgLoop id="bg_img" skinName="BgSkin" left="0" right="0" top="0" bottom="0"/>
+	<e:Group id="fish_group" left="0" right="0" top="0" bottom="0"/>
+	<e:Group id="ef_guang" left="0" right="0" top="0" bottom="0"/>
+	<e:Group left="0" right="0" top="0" bottom="0">
+		<ns1:PTTS id="paotai0" anchorOffsetX="0" anchorOffsetY="0" skinName="PTSkin" currentState="wait" scaleX="1" scaleY="1" left="0" bottom="0"/>
+		<ns1:PTTS id="paotai1" skinName="PTSkin" currentState="wait" scaleX="1" scaleY="1" right="0" bottom="0"/>
+		<ns1:PTTS id="paotai2" skinName="PTSkin" left="0" top="0" currentState="wait" x="0" y="0" scaleX="1" scaleY="1"/>
+		<ns1:PTTS id="paotai3" skinName="PTSkin" right="0" top="0" currentState="wait" x="831" y="0" scaleX="1" scaleY="1"/>
+	</e:Group>
+	<e:Group width="200" horizontalCenter="0" bottom="2">
+		<e:Image source="ui012_png" horizontalCenter="0.5" bottom="-8"/>
+		<ns1:SkillCard id="bdk" skinName="CardSkin" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" x="-4" bottom="6"/>
+		<ns1:SkillCard id="sdk" skinName="CardSkin" currentState="sdk" scaleX="1" scaleY="1" x="110" bottom="6"/>
+	</e:Group>
+	<e:Group width="84.84" height="495.45" anchorOffsetY="0" anchorOffsetX="0" left="25" verticalCenter="-0.5">
+		<e:Image id="shop_btn" x="22" y="208.15" touchEnabled="true" source="shop_icon_png" anchorOffsetX="0" width="92" anchorOffsetY="0" height="92"/>
+		<e:layout>
+			<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="15"/>
+		</e:layout>
+	</e:Group>
+	<e:Group width="115.14" height="386.36" anchorOffsetX="0" anchorOffsetY="0" right="30" verticalCenter="0">
+		<e:layout>
+			<e:VerticalLayout horizontalAlign="right" verticalAlign="middle"/>
+		</e:layout>
+		<ns1:SkillCard id="jsk" skinName="CardSkin" currentState="jsk" scaleX="1" scaleY="1" x="-466.86" bottom="6" y="422.53"/>
+	</e:Group>
+	<ns1:MenuSkinTS skinName="MenuSkin" right="20" top="105"/>
+</e:Skin>

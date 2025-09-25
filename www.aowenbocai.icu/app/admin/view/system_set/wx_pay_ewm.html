@@ -1,0 +1,113 @@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">微信支付二维码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table_box">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>金额</th>
+                            <th>二维码</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {volist name="$setting.diamonds_recharge" id="item"}
+                        <tr>
+                            <td>{$item.money}</td>
+                            <td>
+                                <input type="hide" class="photo_wx_input" value="{$setting['wx_recharge_ewm'][$item['money']]}" data-key="{$item.money}" style="display: none;">
+                                <div class="img_show">
+                                    {if condition="$setting['wx_recharge_ewm'][$item['money']]"}
+                                    <img src="{$setting['wx_recharge_ewm'][$item['money']]}" height="35" alt="">
+                                    {/if}
+                                </div>
+                            </td>
+                            <td>
+                                <!-- <div class="btn-group" role="group" aria-label="..."> -->
+                                    <a href="#" class="btn btn-info btn-xs select_wx_image">
+                                        {if condition="$setting['wx_recharge_ewm'][$item['money']]"}修改{else /}上传{/if}
+                                    </a>
+                                    <span class="btn btn-info clear-src btn-xs " >清除</span>
+                                <!-- </div> -->
+                            </td>
+                        </tr>
+                        {/volist}
+                        <tr>
+                            <td>其他</td>
+                            <td>
+                                <input type="hide" class="photo_wx_input" value="{$setting['wx_recharge_ewm']['other']}" data-key="other" style="display: none;">
+                                <div class="img_show">
+                                    {if condition="$setting['wx_recharge_ewm']['other']"}
+                                    <img src="{$setting['wx_recharge_ewm']['other']}" height="35" alt="">
+                                    {/if}
+                                </div>
+                            </td>
+                            <td>
+                                <!-- <div class="btn-group" role="group" aria-label="..."> -->
+                                <a href="#" class="btn btn-info btn-xs select_wx_image">
+                                    {if condition="$setting['wx_recharge_ewm']['other']"}修改{else /}上传{/if}
+                                </a>
+                                <span class="btn btn-info clear-src btn-xs " >清除</span>
+                                <!-- </div> -->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p style="color:red; float:left;">注：充值金额有变动，需先保存充值金额再设置二维码</p>
+                <button type="button" id="wx_btn_submit" class="btn btn-primary" data-dismiss="modal">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var ewm_tr;
+    $("#wx_btn_add").click(function () {
+        $('#myModal').modal({size:'sm'});
+    });
+    $('.select_wx_image').click(function () {
+        $('.select_photo_wx').click();
+        ewm_tr = $(this).closest('tr');
+    });
+    $('.select_photo_wx').localResizeIMG({
+        quality : 1,
+        success: function (result) {
+            var html = '<img src="'+result.base64+'" height="35" alt="">'
+            ewm_tr.find('.img_show').html(html);
+            $.post('{:url("setWxImg")}', { 'base64_data': result.base64, name: 'pay_wx_'+ ewm_tr.find('.photo_wx_input').data('key')}, function (res) {
+                ewm_tr.find('.photo_wx_input').attr('value', res.data);
+                ewm_tr.find('.select_wx_image').text('修改');
+            }, 'json');
+        }
+    });
+    $(document).on('click','#wx_btn_submit',function () {
+        var wx_recharge_ewm = {};
+        $(".photo_wx_input").each(function(e){
+            wx_recharge_ewm[$(this).data('key')] = $(this).val();
+        });
+
+        var wx_recharge_ewm = JSON.stringify(wx_recharge_ewm);
+
+        $.post('{:url("set")}', {
+            data: JSON.stringify({
+                wx_recharge_ewm: wx_recharge_ewm,
+            })
+        }, function() {
+            $.modal.alert('修改成功');
+        });
+    });
+
+    $(".clear-src").click(function(){
+        var _this = $(this);
+        var parent = _this.parent().parent();
+        parent.find(".photo_wx_input").val('');
+        parent.find("img").attr("src", '');
+    })
+</script>

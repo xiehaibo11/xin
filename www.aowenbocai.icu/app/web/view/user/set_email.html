@@ -1,0 +1,502 @@
+{include file='web@common/login_head' title='邮箱管理'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<style>
+    .form{
+        width: 430px;
+    }
+    html {min-width: 1200px;}
+</style>
+<div class="border-top">
+    <div id="app" class="web" v-cloak>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <el-breadcrumb>
+                    <el-breadcrumb-item>邮箱管理</el-breadcrumb-item>
+                    <el-breadcrumb-item v-if="!{$data.email.islock}">绑定邮箱</el-breadcrumb-item>
+                    <el-breadcrumb-item v-else>修改邮箱</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <template v-if="!{$data.email.islock}">
+                <bind-email :is-yzm="isEmail" style="width: 36%;margin: 10px auto"></bind-email>
+            </template>
+            <template v-else>
+                <change-email :is-yzm="isYzm" :is-email="isEmail" style="width: 50%;margin: 10px auto"></change-email>
+            </template>
+        </el-card>
+    </div>
+</div>
+
+<!--绑定邮箱-->
+<template id="bindEmail">
+    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+        <el-form-item prop="email"  label="邮箱地址" :error="emailErr">
+            <el-input v-model="ruleForm.email" type="text" placeholder="请输入邮箱地址"></el-input>
+        </el-form-item>
+        <el-form-item prop="yzm"  label="验证码" v-if="isYzm" :error="yzmErr">
+            <el-input v-model.number="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码 "></el-input>
+            <el-button type="primary" plain @click.native="sendsms" class="btn-yzm" v-if="smsState"  :loading="loadingEmail">{{text}}</el-button>
+            <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+        </el-form-item>
+        <el-form-item>
+            <el-button  type="danger" @click="submitForm('ruleForm')" :loading="loading">绑定</el-button>
+        </el-form-item>
+    </el-form>
+</template>
+
+<!--更改邮箱-->
+<template id="changeEmail">
+    <div>
+        <div class="l-concise-hd" v-if="isYzm || isEmail">
+            <div class="steps steps-2">
+                <ol>
+                    <li :class="{'active' : steps1}"><span><i>1</i>安全验证</span></li>
+                    <li :class="{'active' : steps2}"><span><i>2</i>重置邮箱</span></li>
+                </ol>
+            </div>
+        </div>
+        <template v-if="steps1">
+            <change-email-steps1 @yz-suc="changeStep" :is-yzm="isYzm" :is-email="isEmail"></change-email-steps1>
+        </template>
+        <template v-if="steps2">
+            <change-email-steps2 :is-yzm="isYzm"></change-email-steps2>
+        </template>
+    </div>
+</template>
+
+<!--更改邮箱 ****安全验证-->
+<template id="changeEmailSteps1">
+    <div>
+        <!--邮箱验证-->
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm2" label-width="100px" class="ruleForm form login" v-if="isEmail && checkWay==1">
+            <div class="tr" style="margin-bottom: 15px;height: 28px" v-if="isYzm">
+                <a class="link"  style="font-size: 13px"  @click="checkTel">使用已绑定手机进行验证</a>
+            </div>
+            <el-form-item  prop="email" label="已绑定邮箱">
+                <el-input v-model="ruleForm.email" type="text" placeholder="请已绑定邮箱" disabled></el-input>
+            </el-form-item>
+            <el-form-item prop="emailYzm"  label="验证码">
+                <el-input v-model.number="ruleForm.emailYzm" type="tel" class="yzm" placeholder="请输入验证码 "></el-input>
+                <el-button type="primary" plain @click.native="sendEmail" class="btn-yzm" v-if="smsState2" :loading="loadingEmail">{{text2}}</el-button>
+                <el-button type="info" class="btn-yzm" plain disabled v-else>{{text2}}</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button  type="danger" @click="checkYzm('ruleForm2',2)">下一步</el-button>
+            </el-form-item>
+        </el-form>
+        <!--手机短信验证-->
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login"  v-if="isYzm && checkWay==2">
+            <div class="tr" style="margin-bottom: 15px;height: 28px" v-if="isEmail">
+                <a class="link" style="font-size: 13px" @click="checkWay=1">使用已绑定邮箱进行验证</a>
+            </div>
+            <el-form-item  prop="tel" label="已绑定手机号">
+                <el-input v-model="ruleForm.tel" type="tel" placeholder="请输入手机号" disabled></el-input>
+            </el-form-item>
+            <el-form-item prop="yzm"  label="验证码">
+                <el-input v-model.number="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码 "></el-input>
+                <el-button type="primary" plain @click.native="sendsms" class="btn-yzm" v-if="smsState">{{text}}</el-button>
+                <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button  type="danger" @click="checkYzm('ruleForm',1)">下一步</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+
+<!--更改邮箱 ****重置邮箱-->
+<template id="changeEmailSteps2">
+    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm form login">
+        <el-form-item prop="email" label="新邮箱地址" :error="emailErr">
+            <el-input v-model="ruleForm.email" type="text" placeholder="请输入新的邮箱地址"></el-input>
+        </el-form-item>
+        <el-form-item prop="yzm" label="验证码" v-if="isYzm">
+            <el-input v-model.number="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码 "></el-input>
+            <el-button class="btn-yzm" type="primary" plain @click.native="sendsms" v-if="smsState" :loading="loadingEmail">{{text}}</el-button>
+            <el-button class="btn-yzm" type="info" plain disabled v-else>{{text}}</el-button>
+        </el-form-item>
+        <el-form-item>
+            <el-button  type="danger" @click="submitForm('ruleForm')" :loading="loading">确认重置</el-button>
+        </el-form-item>
+    </el-form>
+</template>
+
+{include file='web@common/foot' /}
+<script>
+    'use strict';
+
+    $(function () {
+        //更改邮箱***重置邮箱
+        Vue.component('change-email-steps2', {
+            template: '#changeEmailSteps2',
+            props: ['isYzm'],
+            data: function data() {
+                return {
+                    ruleForm: {
+                        email: '',
+                        yzm: ''
+                    },
+                    rules: {
+                        email: [{ required: true, message: '邮箱地址不能为空', trigger: 'blur' }, { pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/, message: '请输入正确的邮箱地址', trigger: 'blur' }],
+                        yzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+                    },
+                    loading: false,
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120,
+                    emailErr: '', //邮箱错误信息
+                    loadingEmail: false
+                };
+            },
+
+            methods: {
+                //发送邮箱验证码
+                sendsms: function sendsms() {
+                    var _this = this;
+
+                    if (this.countDown != 120) return false;
+                    var reg = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+                    var res = reg.test(this.ruleForm.email);
+                    if (!res) {
+                        this.emailErr = '请输入正确的邮箱地址';
+                        return false;
+                    }
+                    this.loadingEmail = true;
+                    $.get('{:url("sendNewEmail")}', { email: this.ruleForm.email }, function (res) {
+                        if (!res.err) {
+                            _this.smsState = false;
+                            _this.text = "已发送(" + _this.countDown + "秒)";
+                            _this.loadingEmail = false;
+                            var interval = setInterval(function () {
+                                _this.countDown = _this.countDown - 1;
+                                if (_this.countDown == 0) {
+                                    _this.text = '获取验证码';
+                                    _this.countDown = 120;
+                                    clearInterval(interval);
+                                    _this.smsState = true;
+                                    return;
+                                }
+                                _this.text = "已发送(" + _this.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this.loadingEmail = false;
+                        }
+                    });
+                },
+
+                //绑定新邮箱
+                submitForm: function submitForm(formName) {
+                    var _this2 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            _this2.loading = true;
+                            var data = {
+                                email: _this2.ruleForm.email
+                            };
+                            if(_this2.isYzm){
+                                data['yzm'] = _this2.ruleForm.yzm
+                            }
+                            $.post('{:url("checkNewEmail")}', data, function (res) {
+                                if (!res.err) {
+                                    _this2.loading = false;
+                                    _this2.$message({
+                                        showClose: true,
+                                        message: res.msg,
+                                        type: 'success'
+                                    });
+                                    setTimeout(function () {
+                                        location.href = "{:url('user/my')}?ac=0-2";
+                                    }, 1500);
+                                    return;
+                                }
+                                _this2.loading = false;
+                                _this2.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //更改邮箱***安全验证
+        Vue.component('change-email-steps1', {
+            template: '#changeEmailSteps1',
+            props: ['isYzm', 'isEmail'],
+            data: function data() {
+                return {
+                    ruleForm: {
+                        tel: "{$data.tel.number}",
+                        yzm: '',
+                        email: "{$data.email.number}",
+                        emailYzm: ''
+                    },
+                    rules: {
+                        yzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                        emailYzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+                    },
+                    checkWay: this.isEmail ? 1 : 2, //选择验证方式
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120,
+                    text2: '获取验证码',
+                    smsState2: true,
+                    countDown2: 120,
+                    loadingEmail: false
+                };
+            },
+
+            methods: {
+                //发送手机短信验证码
+                sendsms: function sendsms() {
+                    var _this3 = this;
+
+                    if (this.countDown != 120) return false;
+                    $.get('{:url("sendMsgEmail")}', function (res) {
+                        if (!res.err) {
+                            _this3.smsState = false;
+                            _this3.text = "已发送(" + _this3.countDown + "秒)";
+                            var interval = setInterval(function () {
+                                _this3.countDown = _this3.countDown - 1;
+                                if (_this3.countDown == 0) {
+                                    _this3.text = '获取验证码';
+                                    _this3.countDown = 120;
+                                    clearInterval(interval);
+                                    _this3.smsState = true;
+                                    return;
+                                }
+                                _this3.text = "已发送(" + _this3.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this3.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //判断是否绑定手机
+                checkTel: function checkTel() {
+                    if (!parseInt('{$data.tel.islock}')) {
+                        this.$confirm('您还未绑定手机！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.location.href = '{:url("setTel")}';
+                        }).catch(function () {});
+                    } else {
+                        this.checkWay = 2;
+                    }
+                },
+
+                //发送邮箱验证码
+                sendEmail: function sendEmail() {
+                    var _this4 = this;
+
+                    this.loadingEmail = true;
+                    if (this.countDown2 != 120) return false;
+                    $.get('{:url("sendOldEmail")}', function (res) {
+                        if (!res.err) {
+                            _this4.smsState2 = false;
+                            _this4.text2 = "已发送(" + _this4.countDown2 + "秒)";
+                            _this4.loadingEmail = false;
+                            var interval = setInterval(function () {
+                                _this4.countDown2 = _this4.countDown2 - 1;
+                                if (_this4.countDown2 == 0) {
+                                    _this4.text2 = '获取验证码';
+                                    _this4.countDown2 = 120;
+                                    clearInterval(interval);
+                                    _this4.smsState2 = true;
+                                    return;
+                                }
+                                _this4.text2 = "已发送(" + _this4.countDown2 + "秒)";
+                            }, 1000);
+                        } else {
+                            _this4.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this4.loadingEmail = false;
+                        }
+                    });
+                },
+
+                //验证
+                checkYzm: function checkYzm(formName, changeWay) {
+                    var _this5 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            var yzm = changeWay == 1 ? _this5.ruleForm.yzm : _this5.ruleForm.emailYzm;
+                            $.post('{:url("checkOldEmail")}', {
+                                changeWay: changeWay,
+                                yzm: yzm
+                            }, function (res) {
+                                if (!res.err) {
+                                    _this5.$emit('yz-suc');
+                                    return;
+                                }
+                                _this5.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+        //更改邮箱
+        Vue.component('change-email', {
+            template: '#changeEmail',
+            props: ['isYzm', 'isEmail'],
+            data: function data() {
+                return {
+                    steps1: this.isYzm || this.isEmail ? 1 : 0,
+                    steps2: !this.isYzm && !this.isEmail ? 1 : 0
+                };
+            },
+
+            methods: {
+                changeStep: function changeStep() {
+                    //改变步骤
+                    this.steps1 = 0;
+                    this.steps2 = 1;
+                }
+            }
+        });
+        //绑定邮箱
+        Vue.component('bind-email', {
+            template: '#bindEmail',
+            props: ['isYzm'],
+            data: function data() {
+                return {
+                    ruleForm: {
+                        email: '',
+                        yzm: ''
+                    },
+                    rules: {
+                        email: [
+                            { required: true, message: '邮箱地址不能为空', trigger: 'blur' },
+                            { pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/, message: '请输入正确的邮箱地址', trigger: 'blur' }
+                            ],
+                        yzm: [
+                            { required: true, message: '请输入验证码', trigger: 'blur' }
+                            ]
+                    },
+                    yzmErr: '', //验证码错误信息
+                    emailErr: '', //邮箱错误信息
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120,
+                    loading: false,
+                    loadingEmail: false
+                };
+            },
+
+            methods: {
+                //绑定邮箱发送验证码
+                sendsms: function sendsms() {
+                    var _this6 = this;
+
+                    if (this.countDown != 120) return false;
+                    var reg = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+                    var res = reg.test(this.ruleForm.email);
+                    if (!res) {
+                        this.emailErr = '请输入正确的邮箱地址';
+                        return false;
+                    }
+                    this.loadingEmail = true;
+                    $.get('{:url("sendLockEmail")}', { email: this.ruleForm.email }, function (res) {
+                        if (!res.err) {
+                            _this6.smsState = false;
+                            _this6.loadingEmail = false;
+                            _this6.text = "已发送(" + _this6.countDown + "秒)";
+                            var interval = setInterval(function () {
+                                _this6.countDown = _this6.countDown - 1;
+                                if (_this6.countDown == 0) {
+                                    _this6.text = '获取验证码';
+                                    _this6.countDown = 120;
+                                    clearInterval(interval);
+                                    _this6.smsState = true;
+                                    return;
+                                }
+                                _this6.text = "已发送(" + _this6.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this6.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this6.loadingEmail = false;
+                        }
+                    });
+                },
+                submitForm: function submitForm(formName) {
+                    var _this7 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            _this7.loading = true;
+                            var data = {
+                                email: _this7.ruleForm.email,
+                                yzm: _this7.ruleForm.yzm
+                            };
+                            $.post('{:url("lockEmail")}', data, function (res) {
+                                if (!res.err) {
+                                    _this7.loading = false;
+                                    _this7.$message({
+                                        showClose: true,
+                                        message: res.msg,
+                                        type: 'success'
+                                    });
+                                    setTimeout(function () {
+                                        location.href = "{:url('user/my')}?ac=0-2";
+                                    }, 1500);
+                                    return;
+                                }
+                                _this7.loading = false;
+                                _this7.$message({
+                                    showClose: true,
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                isYzm: parseInt('{$data.tel.isOpen}'), //是否开启短信接口
+                isEmail: parseInt('{$data.email.isOpen}') //是否开启邮箱验证
+            }
+        });
+    });
+</script>

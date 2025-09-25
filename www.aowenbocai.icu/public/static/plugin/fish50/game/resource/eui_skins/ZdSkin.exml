@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ZdSkin" width="44" height="108" xmlns:e="http://ns.egret.com/eui">
+	<e:Image source="zd21000_png" horizontalCenter="0" verticalCenter="0"/>
+</e:Skin>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{present name="$title"}{$title}{else /}[title]{/present} {:isset($site_name) ? '-' . $site_name : ''}</title>
+    {include file='web@common/link'/}
+</head>
+<body>
+
+<div id="top">
+    <div class="header flex-box web">
+        <div class="logo"><a href="{:url('./')}"><img src="{$company['logo_url']}" alt=""></a></div>
+        <div style="font-size: 25px">{$title}</div>
+        <div class="info tr flex">
+            {if condition = "!empty($company['company_img_qq']) || !empty($company['company_qq'])"}
+            <div class="reference">
+                <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover">
+                    <div v-cloak  class="tc">
+                        <p>{present name="$company['company_img_qq']"}<img src="{$company['company_img_qq']}" alt="" width="160">{/present}</p>
+                        <p>{present name="$company['company_qq']"}{$company['company_qq']}{/present}</p>
+                    </div>
+                    <span slot="reference">
+                         <a href="tencent://message/?uin={$qq_num}&amp;Site={$company['site_name']}&amp;Menu=yes">
+                            <i class="iconfont icon-qq-copy"></i>
+                         </a>
+                    </span>
+                </el-popover>
+            </div>
+            {/if}
+            {if condition = "!empty($company['company_img']) || !empty($company['company_wx'])"}
+            <div class="reference tc">
+                <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover">
+                    <div v-cloak class="tc">
+                        <p>{present name="$company['company_img']"}<img src="{$company['company_img']}" alt="" width="160">{/present}</p>
+                        <p>{present name="$company['company_wx']"}{$company['company_wx']}{/present}</p>
+                    </div>
+                    <span slot="reference"><i class="iconfont icon-big-WeChat"></i></span>
+                </el-popover>
+            </div>
+            {/if}
+            {notempty name="$company['company_tel']"}
+            <div class="reference">
+                <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover">
+                    <div v-cloak class="tc">
+                        {$company['company_tel']}
+                    </div>
+                    <span slot="reference"><i class="iconfont icon-phone"></i></span>
+                </el-popover>
+            </div>
+            {/notempty}
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        var vm = new Vue({
+            el: '#top'
+        });
+    })
+</script>

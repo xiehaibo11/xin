@@ -1,0 +1,118 @@
+{include file='web@common/link' title="代理报表"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">代理报表</span>
+        </div>
+        <div class="agent-report">
+            <div class="options flex-box">
+                <div class="time-box flex tl cf">
+                    <span class="fl">时间：</span>
+                    <el-radio-group v-model="time" size="mini" @change="handleTime" class="fl">
+                        <el-radio-button label="1">今天</el-radio-button>
+                        <el-radio-button label="2">昨天</el-radio-button>
+                        <el-radio-button label="3">本月</el-radio-button>
+                        <el-radio-button label="4">上月</el-radio-button>
+                    </el-radio-group>
+                    <el-date-picker v-model="value"  style="width:270px;margin-left: 5px" class="fl"
+                                    type="daterange"
+                                    size="mini"
+                                    format="yyyy 年 MM 月 dd 日"
+                                    value-format="yyyy-MM-dd"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </div>
+                <!--<div class="">-->
+                    <!--<div class="flex-box">-->
+                        <!--<el-input v-model="subName" type="text" size="mini" placeholder="下级报表查询" prefix-icon="el-icon-search" @keyup.enter.native="doSearch"></el-input>-->
+                        <!--<el-button size="mini" type="primary" @click.native="doSearch">搜索</el-button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+            <div class="report-table" v-loading="loading">
+                <ul class="cf" style="height: 261px">
+                    <!--<template v-if="!loading">-->
+                    <li><span>{{statisticData.spend || 0}}</span>投注金额<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li><span>{{statisticData.award || 0}}</span>中奖金额<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li><span>{{statisticData.send || 0}}</span>活动礼金<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li><span>{{statisticData.rebate || 0}}</span>团队返点<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li><span>{{statisticData.gain || 0}}</span>团队盈利<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li><span>{{statisticData.recharge || 0}}</span>充值金额<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li class="border-none"><span>{{statisticData._change || 0}}</span>兑换金额<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li class="border-none"><span>{{statisticData.register_num || 0}}</span>注册人数<em class="gray">(个)</em></li>
+                    <li class="border-none"><span>{{statisticData.agent_num || 0}}</span>下级人数<em class="gray">(个)</em></li>
+                    <li class="border-none"><span>{{statisticData.money || 0}}</span>团队余额<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li class="border-none"><span>{{statisticData.agent_rebate || 0}}</span>返点(下级)<em class="gray">({$company['lottery_unit']})</em></li>
+                    <li class="border-none"><span>{{statisticData.self_rebate || 0}}</span>返点(自身)<em class="gray">({$company['lottery_unit']})</em></li>
+                    <!--</template>-->
+                </ul>
+            </div>
+            <div class="tips">温馨提示：代理报表最多可查询近半年。</div>
+        </div>
+    </el-card>
+</div>
+
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                statisticData:{},
+                initUrl: '{:url("get_statistics")}',
+                time:'1',
+                value : '',
+                name:'',
+                subName:'',
+                loading:true,
+                //设置选择六个月之前到今天的日期
+                pickerOptions0: {
+                    disabledDate: function disabledDate(time) {
+                        var curDate = new Date().getTime();
+                        var three = 180 * 24 * 3600 * 1000;
+                        var threeMonths = curDate - three;
+                        return time.getTime() > Date.now() || time.getTime() < threeMonths;
+                    }
+                }
+            },
+            computed:{
+                url:function () {
+                    var name, time
+                    name = this.name.length ?  '&name=' + this.name : '';
+                    time = this.value.length ? '&starttime=' + this.value[0] + '&endtime=' + this.value[1] :  '&time=' + this.time
+                    return this.initUrl + time + name
+                }
+            },
+            watch:{
+                url:function () {
+                    this.getData();
+                }
+            },
+            methods: {
+                //获取数据
+                getData:function(){
+                    var _this = this;
+                    _this.loading = true
+                    $.get(_this.url,function (res) {
+                        _this.$set(_this,'statisticData',res)
+                        _this.loading = false
+                    })
+                },
+                handleTime(){
+                    //自定义时间切换为快捷时间选择
+                    this.value = '';
+                },
+                doSearch:function () {
+                    this.name = this.subName
+                },
+            },
+            created:function () {
+                this.getData();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,40 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style media="screen">
+    .form{
+        margin:20px;
+        width: 400px;
+    }
+    .form textarea{
+        width: 100%;
+        height: 7rem;
+    }
+</style>
+<div id="app" class="box-padding">
+    <ol class="breadcrumb">
+        <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('index')}">支付管理</a></li>
+        <li class="active">添加支付</li>
+    </ol>
+    <form class="form" action="{:url('edit')}" method="post">
+        <input type="hidden" name="id" value="{$info.id}">
+        <div class="form-group">
+            <label>名称</label>
+            <input type="text" class="form-control" placeholder="输入支付名称" name="name" value="{$info.name}">
+        </div>
+        <div class="form-group">
+            <label>提交链接</label>
+            <input type="text" class="form-control" placeholder="请输入提交链接" name="post_url" value="{$info.post_url}">
+        </div>
+        <div class="form-group">
+            <label>编码</label>
+            <input type="text" class="form-control" placeholder="请输入编码" name="pay_charset" value="{$info.pay_charset}">
+        </div>
+        <div class="form-group">
+            <label>支付类型(json格式)</label>
+            <textarea class="form-control" placeholder="{值:文字}，例：{'1':'支付宝', '2':'微信'}" name="type_param">{$info.type_param}</textarea>
+        </div>
+        <button type="submit" class="btn btn-default">提交</button>
+    </form>
+</div>
+
+{include file='common/foot' /}

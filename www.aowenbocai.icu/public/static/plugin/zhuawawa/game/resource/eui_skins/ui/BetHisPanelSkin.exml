@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BetHisPanelSkin" width="750" height="1356" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*">
+	<e:Image source="alert_lanel_png" left="0" right="0" top="0" bottom="0" scale9Grid="114,94,688,428"/>
+	<e:Image id="closeBtn" source="btn_png" scale9Grid="12,0,55,47" anchorOffsetY="0" height="95.76" anchorOffsetX="0" width="681" horizontalCenter="0.5" bottom="16"/>
+	<e:Label text="返回游戏" size="36" horizontalCenter="0" bottom="46" touchEnabled="false"/>
+	<e:Label text="游戏记录" size="33" horizontalCenter="0" top="28"/>
+	<e:Scroller id="scroller" width="674" anchorOffsetY="0" anchorOffsetX="0" horizontalCenter="0" top="98" bottom="122">
+		<e:Group>
+		<e:List id="list" anchorOffsetX="0" anchorOffsetY="0" x="0" y="0">
+			<e:layout>
+			<e:VerticalLayout gap="6"/>
+			</e:layout>
+		</e:List>
+		<e:Group width="100%" height="55" x="80" y="168" anchorOffsetY="0">
+			<e:Label id="tips" text="上拉加载更多" size="25" textColor="0xffda89" anchorOffsetY="0" left="0" right="0" top="0" bottom="0" verticalAlign="middle" textAlign="center"/>
+		</e:Group>
+		<e:layout>
+			<e:VerticalLayout/>
+		</e:layout>
+		</e:Group>
+	</e:Scroller>
+	<e:Label id="reload" text="刷新" x="593" y="17" anchorOffsetY="0" height="60" verticalAlign="middle" anchorOffsetX="0" width="134" textAlign="center"/>
+</e:Skin>

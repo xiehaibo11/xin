@@ -1,0 +1,81 @@
+{include file='common/head' /}
+<div class="box-padding">
+<ol class="breadcrumb">
+  <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('index')}">会员列表</a></li>
+  <li class="active"> 会员充值</li>
+</ol>
+  <form class="form" action="{:url('recharge', ['userid' => $user['id']])}" method="post">
+
+    <div class="user_table">
+      <div class="user_tr" style="height: 80px;">
+        <span class="user_l_text">头像</span>
+        <span class="user_r_text center-center" style="height: 80px;justify-content: flex-start;">
+        <img class="user_photo" width="60" height="60" src="{$user.photo}" alt="">
+      </span>
+      </div>
+      <div class="user_tr">
+        <span class="user_l_text">用户名</span>
+        <span class="user_r_text">{$user.username}</span>
+      </div>
+
+      <div class="user_tr">
+        <span class="user_l_text">昵称</span>
+        <div class="user_r_text">{$user.nickname}</div>
+      </div>
+
+      <div class="user_tr">
+        <span class="user_l_text">余额</span>
+        <div class="user_r_text user_money">{$user.money}</div>
+      </div>
+
+      <div class="user_tr">
+        <span class="user_l_text">游戏币</span>
+        <div class="user_r_text user_money">{$user.game_money}</div>
+      </div>
+      <div class="user_tr">
+        <span class="user_l_text">充值类型</span>
+        <div class="user_r_text" style="width:500px;">
+          <select name="cz_type" id="" class="form-control" style="float:left; width: 200px; margin-top:8px;">
+            <option value="">请选择充值类型</option>
+            <option value="0">微信充值</option>
+            <option value="1">支付宝充值</option>
+            <option value="2">微信扫码充值</option>
+            <option value="3">支付宝扫码充值</option>
+            <option value="4">其他三方充值</option>
+            <option value="5">银行卡转账充值</option>
+            <option value="11">其它操作</option>
+          </select>
+          <span class="fl" style="margin-left:15px; color:#999;">选择“其它操作”时，不会充值赠送</span>
+        </div>
+      </div>
+      <div class="user_tr cz_remark" style="display: none;">
+        <span class="user_l_text">充值备注</span>
+        <div class="user_r_text center-center"><input type="text" class="form-control" name="remark"></div>
+      </div>
+      <div class="user_tr">
+        <span class="user_l_text">充值余额</span>
+        <div class="user_r_text center-center">
+          <input type="text" class="form-control" placeholder="扣款为负，充值为正" name="coin">
+        </div>
+      </div>
+    </div>
+    <p></p>
+      <button type="submit" class="btn btn-lg btn-primary btn-block"> 充值 </button>
+
+  </form>
+</div>
+<script>
+</script>
+{include file='common/foot' /}
+<script>
+  $(function(){
+      $('select[name=cz_type]').change(function(){
+          var my_v = $(this).val();
+          if (my_v == 11) {
+            $('.cz_remark').show();
+          } else {
+            $('.cz_remark').hide();
+          }
+      })
+  })
+</script>

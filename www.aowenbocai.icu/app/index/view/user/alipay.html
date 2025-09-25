@@ -1,0 +1,120 @@
+{include file='common@common/head' /}
+
+<style>
+    .form {
+        margin: .5rem;
+    }
+    .form button.btn
+    {
+        display: block;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    .icon-svg {
+        display: inline-block;
+        margin: 0.2rem .4rem;
+    }
+    .header .header-left{
+        margin-top: .2rem;
+    }
+    .btn-yzm{  margin: 0;line-height: 1.7rem;margin-right: 0.3rem;}
+    .tips{
+        padding: 0 .5rem 0.5rem .5rem;
+        color: #999999;
+    }
+    h4{
+        padding: 0 .5rem;margin: 1rem 0;
+        font-weight: normal;
+        font-size: .8rem;
+        color: #ffffff;
+    }
+    .info{
+        text-align: center;
+        padding: .2rem .5rem;
+        font-size: .8rem;
+        color: #dddddd;
+        line-height: 1.5;
+    }
+</style>
+
+<header class="header">
+    <a class="header-left" href="/index/user/set">
+        <i class="icon-svg icon_left"></i>
+    </a>
+    <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <template v-if="isBind">
+        <div class="info">
+            <h4><i class="iconfont icon-tuiguangyuan_wancheng_icon" style="color: #716aff;font-size: 1rem;padding-right: .5rem"></i>支付宝绑定成功</h4>
+            <div>{{name}}</div>
+            <div>{{num}}</div>
+        </div>
+    </template>
+    <template v-else>
+        <div class="form">
+            <h4>绑定支付宝</h4>
+            <div>
+                <div class="item-lg-radius">
+                    <div class="item-line item-lg">
+                        <div class="item-title">姓名</div>
+                        <input type="text" class="input input-line input-lg" placeholder="输入真实姓名" name="nickname" v-model="name" disabled>
+                    </div>
+                    <div class="item-line item-lg">
+                        <div class="item-title">账号</div>
+                        <input type="text" class="input input-line input-lg" placeholder="输入支付宝账号" name="email" v-model="num">
+                    </div>
+                </div>
+                <div><button class="btn btn-fill btn-lg" @click="submit">确认绑定</button></div>
+            </div>
+        </div>
+    </template>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                name : '{$name}',
+                num : '',
+                isBind : 0
+            },
+            methods: {
+                submit : function() {
+                    var _this = this;
+                    if(!_this.num.length){
+                        $.alert('支付宝账号不能为空!')
+                        return
+                    }
+                    $.post('/index/user/lockBank',{
+                        type:2,
+                        name:'支付宝',
+                        numbers:_this.num
+                    },function(res) {
+                        $.alert(res.msg)
+                        if(!res.err){
+                            _this.isBind = 1
+                        }
+                    });
+                }
+            },
+            created: function() {
+                var _this = this;
+                $.get('{:url("getBanks")}?type=2', function(res) {
+                    if(!res.err && res.data.length){
+                        _this.isBind = 1
+                        _this.name = res.data[0].numbers
+                    }else {
+                        _this.isBind = 0
+                    }
+                    $("#app").removeClass("app_init");
+                });
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BalanceSkin" width="750" height="1334" currentState="auto" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  states="warming,auto" >
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" alpha="0" alpha.auto="0" fillAlpha.auto="0.7"/>
+	<e:Group width.warming="750" height.warming="400" horizontalCenter.warming="0" verticalCenter.warming="0" anchorOffsetX.auto="0" anchorOffsetY.auto="0" bottom.auto="0" horizontalCenter.auto="0" width.auto="750" height.auto="450">
+		<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" x="0" y="0" scaleX="1" scaleY="1" fillColor.auto="0x3d1c23" includeIn="auto" fillColor="0x000000"/>
+		<e:Image includeIn="auto" scaleY="1" bottom="0" left="0" right="0" top="0" source="alert_png" scale9Grid="27,14,168,84"/>
+		<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillColor="0x0893db" x="0" y="0" scaleX="1" scaleY="1" fillColor.auto="0x3d1c23" includeIn="warming"/>
+		<e:Label text="提示" y="32" size="50" horizontalCenter.warming="0" width.warming="150" height="50" verticalAlign="middle" textAlign="center" x="300" scaleX="1" scaleY="1" text.auto="温馨提示:" bold.auto="true" y.auto="11" size.auto="30" textAlign.auto="left" left.auto="20" width.auto="150" textColor.auto="0xd219d3"/>
+		<e:Label text="土豪，余额不足呢，要不要买买买？" y.warming="118.34" width="750" height.warming="100" verticalAlign="middle" textAlign="center" horizontalCenter.warming="0" x="0" scaleX="1" scaleY="1" text.auto="自动游戏中:" textAlign.auto="center" width.auto="316" size.auto="50" anchorOffsetX.auto="0" textColor.auto="0x000000" top.auto="100" horizontalCenter.auto="0" height.auto="50"/>
+		<e:Label id="allAuto" text="自动局数：10  局" y="174.51" height="50" verticalAlign="middle" textAlign="center" horizontalCenter="0.5" x="10" scaleX="1" scaleY="1" includeIn="auto" textColor="0xd80000"/>
+		<e:Label id="nowAuto" text="当前局数：第 1 局" includeIn="auto" width="274" height="50" verticalCenter="46" verticalAlign="middle" textAlign="center" anchorOffsetX="0" horizontalCenter="0" textColor="0xd80000"/>
+		<e:Button id="cancel" label="取消" x.warming="161" y="279" skinName="CancelSkin" scaleX="1" scaleY="1" horizontalCenter.auto="0" bottom.auto="20" label.auto="退出" visible.auto="false"/>
+		<e:Button id="recharge" label="充值" x="467" y="275" scaleX="1" scaleY="1" skinName="CancelSkin" visible.auto="false">
+		</e:Button>
+		<e:Button id="back" label="退出" includeIn="auto" skinName="CancelSkin" bottom="50" horizontalCenter="0"/>
+		<e:Image source="Sigh_png" includeIn="auto" left="100" verticalCenter="0"/>
+		<e:Image source="" includeIn="auto" left="0" right="0" top="0" bottom="0"/>
+	</e:Group>
+</e:Skin>

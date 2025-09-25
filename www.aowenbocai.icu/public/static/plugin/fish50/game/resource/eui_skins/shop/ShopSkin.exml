@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" width="1280" height="720">
+	<w:Config id="161f91883fa"/>
+	<e:Rect id="close_bg" left="0" right="0" top="0" bottom="0" fillAlpha="0.6"/>
+	<e:Group left="50" right="50" top="60" bottom="50">
+		<e:Image anchorOffsetX="0" anchorOffsetY="0" source="bg_png" scale9Grid="293,300,637,84" left="0" right="0" top="0" bottom="0"/>
+		<e:Image id="close_btn" source="Shopping Mall2_json.x" top="14" right="26"/>
+		<e:Group bottom="44" left="90" right="60">
+			<e:Group height="38" y="1" anchorOffsetY="0" left="0">
+				<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="44" ellipseHeight="44" fillColor="0x96d9f9"/>
+			<e:Image y="-4.92" anchorOffsetX="0" anchorOffsetY="0" source="Shopping Mall2_json.金豆" left="-10" width="49.09" height="51.55"/>
+			<e:Label id="money" text="12" anchorOffsetX="0" top="0" bottom="0" verticalAlign="middle" size="26" right="20" left="45" textColor="0x004cbc"/>
+			</e:Group>
+			<e:Group height="38" y="11" anchorOffsetY="0" left="0" x="10">
+				<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="44" ellipseHeight="44" fillColor="0x96D9F9"/>
+				<e:Image y="-4.92" anchorOffsetX="0" anchorOffsetY="0" left="-10" width="49.09" height="51.55" source="Shopping Mall2_json.钻石"/>
+				<e:Label id="diamonds" text="12" anchorOffsetX="0" top="0" bottom="0" verticalAlign="middle" size="26" right="20" left="45" textColor="0x004CBC"/>
+			</e:Group>
+			<e:Group height="43" y="1" anchorOffsetY="0" anchorOffsetX="0" horizontalCenter="0">
+				<e:Label text="充值不到账，请联系客服" size="22" left="0" verticalAlign="middle" top="0" bottom="0" textColor="0x004cbc"/>
+			</e:Group>
+			<e:layout>
+				<e:HorizontalLayout gap="20" horizontalAlign="left" verticalAlign="middle"/>
+			</e:layout>
+		</e:Group>
+		<e:Scroller id="scroller" anchorOffsetY="0" anchorOffsetX="0" scrollPolicyH="on" scrollPolicyV="off" left="90" right="90" top="120" bottom="100">
+			<e:Group id="scroller_box" anchorOffsetY="0" anchorOffsetX="0">
+			<e:layout>
+				<e:HorizontalLayout/>
+			</e:layout>
+			</e:Group>
+		</e:Scroller>
+		<e:Group id="loading" left="90" right="90" bottom="100" top="120">
+			<e:Label text="加载中...." y="0" scaleX="1" scaleY="1" verticalAlign="middle" textAlign="center" anchorOffsetX="0" size="22" left="0" right="0"/>
+		</e:Group>
+		<e:Image source="Shopping Mall2_json.商城_03" horizontalCenter="0" top="-31"/>
+		<e:Image source="Shopping Mall2_json.小" bottom="33" left="0"/>
+	</e:Group>
+</e:Skin>

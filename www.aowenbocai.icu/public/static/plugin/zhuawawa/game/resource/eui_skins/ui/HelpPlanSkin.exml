@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HelpPlanSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="547.81" height="483.88">
+	<e:Image source="alert_lanel_png" left="0" right="0" top="0" bottom="0"/>
+
+
+			<e:Scroller width="502" height="295" anchorOffsetY="0" anchorOffsetX="0" y="92" horizontalCenter="0.5">
+			<e:Group>
+				<e:Label text="一、玩法说明\n				  1.玩家需注册游戏帐号方可参与该活动；\n				  2.玩家首先应选择每次夹娃娃需要花费的幸运豆数，然后点击“开始”便可伸出夹子去夹取相应的奖品；\n				  3.能否夹起娃娃取决于玩家出手的时机，夹起娃娃后能否夹中则取决于奖品的概率；\n				  4.夹娃娃开启时：2017年1月1日至2017年12月31日；\n				 二、奖品说明\n				  1.京东E卡、充值卡：可兑换等额幸运豆或相应卡密，卡密可到相应平台进行消费；\n				  2.实物奖品：获得实物奖品后请及时填写收货信息；若部分地区无法正常派发，我们将会及时通知用户，可退还价值等额的幸运豆；实物奖品颜色随机派发；\n				  3.请在中奖后30个自然日内兑换或填写收货地址，逾期将取消中奖资格； \n				 三、其他说明\n				  1.用户不得利用外挂、爬虫软件或其它恶意手段获得奖励，一经发现，我们有权对所有使用非法手段的账号进行不予发奖、冻结、查封等操作。在法律许可的范围内酷睿科技拥有本活动的解释权；\n				  2.受网络影响，页面动画表现可能存在误差，最终中奖结果请以订单详情中的结果为准；\n				  3.所有奖品和活动均由幸运竞猜负责，与苹果公司无关；"  top="0" horizontalCenter="0" anchorOffsetY="0" lineSpacing="10" anchorOffsetX="0" multiline="true" width="472" scaleX="1" scaleY="1" size="24" textColor="0xFFE49E"/>
+			</e:Group>
+		</e:Scroller>
+	<e:Image id="closeBtn" source="btn_png" scale9Grid="12,0,55,47" y="396.79" anchorOffsetX="0" width="507.8" anchorOffsetY="0" height="69.73" horizontalCenter="0"/>
+	<e:Label text="返回游戏" y="415.14" horizontalCenter="0.09500000000002728" touchEnabled="false"/>
+	<e:Label text="游戏说明" y="23.12" horizontalCenter="0.09500000000002728"/>
+
+</e:Skin>

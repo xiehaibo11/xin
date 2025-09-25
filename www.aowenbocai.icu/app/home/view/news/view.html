@@ -1,0 +1,33 @@
+{include file='home@common/head' title="文章详情"/}
+
+<!--顶部主题图-->
+<div class="buy-banner">
+    <div class="web_"></div>
+</div>
+
+<div class="web_ bg-white news-list hidden" style="min-height: 455px;margin: 30px auto 0">
+    <div class="animated fadeInUp wow"  data-wow-duration="1s">
+        <div class="location c-4"><i class="iconfont icon-dizhi1 c-5"></i><a href="{:url('./')}"> 首页</a> / <span class="cloumn"></span>  / <span class="column_name">文章详情</span></div>
+        <div class="view-detail m-width">
+            <div class="d_title">{$view.title}</div>
+            <div class="d_time tc c-4">更新时间：{$view.create_time}</div>
+            <div class="d_content border-b">{$view.content}</div>
+        </div>
+    </div>
+</div>
+
+{include file='home@common/foot' /}
+<script type="text/javascript">
+    $(function () {
+        var id = GetUrlParam('navid');
+        if(id == {$newsId}){
+            $('.cloumn').html('<a href="/home/news/newsList?navid={$newsId}">新闻资讯</a>')
+        }
+        if(id == {$noticeId}){
+            $('.cloumn').html('<a href="/home/news/newsList?navid={$noticeId}">网站公告</a>')
+        }
+        if(id == {$helpId}){
+            $('.cloumn').html('<a href="/home/help">帮助中心</a>')
+        }
+    });
+</script>

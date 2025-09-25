@@ -1,0 +1,102 @@
+{include file='common@common/head' /}
+
+<style>
+    .icon-svg {
+        display: inline-block;
+        margin: 0.2rem .4rem;
+    }
+    .header .header-left{
+        margin-top: .2rem;
+    }
+    .bank{
+
+    }
+</style>
+
+<header class="header">
+    <a class="header-left" href="/index/user/set">
+        <i class="icon-svg icon_left"></i>
+    </a>
+    <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init bank">
+    <div class="bank-list">
+        <div v-if="!cardLish.length" style="color: #999999;padding: 1rem">您还未绑定任何银行卡！</div>
+        <div v-else class="card card-line card-content flex-box" v-for="(item,index) in cardLish">
+            <div class="card-name flex" style="text-align: left">
+                <p style="color: #c7c7c7;padding-bottom: .5rem">{{item.openname}}</p>
+                <p>{{item.numbers}}</p>
+            </div>
+            <div @click="deleteBank(item.sign,index)">删除</div>
+        </div>
+    </div>
+    <div class="m-top" style="text-align: center;margin: .5rem 0">
+        <button class="btn" @click="addBank">+ 添加银行卡</button>
+    </div>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        new Vue({
+            el: '#app',
+            data: {
+                cardLish:[], //银行卡列表
+            },
+            methods: {
+                addBank(){
+                    $.get('{:url("getTrueInfo")}', function(res) {
+                        if(res.err){
+                            Zepto.modal({
+                                content: '您还未做实名制认证！',
+                                btn: [function ($btn) {
+                                    $btn.text('立即去认证');
+                                    $btn.click(function () {
+                                        location.href = '{:url("realName")}';
+                                    });
+                                }, function ($btn) {
+                                    $btn.text('取消');
+                                }]
+                            });
+                        }else {
+                            location.href = '{:url("addBank")}';
+                        }
+                    });
+                },
+                deleteBank(n,index){
+                    var _this = this;
+                    Zepto.modal({
+                        content: '是否确认删除该银行卡',
+                        btn: [function ($btn) {
+                            $btn.text('确定');
+                            $btn.click(function () {
+                                $.get('{:url("deleteBank")}',{
+                                    sign:n
+                                },function (res){
+                                    $.msg(res.msg)
+                                    if(!res.err){
+                                        _this.cardLish.splice(index,1)
+                                    }
+                                })
+                            });
+                        }, function ($btn) {
+                            $btn.text('取消');
+                        }]
+                    });
+                }
+            },
+            created: function() {
+                var _this = this;
+                $.get('{:url("getBanks")}?type=1', function(res) {
+                    if(!res.err){
+                        _this.$set(_this,'cardLish',res.data)
+                    }
+                    $("#app").removeClass("app_init");
+                });
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="OperatePanelSkin" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="home">
+			<tween:TweenItem target="{group}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleY="{1}" scaleX="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1.2}" scaleY="{1.2}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="open">
+			<tween:TweenItem target="{group}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="350">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillAlpha="0"/>
+	<e:Group id="group" width="900" height="550" horizontalCenter="0" verticalCenter="0">
+		<e:Group width="900" height="550" horizontalCenter="0" verticalCenter="0" x="0" y="0" scaleX="1" scaleY="1">
+			<e:Rect left="0" right="0" bottom="0" top="0" ellipseWidth="100" fillColor="0x3f4fa8"/>
+			<e:Rect left="10" right="10" top="10" bottom="10" ellipseWidth="100" fillColor="0x1b2244"/>
+			<e:Rect width="800" height="250" top="150" horizontalCenter="0" ellipseWidth="50" strokeWeight="5"/>
+			<e:Group height="50" horizontalCenter="0" top="80" width="800" locked="true">
+			<e:Label text="设置操盘金额" x="57" y="12" textColor="0xbfc6ff" size="30"/>
+			<e:TextInput id="caoMoney" x="271" y="8" skinName="TextInputSkin"/>
+			<e:Label text="注：最低操盘金额500000" x="604" y="14" size="30" textColor="0xbfc6ff"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" gap="15"/>
+			</e:layout>
+			</e:Group>
+			<e:Group id="setPan" width="750" height="200" horizontalCenter="0" top="180">
+			<e:Group x="24" y="6">
+				<e:RadioButton label="" width="47" height="49" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" selected="true">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="operate_setup_json.operate_setup6" source.down="operate_setup_json.operate_setup7"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+				</e:RadioButton>
+				<e:Group x="47" y="10">
+				<e:Label text="自动补足操盘余额" x="-3" y="-5" textColor="0xbfc6ff"/>
+				<e:TextInput id="auto" width="80" height="50" x="203" skinName="TextInputSkin" text="5" maxChars="2"/>
+				<e:Label text="次" x="283" y="8" textColor="0xbfc6ff"/>
+					<e:Label text="(最大次数99次)" x="293" y="18" textColor="0xBFC6FF" size="20"/>
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle"/>
+				</e:layout>
+				</e:Group>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" gap="15"/>
+				</e:layout>
+			</e:Group>
+			<e:Group x="34" y="16">
+				<e:RadioButton label="" width="47" height="49" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="operate_setup_json.operate_setup6" source.down="operate_setup_json.operate_setup7"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+				</e:RadioButton>
+				<e:Label text="持续补足" x="25" y="22" textColor="0xbfc6ff"/>
+				<e:layout>
+				<e:HorizontalLayout verticalAlign="middle" horizontalAlign="left" gap="15"/>
+				</e:layout>
+			</e:Group>
+			<e:Group x="44" y="26">
+				<e:RadioButton label="" width="47" height="49" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="operate_setup_json.operate_setup6" source.down="operate_setup_json.operate_setup7"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+				</e:RadioButton>
+				<e:Label text="不补足操盘余额" x="52" y="13" textColor="0xbfc6ff"/>
+				<e:Label text="（当余额小于100000时自动退出操盘）" x="262" y="15" size="20" textColor="0xbfc6ff"/>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" gap="15"/>
+				</e:layout>
+			</e:Group>
+			<e:layout>
+				<e:VerticalLayout gap="20"/>
+			</e:layout>
+			</e:Group>
+			<e:Image id="cancel" source="operate_setup_json.operate_setup4" bottom="20" horizontalCenter="-200"/>
+			<e:Image id="sure" source="operate_setup_json.operate_setup8" bottom="20" horizontalCenter="200"/>
+			<e:Image id="question" source="operate_setup_json.operate_setup1" top="180" right="90"/>
+		</e:Group>
+		<e:Group id="logo" width="380" height="100" horizontalCenter="0" x="260" scaleX="1" scaleY="1" top="-50">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0x151516" strokeAlpha="1" strokeWeight="10" ellipseWidth="50" strokeColor="0x3f4fa8"/>
+			<e:Label text="操盘设置" horizontalCenter="0" verticalCenter="0" size="50" textColor="0xa0a6e5" bold="true"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>

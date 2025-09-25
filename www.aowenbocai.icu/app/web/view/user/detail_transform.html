@@ -1,0 +1,169 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    body{
+        overflow-y: auto;
+    }
+    .el-input{
+        width: auto;
+    }
+    .el-input__inner{
+        margin-right: 3px;
+    }
+    .options .el-input__inner{
+        width: 100px;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">转账明细</span>
+        </div>
+        <el-radio-group v-model="label" size="small">
+            <el-radio-button @click.native="link('{:url('detail')}')" label="账户明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('drecharge')}')" label="充值明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('dexchange')}')" label="兑换明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('dtransform')}')" label="转账明细" v-if="{$company['game_status']}"></el-radio-button>
+        </el-radio-group>
+        <transform-detail></transform-detail>
+    </el-card>
+</div>
+<!--转账明细-->
+<template id="transformDetail">
+    <div>
+        <div class="options">
+            <el-select
+                    @change="search()"
+                    size="mini"
+                    v-model="time"
+                    placeholder="请选择时间">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <div class="bg" v-if="!time" >
+                <el-date-picker style="width:270px"
+                                v-model="value"
+                                type="daterange"
+                                size="mini"
+                                format="yyyy 年 MM 月 dd 日"
+                                value-format="yyyy-MM-dd"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                :picker-options="pickerOptions0">
+                </el-date-picker>
+            </div>
+        </div>
+        <page-nation :url="url" @game-record="sortC">
+            <el-table-column property="id" label="ID" width="90"></el-table-column>
+            <el-table-column property="create_time" label="交易时间" width="180" sortable="custom"></el-table-column>
+            <el-table-column prop="money" label="收支(游戏账户)" sortable="custom">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.money > 0" class="green"> {{scope.row.money}}</span>
+                    <span v-else class="red">{{scope.row.money}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column property="after" label="余额(游戏账户)"></el-table-column>
+            <el-table-column property="remark" label="备注" width="250"></el-table-column>
+        </page-nation>
+    </div>
+</template>
+
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        var id = GetUrlParam('userid');
+        //钻石明细
+        Vue.component('transform-detail', {
+            template: '#transformDetail',
+            data: function data() {
+                return {
+                    intUrl: '{:url("details/flowerlist")}'+ '?userid=' + id,
+                    options: [//快捷时间选项
+                        { value: 7, label: '最近一周' },
+                        { value: 30, label: '最近一个月' },
+                        { value: 90, label: '最近三个月' },
+                        { value: 180, label: '最近六个月' },
+                        { value: 0, label: '自定义时间' }],
+                    time: '', //快捷时间值
+                    timeTemp: '',
+                    value: '', //自定义时间值
+                    sort: '', //排序
+
+                    //设置选择今天之前的日期
+                    pickerOptions0: {
+                        disabledDate: function(time) {
+                            return time.getTime() > Date.now();
+                        }
+                    }
+                };
+            },
+
+            computed: {
+                timeValue: function() {
+                    if (!this.time == 0) {
+                        this.timeTemp = this.time;
+                    }
+                    var day = parseInt(this.timeTemp);
+                    return timeArr(day);
+                },
+                url: function url() {
+                    var sort;
+                    if (this.sort.length) {
+                        sort = this.sort;
+                    } else {
+                        sort = '';
+                    }
+                    if (this.value.length) {
+                        return this.intUrl + '&starttime=' + this.value[0] + '&endtime=' + this.value[1] + sort;
+                    } else {
+                        return this.intUrl + '&starttime=' + this.timeValue[0] + '&endtime=' + this.timeValue[1] + sort;
+                    }
+                }
+            },
+            methods: {
+                //搜索条件
+                search: function search() {
+                    if (!this.time == 0) {
+                        //自定义时间切换为快捷时间选择
+                        this.value = '';
+                    }
+                },
+                sortC: function sortC(val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 1; //降序
+                        } else {
+                            s = 0; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                }
+            },
+            created: function created() {
+                this.time = this.options[0].value;
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                label: '转账明细'
+            },
+            methods: {
+                link: function link(url) {
+                    window.location.href = url + '?userid=' + id;;
+                }
+            }
+        });
+    });
+</script>

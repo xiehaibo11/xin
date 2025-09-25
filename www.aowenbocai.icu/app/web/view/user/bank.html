@@ -1,0 +1,168 @@
+{include file='web@common/link' title="银行卡管理"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<style>
+    .bank-list{
+        width: 45%;
+        padding: 15px;
+        margin-right: 2%;
+        margin-bottom: 20px;
+        background-color: #f4f4f4;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <el-radio-group v-model="label">
+                <el-radio-button label="银行卡"></el-radio-button>
+                <el-radio-button @click.native="checkName(toAlipay)" label="支付宝"></el-radio-button>
+                <!--<el-radio-button @click.native="checkName(toWei)" label="微信"></el-radio-button>-->
+            </el-radio-group>
+        </div>
+        <div slot="header" class="clearfix" style="margin-top: 15px">
+            <span class="title">银行卡管理</span>
+        </div>
+        <bank-list :card-list="cardList"></bank-list>
+    </el-card>
+</div>
+
+<!--银行卡列表-->
+<template id="bankList">
+    <div>
+        <div class="cf">
+            <div v-if="!cardList.length" style="color: #777777;padding: 1rem">您还未绑定任何银行卡！</div>
+            <div v-else class="bank-list flex-box fl" v-for="(item,index) in cardList">
+                <div class="card-name flex" style="text-align: left">
+                    <p style="color: #c7c7c7;padding-bottom: .5rem">{{item.openname}}</p>
+                    <p>{{item.numbers}}</p>
+                </div>
+                <i class="el-icon-delete" @click="deleteBank(item.sign,index)" style="font-size: 18px;cursor: pointer"></i>
+            </div>
+        </div>
+        <el-button @click="addBank">添加银行卡</el-button>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+
+        //银行卡列表
+        Vue.component('bank-list', {
+            template: '#bankList',
+            props: ['cardList'],
+            data: function data() {
+                return {
+                    bind_idcard: Number("{$company['bind_idcard']}") //是否必须绑定身份证
+                };
+            },
+
+            methods: {
+                //添加银行卡
+                addBank: function () {
+                    if(this.bind_idcard){
+                        if (!{$isnum}) {
+                            this.$confirm('您还未做实名制认证！', '提示', {
+                                confirmButtonText: '立即去认证',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(function () {
+                                location.href = '{:url("idCard")}';
+                            }).catch(function () {});
+                        } else {
+                            location.href = '{:url("addBank")}';
+                        }
+                    }else {
+                        if (!{$isname}) {
+                            this.$confirm('请先完善您的个人资料！', '提示', {
+                                confirmButtonText: '立即去完善',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(function () {
+                                location.href = '{:url("info")}';
+                            }).catch(function () {});
+                        } else {
+                            location.href = '{:url("addBank")}';
+                        }
+                    }
+                },
+                //删除银行卡
+                deleteBank: function (n, index) {
+                    var _this = this;
+
+                    this.$confirm('此操作将删除该银行卡, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        $.get('{:url("deleteBank")}', {
+                            sign: n
+                        }, function (res) {
+                            if (!res.err) {
+                                _this.$notify({
+                                    title: '成功',
+                                    message: res.msg,
+                                    type: 'success'
+                                });
+                                _this.cardList.splice(index, 1);
+                            } else {
+                                _this.$notify({
+                                    title: '错误',
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            }
+                        });
+                    }).catch(function () {});
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                cardList: {$banks},
+                label: '银行卡',
+                bind_idcard: Number("{$company['bind_idcard']}") //是否必须绑定身份证
+            },
+            methods: {
+                checkName: function (callback) {
+                    if(this.bind_idcard){
+                        if (!{$isnum}) {
+                            this.$confirm('您还未做实名制认证！', '提示', {
+                                confirmButtonText: '立即去认证',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(function () {
+                                location.href = '{:url("idCard")}';
+                            }).catch(function () {});
+                        } else {
+                            callback();
+                        }
+                    }else {
+                        if (!{$isname}) {
+                            this.$confirm('请先完善您的个人资料！', '提示', {
+                                confirmButtonText: '立即去完善',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(function () {
+                                location.href = '{:url("info")}';
+                            }).catch(function () {});
+                        } else {
+                            callback();
+                        }
+                    }
+                },
+                toBank: function () {
+                    location.href = '{:url("bank")}';
+                },
+                toAlipay: function () {
+                    location.href = '{:url("alipay")}';
+                },
+                toWei: function () {
+                    location.href = '{:url("wei")}';
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameUiSkin" width="720" height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="light">
+			<tween:TweenItem target="{light1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+			<tween:TweenItem target="{light0}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image id="bg_img" source="bg2_png" left="0" right="0" top="0" bottom="0"/>
+	<e:Scroller left="0" right="0" top="0" bottom="0" width="720" height="1280" scrollPolicyH="off">
+		<e:Group>
+			<e:Image source="bg_png" horizontalCenter="0" top="0"/>
+			<e:Group id="light1" horizontalCenter="0" top="30" width="695" height="694">
+				<e:Image source="light1_png" anchorOffsetX="347.5" anchorOffsetY="347" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+				<e:Image source="light2_png" anchorOffsetX="347.5" anchorOffsetY="347" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+			</e:Group>
+			<e:Group horizontalCenter="0" top="30" id="light0" width="695" height="694" alpha="0">
+				<e:Image source="light1_png" anchorOffsetX="347.5" anchorOffsetY="347" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" rotation="15"/>
+				<e:Image source="light2_png" anchorOffsetX="347.5" anchorOffsetY="347" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" rotation="15"/>
+			</e:Group>
+			<ns1:TurnTable id="turntable" skinName="TurnTableSkin" horizontalCenter="0" top="75"/>
+			<ns1:HistoryPanel id="his_panel" y="1124" horizontalCenter="0" skinName="HistorySkin"/>
+			<e:Label id="balance" text="--" x="366" y="924" width="140" verticalAlign="middle" textAlign="center" size="25" textColor="0xd8b043"/>
+			<e:Label id="times" text="--" x="398.52" y="975" width="30" size="25" verticalAlign="middle" textAlign="center" textColor="0xcc1bd6" height="25"/>
+			<e:Group id="help" width="628" height="200" y="1576" horizontalCenter="0">
+				<e:Label text="玩法说明：" x="112" y="47" textColor="0xcebebe"/>
+				<e:Label text="1.每人每天有3次抽奖机会，点击“抽奖”按钮开始抽奖。" x="122" y="57" width="100%" textColor="0xcebebe"/>
+				<e:Label text="2.指针停止位置，获得相应奖品。" x="122" y="57" width="100%" textColor="0xcebebe"/>
+				<e:layout>
+					<e:VerticalLayout horizontalAlign="left" verticalAlign="top" paddingLeft="20" gap="20"/>
+				</e:layout>
+			</e:Group>
+			<e:Button id="back_btn" label="" x="30" y="42">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="back_up_png" source.down="back_down_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:ToggleSwitch id="music_btn" label="" y="42" x="620">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="music_crr000_png" source.down="music_crr001_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:ToggleSwitch>
+		</e:Group>
+	</e:Scroller>
+</e:Skin>

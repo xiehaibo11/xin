@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="Alert2Skin" minHeight="230" minWidth="450" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="640" height="1136">
+	<e:Group anchorOffsetY="0" anchorOffsetX="0" verticalCenter="0" horizontalCenter="0">
+		<e:Rect anchorOffsetX="0" anchorOffsetY="0" left="0" right="0" top="0" strokeWeight="0" ellipseWidth="40" ellipseHeight="40" scaleX="1" scaleY="1" strokeColor="0x37393f" fillColor="0x000000" bottom="-16" fillAlpha="0.4"/>
+		<e:Group scaleX="1" scaleY="1" left="20" right="20" anchorOffsetY="0" top="16" anchorOffsetX="0">
+			<e:Label id="content" text="提示信息" x="13.36" y="20" anchorOffsetY="0" anchorOffsetX="0" size="24" lineSpacing="15" textAlign="center"/>
+			<e:layout>
+				<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="30"/>
+			</e:layout>
+		</e:Group>
+		<e:layout>
+			<e:BasicLayout/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

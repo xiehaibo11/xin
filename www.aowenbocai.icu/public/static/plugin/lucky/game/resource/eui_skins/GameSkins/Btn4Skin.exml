@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="Btn4Skin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  states="up,down,disabled" >
+	<e:Image source="spxiu_json.spxiu017" horizontalCenter="0" verticalCenter="0" source.down="spxiu_json.spxiu025"/>
+	<e:Label id="labelDisplay" text="" textAlign="center" left="8" right="8" top="8" bottom="8" verticalAlign.down="middle" verticalAlign.up="top" bottom.down="20"/>
+</e:Skin>

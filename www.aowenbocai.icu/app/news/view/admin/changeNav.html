@@ -1,0 +1,62 @@
+{include file='admin@common/head' /}
+<script src="__STATIC__/wangeditor/wangEditor.min.js"></script>
+<style>
+	.box-padding {
+		padding: 20px;
+	}
+	.btn_nav{
+		float:right;
+		margin-left: 50px;
+	}
+	.mex {
+		max-width: 100%;
+	}
+</style>
+<nav class="plugin_nav">
+	<a href="{:url('index')}">文章管理</a>
+	<a class="nav_active" href="#">栏目管理</a>
+</nav>
+<div class="box-padding">
+	<ol class="breadcrumb">
+		<li class=""><i class="glyphicon glyphicon-link"></i> 扩展管理</li>
+		<li class="">新闻资讯</li>
+		<li class="">栏目分类</li>
+		<li class="active">修改栏目</li>
+	</ol>
+<div class="box-padding mex">
+	<form class="form" action="/news/admin/changeNav?id={$info.id}" method="post">
+	<div class="form-group">
+			<label>栏目标题</label>
+			<div class="dropdown">
+				<button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+					<span class="showTitle">{$info.pidName}</span>
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					<li role="presentation">
+						<a name="0" class="nav_id">一级栏目</a>
+					</li>
+					{volist name="$list" id="item"}
+					<li role="presentation">
+						<a name="{$item.id}" class="nav_id">{$item.title}</a>
+					</li>
+					{/volist}
+				</ul>
+			</div>
+		</div>
+		<input type="hidden" name="pid" value="{$info.pid}">
+		<div class="form-group">
+		<label>栏目标题</label>
+		<input type="text" class="form-control" placeholder="输入内容" name="title" value="{$info.title}">
+		</div>
+	  <button type="submit" class="btn btn-lg btn-primary btn-block"> 修改 </button>
+	</form>
+</div>
+<script type="text/javascript">    
+	$(".nav_id").click(function(){
+		var _this = $(this);
+		$(".showTitle").text(_this.text());
+		$("input[name=pid]").val(_this.attr('name'));
+	})
+</script>
+{include file='admin@common/foot' /}

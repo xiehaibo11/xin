@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CarLogoSkin" width="120" height="120" currentState="index" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" states="index,run,open"  width.run="120" height.run="120">
+	<w:Declarations>
+		<tween:TweenGroup id="run">
+			<tween:TweenItem target="{image}">
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image0}">
+				<tween:Set/>
+				<tween:To duration="750">
+					<tween:props>
+						<e:Object alpha="{0}" scaleX="{1.6}" scaleY="{1.6}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image2}">
+				<tween:Wait duration="300"/>
+				<tween:Set/>
+				<tween:To duration="600">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="open">
+			<tween:TweenItem target="{openImg}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{0.5}" scaleY="{0.5}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object alpha="{0}" scaleX="{0.5}" scaleY="{0.5}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{openImg1}">
+				<tween:Set/>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object alpha="{0}" scaleX="{3.5}" scaleY="{3.5}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Group width="120" height="120" top="0" left="0" width.run="120" height.run="120" anchorOffsetX="60" anchorOffsetY="60">
+		<e:Image id="logo" horizontalCenter="0" verticalCenter="0" source="icon_cars_json.icon_cars12"/>
+		<e:Group id="effects" horizontalCenter="0" verticalCenter="0" visible.index="false" visible.open="false">
+			<e:Image id="image" source="play_json.play9" verticalCenter="0" horizontalCenter="0"/>
+		<e:Image id="image0" source="play_json.play19" horizontalCenter="0" verticalCenter="0"/>
+			<e:Image id="image2" source="play_json.play17" verticalCenter="0" horizontalCenter="0"/>
+		</e:Group>
+		<e:Image id="openImg" source="draw_json.draw0" includeIn="open" horizontalCenter="0" verticalCenter="0" scaleX="0.5" scaleY="0.5"/>
+		<e:Image id="openImg1" source="play_json.play63" includeIn="open" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+</e:Skin>

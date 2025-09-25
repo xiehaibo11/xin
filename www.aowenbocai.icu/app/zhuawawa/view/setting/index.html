@@ -1,0 +1,75 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+    <a class="nav_active" href="{:url('index')}">奖品列表</a>
+    <a class="" href="{:url('add')}">添加奖品</a>
+</nav>
+<style>
+  .icon_box {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;
+
+    width: 80px;
+    height: 80px;
+    background: #C6EAFF;
+    overflow: hidden;
+    border: 1px solid #9ED3FF;
+    border-radius: 3px;
+    position: absolute;
+  }
+  .dis {
+    background: #FFCCCC;
+    border: 1px solid #FF9E9E;
+  }
+  .fish_info {
+    padding: 10px;
+  }
+  .right {
+    margin-left: 88px;
+    line-height: 26px;
+  }
+  .hit, .sp {
+    color: #C32AD6;
+    font-weight: 700;
+  }
+  .sp {
+    color: #23AB92;
+  }
+</style>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 奖品列表</li>
+        </ol>
+    </div>
+    <div class="alert alert-success" role="alert">
+      小提示：命中率和赔率的计算公式为 <span class="text-danger">预期奖金 / 命中 = 赔率</span>（以1000分率为参考），例如预期奖金为 950（期望奖金） / 950（命中） = 1（赔率）
+    </div>
+    <div class="row">
+    {foreach $list as $item}
+    <div class="col-lg-4 col-md-6">
+      <div class="fish_info">
+        <div class="icon_box{$item.status == 1 ? '' : ' dis'}">
+            <img src="{$item.icon}" alt="" width="54">              
+        </div>
+        <div class="right">
+          <div>名称：{$item.title}(已{$item.status == 1 ? '启用' : '禁用'})</div>
+          <div>命中：<span class="hit">{$item.hit}</span>‰ 奖品：<span class="sp">{$item.gift}</span></div>
+          <div>投注金币数：<span class="hit">{$item.bet_money}</span></div>
+          <a class="btn btn-primary btn-xs" href="{:url('edit', ['id' => $item.id])}">修改</a>
+          <a class="btn {$item.status == 1 ? 'btn-danger' : 'btn-success'} btn-xs" href="{:url('setStatus', ['id' => $item.id])}">{$item.status == 1 ? '禁用' : '启用'}</a>
+          
+        </div>
+      </div>
+    </div>
+    {/foreach}
+    
+  </div>
+</div>
+{include file='admin@common/foot' /}

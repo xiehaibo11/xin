@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="AutoGameSkin" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group left="0" right="0" top="0" bottom="0">
+		<e:Rect id="back1" left="0" right="0" top="0" bottom="0" fillAlpha="0" x="-120" y="-228" scaleX="1" scaleY="1"/>
+        <e:Group id="sc" width="600" top="250" scaleX="1" scaleY="1" horizontalCenter="0" bottom="150" locked="true">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xb4712f" ellipseWidth="10"/>
+			<e:Rect fillColor="0xf1d193" left="3" right="3" top="3" bottom="3" ellipseWidth="10"/>
+			<e:Rect left="10" right="10" top="10" bottom="10" fillColor="0xf2debc" ellipseWidth="30"/>
+			<e:Rect left="10" right="10" top="60" bottom="10" fillColor="0xe2b891"/>
+		</e:Group>
+        <e:Image source="sprite-dialog_json.sprite-dialog001" scaleX="1" scaleY="1" horizontalCenter="0" top="150"/>
+		<e:Group id="back" width="40" height="40" right="70" top="210" locked="true">
+			<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="40" fillColor="0xf78d02" strokeWeight="3" strokeColor="0x845625"/>
+			<e:Image source="sprite-dialog_json.sprite-dialog000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+        <e:Label text="自动战斗" top="210" horizontalCenter="0"/>
+		<e:Group width="580" top="360" horizontalCenter="0" bottom="285">
+			<e:Group id="plunder" width="100%" height="80" x="98" y="35">
+				<e:Label text="掠夺金豆：" x="113" y="17" textColor="0xce7939"/>
+				<e:TextInput x="261" y="38" skinName="InputSkin" text="输入数量"/>
+				<e:Image x="413" y="14" source="question_png"/>
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="Beplunder" width="100%" height="80" x="108" y="45">
+				<e:Label text="被掠夺金豆：" x="113" y="17" textColor="0xCE7939" size="25"/>
+				<e:TextInput x="261" y="38" skinName="InputSkin" text="输入数量"/>
+				<e:Image x="413" y="14" source="question_png"/>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="Single" width="100%" height="80" x="118" y="55">
+				<e:Label text="单局出兵：" x="113" y="17" textColor="0xCE7939"/>
+				<e:TextInput x="261" y="38" skinName="InputSkin" text="输入数量"/>
+				<e:Image x="413" y="14" source="question_png"/>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="autoSoldier" width="100%" height="80" x="128" y="65">
+				<e:Label text="自动出兵：" x="113" y="17" textColor="0xCE7939"/>
+				<e:Group id="auto_selected" x="209" y="10" width="300">
+					<e:RadioButton label="随机" x="-74" y="-6" scaleX="1" scaleY="1" selected="true">
+					</e:RadioButton>
+					<e:RadioButton label="矛兵" x="-222" y="-11" scaleX="1" scaleY="1"/>
+					<e:RadioButton label="盾兵" x="-148" y="-11" scaleX="1" scaleY="1"/>
+					<e:RadioButton label="弓兵" x="-74" y="-11" scaleX="1" scaleY="1"/>
+					<e:layout>
+						<e:HorizontalLayout/>
+					</e:layout>
+				</e:Group>
+				<e:Image x="413" y="14" source="question_png"/>
+				<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="30"/>
+				</e:layout>
+			</e:Group>
+			<e:Button id="auto_go" label="" x="238" y="436">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="read_fight_png" source.down="read_fight2_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:layout>
+				<e:VerticalLayout horizontalAlign="center" verticalAlign="middle"/>
+			</e:layout>
+		</e:Group>
+        
+	</e:Group>
+</e:Skin>

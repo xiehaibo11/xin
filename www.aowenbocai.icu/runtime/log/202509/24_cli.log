@@ -1,0 +1,10 @@
+[ 2025-09-24T15:23:09+08:00 ][ error ] [2]curl_getinfo(): supplied resource is not a valid cURL handle resource[/www/wwwroot/pk10诊断.php:124]
+[ info ] [ LOG ] INIT File
+[ 2025-09-24T15:28:22+08:00 ][ info ] [ DB ] INIT sqlite
+[ info ] [ LOG ] INIT File
+[ 2025-09-24T15:28:55+08:00 ][ info ] [ DB ] INIT sqlite
+[ info ] [ LOG ] INIT File
+[ 2025-09-24T15:28:55+08:00 ][ info ] [ DB ] INIT mysql
+[ 2025-09-24T15:29:34+08:00 ][ info ] [ DB ] INIT sqlite
+[ info ] [ LOG ] INIT File
+[ 2025-09-24T15:29:34+08:00 ][ info ] [ DB ] INIT mysql

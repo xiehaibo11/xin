@@ -1,0 +1,7 @@
+{"file":"2.png","frames":{
+"中心":{"x":1,"y":640,"w":127,"h":127,"offX":0,"offY":0,"sourceW":127,"sourceH":127},
+"吊绳":{"x":1,"y":1,"w":35,"h":637,"offX":0,"offY":0,"sourceW":35,"sourceH":637},
+"夹子右上":{"x":111,"y":769,"w":79,"h":91,"offX":0,"offY":0,"sourceW":79,"sourceH":91},
+"夹子右下":{"x":56,"y":769,"w":53,"h":140,"offX":0,"offY":0,"sourceW":53,"sourceH":140},
+"夹子左上":{"x":192,"y":769,"w":80,"h":89,"offX":0,"offY":0,"sourceW":80,"sourceH":89},
+"夹子左下":{"x":1,"y":769,"w":53,"h":141,"offX":0,"offY":0,"sourceW":53,"sourceH":141}}}

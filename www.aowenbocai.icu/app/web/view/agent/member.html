@@ -1,0 +1,226 @@
+{include file='web@common/link' title="会员管理"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">会员管理</span>
+        </div>
+        <div class="agent-report">
+            <div class="options flex-box">用户类型 ：
+                <el-select size="mini" v-model="agentType" placeholder="用户类型">
+                    <el-option @change="search()" v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+                账号 ：
+                <div>
+                    <div class="flex-box">
+                       <el-input v-model="agentName" type="text" size="mini" placeholder="账号" prefix-icon="el-icon-search" @keyup.enter.native="doSearch"></el-input>
+                        <el-button size="mini" type="primary" @click.native="doSearch">搜索</el-button>
+                    </div>
+                </div>
+            </div>
+            <div v-if="'{$id}' !== ''" class="cf" style="border-top: 1px solid #e3e3e3;background: #f4f4f4;padding: 5px 10px;font-size: 14px">
+                <span class="fl"><em>当前所查看会员：</em>{$user_info.nickname|default=''}</span>
+                <span class="fr">
+                    <el-button @click.native="go" size="small" icon="el-icon-d-arrow-left" >返回上一级</el-button>
+                    <el-button @click.native="self" size="small" icon="el-icon-caret-left" type="danger">返回自己</el-button>
+                </span>
+            </div>
+            <page-nation :url="url" @game-record="sortC">
+                <el-table-column prop="nickname" label="账号">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.type == 2">
+                            <template v-if="scope.row.agents_num > 0">
+                                <a class="link f13" v-if="scope.row.type == 2 && scope.row.agents_num > 0" @click="toSubMember(scope.row.id)">
+                                    {{scope.row.nickname}}
+                                </a>
+                            </template>
+                            <template v-else>
+                                 <span class="f13" @click="toSubMember(scope.row.id)">{{scope.row.nickname}}
+                                 </span>
+                            </template>
+                        </template>
+                        <template v-else>
+                            <em class="f13">{{scope.row.nickname}}</em>
+                        </template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="total_money" label="用户类型" width="">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.type == 1" class="el-tag el-tag--success">普通会员</span>
+                        <span v-if="scope.row.type == 2" class="el-tag el-tag--danger">代理会员</span>
+                        <span v-if="scope.row.type == 0" class="el-tag el-tag--info">测试会员</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="agents_num" label="下级人数"  width=""  sortable="agents_num">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.type == 1" style="color: #aeaeae">--</span>
+                        <span v-if="scope.row.type == 2 || scope.row.type == 0" :class="{'red' : scope.row.agents_num > 0}">{{scope.row.agents_num}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="money" label="账户余额"  width=""  sortable="money"></el-table-column>
+                <el-table-column prop="create_time" label="会员注册时间"  width="150"></el-table-column>
+                <el-table-column prop="action_time" label="最后登录"  width="150"></el-table-column>
+                <el-table-column label="操作" prop="agents_money"  width="140">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="mini" @click="toBetRecord(scope.row.id)">
+                            <el-tooltip class="item" effect="dark" content="投注明细" placement="bottom">
+                                <i class="iconfont icon-touzhujilu info-c f18"></i>
+                            </el-tooltip>
+                        </el-button>
+                        <!--<span> </span>-->
+                        <el-button type="text" style="margin-left: 0" size="mini" @click="toBillRecord(scope.row.id)">
+                            <el-tooltip class="item" effect="dark" content="资金明细" placement="bottom">
+                                <i class="iconfont icon-yue info-c f18"></i>
+                            </el-tooltip>
+                        </el-button>
+                        <!--<span> </span>-->
+                        <el-button v-if="{$company['agent_recharge']} && '{$id}' == ''" type="text" style="margin-left: 0" size="mini" @click="agentRecharge(scope.$index,scope.row)">
+                            <el-tooltip class="item" effect="dark" content="给Ta充值（扣除自己账户余额）" placement="bottom">
+                                <i class="iconfont icon-zhanghuchongzhi-copy info-c f18"></i>
+                            </el-tooltip>
+                        </el-button>
+                        <el-button v-if="scope.row.rebate !== ''" type="text" style="margin-left: 0" size="mini" @click="viewDetail(scope.row.rebate)">
+                            <el-tooltip class="item" effect="dark" content="查看返点" placement="bottom">
+                                <i class="iconfont icon-fanli info-c f18"></i>
+                            </el-tooltip>
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </page-nation>
+            <!--查看返点 dialog-->
+            <el-dialog title="返点详情" :visible.sync="dialogTableVisible" top="0" width="500">
+                <el-form class="invite-cont" label-width="100px">
+                    <template v-for="(item,index) in lotteryShow">
+                        <el-form-item :label="item.label" :key="index" size="small"  :prop="item.type">
+                            <el-input v-model="setInfo[item.type]" :disabled="true" style="width: 150px"></el-input>
+                        </el-form-item>
+                    </template>
+                </el-form>
+            </el-dialog>
+            <!--查看返点 dialog end-->
+        </div>
+    </el-card>
+</div>
+
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                agentType:'', //代理类型
+                agentName:'', //代理昵称
+                userid :'{$id}',//代理id
+                searchName:'',
+
+                initUrl:"{:url('get_member')}", //接口地址
+                sort : '',//排序
+
+                options: [//会员类型搜索
+                    { value: '', label: '全部' },
+                    { value: 2, label: '代理会员' },
+                    { value: 1, label: '普通会员' }],
+
+                //彩票分类列表
+                lotteryShow: {$navList},
+                dialogTableVisible:false,
+                setInfo:{
+                    ssc:'4.0',
+                    ks:'4.0',
+                    pk10:'4.0',
+                    syxw:'4.0',
+                    pc28:'4.0'
+                },//查看用户返点
+            },
+            computed:{
+                url:function () {
+                    var type,name,id
+                    type = this.agentType ?  '&type='+ this.agentType : ''
+                    name = this.searchName ?  '&name='+ this.searchName : ''
+                    id = this.userid ?  '&id='+ this.userid : ''
+                    return this.initUrl + id + type + name
+                },
+            },
+            methods: {
+                //搜索
+                doSearch:function () {
+                    this.searchName = this.agentName
+                },
+                sortC: function(val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 0; //降序
+                        } else {
+                            s = 1; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                    this.$emit('sort-change', this.sort);
+                },
+                //查看返点
+                viewDetail:function(rebate){
+                    this.$set(this,'setInfo',JSON.parse(rebate))
+                    this.dialogTableVisible = true
+                },
+                //查看下级
+                toSubMember:function (id) {
+                    window.location.href = "{:url('member')}?id=" + id
+                },
+                //返回上一级
+                go:function(){
+                    window.history.go(-1);
+                },
+                //返回自己
+                self:function () {
+                    window.location.href="{:url('member')}"
+                },
+                //投注明细
+                toBetRecord:function (id) {
+                    window.location.href="{:url('betRecord')}/userid/" + id
+                },
+                //资金明细
+                toBillRecord:function (id) {
+                    window.location.href="{:url('billRecord')}/userid/" + id
+                },
+                //充值
+                //备注设置
+                agentRecharge:function(index,row) {
+                    var _this = this;
+                    _this.$prompt('<div>请输入充值金额<i class="red" style="font-size: 12px">（此操作将会扣除您自己的账户余额）</i></div>', '为 ' + row.nickname + ' 充值', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /^[0-9]*[1-9][0-9]*$/,
+                        dangerouslyUseHTMLString: true,
+                        inputErrorMessage: '请出入正确的充值金额'
+                    }).then(function(action) {
+                        $.post('{:Url("change_money")}',{
+                            'userid' :row.id,
+                            'money' : action.value
+                        },function (res) {
+                            var type = 'error'
+                            if(!res.err){
+                                type = 'success'
+                                _this.$set(row,'money',Number(action.value) + Number(row.money))
+                            }
+                            _this.$alert( res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: type,
+                                center: true
+                            });
+                        })
+                    }).catch(function(){
+
+                    });
+                },
+            },
+            created:function () {
+                this.agentType = this.options[0].value;
+            }
+        });
+    });
+</script>

@@ -1,0 +1,200 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+    <a href="{:url('index')}">物品管理</a>
+    <a href="{:url('awardRule')}">中奖规则</a>
+    <a  class="nav_active">设置中奖率</a>
+</nav>
+
+<ol class="breadcrumb">
+    <li class="active common" name="common_lucky">普通奖设置</li>
+    <!-- <li class="lucky" name="lucky_lucky">幸运奖设置</li> -->
+</ol>
+<style>
+.breadcrumb > li + li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "";
+}
+.breadcrumb > li:hover{
+    cursor: pointer;
+}
+  .icon_box {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;
+
+    width: 80px;
+    height: 80px;
+    background: #C6EAFF;
+    overflow: hidden;
+    border: 1px solid #9ED3FF;
+    border-radius: 3px;
+    position: absolute;
+  }
+  .dis {
+    background: #FFCCCC;
+    border: 1px solid #FF9E9E;
+  }
+  .fish_info {
+    padding: 10px;
+  }
+  .right {
+    margin-left: 88px;
+    line-height: 26px;
+  }
+  .hit, .sp {
+    color: #C32AD6;
+    font-weight: 700;
+  }
+  .sp {
+    color: #23AB92;
+  }
+  .multiple{
+    color:rgb(243, 117, 13);
+    font-weight: 700;}
+  .change_info input{width: 60px;color: #000;font-weight: normal;height: 23px}
+</style>
+<div class="box-padding">
+    <div class="row common_lucky">
+        <div class="alert alert-success" role="alert">
+          小提示：点击修改设置中奖概率及排序。中奖概率总和为1000。排序影响的派奖，中奖率越低的排序应越低
+        </div>
+        {foreach $data as $item}
+        {if condition ='$item.type eq 0'}
+        <div class="col-lg-3 col-md-6">
+            <div class="fish_info">
+                <div class="right">
+                <div>名称：{$item.planList}(已{$item.status == 1 ? '启用' : '禁用'})</div>
+                <div>奖金倍数：<span class="multiple">{$item.multiple}</span></div>
+                <div>中奖概率：<span class="hit"><span class="oldSp">{$item.sp}</span></span>‰ 排序：<span class="sp">{$item.sort}</span></div>
+                <div class="common_info change_info" style="display:none">
+                        概率：<input type="text" name="change_sp" id="{$item.id}" value="{$item.sp}">‰ </br>
+                        排序：<input type="text" name="sort" id="" value="{$item.sort}"> 
+                </div>
+                <a class="btn btn-xs btn-danger" > {$item.status_name}</a>
+                <a class="btn btn-primary btn-xs change" name="common" >修改</a>
+                </div>
+            </div>
+        </div>
+        {/if}
+        {/foreach}
+        <div class="col-lg-12 col-md-12 common_close " style="display:none">
+            <button class="change_post btn btn-success" style="margin-left:40%" name="common" >提交修改</button> 
+            <button class="change_close btn btn-default" name="common" >放弃修改</button>
+        </div>
+    </div>
+    <div class="row lucky_lucky" style="display:none">
+        {foreach $data as $item}
+        {if condition ='$item.type eq 1'}
+        <div class="col-lg-3 col-md-6">
+            <div class="fish_info">
+            <div class="right">
+                <div>名称：{$item.planList}(已{$item.status == 1 ? '启用' : '禁用'})</div>
+                <div>中奖概率：<span class="hit">
+                        <span class="oldSp">{$item.sp}</span>
+                        <input type="text" name="change_sp" id="" value="{$item.sp}">
+                    </span>‰ 
+                </div>
+                <div>中奖排序：<span class="hit">
+                            <span class="oldSp">{$item.sp}</span>
+                            <input type="text" name="change_sp" id="" value="{$item.sp}">
+                        </span>‰ 
+                    </div>
+                <a class="btn btn-xs btn-danger" > {$item.status_name}</a>
+                <a class="btn btn-primary btn-xs" href="{:url('edit', ['id' => $item.id])}">修改</a>
+                
+            </div>
+            </div>
+        </div>
+        {/if}
+        {/foreach}
+        </div>
+</div>
+<script>
+    $(".breadcrumb li").click(function(){
+        $(".breadcrumb li").removeClass('active');
+        var _this = $(this);
+        _this.addClass('active');
+        $(".row").hide();
+        $("."+_this.attr('name')).show();
+    })
+    $("input[name=change_sp]").change(function(){
+        var _this = $(this);
+        var value = _this.val();
+    });
+    $(".change").click(function(){
+        var name = $(this).attr('name');
+        if(name == 'common'){
+            $(".common_info").show();
+        }else{
+            $(".lucky_info").show();
+        }
+        $("."+name+'_close').show();
+    })
+    $(".change_close").click(function(){
+        var name = $(this).attr('name');
+        if(name == 'common'){
+            $(".common_info").hide();
+        }else{
+            $(".lucky_info").hide();
+        }
+        $(this).parent().hide();
+    })
+
+    $(".change_post").click(function(){
+        var name = $(this).attr('name');
+        var _elem = $("."+name+'_info');
+        var data = [];
+        var sp = 0;
+        var sort = [];
+        var length  = _elem.length;
+        _elem.each(function(index){ 
+          var input = _elem.eq(index).find("input");
+          var obj = {};
+          obj.sp = input.eq(0).val();
+          input.eq(0).parent().parent().find(".hit").text(obj.sp);
+          obj.id = input.eq(0).attr('id');
+          obj.sort = input.eq(1).val();
+          input.eq(1).parent().parent().find(".sp").text(obj.sort);
+          if(obj.sp == '' || obj.sort == ''){
+              $.modal.alert('请认真填写数据');
+              return false;
+          }
+          sp = sp +  parseInt(obj.sp);
+          if(sp > 1000){
+              $.modal.alert('中奖概率最大为1000，请确认您的概率');
+              return false;
+          }
+          if(sort.indexOf(obj.sort) != -1){
+              $.modal.alert(obj.sort+'这个排序已存在，请重新选择');
+              return false;
+          }
+
+          sort.push(obj.sort);
+          data.push(obj);
+        })
+        if(length != data.length){
+            return false;
+        }
+        
+        if(sp != 1000){
+              $.modal.alert('中奖概率总和应等于1000，请确认您的概率');
+              return false;
+        }
+        $.post("{:Url('changeSp')}",{data: data, name: name}, function(res){
+              $.modal.alert(res.msg);
+              if(!res.err){
+                  $(".common_info").hide();
+                  $(".common_close").hide();
+              }
+        }, 'json');
+    })
+</script>
+{include file='admin@common/foot' /}
+

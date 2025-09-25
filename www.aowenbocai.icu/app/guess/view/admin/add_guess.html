@@ -1,0 +1,208 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style>
+    .form {
+        margin: 20px;
+        width: 400px;
+    }
+
+    .input-group[class*="col-"] {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .remark {
+        height: 34px;
+        line-height: 34px;
+        font-size: 16px
+    }
+
+    .remark i {
+        font-style: normal;
+        font-size: 12px;
+        margin-left: 10px
+    }
+</style>
+<nav class="plugin_nav">
+    <a href="{:url('index')}">题目列表</a>
+    <a class="nav_active" href="{:url('addGuess')}">添加题目</a>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li><i class="glyphicon glyphicon-link"></i> 添加题目</li>
+        </ol>
+    </div>
+    <form action="{:url('addGuess')}" method="post" id="userform">
+        <div class="form-horizontal form_max">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">竞猜题目</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" placeholder="" name="title">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">题目类型</label>
+                <div class="col-sm-6">
+                    <select name="type" class="form-control" id="">
+                        {$type_option}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">上传LOGO:</label>
+
+                <div class="col-sm-6">
+                    <input type="file" class="hidden select_photo">
+                    <img class="user_photo" width="80" height="80" alt="">
+                    <input type="hidden" name="logo" value="">
+                    <button type="button" class="btn btn-success btn_select_photo">上传图片</button>
+                </div>
+            </div>
+            <div class="options">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">答案选项</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control input_options" placeholder="问题答案选项" name="options[]">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control input_odds text-center" placeholder="赔率" name="odds[]">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control input_options" placeholder="问题答案选项" name="options[]">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control input_odds text-center" placeholder="赔率" name="odds[]">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2">
+                    <a href="javascript:;" class="add_options" style="display: block; line-height:34px;">增加答案</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开奖依据</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" placeholder="以***为准" name="basis">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开始时间</label>
+                <div class='col-sm-6 input-group date start_time'>
+                    <input type="text" class="form-control" placeholder="开始投注时间" name="start_time">
+                    <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">结束时间</label>
+                <div class='col-sm-6 input-group date end_time'>
+                    <input type="text" class="form-control" placeholder="结束投注时间" name="end_time">
+                    <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开奖时间</label>
+                <div class='col-sm-6 input-group date open_time'>
+                    <input type="text" class="form-control" placeholder="开奖时间" name="open_time">
+                    <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-2">
+                    <button type="button" class="btn btn-primary btn_save">保存</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    $(".add_options").click(function () {
+        var html = '<div class="form-group"><label  class="col-sm-2 control-label"></label>\
+                  <div class="col-sm-3">\
+                  <input type="text" class="form-control input_options" placeholder="问题答案选项" name="options[]">\
+                  </div>\
+                  <div class="col-sm-2">\
+                  <input type="text" class="form-control input_odds text-center" placeholder="赔率" name="odds[]">\
+                  </div>\
+                    <div class="col-sm-1">\
+                      <a href="javascript:;" class="options_dele" style="line-height:34px;">删除</a>\
+                    </div>\
+                  </div>';
+        $(".options").append(html);
+    })
+
+    $(document).on('click', '.options_dele', function () {
+        $(this).closest('.form-group').remove();
+    })
+
+    $('.start_time,.end_time,.open_time').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 0,
+        startDate: new Date(),
+        minView: 0,
+        forceParse: 0,
+    });
+    $(".dropdown-menu li").click(function () {
+        customN = 0;
+        $(".custom").hide();
+        var a_this = $(this).find('a');
+        $("#dropdownMenu1").html(a_this.text() + '<span class="caret"></span>');
+        if (a_this.data('logo') == '自定义') {
+            $(".custom").show();
+            customN = 1;
+            return false;
+        }
+        $("input[name=type]").val(a_this.data('logo'))
+    })
+    // 上传LOGO
+    $('.btn_select_photo').click(function () {
+
+        $('.select_photo').click();
+    });
+    $('.select_photo').localResizeIMG({
+        maxSize: 200,
+        success: function (result) {
+            $('.user_photo').attr('src', result.base64);
+            $.post('{:url("base64Upload")}', {
+                'base64_data': result.base64,
+                'userid': Math.ceil(Math.random() * 1000)
+            }, function (res) {
+                $('input[name=logo]').attr('value', res.data);
+            }, 'json');
+        }
+    });
+
+    $(document).on('click', '.btn_save', function () {
+        var is_go = 1;
+        $('.input_options').each(function (i) {
+            if ($(this).val() == '' || $('.input_odds').eq(i).val() == '') {
+                is_go = 0;
+                $.modal.alert('请完整填写答案选项!');
+                return false
+            }
+        })
+        if (is_go) {
+            $(this).closest('form').submit();
+        }
+    });
+</script> {include file='admin@common/foot' /}

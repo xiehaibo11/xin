@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="TagPayBotton" width="200" height="54" currentState="up" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="down,up" >
+	<e:Rect ellipseWidth="54" anchorOffsetX="0" left="0" right="-39" top="0" bottom="0" fillColor="0x1f2025" fillColor.down="0xd54535" left.up="0" right.up="0" top.up="0" bottom.up="0" ellipseWidth.up="0" left.down="0" right.down="0" top.down="0" bottom.down="0" ellipseWidth.down="0"/>
+	<e:Label id="labelDisplay" text="Label" textAlign="center" left="0" right="0" top="0" bottom="0" verticalAlign="middle" size="26"/>
+</e:Skin>

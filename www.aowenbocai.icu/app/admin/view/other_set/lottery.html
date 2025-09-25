@@ -1,0 +1,238 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+            <li>彩票设置</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">彩票开启</label>
+            <div  class="col-sm-4">
+                <input id="cp-state" type="checkbox" class="switch_check"  name="lottery_status"/>
+            </div>
+        </div>
+		<div class="form-group">
+            <label class="col-sm-2 control-label">网站合买保底</label>
+            <div class="col-sm-3">
+                <input id="bd-state" class="switch_check"  type="checkbox" name="openBd"/>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group startBd" {if condition="$setting['openBd'] eq 0"}style="display:none"{/if}>
+                  <span class="input-group-addon">保底比例</span>
+                  <input type="text" class="form-control Bdpercent" value="{$setting['Bdpercent']}" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                  <span class="input-group-addon">%</span>
+               </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">系统自动出票</label>
+            <div  class="col-sm-4">
+                <input id="auto-state" class="switch_check"  type="checkbox" name="isAuto"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">发起人提成</label>
+            <div  class="col-sm-4">
+                <input id="gain-state" class="switch_check"  type="checkbox" name="isGain"/>
+            </div>
+          </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">开启合买</label>
+            <div  class="col-sm-4">
+                <input id="hemai-state" class="switch_check"  type="checkbox" name="join_isOpen"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">圆角分模式</label>
+            <div  class="col-sm-3">
+                <input id="coin-state" class="switch_check"  type="checkbox" name="unit_isOpen"/>
+            </div>
+            <div class="col-sm-4 mode_unit_group" {if condition="!$setting['unit_isOpen']"} style="display: none;" {/if}>
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="mode_unit_value" value="1" {if condition="in_array(1, $setting['mode_unit_value'])"} checked {/if}> 元
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="mode_unit_value" value="2" {if condition="in_array(2, $setting['mode_unit_value'])"} checked {/if}> 角
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="mode_unit_value" value="3" {if condition="in_array(3, $setting['mode_unit_value'])"} checked {/if}> 分
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="mode_unit_value" value="4" {if condition="in_array(4, $setting['mode_unit_value'])"} checked {/if}> 厘
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">可调节返点</label>
+            <div  class="col-sm-4">
+                <input id="rebate-state" class="switch_check" type="checkbox" name="rebate_isOpen"/>
+            </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">开奖延时</label>
+          <div  class="col-sm-4">
+              <input type="text" class="form-control" placeholder="单位：秒" name="openDaley" value="{$setting['openDaley']}">
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">购彩金额单位名</label>
+          <div  class="col-sm-4">
+              <input type="text" class="form-control" placeholder="单位：元" name="lottery_unit" value="{$setting['lottery_unit']}">
+          </div>
+      </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">模式二最小投注</label>
+            <div  class="col-sm-4">
+                <input type="text" class="form-control" placeholder="模式二最小投注金额" name="mode2_min_money"  value="{$setting['mode2_min_money']}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">最高返点值</label>
+            <div  class="col-sm-4">
+                <input type="text" class="form-control" placeholder="最高返点值" name="rebate_max"  value="{$setting['rebate_max']}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">最多追号期数</label>
+            <div  class="col-sm-4">
+                <input type="text" class="form-control" placeholder="最多追号期数" name="max_chase"  value="{$setting['max_chase']}">
+            </div>
+        </div>
+      <div class="form-group alert alert-success">
+          星星战绩值：一个星星达到转化的最大战绩值(单位是彩豆)
+          </br>
+          战绩之间转换：1个皇冠 = 10个太阳 = 100个月亮 = 1000个星星
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">星星战绩值</label>
+        <div  class="col-sm-4">
+                <input type="text" class="form-control" placeholder="一个星星最大对应的战绩值" name="star_num" onkeyup="value=value.replace(/[^\d]/g,'')" value="{$setting['star_num']}">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary btn_save">保存设置</button>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+$(function(){
+    $('.switch_check').bootstrapSwitch({
+        onText:'开启',
+        offText:'关闭',
+        onColor:'success',
+        offColor:'default',
+        size:'mini'
+    });
+    //网站合买保底 开启 or 关闭
+    var isOpen = '{$setting["openBd"]}'
+    var bdState = isOpen == 1 ? true : false;
+    if(isOpen == 1){
+        $(".startBd").show();
+    }else {
+        $(".startBd").hide();
+    }
+    var bdValue;
+    $('#bd-state').bootstrapSwitch('state', bdState);
+    $('#bd-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        bdValue = state ? '1' : '0';
+        if(state){
+            $(".startBd").show();
+        }else {
+            $(".startBd").hide();
+        }
+    });
+
+    //系统自动出票 开启 or 关闭
+    var autoState = "{$setting['isAuto']}" == 1 ? true : false;
+    var autoValue;
+    $('#auto-state').bootstrapSwitch('state', autoState);
+    $('#auto-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        autoValue = state ? '1' : '0';
+    });
+
+    //发起人提成 开启 or 关闭
+    var gainState = "{$setting['isGain']}" == 1 ? true : false;
+    var gainValue;
+    $('#gain-state').bootstrapSwitch('state', gainState);
+    $('#gain-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        gainValue = state ? '1' : '0';
+    });
+
+    var cpState = "{$setting['lottery_status']}" == 1 ? true : false;
+    var cpValue;
+    $('#cp-state').bootstrapSwitch('state', cpState);
+    $('#cp-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        cpValue = state ? '1' : '0';
+    });
+
+    var joinState = "{$setting['join_isOpen']}" == 1 ? true : false;
+    var joinValue;
+    $('#hemai-state').bootstrapSwitch('state', joinState);
+    $('#hemai-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        joinValue = state ? '1' : '0';
+    });
+
+    var coinState = "{$setting['unit_isOpen']}" == 1 ? true : false;
+    var coinValue;
+    $('#coin-state').bootstrapSwitch('state', coinState);
+    $('#coin-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        coinValue = state ? '1' : '0';
+        if (coinValue == '1') {
+            $('.mode_unit_group').show();
+        } else {
+            $('.mode_unit_group').hide();
+        }
+    });
+
+    var rebateState = "{$setting['rebate_isOpen']}" == 1 ? true : false;
+    var rebateValue;
+    $('#rebate-state').bootstrapSwitch('state', rebateState);
+    $('#rebate-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        rebateValue = state ? '1' : '0';
+    });
+
+    $("[data-toggle='tooltip']").tooltip();
+
+	$('.btn_save').click(function() {
+        var openDaley = parseInt($('input[name=openDaley]').val());
+        if(openDaley < 0){
+            $.modal.alert('开奖延时只能为正数');
+            return;
+        }
+        var mode_unit_value = [];
+        $('input[name=mode_unit_value]:checked').each(function(){
+            mode_unit_value.push($(this).val());
+        });
+      $.post('{:url("set")}', {
+        data: JSON.stringify({
+            openBd : bdValue,
+            isAuto : autoValue,
+            isGain : gainValue,
+            lottery_unit : $('input[name=lottery_unit]').val(),
+            join_isOpen : joinValue,
+            unit_isOpen : coinValue,
+            rebate_isOpen : rebateValue,
+            lottery_status : cpValue,
+            openDaley : openDaley,
+            Bdpercent : $(".Bdpercent").val(),
+            star_num : $("input[name=star_num]").val(),
+            mode_unit_value : mode_unit_value.join(','),
+            mode2_min_money : $("input[name=mode2_min_money]").val(),
+            rebate_max : $("input[name=rebate_max]").val(),
+            max_chase : $("input[name=max_chase]").val()
+        })
+      }, function() {
+        $.modal.alert('修改成功');
+      });
+    });
+})
+</script>
+{include file='common/foot' /}

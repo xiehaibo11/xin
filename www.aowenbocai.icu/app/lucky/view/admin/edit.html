@@ -1,0 +1,78 @@
+{include file='admin@common/head' /}
+
+<style media="screen">
+    .form {
+        margin: 20px;
+        width: 500px;
+    }
+
+    .btn-group {
+        margin-left: 10px;
+        width: 120px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 2px;
+    }
+
+    .dropdown-toggle, .dropdown-menu {
+        min-width: 122px !important;
+    }
+</style>
+<div id="app" class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li><i class="glyphicon glyphicon-link"></i> 超级幸运星</li>
+            <li><a href="{:url('awardRule')}">游戏管理</a></li>
+            <li class="active">修改规则</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+        <form action="" method="post">
+            <input type="hidden" name="id" value="{$data.id}">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">中奖类型</label>
+                <div class="col-sm-3">
+                <input type="text" class="form-control" disabled value="{$data.status_name}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">中奖规则</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" disabled value="{$data.planList}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputPassword1">奖金倍数</label>
+                <div class="col-sm-3">
+                <input name="multiple" type="text" class="form-control" value="{$data.multiple}"
+                       onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="exampleInputPassword1">权重</label>
+                <div class="col-sm-3">
+                    <input name="sp" type="text" class="form-control" value="{$data.sp}"
+                           onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                </div>
+            </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-6">
+            <button class="btn btn-primary btn_save">保存设置</button>
+            <button class="btn btn-default" onclick="history.go(-1)">返回上一页</button>
+                    </div>
+        </form>
+    </div>
+    <script>
+        $(".toPost").click(function () {
+            var multiple = $("input[name=multiple]").val();
+            var sp = $("input[name=sp]").val();
+            var relust = multiple && sp;
+            if (!relust) {
+                $.modal.alert('请认真填写信息');
+                return false;
+            }
+            $('form').submit();
+        })
+    </script>
+    {include file='admin@common/foot' /}

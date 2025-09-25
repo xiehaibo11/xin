@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="NavSkin" width="213" height="352" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect width="202" height="322" anchorOffsetX="0" anchorOffsetY="0" ellipseWidth="20" top="14" fillColor="0x3a5877" horizontalCenter="-0.5"/>
+	<e:Image source="jt_png" x="168" y="7"/>
+	<e:Label id="record_nav" text="游戏记录" y="23" size="30" textColor="0x91d0f7" anchorOffsetX="0" height="60" left="0" right="0" verticalAlign="middle" textAlign="center"/>
+	<e:Rect width="170" height="2" y="88" fillColor="0x5da3cc" horizontalCenter="0.5"/>
+	<e:Label id="task_nav" text="每日任务" y="104" size="30" textColor="0x91D0F7" height="60" left="0" right="0" verticalAlign="middle" textAlign="center"/>
+	<e:Rect width="170" height="2" y="174" horizontalCenter="0.5" fillColor="0x5DA3CC"/>
+	<e:Label id="play_info_nav" text="玩法介绍" y="186" size="30" textColor="0x91D0F7" height="60" left="0" right="0" verticalAlign="middle" textAlign="center"/>
+	<e:Rect width="170" height="2" y="256" horizontalCenter="0.5" fillColor="0x5DA3CC"/>
+	<e:Label id="go_home" text="大厅首页" y="266" size="30" textColor="0x91D0F7" height="60" left="0" right="0" verticalAlign="middle" textAlign="center"/>
+</e:Skin>

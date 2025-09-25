@@ -1,0 +1,30 @@
+{include file='common/head' /}
+<style media="screen">
+    .form{
+      margin:20px;
+      width: 400px;
+    }
+</style>
+<nav class="plugin_nav">
+  <a href="{:url('admin/UserAdmin/index')}">管理员管理</a>
+  <a class="nav_active" href="{:url('admin/UserAdmin/add')}">添加管理员</a>
+</nav>
+<div class="box-padding">
+<div class="breadcrumb">
+  <ol>
+    <li class="active">
+      <i class="glyphicon glyphicon-link"></i> 权限管理
+    </li>
+    <li>添加管理员</li>
+  </ol>
+</div>
+<form class="form" action="{:Request()->baseUrl()}" method="post">
+  <div class="form-group">
+    <label>用户名</label>
+    <input type="text" class="form-control" placeholder="输入用户名" name="username">
+  </div>
+
+  <button type="submit" class="btn btn-default">提交</button>
+</form>
+</div>
+{include file='common/foot' /}

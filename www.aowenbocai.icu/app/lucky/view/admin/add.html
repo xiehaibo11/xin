@@ -1,0 +1,125 @@
+{include file='admin@common/head' /}
+
+<style media="screen">
+    .form{
+      margin:20px;
+      width: 500px;
+    }
+    .btn-group{margin-left: 10px;width: 120px;height: 30px;line-height: 30px;border-radius: 2px;}
+    .dropdown-toggle, .dropdown-menu{min-width: 122px  !important;}
+</style>
+
+<nav class="plugin_nav">
+  <a href="{:url('index')}">物品管理</a>
+  <a  class="nav_active" href="{:url('awardRule')}">中奖规则</a>
+</nav>
+<ol class="breadcrumb">
+       <li><a href="/{$loginName}.php/extend">扩展管理</a></li>
+  <li>中奖规则</li>
+  <li class="active">添加中奖规则</li>
+</ol>
+<div  class="form">
+  {if condition = '$type eq 1'}
+  <div class="form-group">
+    <label>关联普通奖</label>
+    <input type="text" disabled class="form-control" value="{$info.planList}">
+  </div>
+  {/if}
+  <div class="form-group">
+    <label>选择中奖类型</label>
+    <input type="text" disabled class="form-control" value="{if condition = '$type eq 1'}幸运奖{else/}普通奖{/if}">
+  </div>
+  <div class="form-group">
+    <label>选择中奖组合</label>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <span class="oneCSpan">选择第一选项</span> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" id="oneC">
+          {volist name="goods" id = "item"}
+          <li><a  value="{$item.sign}">{$item.name}</a></li>
+          {/volist}
+          <li><a  value="0">其他</a></li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown">
+            <span class="twoCSpan">选择第二选项</span>  <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" id="twoC">
+          {volist name="goods" id = "item"}
+          <li><a  value="{$item.sign}">{$item.name}</a></li>
+          {/volist}
+          <li><a  value="0">其他</a></li>
+        </ul>
+      </div>
+      {if condition = '$type eq 0'}
+      <div class="btn-group threeChoice">
+        <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown">
+            <span  class="threeCSpan">选择第三选项</span>  <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" id="threeC">
+          {volist name="goods" id = "item"}
+          <li><a  value="{$item.sign}">{$item.name}</a></li>
+          {/volist}
+          <li><a  value="0">其他</a></li>
+        </ul>
+      </div>
+      {/if}
+    <div>
+    </div>
+  </div>
+  <input type="hidden" class="threeC">
+  <input type="hidden" class="twoC">
+  <input type="hidden" class="oneC">
+  
+  <div class="form-group">
+      <label for="exampleInputPassword1">奖金倍数</label>
+      <input name="multiple" type="text" class="form-control" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+  </div>
+  {if condition = '$type eq 1'}
+  <div class="form-group">
+    <label for="exampleInputPassword1">权重</label>
+    <div class=" input-group">
+      <input name="sp" type="text" class="form-control" onkeyup="value=value.replace(/[^\d\.]/g,'')"><span class="input-group-addon"></span>
+    </div>
+  </div>
+  {/if}
+  <button class="btn btn-default toPost">提交</button>
+  <button class="btn btn-default" onclick="history.go(-1)">返回上一页</button>
+ 
+  {if condition = '$type eq 0'}
+   <span style="color:red;font-size:12px"> （请在中奖规则点击修改中奖率设置<b style="color:green;font-size:14px"> 中奖率 </b>及<b style="color:green;font-size:14px"> 排序 </b>）</span> 
+  {/if}
+</div>
+<script>
+  $("#threeC li,#twoC li,#oneC li").click(function(){
+    var _this = $(this);
+    var athis = _this.find('a');
+    var name = _this.parent().attr('id');
+    var classname = name+'Span';
+    var value = athis.attr('value');
+    var text = athis.text();
+    $("."+name).val(value)
+    $("."+classname).text(text)
+  })
+
+$(".toPost").click(function(){
+  var type = {$type};
+  var one = $(".oneC").val();
+  var two = $(".twoC").val();
+  var three = $(".threeC").val();
+  var multiple = $("input[name=multiple]").val();
+  var sp = $("input[name=sp]").val();
+  var pid = {$pid};
+  var relust = one && two && multiple;
+  if((type == 1 && !relust  && sp) || (type == 0 && !(relust && three))){
+    $.modal.alert('请认真填写信息');
+    return false;
+  }
+  $.post('{:url()}',{type: type,one: one,two: two,three: three,multiple: multiple,sp: sp,pid: pid},function(res){
+    $.modal.alert(res.msg)
+  })
+})
+</script>
+{include file='admin@common/foot' /}

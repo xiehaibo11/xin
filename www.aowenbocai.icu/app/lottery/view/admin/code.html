@@ -1,0 +1,180 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+    .form-group{
+        margin-bottom: 0;
+    }
+
+</style>
+<div id="app" class="box-padding">
+    <div class="form-group" style="margin-bottom:20px;">
+        <div class="fl btn-group">
+            <a href="#" data-url="{:url('codeDayDelete')}?day=30" class="btn btn-primary isAlldelete">清除30天前记录</a>
+            <a href="#" data-url="{:url('codeDayDelete')}?day=15" class="btn btn-primary isAlldelete">清除15天前记录</a>
+            <a href="#" data-url="{:url('codeDayDelete')}?day=7" class="btn btn-primary isAlldelete">清除7天前记录</a>
+            <a href="#" data-url="{:url('codeDayDelete')}?day=3" class="btn btn-primary isAlldelete">清除3天前记录</a>
+            <a href="#" data-url="{:url('codeDayDelete')}?day=1" class="btn btn-primary isAlldelete">全部清除</a>
+        </div>
+        <label class="radio-inline fl" style="margin-top:8px;">
+            <input type="checkbox" id="is_all_lottery"> 全部彩种
+        </label>
+        <div class="clear"></div>
+    </div>
+    <div class="breadcrumb">
+        <div class="form-group form-group-left fl" >
+            <label>选择彩种:</label>
+            <div class="dropdown" style="display:inline-block">
+                <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">{$lotteryName}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    {volist name="$extList" id="item"}
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1"{neq name="$item" value="$lotteryName"} href="{:url('code', ['name'=>trim($key, '/')])}" {/neq}>{$item}</a>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+        <div class="form-group form-group-left fl" >
+            <a href="{:url('addCode', ['name'=> $name])}" class="btn btn-danger" role="button"><i class="glyphicon glyphicon-plus"></i> 添加开奖号码</a>
+             <a href="javascript:;" class="btn btn-success ismissing" role="button" data-url="{:url('reCountMiss',  ['name' => $name])}">重新统计遗漏</a>
+        </div>
+        <div class="search fr">
+            <form class="form-inline" id="search">
+                <div class="form-group form-group-left">
+                    <label>期号:</label>
+                    <input type="text" name="expect" class="form-control"{present name="$query.expect"} value="{$query.expect}"{/present} placeholder="期号">
+                </div>
+                <div class="form-group form-group-left">
+                    <label>时间</label>
+                    <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                        <input type='text' class="form-control" name="starttime" {present name="$query.starttime"}value="{$query.starttime}" {/present}/>
+                        <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+                    </div>
+                    <label>到</label>
+                    <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                        <input type='text' class="form-control" name="endtime" {present name="$query.endtime"} value="{$query.endtime}"{/present}/>
+                        <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default form-group-left btn-sm">搜索</button>
+            </form>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>期号</th>
+            <th>开奖号码</th>
+            <th>开奖时间</th>
+            <th width="240" class="tc">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="$list" id="item"}
+        <tr>
+            <td>{$item.id}</td>
+            <td>{$item.expect}</td>
+            <td>{$item.code}</td>
+            <td>{$item.create_time}</td>
+            <td class="tc">
+                <div class="btn-group" role="group" aria-label="...">
+                    <!-- <a href="#" class="btn btn-primary btn-xs show_send" data-id="{$item.id}"
+                       data-expect="{$item.expect}">统计</a> -->
+                    <a data-url ="{:url('award')}" data-id = "{$item.id}" data-name = "{$name}" class="btn btn-primary btn-sm sendAward">派奖</a>
+                    <a href="{:url('editCode', ['name'=>$name, 'id'=>$item.id])}" class="btn btn-success btn-sm">修改</a>
+                    <a class="btn btn-default isdelete btn-sm" data-url="{:url('codeDelete')}" data-num="{$key+1}" data-id = "{$item.id}" data-name = "{$name}" >删除</a>
+                </div>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div class="tr">
+        {$list->render()}
+    </div>
+</div>
+
+{include file='admin@common/foot' /}
+<script>
+    $(function () {
+        $(".sendAward").click(function(){
+            var _this = $(this);
+            var e = $.modal.confirm('你是否确定对该期进行派奖', function () {
+                $.get(_this.data("url"), {id: _this.data('id'), name: _this.data('name')}, function(res){
+                  e.close();
+                  $.modal.alert(res.msg);
+                })
+            });
+        })
+        $('.isdelete').click(function () {
+            var _this = $(this);
+            var e = $.modal.confirm('你确定删除吗？', function () {
+                $.post(_this.data("url"), {id: _this.data('id'), name: _this.data('name')}, function(res){
+                    e.close();
+                    $.modal.alert(res.msg);
+                    if(!res.err){
+                        var num = _this.data('num');
+                        $(".table").find('tr').eq(num).hide ();
+                    }
+                })
+            });
+        });
+        $('.isAlldelete').click(function () {
+            var _this = $(this);
+            var is_all = $('#is_all_lottery').is(":checked") ? 1 : 0;
+            var msg = is_all ? '你确定删除<font style="color: red;">全部彩种</font>的开奖号码吗？' : '你确定删除<font style="color: red;">{$lotteryName}</font>的开奖号码吗？';
+            $.modal.confirm(msg, function () {
+                location.href = _this.data("url") + '&name={$name}&is_all=' + is_all;
+            });
+        });
+
+        $('.ismissing').click(function () {
+            var _url = $(this).data("url");
+            $.modal.confirm('确认重新统计遗漏吗？', function () {
+                location.href = _url;
+            });
+        });
+        $('.show_send').click(function () {
+            var expect = $(this).data('expect');
+            var id = $(this).data('id');
+            $.ajax({
+                url: '{:Url("codeSendTotal")}',
+                type: 'post',
+                dataType: "json",
+                data: {id: id},
+                success: function (data) {
+                    $.modal({
+                        title: '第' + expect + '期发奖明细',
+                        html: '<p><i>期数：</i>' + expect + '</p>\
+                        <p><i>投注数量：</i>' + data.send_num + '</p>\
+                        <p><i>未验证数量：</i>' + data.no_send_num + '</p>\
+                        <p><i>已验证数量：</i>' + (data.send_num - data.no_send_num) + '</p>\
+                        <p><i>已发奖金额：</i>' + data.bonus_count + '</p>',
+                        closeBtnText: '确认'
+                    });
+                }
+            });
+
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>

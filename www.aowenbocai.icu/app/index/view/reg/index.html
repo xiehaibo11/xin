@@ -1,0 +1,338 @@
+{include file='common@common/head' /}
+<script src="/static/vue-component/kr-agreement.js"></script>
+<style>
+  html{
+    background: url("/static/images/login_bg.jpg") no-repeat top center;
+    background-size: cover;
+    height: 100%;
+    /*background-color: #12243c;*/
+    position: relative;
+  }
+  input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #b4b4b4;
+  }
+  input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #b4b4b4;
+  }
+  input:-ms-input-placeholder{
+    color: #b4b4b4;
+  }
+  input::-webkit-input-placeholder{
+    color: #b4b4b4;
+  }
+  .reg-box{padding: 1rem .75rem 0;}
+  .reg-input input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+    border: 1px solid #fff !important;
+    border-top-right-radius: 1.0rem;
+    border-bottom-right-radius: 1.0rem;
+  }
+  .item-line {
+    height: 2.0rem;
+    position: relative;
+    display: flex;
+    line-height: 2.0rem;
+    background: rgba(255, 255, 255, 0.11);
+    border-radius: 1.0rem;
+    margin-top: 0.5rem;
+    border: 1px solid #6765a5;
+    box-shadow: 0 0 3px #8585b9;
+  }
+  .input.input-lg {
+    line-height: 1.9rem;
+    font-size: 0.75rem;
+    background:none;
+    resize: none;
+    color: #fff;
+    display: flex;
+  }
+  .item-line{padding: 0}
+  .item-line:after{
+    background: none;
+  }
+  .item-line.item-lg{line-height: 2.0rem}
+  .reg-input i{
+    padding: 0 0.2rem 0 .5rem;
+    font-size: .8rem;
+    color: #FFFFff;
+    border-right: 1px solid #60608c;
+    height: 1.0rem;
+    line-height: 1.0rem;
+    margin: .5rem 0.2rem;
+  }
+  .text-center {
+    text-align: center;
+    color: #666;
+    font-size: .7rem;
+  }
+  .input-lg{font-size: 0.8rem;}
+  button.btn-reg{
+    color: #FFF;
+    background: #d1564e;
+    border: none;
+    line-height: 2.0rem;
+    font-size: 0.9rem;
+    width: 100%;
+    margin: 8px auto 15px;
+    height: 2.0rem;
+    display: block;
+    border-radius: 1.0rem;
+    transition: all .2s;
+    position: relative;
+  }
+  .col{color: #9094b9;font-size: 0.7rem;text-align: center;}
+  .btn-yzm{
+    width: 14rem;
+    line-height: 1.5rem;
+    height: 1.5rem;
+    margin: .2rem 0.5rem .2rem 0;
+    background-color: #0894ec;
+    padding: 0 0.2rem;
+    font-size: .65rem;
+    padding: 0;
+    text-align: center;
+    border-radius: 0.2rem;
+    text-align: center;
+    color: #ffffff;
+  }
+  .icon-gou{
+    opacity:0;
+    transition: all .25s;
+    display: inline-block;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    margin-left: -10.5px;
+    margin-top: -.2rem;
+  }
+  .modal.modal-msg{
+    position: absolute;
+    top: 1.2rem;
+    width: 100%;
+    height: 2.0rem;
+    background-color: #0894ec;
+    color: #fffcfc;
+    display: inline-block;
+    line-height: 2.0rem;
+    border:none;
+  }
+  .other-login{
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    color: #fff;
+    text-align: center;
+    width: 100%;
+  }
+  .other-login-tit{padding: .8rem;color: #8a8aab;font-size: .8rem}
+  .other-login-icon{justify-content: center;}
+  .other-login-icon a{margin: 0 .5rem}
+</style>
+
+<header class="header">
+  <div class="header-nav">
+    <a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);" data-no-cache="true"><i class="icon-svg icon_left"></i></a>
+  </div>
+  <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="reg-box" v-cloak>
+  <div v-if = "reg_tel">
+    <div class="reg-input">
+      <div class="item-line item-lg">
+        <i class="iconfont icon-icon-copy"></i>
+        <input type="tel" class="input input-line input-lg" placeholder="手机号码" v-model = "tel">
+        <span @click = "sendSms" class="btn-yzm">{{btntext}}{{btnmsg}}</span>
+      </div>
+      <div class="item-line item-lg">
+        <i class="iconfont icon-yanzhengma"></i>
+        <input type="text" class="input input-line input-lg" placeholder="输入验证码" v-model = "yzm">
+      </div>
+    </div>
+    <div class="agree"><input type="checkbox" v-model="regAgreeTel">我已仔细阅读并同意《<kr-agreement id="22" title="注册协议"></kr-agreement>》</div>
+    <div><button class="btn btn-fill btn-lg btn-reg" v-on:click='reguser'> 注册</button></div>
+  </div>
+  <div v-if = 'reg_name'>
+      <div class="reg-input">
+        <div class="item-line item-lg">
+          <i class="iconfont icon-yonghuming"></i>
+          <input type="text" class="input input-line input-lg" placeholder="用户名" v-model="username">
+        </div>
+        <div class="item-line item-lg">
+          <i class="iconfont icon-mima11"></i>
+          <input type="password" class="input input-line input-lg" placeholder="登陆密码" v-model="password">
+        </div>
+        <div class="item-line item-lg">
+          <i class="iconfont icon-mima11"></i>
+          <input type="password" class="input input-line input-lg" placeholder="重复密码" v-model="password2">
+        </div>
+        <div class="item-line item-lg" >
+          <i class="iconfont icon-icon-copy"></i>
+          <input type="tel" class="input input-line input-lg" placeholder="手机号码">
+        </div>
+      </div>
+      <div class="agree"><input type="checkbox" v-model="regAgree">我已仔细阅读并同意《<kr-agreement id="22" title="注册协议"></kr-agreement>》</div>
+      <div><button class="btn btn-fill btn-lg btn-reg" v-on:click='reguser_name'> 注册</button></div>
+    </div>
+    <div class="col" style="margin-bottom:5px">
+      <a  v-if="tel_open && reg_name"  v-on:click="changeway('tel')">使用手机号注册</a>
+      <a v-if='name_open && reg_tel' v-on:click="changeway('name')">使用用户名注册</a>
+    </div>
+    <div class="col">已有账号？<a href="/index/login/">去登陆</a></div>
+    <div class="other-login" v-if="qq_open">
+      <div class="other-login-tit">--------使用QQ账号注册--------</div>
+      <div class="text-center flex-box other-login-icon">
+        <a :href="qqlink"><i class="iconfont icon-QQ" style="font-size:2.2rem;"></i></a>
+      </div>
+    </div>
+</div>
+{include file='common@common/foot' /}
+<script>
+    $(function () {
+        var h=$(window).height();
+        $('html').css('height',h+'px');
+        $("#reg").formAjax({
+            callback: function (data) {
+                $.msg(data.msg);
+                if (data.code) {
+                    setTimeout(function () {
+                      location.href  = "/index/user/setNickname";
+                    }, 2000);
+                }
+            }
+        });
+        var vue = new Vue({
+          el : '#app',
+          data : {
+              countDown : 120,
+              tel :'',
+              btnmsg : '',
+              btntext :'发送验证码',
+              yzm:'',
+              reg_tel: 0,
+              reg_name : 0,
+              tel_open: 0,
+              qq_open: 0,
+              name_open : 0,
+              username : '',
+              password : '',
+              password2:'',
+              link:"{$link}",
+              qqlink :'/index/Qqlogin/toLogin',
+              regAgree:false,
+              regAgreeTel:false
+          },
+          created : function(){
+            var _this = this;
+            this.qqlink = this.link != '' ?　'/index/Qqlogin/toLogin/type/0/link/'+this.link :　this.qqlink;
+            $.get('/index/reg/getType',function(res){
+              if(res.is_reg == 0) {
+                $.alert('本站未开启注册功能');
+                setTimeout(function () {
+                    location.href = "/index/Login";
+                }, 2000);
+                return false;
+              }
+              if(res.data.reg_way.common){
+                  _this.name_open = 1;
+                  _this.reg_name = 1;
+              }
+              if(res.data.reg_way.tel){
+                  _this.tel_open = 1;
+                  _this.reg_tel = 1;
+              }
+              if(res.data.reg_way.common && res.data.reg_way.tel){
+                  _this.reg_name = 0;
+                  _this.reg_tel = 1;
+              }
+              if(res.data.reg_way.qq){
+                  _this.qq_open = 1;
+              }
+            })
+          },
+          methods : {
+            sendSms : function(){
+              var _this = this;
+              var reg = /^1[3|4|5|7|8][0-9]{9}$/;
+              if(!reg.test(_this.tel)){
+                $.alert('手机号格式不正确，请输入正确的手机号');
+                return false;
+              }
+              if (_this.countDown != 120){
+                return false;
+              }
+              $.get('/index/reg/sendsms',{tel: _this.tel},function(res){
+                if(res.err == 0){
+                  _this.btntext = '消息已发送';
+                  _this.btnmsg = "("+_this.countDown+")";
+                  var interval = setInterval(function(){
+                      _this.countDown = _this.countDown - 1;
+                      if(_this.countDown == 0){
+                          _this.btntext = '发送验证码';
+                          _this.btnmsg = "";
+                          _this.countDown = 120;
+                          clearInterval(interval);
+                          return;
+                      }
+                      _this.btnmsg = "(" + _this.countDown + ")";
+                  },1000);
+                }else{
+                  $.msg(res.msg[0]);
+                }
+              });
+            },
+            reguser : function(){
+              var _this = this;
+              if(!_this.yzm){
+                $.alert("请输入验证码");
+                return false;
+              }
+              if(!_this.regAgreeTel){
+                  $.alert("请仔细阅读相关协议");
+                  return false;
+              }
+              $.post('/index/reg/reg',{tel: _this.tel, yzm: _this.yzm},function(res){
+                $.msg(res.msg);
+                if (res.err == 0) {
+                    setTimeout(function () {
+                        location.href = "/index/user/setNickname";
+                    }, 2000);
+                }
+              });
+            },
+            reguser_name : function(){
+              var _this = this;
+              var data = {
+                  'username' : _this.username,
+                  'password' : _this.password,
+                  'password2' : _this.password2,
+                  'link' : _this.link
+              }
+              if(!_this.regAgree){
+                  $.alert("请仔细阅读相关协议");
+                  return false;
+              }
+              $.post('/index/reg/reg_before',data,function(res){
+                $.msg(res.msg);
+                if (res.err == 0) {
+                    setTimeout(function () {
+                        location.href = "/index/user/setNickname";
+                    }, 2000);
+                }
+              });
+            },
+             //切换注册方式
+             changeway : function(way){
+                var _this = this;
+                if(way == 'name'){
+                  _this.reg_name = 1;
+                  _this.reg_tel = 0;
+                }else{
+                  _this.reg_name = 0;
+                  _this.reg_tel = 1;
+                }
+            }
+          }
+        })
+    });
+</script>

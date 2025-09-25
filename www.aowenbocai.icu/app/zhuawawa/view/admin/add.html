@@ -1,0 +1,46 @@
+{include file='admin@common/head' /}
+<script src="__STATIC__/wangeditor/wangEditor.min.js"></script>
+<style>
+	.box-padding {
+		padding: 20px;
+	}
+	.btn_nav{
+		float:right;
+		margin-left: 50px;
+	}
+	.mex {
+		max-width: 700px;
+	}
+</style>
+<ol class="breadcrumb">
+	<li class="">扩展管理</li>
+	<li class="">新闻资讯</li>
+	<li class="active">添加</li>
+</ol>
+<div class="box-padding mex">
+	<form class="form" action="/news/admin/add" method="post">
+	<div class="form-group">
+	  <label>标题</label>
+	  <input type="text" class="form-control" placeholder="输入密码" name="title">
+	</div>
+	<input type="hidden" id="cont" name="content">
+	  <div class="form-group">
+	    <label>内容</label>
+		<div id="div1"></div>
+	  </div>
+	  <button type="submit" class="btn btn-default btn-block">提交</button>
+	</form>
+</div>
+<script type="text/javascript">
+    var E = window.wangEditor
+    var editor = new E('#div1')
+    editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+    editor.create()
+
+	$('.form').submit(function() {
+		$('#cont').val(editor.txt.html());
+		console.log(editor.txt.html());
+		//return false;
+	});
+</script>
+{include file='admin@common/foot' /}

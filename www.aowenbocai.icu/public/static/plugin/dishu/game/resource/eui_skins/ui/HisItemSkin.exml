@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HisItemSkin" width="528" height="81" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image id="shu_img" source="shu_json.shu003" x="27" y="5" anchorOffsetX="0" width="77.91" anchorOffsetY="0" height="73"/>
+	<e:Label id="shu_name" text="萌萌鼠" y="14" size="22" left="124"/>
+	<e:Image y="40.86" anchorOffsetX="0" width="40.91" anchorOffsetY="0" height="32.14" left="124" source="chuizi_png"/>
+	<e:Label id="t_num" text="100t" y="44.86" left="170" size="26"/>
+	<e:Label id="hit_str" text="击晕" y="14" size="26" right="26" textColor="0xff5000"/>
+	<e:Label id="bouns" text="" y="45.86" size="22" right="26"/>
+	<e:Rect height="1" bottom="0" left="0" right="0" fillColor="0xffffff" fillAlpha="0.2"/>
+	<e:Rect height="1" left="0" right="0" bottom="1" fillAlpha="0.2"/>
+</e:Skin>

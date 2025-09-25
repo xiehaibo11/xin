@@ -1,0 +1,79 @@
+{include file='admin@common/head' /}
+<link rel="stylesheet" href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<nav class="plugin_nav">
+	<a class="nav_active" href="#">下注管理</a>
+	<a href="#">开奖管理</a>
+</nav>
+	  
+<ol class="breadcrumb">
+         <li><a href="/{$loginName}.php/extend">扩展管理</a></li>
+    <li class="active">下注管理</li>
+</ol>
+<div class="box-padding">
+
+	<form class="form-inline" action="">
+		<div class="form-group">
+			时间
+			<input type="text" name="starttime" class="form-control form_datetime" placeholder="开始时间" data-date-format="yyyy-mm-dd">
+		</div>
+		<div class="form-group">
+			到
+			<input type="text" name="endtime" class="form-control form_datetime" placeholder="结束时间" data-date-format="yyyy-mm-dd">
+		</div>
+		<div class="form-group">
+			- 关键字
+			<input type="text" name="words" class="form-control" value="{$query.words}" placeholder="关键字/用户名/操作/IP/地址">
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+	</form>
+</div>
+
+<div class="box-padding">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>用户ID</th>
+				<th>期号</th>
+				<th>合买</th>
+				<th>总份数</th>
+				<th>保底</th>
+				<th>提成</th>
+				<th>发起时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $list as $item}
+			<tr>
+				<td>{$item.userid}</td>
+				<td>{$item.issue}</td>
+				<td>{$item.is_join}</td>
+				<td>{$item.total}</td>
+				<td>{$item.assure}</td>
+				<td>{$item.gain}</td>
+				<td>{$item.create_time}</td>
+				<td>
+					<div class="btn-group" role="group" aria-label="...">
+						<a class="btn btn-primary btn-xs btn_install" href="{:url('edit', ['id' => $item.id])}">参与人</a>
+						<a class="btn btn-primary btn-xs btn_install" href="{:url('/app/pk10/view', ['id' => $item.id])}">查看</a>
+						<button class="btn btn-danger btn-xs remove" data-href="{:url('remove', ['id' => $item.id])}">删除</button>
+					</div>
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+	{$list->render()}
+</div>
+<script>
+	$('.remove').click(function() {
+		var href = $(this).data('href');
+
+		$.modal.confirm('你是否确定删除', ()=>{
+			location.href = href;
+		});
+	});
+</script>
+{include file='admin@common/foot' /}

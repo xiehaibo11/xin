@@ -1,0 +1,9 @@
+.publish-article-content .footer-btn .upload-img {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 1.2rem;
+  height: 1rem;
+  margin-right: .5rem;
+  background: url(../images/img.png) 0 no-repeat;
+  background-size: contain;
+}

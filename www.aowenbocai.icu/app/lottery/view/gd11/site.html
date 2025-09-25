@@ -1,0 +1,79 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+  <a href="{:url('index')}">奖金设置</a>
+  <a class="nav_active" >信息配置</a>
+</nav>
+<div class="box-padding">
+<ol class="breadcrumb">
+       <li><a href="/{$loginName}.php/extend">扩展管理</a></li>
+  <li class="active">信息配置</li>
+</ol>
+<style>
+  .form-group  a:hover{text-decoration:none}
+ 
+</style>
+<div class="box-padding">
+    <div class="form-horizontal form_max">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">每日期数</label>
+        <div class="col-sm-4">
+          <a class="tooltip-test" data-toggle="tooltip" title="每天的总期数">
+          <input type="text" class="form-control" disabled  placeholder="178" name="startIssue" value="{$list.startIssue}">
+          </a>
+        </div>
+        
+        <label for="inputEmail3" class="col-sm-2 control-label">起售时间</label>
+        <div class="col-sm-4">
+          <a class="tooltip-test" data-toggle="tooltip" title="每日第一期开售时间">
+          <input type="text" class="form-control" disabled placeholder="09:02" name="startTime" value="{$list.startTime}">
+          </a>
+        </div>
+      </div>
+      <div class="form-group">
+        
+        <label for="inputEmail3" class="col-sm-2 control-label">结束时间</label>
+        <div class="col-sm-4">
+          <a class="tooltip-test" data-toggle="tooltip" title="每日最后一期结束时间.若结束时间在第二天，在时间后+1,例：02:00+1">
+          <input type="text" disabled class="form-control" placeholder="23:57" name="endTime" value="{$list.endTime}">
+          </a>
+        </div>
+        
+        <label for="inputEmail3" class="col-sm-2 control-label">投注时长</label>
+        <div class="col-sm-4">
+          <a class="tooltip-test" data-toggle="tooltip" title="多少分钟一期，单位分钟">
+          <input type="text" disabled class="form-control" placeholder="5" name="timelong" value="{$list.timelong}">
+          </a>
+        </div>
+      </div>
+
+      <div class="form-group">
+        
+        <label for="inputEmail3" class="col-sm-2 control-label">开售延时</label>
+        <div class="col-sm-4">
+          <a class="tooltip-test" data-toggle="tooltip" title="将整体售卖时间提前或延后（正数：提前，负数：延后）">
+          <input type="text" class="form-control" placeholder="23:57" name="delay" value="{$list.delay}">
+          </a>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10"><button type="submit" class="btn btn-default">保存</button></div>
+      </div>
+    </div>
+</div>
+</div>
+<script>
+  $("[data-toggle='tooltip']").tooltip();
+  $(".btn").click(function(){
+    $.post('{:url("site")}', {
+          // 'startIssue': $("input[name=startIssue]").val(),
+          // 'startTime': $("input[name=startTime]").val(),
+          // 'endTime': $("input[name=endTime]").val(),
+          // 'timelong': $("input[name=timelong]").val(),
+          'delay': $("input[name=delay]").val()
+    },function(res){
+        $.modal.alert(res.msg)
+    })
+  })
+ </script>
+{include file='admin@common/foot' /}

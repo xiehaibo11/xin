@@ -1,0 +1,120 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<style>
+    .ext_head:after{
+        background: none;
+    }
+    .flower_img img{margin-left: .4rem}
+    .user_bag {
+        flex-wrap:wrap;
+    }
+    .user_bag .item {
+        width:21%;
+        height:4rem;
+        margin-left:3.2%;
+        margin-top:3.2%;
+        background: url("/static/images/bag_bg.png")  center no-repeat;
+        background-size: contain;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        position: relative;
+    }
+    .user_bag .item img {
+        height:100%;
+        vertical-align: middle;
+    }
+    .user_bag .item section {
+        position: absolute;
+        bottom:0;
+        left:0;
+        color:#fff;
+        width:100%;
+        text-align: center;
+
+    }
+    .user_bag .item p {
+        line-height:0.8rem;
+        text-align: center;
+        border-radius: 0.4rem;
+        background: rgba(0,0,0,0.5);
+        text-shadow: 1px 1px 1px #333;
+        padding:0 0.5rem;
+        display: inline-block;
+    }
+    .user_bag .item p font {
+        margin-left:1px;
+    }
+</style>
+<header class="header">
+    <a class="header-nav" href="/index/user">
+        <i class="icon-svg icon_left"></i>
+    </a>
+    <div class="header-center">我的背包</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <div class="user_bag flex-box">
+        <list-group v-for="item in list" v-bind:item="item" v-bind:key="item.id"></list-group>
+
+    </div>
+</div>
+<template id="list-atom">
+    <div>
+        <div class="card-header">
+            <div class="c_coin flex-box">
+                <span class="datetime">{{item.create_time}}</span>
+                <span class="flex" :class="{'coin_g':item.money > 0}" style="text-align: right"><em v-if="item.money > 0">+</em>{{item.money}}</span>
+                <span class="flower_img"><img width="30" src="/static/images/index/common_flower.png" alt=""></span>
+            </div>
+        </div>
+        <div class="card-content">
+            {{item.remark}}
+        </div>
+    </div>
+</template>
+<template id="list-group">
+    <div class="item" v-on:click="show_info"><img :src="item.pic" alt=""><section><p>x<font>{{item.num}}</font></p></section></div>
+</template>
+<script>
+    $(function () {
+
+        Vue.component('list-group', {
+            props: ['item'],
+            template: '#list-group',
+            methods: {
+                show_info:function () {
+                    var _this = this;
+                    Zepto.modal({
+                        content: '<div class="text-left"><h3 style="color:rgb(249, 227, 125); line-height:1.5rem;">' + _this.item.name + '</h3><p style="line-height:1.2rem; opacity: 0.8;">' + _this.item.desc + '</p></div>',
+                        btn: [
+                            function($btn) {
+                                $btn.text('取消');
+                            },
+                            function($btn) {
+                                $btn.html('<a href="' + _this.item.url + '" style="color:rgb(249, 227, 125);">去使用</a>');
+                            }
+                        ]
+                    });
+                }
+            }
+        })
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: {}
+            },
+            created: function () {
+                $('#app').removeClass('app_init');
+                var _this = this;
+                $.post('{:Url("getBagList")}',function (res) {
+                    _this.$set(_this, 'list', res);
+                })
+            }
+        });
+    });
+</script>
+{include file='common@common/foot' /}

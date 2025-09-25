@@ -1,0 +1,95 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/summernote/summernote.css?v=2" rel="stylesheet">
+<script src="__STATIC__/summernote/summernote.min.js?v=2"></script>
+<script src="__STATIC__/summernote/summernote-zh-CN.js?v=2"></script>
+<style>
+	.form-group .dropdown-toggle {
+		padding:5px 10px !important;
+	}
+</style>
+<style>
+	.box-padding {
+		padding: 20px;
+	}
+	.btn_nav{
+		float:right;
+		margin-left: 50px;
+	}
+	.mex {
+		max-width: 700px;
+	}
+</style>
+<nav class="plugin_nav">
+	<a class="nav_active" href="{:url('index')}">文章管理</a>
+	<a href="{:url('nav')}">栏目管理</a>
+</nav>
+<div class="box-padding">
+	<ol class="breadcrumb">
+		<li class=""><i class="glyphicon glyphicon-link"></i> 扩展管理</li>
+		<li class="">新闻资讯</li>
+		<li class="active">修改内容</li>
+	</ol>
+	<form class="form" action="/news/admin/add" method="post">
+	<div class="form-group">
+	  <label>标题</label>
+	  <input type="text" class="form-control" placeholder="输入标题" name="title">
+	</div>
+	<div class="form-group">
+			<label>所属栏目</label>
+			<select class="form-control" name="nav_id" onchange="changeNavId()" id="nav_id">
+				
+					{foreach $nav_list as $item}
+						<option value="{$item.id}">{$item.title}</option>
+					{/foreach}
+			</select>
+		</div>
+	  <div class="form-group">
+	    <label>内容<span class="notice" style="color:red;font-size:12px;margin-left:10px">在选择网站协议时，内容中包含网站名及平台名时请用<b style="color:green">**company**</b>代替</span></label>
+	  	<textarea name="content" class="content"></textarea>
+	  </div>
+	  <button type="submit" class="btn btn-lg btn-primary btn-block">添加</button>
+	</form>
+</div>
+<script type="text/javascript">
+    //富文本发送图片
+    function sendFile(Url,file,callback) {
+        var filename = false;
+        try{
+            filename = file['name'];
+        } catch(e){filename = false;}
+        if(!filename){$(".note-alarm").remove();}
+        data = new FormData();
+        data.append("file", file);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: Url,//路径是你控制器中上传图片的方法，下面controller里面我会写到
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(url) {
+                callback(url);
+            }
+        });
+    }
+    $(document).ready(function() {
+        $(".content").each(function(){
+            var _this = $(this);
+            _this.summernote({
+                lang: "zh-CN",
+                height: 350,
+                callbacks: {
+                    //调用图片上传
+                    onImageUpload: function (files) {
+                        sendFile("{:Url('editor_upload')}?dir=news", files[0], function(data){
+                            _this.summernote('insertImage',data,'img');
+                        });
+                    }
+                }
+            })
+        })
+    });
+
+
+</script>
+{include file='admin@common/foot' /}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="rankSkin" width="640" height="717.33" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group left="0" right="0" top="0" bottom="1.330000000000041" anchorOffsetY="0">
+		<e:Rect width="582" height="657.33" x="29" y="44.7" anchorOffsetX="0" anchorOffsetY="0" fillColor="0x26323e" ellipseWidth="30" ellipseHeight="30" strokeAlpha="1" strokeWeight="2" strokeColor="0x3a5977"/>
+		<e:Rect width="310" height="80" x="164" y="5.9" rotation="0" anchorOffsetX="0" anchorOffsetY="0" ellipseWidth="100" ellipseHeight="0" fillColor="0x26a7da" strokeWeight="4" strokeColor="0x63ccf5"/>
+		<e:Image source="zoo_sheet2_json.zoo_sheet2004" x="209.96" y="35.57"/>
+		<e:Image source="zoo_sheet2_json.zoo_sheet2004" x="409.96" y="35.57"/>
+		<e:Label text="近期大奖" x="259" y="31.48"/>
+		<e:Rect height="44.24" y="105.09" anchorOffsetY="0" anchorOffsetX="0" width="580" horizontalCenter="0" fillColor="0x115f8f"/>
+		<e:Label text="玩 家" x="31.57" y="117.25" size="22" width="233.33" textAlign="center" anchorOffsetX="0"/>
+		<e:Label text="消耗法力值" x="342.2" y="116.88" size="22" width="143.33" textAlign="left" anchorOffsetX="0"/>
+		<e:Label text="获得奖励" x="461.6" y="117.25" size="22" width="146.67" textAlign="center" anchorOffsetX="0"/>
+		<e:Button id="close_btn" label="X" x="569.59" y="20.9" skinName="skins.CloseButtonSkin"/>
+		<e:Group id="article_box" height="541.33" y="152.41" width="580" horizontalCenter="0" anchorOffsetY="0"/>
+	</e:Group>
+</e:Skin>

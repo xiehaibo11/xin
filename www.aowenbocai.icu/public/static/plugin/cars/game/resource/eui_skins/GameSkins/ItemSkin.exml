@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ItemSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="up,down,disabled" >
+	<e:Image source="bet_json.bet24" horizontalCenter="0" verticalCenter="0" alpha.down="2"/>
+	<e:Label id="txt" text="100" left="8" right="8" top="10" bottom="5" verticalAlign="middle" textAlign="center" textColor="0x3099e8" alpha.down="2"/>
+</e:Skin>

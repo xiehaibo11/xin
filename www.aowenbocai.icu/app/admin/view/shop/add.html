@@ -1,0 +1,102 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<style media="screen">
+    .form{
+      margin:20px;
+      width: 400px;
+    }
+  .form textarea{
+    width: 100%;
+    height: 7rem;
+  }
+</style>
+<nav class="plugin_nav">
+  <a href="{:url('admin/Shop/index')}">商品管理</a>
+  <a href="{:url('admin/ShopOrder/index')}">订单管理</a>
+  <a href="{:url('admin/shop/shopNav')}">分类管理</a>
+  <a class="nav_active" href="{:url('admin/shop/add')}">添加商品</a>
+</nav>
+<div id="app" class="box-padding">
+  <div class="breadcrumb">
+    <ol>
+      <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('index')}">兑换商城</a></li>
+      <li class="active">添加管理</li>
+    </ol>
+  </div>
+    <form class="form" action="{:url('add')}" method="post">
+      <input type="file" class="hidden select_photo">
+      <div class="form-group">
+        <label>商品名</label>
+        <input type="text" class="form-control" placeholder="输入商品名" name="name">
+      </div>
+      <div class="form-group">
+        <label>商品类型</label>
+        <input type="hidden" name="type">
+        <div class="dropdown" style="display:inline-block">
+            <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"><span class="typename">选择类型</span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              {volist name="$nav" id="item"}
+                <li role="presentation"  class="typeSelect">
+                    <a role="menuitem" tabindex="-1" data-id="{$item.id}">{$item.name}</a>
+                </li>
+              {/volist}
+            </ul>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>商品图片</label>
+          <img class="user_photo" width="60" height="60" src="" alt="">
+          <input type="hidden" name="img_url" value="">
+          <button type="button" class="btn btn-success btn_select_photo">上传图片</button>
+      </div>
+      <div class="form-group">
+        <label>兑换金豆</label>
+        <input type="number" class="form-control" placeholder="输入兑换商品所需金豆数量" name="integral">
+      </div>
+      <div class="form-group">
+        <label>商品价格</label>
+        <input type="number" class="form-control" placeholder="输入商品价值（单位：元）" name="money">
+      </div>
+      <div class="form-group">
+        <label>商品件数</label>
+        <input type="number" class="form-control" placeholder="商品件数" name="total_num">
+      </div>
+      <div class="form-group">
+        <label>商品描述</label><br/>
+        <textarea class="form-control" placeholder="输入商品描述" name="detail"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-default">提交</button>
+    </form>
+</div>
+
+
+<script>
+    $(function () {
+        $(".typeSelect").click(function(){
+          var _this = $(this);
+          var _this_a = _this.find('a');
+          $('input[name=type]').val(_this_a.data('id'));
+          $(".typename").text(_this_a.text());
+        })
+
+        $('.btn_select_photo').click(function () {
+            $('.select_photo').trigger('click')
+        });
+        $('.select_photo').localResizeIMG({
+            maxSize: 200,
+            success: function (result) {
+                $('.btn_save').attr('disabled', 'disabled');
+                $('.user_photo').attr('src', result.base64);
+                $.post('{:url("base64Upload")}', {'base64_data': result.base64}, function(res) {
+                    $('input[name=img_url]').attr('value', res.data);
+                    $('.btn_save').attr('disabled', null);
+                }, 'json');
+            }
+        });
+    });
+
+</script>
+{include file='common/foot' /}

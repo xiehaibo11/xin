@@ -1,0 +1,72 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<style>
+    .card-content .user:after, .ext_head:after{background: none}
+</style>
+<header class="header">
+    <a class="header-nav" href="/index/user">
+      <i class="icon-svg icon_left"></i>
+    </a>
+    <div class="header-center">账户明细</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+    <div>
+        <list-group></list-group>
+    </div>
+</div>
+
+<template id="list-atom">
+    <div class="coin-detail">
+        <div class="card-header flex-box">
+            <div>
+                <p class="from">来自：{{item.ext_info.title}}</p>
+                <p class="datetime">{{item.friend_time}}</p>
+            </div>
+            <div class="c_coin flex">
+                <span :class="{'coin_g':item.money > 0}"><em v-if="item.money > 0">+</em>{{item.money}}</span>
+            </div>
+            <div class="c_img">
+                <img src="/static/images/index/common_jd.png" alt="">
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="remark card-content-inner" v-html="item.remark"></div>
+        </div>
+    </div>
+</template>
+<template id="list-group">
+    <loading-box url="/index/detail/list">
+        <template scope="props">
+                <div v-for="item of props.list" class="card card-line">
+                <list-atom :item="item"></list-atom>
+            </div>
+        </template>
+    </loading-box>
+</template>
+<script>
+'use strict';
+
+$(function () {
+    Vue.component('list-atom', {
+        props: ['item'],
+        template: '#list-atom'
+    });
+    Vue.component('list-group', {
+        template: '#list-group'
+    });
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            info: {}
+        },
+        created: function created() {
+            $('#app').removeClass('app_init');
+        }
+    });
+});
+</script>
+{include file='common@common/foot' /}

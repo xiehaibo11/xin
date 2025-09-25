@@ -1,0 +1,1534 @@
+/**
+ * 开奖类游戏样式文件
+ */
+@charset "UTF-8";
+@import "./variables";
+@bg:#fff7ea;
+@bg-b:#fbedd7;
+@ball-base-col:#e82828;
+@border-col:#eaeaea;
+.el-tooltip__popper.is-dark{
+    line-height: 1.5;
+}
+.el-switch__core:after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    border-radius: 100%;
+    transition: all .3s;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+}
+.el-switch.is-checked .el-switch__core:after{
+    left: 100%;
+    margin-left: -17px;
+}
+.el-slider__button{
+    user-select: none;
+    border-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(143, 143, 143, 0.68) 0px 1px 4px 0px;
+}
+.game-rule{
+    p{
+        height: 35px;line-height: 35px;border-bottom: 1px solid #ebeef5;width: 100%;position: absolute;left: 0;padding-left: 10px;
+    }
+}
+.tl{
+    text-align: left;
+}
+.tr{
+    text-align: right;
+}
+.lottery-bg{
+    min-height: 760px;
+    background: url("/static/vipweb/images/bg_lobby.jpg") repeat-y top center;
+}
+//11选5
+//投注页面
+.game-lottery{
+    .head{
+        position: relative;
+        margin: 15px 0;
+        border: 1px solid @bg-b;
+        background-color:@bg;
+        .lottery-logo{
+            text-align: center;
+            padding-top: 15px;
+            .lottery-name{
+                font-size: @font-size-large + 2;
+                font-weight: 600;
+                color: @color-base;
+            }
+        }
+        .lottery-info{
+            @padding-left:30px;
+            margin: 15px;
+            border-right: 1px solid @bg-b;
+            .lottery-info-issue{
+                line-height: 1.8;
+                width: 360px;
+                background-color: #fff;
+                border-radius: 50px;
+                padding-left: @padding-left;
+                .time{
+                    font-size: @font-size-large + 22;
+                    color: #4db2f4;
+                    font-weight: 500;
+                    padding-left: 20px;
+                }
+                .red{
+                    color: @color-base;
+                }
+            }
+            .lottery-info-sum{
+                padding-left: @padding-left;
+                color: @gray-light;
+                padding-top: 5px;
+                b{
+                    color: @gray-dark;
+                    padding: 0 2px;
+                    &.red{
+                        color: @color-base;
+                    }
+                }
+            }
+        }
+        .lottery-kj{
+            text-align: center;
+            .kj-issue{
+                width: 280px;
+                height: 30px;
+                margin: 0 auto 12px;
+                text-align: center;
+                line-height: 30px;
+                font-size: 14px;
+                color: #ab5b06;
+                background-color: darken(@bg,8%);
+                border-bottom-left-radius: 25px;
+                border-bottom-right-radius: 25px;
+            }
+            .kj-num{
+                width: 420px;
+                margin: 5px auto;
+                overflow: hidden;
+                .kj-num-item{
+                    float: left;
+                    width: 80px;
+                    height: 80px;
+                    border:4px solid darken(@bg,15%);
+                    .borderRadius(10px);
+                    margin-left: 3px;
+                    overflow: hidden;
+                    .inner {
+                        position: relative;
+                        height: 72px;
+                        overflow: hidden;
+                        ul{
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 72px;
+                            .dz(1s);
+                            li{
+                                width: 72px;
+                                height: 72px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                text-align: center;
+                                span{
+                                    display: inline-block;
+                                    width: 45px;
+                                    height: 45px;
+                                    .borderRadius(50%);
+                                    background-color: lighten(@ball-base-col,5%);
+                                    font-size: 26px;
+                                    color: #fff;
+                                    line-height: 45px;
+                                    box-shadow: 4px 2px 0px @ball-base-col inset;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+            //pk10
+            .kj-num-pk10{
+                width: auto;
+                margin: 10px auto;
+                .kj-num-item{
+                    width: 56px;
+                    height: 56px;
+                    border: 1px solid #ffda9d;
+                    .inner ul li{
+                        width: 54px;
+                        height: 54px;
+                        span{
+                            width: 40px;
+                            height: 40px;
+                            line-height: 40px;
+                            font-size: 22px;
+                        }
+                    }
+                }
+            }
+            .kj-info{
+                font-size: @font-size-small + 1;
+                em{
+                    font-size: @font-size-base;
+                    padding: 0 2px;
+                }
+                .kj-time{
+                    padding-left: 15px;
+                    font-size: @font-size-small + 1;
+                }
+            }
+        }
+    }
+    .lottery-info-link{
+        position: absolute;
+        left: 200px;
+        bottom: 0px;
+        a{
+            display: inline-block;
+            margin-right: 15px;
+            font-size: @font-size-small+1;
+            i{
+                font-size: @font-size-base + 1;
+                color: @color-base;
+            }
+        }
+    }
+    .main{
+        display: flex;
+        border:1px solid @border-col;
+        border-top: 2px solid @color-base;
+        .el-col-18{
+            width: 78%;
+        }
+        .el-col-6 {
+            width: 22%;
+        }
+        .bet-left{
+            //投注导航
+            .bet-nav{
+                background: #fafafa;
+                border-bottom: 1px solid #ededed;
+                ul{
+                    li{
+                        width: 81px;
+                        height: 60px;
+                        margin-right: 0;
+                        border: none;
+                        border-right: 1px solid #ededed;
+                        a{
+                            width: 100%;
+                            text-align: center;
+                            display: inline-block;
+                            height: 52px;
+                            padding-top: 8px;
+                            background: #fafafa;
+                            line-height: 1.5;
+                            font-size: @font-size-base + 1;
+                            font-weight: bold;
+                            span{
+                                display: block;
+                                font-size: 12px;
+                                color: #999;
+                                font-weight: normal;
+                                u{
+                                    margin-right: 2px;
+                                    background: #ffd036;
+                                    border: 1px solid #f6be44;
+                                    border-radius: 2px;
+                                    font: 12px/1 "宋体",serif;
+                                    color: #f33;
+                                    text-decoration: none;
+                                }
+                            }
+                        }
+                        &.active{
+                            a{
+                                background: @ball-base-col;
+                                border-color: @ball-base-col;
+                                color: @white;
+                                span{
+                                    color: @white;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //pk10
+            .pk-nav{
+                ul li{
+                    height: auto;
+                    a{
+                        height: auto;
+                        font-size: 15px;
+                        font-weight: bold;
+                        line-height: 3;
+                        padding-top: 0;
+                    }
+                }
+            }
+            .bet-b{
+                border-top:none ;
+                padding:10px 10px;
+                //选号区
+                .bet-cont{
+                    .bet-item{
+                        .bet-type-tab{
+                            .bet-tips{
+                                font-size: 13px;
+                                color: #151515;
+                                line-height: 1.6;
+                                margin-bottom: 20px;
+                                i{
+                                    font-size: 16px;
+                                    color: @color-secondary;
+                                    padding-right: 5px;
+                                }
+                                a:hover{
+                                    color: @color-secondary;
+                                }
+                            }
+                            .bet-solutions{
+                                margin-bottom: 20px;
+                                text-align: center;
+                                font-size: @font-size-base;
+                                p, .add-box{
+                                    width: 780px;
+                                    margin: 0 auto;
+                                    padding: 8px;
+                                    margin-bottom: 10px;
+                                    background-color: #efefef;
+                                    background-image: linear-gradient(0deg, #fbfbfb 2%, #efefef 100%);
+                                }
+                            }
+                        }
+                    }
+                    .el-radio{margin-top: 15px}
+                    .bet-tips{
+                        margin-top: 5px;
+                    }
+                }
+                //投注区
+                .bet-foot{
+                    width: 780px;
+                    margin: 0 auto;
+                    position: relative;
+                    .bet-area{
+                        align-items: flex-end;
+                        .bet-area-box{
+                            width: 648px;
+                            height: 240px;
+                            overflow-y: hidden;
+                            margin-right: 10px;
+                            border:1px solid @border-col;
+                            .bet-area-title{
+                                background-color: #f4f4f4;
+                                background-image: linear-gradient(0deg, #fbfbfb 2%, #efefef 100%);
+                                padding:5px 10px;
+                                border-bottom: 1px solid #eaeaea;
+                            }
+                            .title{
+                                padding-right: 5px;
+                            }
+                            .t-h{
+                                text-align: center;
+                                color: @gray-light;
+                                padding-right: 15px;
+                                font-size: 12px;
+                            }
+                            .t-h-l{
+                                text-align: right;
+                                color: @gray-light;
+                                padding-right: 15px;
+                                font-size: 12px;
+                            }
+                            .each-set-money{
+                                width: 200px;
+                                display: flex;
+                                align-items: center;
+                                .el-input-number--mini{
+                                    margin: 0 2px;
+                                }
+                            }
+                            .bet-area-list{
+                                height: 200px;
+                                overflow-y: auto;
+                                padding: 0 10px;
+                                li{
+                                    font-size: @font-size-small;
+                                    padding: 4px 10px;
+                                    color: @gray-light;
+                                    border-bottom: 1px dashed #ddd;
+                                    .code{
+                                        line-height: 24px;word-wrap: break-word;height: 24px;overflow: auto;
+                                        margin-right: 10px;
+                                        color: #000000;
+                                    }
+                                    a{
+                                        color: @gray-light;
+                                        &.edit{
+                                            padding-right: 10px;
+                                        }
+                                        i{
+                                            font-size: 16px;
+                                            color: #b9b9b9;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .bet-area-qbtn{
+                            span.tips{
+                                position: absolute;
+                                right: -8px;
+                                top: 0px;
+                                padding: 5px 10px;
+                                margin: 0;
+                                border: 1px solid #ffda9d;
+                                color: @gray-dark;
+                            }
+                            a{
+                                display: inline-block;
+                                width: 100%;
+                                height: 42px;
+                                margin-bottom: 10px;
+                                .btn-full{
+                                    height: 42px;
+                                    background-color: #f4f4f4;
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+                    }
+                    .bet-area-txt{
+                        margin-top: 10px;
+                    }
+                    .buy-type{
+                        .header{
+                            background-color: @gray-bg;
+                            padding: 5px 10px;
+                            margin: 15px 0 0;
+                            .notes{
+                                color: @gray-light;
+                                font-size: @font-size-small;
+                                i{
+                                    color: @color-secondary;
+                                    font-size: @font-size-base;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                        .buy-type-cont{
+                            .tab-radio-inner{
+                                border:1px solid #e8e8e8;
+                                padding: 15px 50px;
+                                .info{
+                                    margin: 8px 0;
+                                }
+                            }
+                            .border-none{
+                                border-bottom: none;
+                            }
+                            .foot-ts{
+                                padding: 5px 10px;
+                                .red{}
+                                em{
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                    .submit{
+                        margin: 15px 0;
+                    }
+                }
+            }
+        }
+        .bet-rig{
+            background-color: @gray-bg;
+            border-left: 1px solid @border-col;
+            padding: 10px;
+            .concent-award{
+                padding: 0;
+                .bt{
+                    color: @gray-base;
+                    font-weight: 600;
+                    margin-bottom: 10px;
+                    font-size: @font-size-base + 1;
+                    height: 16px;
+                    line-height: 16px;
+                }
+                table{
+                    tr.title{
+                        border:solid #cccccc;
+                        border-width:1px 0 0 1px ;
+                        background-color: #fff;
+                        td{
+                            border:solid #cccccc;
+                            border-width:0px 1px 1px 0;
+                            font-size: @font-size-small + 1;
+                        }
+                    }
+                    tr td{
+                        font-size: @font-size-small;
+                        text-align: center;
+                    }
+                }
+            }
+            .trend-lr{
+                .title{
+                    border-bottom: 1px solid #ccc;
+                    color: @gray-base;
+                    font-weight: 600;
+                    margin-top: 10px;
+                    font-size: @font-size-base + 1;
+                    position: relative;
+                    .tabs{
+                        position: absolute;
+                        right: 0 ;
+                        bottom: -1px;
+                        span{
+                            font-weight: normal;
+                            display: inline-block;
+                            width: 40px;
+                            height: 29px;
+                            line-height: 29px;
+                            text-align: center;
+                            border:1px solid #cccccc;
+                            background-color: @gray-bg;
+                            font-size: @font-size-base - 1;
+                            cursor: pointer;
+                            &:hover{
+                                background-color: @bg;
+                            }
+                            &.active{
+                                background-color: @bg;
+                                border-bottom: 1px solid @bg;
+                                color: #ab5b06;
+                            }
+                        }
+                    }
+                }
+                .cont{
+                    .numbers{
+                        ul li{
+                            display: flex;
+                            align-items: center;
+                            .line{
+                                width: 100%;
+                                height: 4px;
+                                display: inherit;
+                                em{
+                                    display: inline-block;
+                                    height: 4px;
+                                }
+                            }
+                            .num{
+                                width: 30px;
+                                padding-left: 8px;
+                            }
+                        }
+                        .muted{
+                            color: @gray-light;
+                            font-size: @font-size-small + 1;
+                            padding: 8px 0;
+                        }
+                    }
+                    .cold-num{
+                        ul li .line em{
+                            background-color: #c2d8e5;
+                        }
+                    }
+                    .hot-num{
+                        ul li .line em{
+                            background-color: #f5d89d;
+                        }
+                    }
+                }
+            }
+        }
+        .chose-play{
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 2px dotted #ededed;
+        }
+    }
+}
+.el-dialog--center .el-dialog__body{
+    padding: 10px 20px;
+}
+.bet-ball-box ,.code-box{
+    margin:20px 0 50px 0px;
+    .time{
+        line-height: 1.5;
+        background-color: @bg-b;
+        padding: 5px;
+        text-align: center;
+        font-size: @font-size-small;
+        .value{
+            font-size: @font-size-large + 2;
+        }
+    }
+    .nav{
+        padding: 0px 15px 0;
+        font-size: @font-size-small;
+        .miss{
+            color: #ab5b06;
+        }
+    }
+    .balls{
+        ul li{
+            width: 33px;
+            margin: 0 5px;
+            text-align: center;
+            color: #ccc;
+            a{
+                display: inline-block;
+                width: 33px;
+                height: 33px;
+                background: url('@{images}sprite-ball.png') no-repeat;
+                text-align: center;
+                font-weight: 700;
+                font-size: 16px;
+                line-height: 33px;
+                background-position: 0 0;
+                .dz(0s);
+                &:hover{
+                    background-position: -40px 0;
+                }
+                &.selected{
+                    background-position: -80px 0;
+                    color: @white;
+                }
+                &.forbidden{
+                    background-position: -40px 0;
+                }
+            }
+            i{
+                display: block;
+                height: 22px;
+                line-height: 22px;
+            }
+        }
+    }
+    .select{
+        margin-left: 30px;
+        a{
+            display: inline-block;
+            width: 26px;
+            height: 22px;
+            .borderRadius(2px);
+            background: #fbfbfb;
+            border: 1px solid #ddd;
+            text-align: center;
+            line-height: 22px;
+            font-size: 12px;
+            margin-right: 5px;
+            color: #666;
+            &:hover{
+                border:1px solid @ball-base-col;
+                background-color: @bg;
+                color: @ball-base-col;
+            }
+        }
+        span{
+            cursor: pointer;
+        }
+    }
+}
+//胆拖投注选号区
+.lottery-dt{
+    .bet-ball-box{
+        align-items: flex-start;
+        .time{
+            margin-top: 38px;
+        }
+        .nav{
+            margin-top: 33px;
+        }
+        .dm-title{
+            margin: 8px 0;
+        }
+    }
+}
+//前直投注选号区
+.lottery-qz{
+    .bet-ball-box{
+        align-items: flex-start;
+        .time{
+            margin-top: 15px;
+        }
+        .code-box{
+            margin: 10px 0;
+        }
+    }
+}
+//投注页面 --追号
+.chase-cont{
+    max-height: 310px;overflow-y: auto;padding: 5px 0
+}
+.chase{
+    tr td{font-size: 13px;line-height:2.2}
+    tr th{font-size: 13px;padding-bottom: 5px}
+}
+.chase-input{
+    width: 40px;
+    margin-right: 2px;
+    display: inline-block;
+    .el-input__inner{
+        height: 20px;
+        line-height: 20px;
+        padding: 0 5px;
+    }
+}
+.notes{
+    font-size: 13px;
+    i{
+        color: @color-secondary;
+    }
+}
+//投注页面 --合买
+//合买
+.bet-jion{
+    font-size: @font-size-small;
+    .el-radio-button--mini .el-radio-button__inner{
+        width: 38px;
+        padding: 7px 0px;
+    }
+    .jion-tip{
+        color: darken(@gray-lighter,5%);
+    }
+    .el-radio__label{
+        font-size: 12px;
+    }
+}
+
+//投注页面--订单信息
+.order-info{
+    padding: 0 25px;
+    line-height: 2;
+    .name{
+        display: inline-block;
+        width: 75px;
+        text-align: right;
+    }
+    em.info{
+        font-size: 12px;
+        color: #888888;
+    }
+}
+.el-dialog__body{
+    padding: 10px 20px;
+}
+
+//开奖详情
+.lottery-detail-main{
+    display: flex;
+    .lottery-detail-img{
+        width: 76px;
+        margin-right: 15px;
+    }
+    .lottery-detail-cont{
+        flex:1;
+        .title{
+            padding-bottom: 5px;
+            border-bottom: 1px solid #dddddd;
+            .name{
+                font-size: @font-size-large;
+                color:@color-secondary;
+            }
+        }
+        .cur-issue-bet{
+            padding: 10px;
+            background-color: @gray-bg;
+            line-height: 1.2;
+            .time{
+                display: inline-block;
+                color: white;
+                background-color: #FF9800;
+                padding:4.1px 10px;
+                font-size: 15px;
+                margin-right: 15px;
+            }
+            .summary{
+                color: #888888;
+                font-size: @font-size-small;
+            }
+        }
+        .new-issue-code{
+            margin: 10px 0;
+        }
+    }
+}
+
+//开奖号码表格
+.lottery-award-all{
+    border:1px solid #dddddd;
+    .head{
+        padding: 5px 10px;
+        background-color: @gray-bg;
+        cursor: pointer;
+        .name{
+            color: @gray-base;
+            font-size: @font-size-base + 1;
+            font-weight: 500;
+        }
+        .change{
+            color: @gray-light;
+            font-size: @font-size-base - 1;
+            cursor: pointer;
+        }
+    }
+    .cont{
+        align-items: flex-start;
+        .all-num{
+            flex:1;
+            table{
+                width: 100%;
+                td{
+                    border:solid #eeeeee;
+                    border-width: 0 1px 1px 0px;
+                    font-size: @font-size-small;
+                    color: @gray-light;
+                    height: 27px;
+                    line-height: 27px;
+                    padding-left: 10px;
+                    &.red{
+                        color: @ball-base-col;
+                        font-size: @font-size-small + 1;
+                    }
+                    &.org{
+                        color: #ff6c08;
+                    }
+                    &.green{
+                        color: green;
+                    }
+                    &.tc{
+                        padding-left: 0;
+                        text-align: center;
+                    }
+                }
+                & tr:last-child td{
+                    //border-bottom: none;
+                }
+            }
+        }
+    }
+}
+
+//订单详情
+.page-orders{
+    .head{
+        padding: 10px;
+        border-bottom:2px solid @color-base;
+    }
+    .info{
+        padding-left: 10px;
+        .name{
+            font-size: @font-size-large + 4;
+            color: #000000;
+            font-weight:500;
+        }
+        .summary{
+            color: #adadad;
+            font-size: 13px;
+        }
+    }
+    .cont{
+        .part01{
+            padding:0 10px 10px;
+            font-size: 16px;
+            color: #000000;
+            font-weight: 600;
+            .is-jion{
+                padding: 15px;
+            }
+            .orders{
+                color: #666666;
+                font-size: 14px;
+                font-weight: normal;
+            }
+            .state{
+                font-size: 14px;
+                .name{
+                    display: inline-block;
+                    height: 30px;
+                    line-height: 30px;
+                    padding: 0px 10px;
+                    background-color: #ff6c08;
+                    color: #fff;
+                    border:1px solid #ff6c08;
+                }
+                .result{
+                    display: inline-block;
+                    height: 30px;
+                    line-height: 30px;
+                    padding: 0px 10px;
+                    border:1px solid #ff6c08;
+                }
+            }
+        }
+        .part02{
+            width: 100%;
+            td{
+                &.bt{
+                    padding: 10px 20px;
+                    font-size: 13px;
+                    border-top: 1px solid #dddddd;
+                }
+                &.left{
+                    background-color: #f4f4f4;
+                    width: 130px;
+                    border-right: 1px solid #dddddd;
+                    text-align: center;
+                }
+                &.progress{
+                    padding: 30px 0;
+                }
+                .td-mocks{
+                    display: flex;
+                    line-height: 3.6;
+                    .nickname{
+                        width: 400px;
+                        color: #000000;
+                    }
+                    .title{
+                        border-left: 1px solid #ddd;border-right:1px solid #ddd;
+                        width: 130px;
+                        text-align: center;
+                    }
+                    .money-info{
+                        padding: 0 20px;
+                    }
+                }
+                &.service{
+                    line-height: 1.6;
+                    color: #999999;
+                    font-size: 12px;
+                }
+            }
+            .el-step__title{
+                font-size: 12px;
+                line-height: 20px;
+            }
+            .el-step__icon{
+                width: 18px;
+                height: 18px;
+                color: #fff;
+            }
+            .el-step__head.is-success{
+                color: #ff6c08;
+                border-color: #ff6c08;
+            }
+            .el-step__title.is-success{
+                color: #ff6c08;
+            }
+        }
+    }
+
+}
+
+//合买订单详情页
+.orders-jion{
+    .info{
+        margin-left:5px;
+        .top{
+            border-bottom: 1px solid #dddddd;
+            .title{
+                font-size: 18px;
+                color: #000000;
+                font-weight: bold;
+            }
+            .issue{
+                color: #000000;
+                font-size: 15px;
+                padding:0 10px;
+            }
+            .time{
+                color: #888888;
+                font-size: 13px;
+            }
+        }
+        .fq-user{
+            padding-top: 5px;
+            .nickname{
+                font-size: 15px;
+                color: #ff6c08;
+            }
+        }
+    }
+    .cont{
+        display: flex;
+        .jion-detail-left{
+            background-color:#fff5d9;
+            border:1px solid @bg-b;
+            padding: 15px;
+            width: 270px;
+            font-size: 13px;
+            .order-d{
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+                border-bottom: 1px solid @bg-b;
+                ul li{
+                    line-height: 2.5;
+                    .tit{
+                        color: #333333;
+                    }
+                    &.btn{
+                        margin-top: 20px;
+                    }
+                }
+            }
+            .plan-d{
+                font-size: 12px;
+                color: #888888;
+            }
+        }
+        .jion-detail-rig{
+            padding: 10px 20px;
+            border:1px solid @bg-b;
+            border-left:none;
+            .el-tabs__item{
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .jion-order{
+                position: relative;
+                .nav-tit{
+                    background-color: #f4f4f4;
+                    padding-left: 10px;
+                    margin: 10px 0;
+                }
+                .jion-num{
+                    position: absolute;
+                    display: inline-block;
+                    padding: 2px 5px;
+                    background-color: #ff6c08;
+                    color: #ffffff;
+                    font-size: 12px;
+                    .borderRadius(4px);
+                    top: -3px;
+                    left: 180px;
+                    line-height: 1;
+                }
+                .show-not{
+                    padding: 30px 0;
+                    text-align: center;
+                    color: #888888;
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+.order-cont-list{
+    i{
+        color: #a9a9a9;
+    }
+    font{
+        padding: 0 10px;
+        color: #333333;
+    }
+    em{
+        padding: 0 10px;
+    }
+}
+//开奖状态
+.prize_wait{
+    color: #000000;
+}
+.prize_win{
+    color: red;
+}
+.prize_not{
+    color: #666666;
+}
+.prize_cancel{
+    color: #ff6c08;
+}
+
+//时时彩
+.ssc-ball{
+    margin: 5px 0;
+    margin-bottom: 30px;
+    overflow: hidden;
+    justify-content: center;
+    .code-box{
+        align-items: flex-start;
+        margin-top: 8px;
+        margin-bottom: 0;
+        justify-content: center;
+        .nav{
+            font-size: 13px;
+            padding-right: 25px;
+        }
+        .select a{
+            font-size: 13px;
+        }
+    }
+}
+
+//快3
+.lottery-ks{
+    .main .bet-rig .concent-award table tr td{
+        border: 1px dotted #ccc;
+    }
+    .da ,.dan{
+        background-color: #5691d7;
+        color: #ffffff;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        .borderRadius(2px);
+    }
+    .xiao ,.shuang{
+        background-color:@color-secondary;
+        color: #ffffff;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        .borderRadius(2px);
+    }
+    @width:780px;
+    .main .bet-left .bet-b .bet-foot{
+        width: @width;
+        .ks-bet-area{
+            .ks-area-box{
+                width: 100%;
+                margin-right: 0;
+                padding:0;
+                overflow: hidden;
+                height: 240px;
+                ul.bet-area-list{
+                    height: 200px;
+                    overflow-y: auto;
+                    padding: 0 10px;
+                    li{
+                        background-color: #f4f4f4;
+                        margin-top: 10px;
+                        border-bottom: none;
+                        padding: 0 5px;
+                        height: 36px;
+                        .b-width-s{
+                            width: 40px;
+                            text-align: center;
+                        }
+                        .b-width-l{
+                            width: 150px;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .ks-ball{
+        margin: 10px 0 40px 0;
+    }
+    .ks-balls{
+        ul{
+            width: @width + 20px;
+            margin: 0 auto;
+            li{
+                width: 74px;
+                margin: 8px 13px;
+                text-align: center;
+                &:nth-child(17){
+                    margin-left: 203px;
+                }
+                a{
+                    display: inline-block;
+                    width: 100%;
+                    height: 55px;
+                    line-height: 55px;
+                    text-align: center;
+                    font-size: 28px;
+                    font-weight: bold;
+                    //background: linear-gradient(to bottom, #efefef 0%, #f9f9f9 100%);
+                    //border: 1px solid #e6e6e6;
+                    background-image: linear-gradient(0deg, #FFFFFF 2%, #E7E7E7 100%);
+                    border: 1px solid #D6D6D6;
+                    background-color: whitesmoke;
+                    font-family: "黑体";
+                    box-shadow: 2px 2px 5px #ececec;
+                    .borderRadius(3px);
+                    .dz(0s);
+                    &:hover{
+                        background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+                        border: 1px solid #ff3333;
+                    }
+                    &.selected{
+                        background: linear-gradient(to top, #ff3333 0%, #ff7878 100%);
+                        color: #ffffff;
+                        border: 1px solid #fffefe;
+                        box-shadow: 2px 2px 5px #ffcfcf;
+                    }
+                    &.forbidden{
+                        //background-image: linear-gradient(0deg, #FFFFFF 2%, #ffcfcf 100%);
+                    }
+                }
+                i{
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+    .main{
+        border-top:none;
+    }
+    //头部
+    .head-ks{
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #ffffff;
+        border: 1px solid #e4e4e4;
+        .head-item{
+            float: left;
+            height: 140px;
+            //background-color: #f4f4f4;
+            background-color: #eff1f4;
+            .borderRadius(4px);
+        }
+        .lottery-logo{
+            width: 288px;
+            text-align: center;
+            padding-top: 5px;
+            line-height: 1.5;
+            .lottery-info-sum{
+                color: #888888;
+                margin-top: 5px;
+                font-size: 13px;
+            }
+        }
+        .lottery-info{
+            width: 565px;
+            margin-left: 15px;
+            padding-top: 10px;
+            font-size: 15px;
+            .time{
+                width: 210px;
+                height: 60px;
+                line-height: 60px;
+                background-color: @color-base;
+                color: #ffffff;
+                margin: 5px auto;
+                .borderRadius(4px);
+                font-size: 40px;
+                text-align: center;
+                box-shadow: 0 0 10px #eee;
+                letter-spacing: 5px;
+                i{
+                    margin-right: 2px;
+                }
+            }
+            .kj-info{
+                font-size: 13px;
+            }
+        }
+        .lottery-kj{
+            width: 285px;
+            margin-left: 15px;
+            .kj-issue{
+                padding-top: 10px;
+                font-size: 15px;
+            }
+            .kj-num{
+                width: 279px;
+                margin: 15px auto;
+                ul>li{
+                    width: 61px;
+                    height: 71px;
+                    overflow: hidden;
+                    float: left;
+                    margin: 0 15px;
+                    &.open-point{
+                        margin-top: 5px;
+                        height: 61px;
+                        background: url('@{images}open_num.png') no-repeat;
+                    }
+                    &.point1{
+                        background-position: 0 0;
+                    }
+                    &.point2{
+                        background-position: 0 -61px;
+                    }
+                    &.point3{
+                        background-position: 0 -122px;
+                    }
+                    &.point4{
+                        background-position: 0 -183px;
+                    }
+                    &.point5{
+                        background-position: 0 -244px;
+                    }
+                    &.point6{
+                        background-position: 0 -305px;
+                    }
+                }
+            }
+        }
+    }
+    //右侧
+    .lottery-intr{
+        height: 30px;
+        line-height: 30px;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+        a{
+            font-size: 13px;
+            padding: 0 10px;
+            i{
+                color: @color-secondary;
+                font-size: 20px;
+                padding-right: 5px;
+            }
+        }
+    }
+}
+
+//单位选择
+.unit-model-box{
+    width: 780px;
+    margin: 0 auto;
+    .el-slider__bar{
+        background-color: #e4e7ed;
+    }
+    position: relative;
+    .unit-model-cont{
+        position: absolute;top: -112px;left: 10px;display: flex;
+        .el-input-number--mini{
+            width: 110px;
+            margin: 0 2px;
+        }
+        .unit{
+            margin-left: 5px;
+        }
+    }
+    .model-box{
+        margin-right: 5px;
+        margin-top: 5px;
+        i{
+            font-size: 17px;
+            margin-left: 2px;
+        }
+        .el-select{
+            margin-left: 2px;
+        }
+    }
+    .rebate-box{
+        .rebate-val{
+            display: inline-block;width: 30px;text-align: right;
+        }
+        .rebate-slider{
+            display: inline-block;width: 100px;
+            margin: 0 15px;
+        }
+        i{
+            font-size: 20px;
+            color: #888;
+            cursor: pointer;
+            &.disabled{
+                cursor: not-allowed;
+                color: #c8c8c8;
+            }
+        }
+    }
+}
+
+//pc28开奖区
+.kj-num-pc28{
+    padding: 15px 10px;
+    ul >li{
+        @w:30px;
+        float: left;
+        display: inline-block;
+        height: @w;
+        line-height: @w;
+        font-size: 16px;
+        margin: 10px 3px 0;
+        &.code{
+            width:@w;
+            height: @w;
+            background-color: #afafaf;
+            color: #ffffff;
+            font-size: 18px;
+            line-height: @w;
+            text-align: center;
+            border-radius: 50%;
+        }
+        &.code-result{
+            background-color:#d2d2d2;
+        }
+        &.code-lx{
+            background-color: #656565;
+            font-size: 16px;
+            width: 57px;
+            text-align: center;
+            border-radius: @w / 2;
+            color: #ffffff;
+            margin-left: 8px;
+        }
+    }
+}
+.bet-clear{
+    width: 780px;
+    margin: 0 auto 5px;
+    span{
+        color: #9a9a9a;cursor: pointer
+    }
+}
+//pc28右侧开奖号码
+.pc28-tencode{
+    padding-left: 5px;
+    .pc28-code{
+        display: inline-block;width: 15px;font-size: 13px;color: #333;
+    }
+    .pc28-he{
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        text-align: center;
+        font-size: 13px;
+        background-color: #d2d2d2;
+        color: #ffffff;
+        .borderRadius(50%);
+        margin-left: 5px;
+        margin-top: 2px;
+    }
+}
+.pc28-sb{
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    width: 35px;
+    .borderRadius(10px);
+    text-align: center;
+    background-color: #d2d2d2;
+    color: #ffffff;
+    font-size: 12px;
+}
+
+//单式投注
+.copy-box{
+    width: 780px;
+    margin: 20px auto;
+}
+
+//快3导航
+.topMenuDiv{
+    margin:0px;
+    padding:0px;
+    line-height:50px;
+    border-bottom:1px solid #E5E5E5;
+    color: #333;
+    position: relative;
+    .betNavtab {
+        height: 38px;
+        background: #ececec;
+        width: 36px;
+        background: linear-gradient(#fff 2%,#ececec);
+        border-left: 1px solid #ddd;
+        cursor: auto;
+        position: absolute;
+        right: 0;
+        top:0;
+        span{
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid;
+            margin: 11px 9.5px;
+            cursor: pointer;
+            em{
+                width: 0;
+                height: 0;
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 4px solid;
+                display: block;
+                margin: 6px;
+                transition: .2s;
+                -webkit-transform: rotate(-90deg);
+                transform: rotate(-90deg);
+                margin-left: 4px;
+                &:before{
+                    content: "";
+                    display: block;
+                    width: 38px;
+                    height: 35px;
+                    position: absolute;
+                    margin-left: -19px;
+                    margin-top: -21px;
+                }
+            }
+        }
+    }
+    .left{
+        left: 0;
+        border-right: 1px solid #ddd;
+        border-left: none;
+        span{
+            em{
+                -webkit-transform: rotate(90deg);
+                transform: rotate(90deg);
+                margin-left: 3px;
+            }
+        }
+
+    }
+    .right{
+        margin-left: -1px;
+    }
+    .menuDiv{
+        margin:0 37px ;
+        overflow: hidden;
+        ul {
+            height: 38px;
+            width: 800%;
+            overflow: hidden;
+            li{
+                display: inline-block;
+                width: 118px;
+                float: left;
+                text-align: center;
+                box-sizing: border-box;
+                font-size: 16px;
+                line-height: 38px;
+                background: #fff;
+                cursor: pointer;
+                color: #333;
+                border-right: 1px solid #ddd;
+                &.active{
+                    background-color: orange;
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+}
+
+.stop_selling{
+    position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.42);;
+    z-index: 50;text-align: center;line-height: 100%;padding-top: 100px;
+}
+
+
+
+
+
+

@@ -1,0 +1,414 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+    <a class="nav_active">奖金设置</a>
+    <a href="{:url('LotteryBouns/site', ['name'=>$name])}">期号配置</a>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 奖金设置【{$lottery}】</li>
+        </ol>
+    </div>
+<style>
+  .form_max {
+    margin: 10px;
+  }
+  .icon_box {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;
+
+    width: 80px;
+    height: 80px;
+    background: #C6EAFF;
+    overflow: hidden;
+    border: 1px solid #9ED3FF;
+    border-radius: 3px;
+    position: absolute;
+  }
+
+  .dis {
+    background: #FFCCCC;
+    border: 1px solid #FF9E9E;
+  }
+
+  .fish_info {
+    padding: 10px;
+  }
+
+  .right {
+    margin-left: 88px;
+    line-height: 26px;
+  }
+
+  .hit,
+  .sp {
+    color: #C32AD6;
+    font-weight: 700;
+  }
+
+  .sp {
+    color: #23AB92;
+  }
+</style>
+<div class="box-padding">
+    <div class="form-horizontal" style="width:70%;">
+        <div class="form-group col-sm-4" style="width:25%;">
+            <label class="col-sm-1 control-label" style="width:35%;">是否同步</label>
+            <div class="col-sm-8" style="width:65%;">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="is_all" value="1"> 开启同步
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-4" style="width:30%;">
+            <label class="col-sm-1 control-label" style="width:30%;">奖金率</label>
+            <div class="col-sm-8" style="width:70%;">
+                <input type="number" class="form-control bonus_base" value="{$config.bonus_base|default=''}" style="width: 85%; display: inline-block;" placeholder="1-100的数字" name="bonus_base"> %
+            </div>
+        </div>
+        <div class="form-group col-sm-3" style="width:30%;">
+            <label class="col-sm-1 control-label" style="width:30%;">模式</label>
+            <div class="col-sm-8" style="width:70%;">
+                <select name="mode" class="form-control" >
+                    <option value="1" {if condition="$config.mode == 1"}selected {/if}>模式一</option>
+                    <option value="2" {if condition="$config.mode == 2"}selected {/if}>模式二</option>
+                </select>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+  <div class="alert alert-success" role="alert">
+    小提示：按位设置的是赔率，冠军、冠亚、前三、前四等设置的是奖金，且奖金只能是数字，填写错误将影响派奖！！
+  </div>
+  <div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <!--<li role="presentation"><a href="#wz" aria-controls="wz" role="tab" data-toggle="tab">按位赔率</a></li>-->
+      <li role="presentation" class="active"><a href="#gj" aria-controls="gj" role="tab" data-toggle="tab">冠军奖金</a></li>
+      <li role="presentation"><a href="#yj" aria-controls="yj" role="tab" data-toggle="tab">亚军奖金</a></li>
+      <li role="presentation"><a href="#jj" aria-controls="jj" role="tab" data-toggle="tab">季军奖金</a></li>
+      <li role="presentation"><a href="#qs" aria-controls="qs" role="tab" data-toggle="tab">前四奖金</a></li>
+      <li role="presentation"><a href="#qw" aria-controls="qw" role="tab" data-toggle="tab">前五奖金</a></li>
+      <li role="presentation"><a href="#ql" aria-controls="ql" role="tab" data-toggle="tab">前六奖金</a></li>
+      <li role="presentation"><a href="#qq" aria-controls="qq" role="tab" data-toggle="tab">前七奖金</a></li>
+      <li role="presentation"><a href="#qb" aria-controls="qb" role="tab" data-toggle="tab">前八奖金</a></li>
+      <li role="presentation"><a href="#qj" aria-controls="qj" role="tab" data-toggle="tab">前九奖金</a></li>
+      <li role="presentation"><a href="#qshi" aria-controls="qshi" role="tab" data-toggle="tab">前十奖金</a></li>
+      <li role="presentation"><a href="#dw" aria-controls="dw" role="tab" data-toggle="tab">定位胆</a></li>
+      <li role="presentation"><a href="#dxds" aria-controls="dxds" role="tab" data-toggle="tab">大小单双</a></li>
+      <li role="presentation"><a href="#lh" aria-controls="lh" role="tab" data-toggle="tab">龙虎斗</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!--<div role="tabpanel" class="tab-pane" id="wz">-->
+        <!--<form onsubmit="return false" class="form-horizontal form_max">-->
+          <!--<div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">猜数字</label>-->
+            <!--<div class="col-sm-10"><input type="text"  class="form-control" data-key = 'number' value="{$list.WZ.number}"></div>-->
+          <!--</div>-->
+          <!--<div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">大小单双</label>-->
+            <!--<div class="col-sm-10"><input type="text" id="small" class="form-control" data-key = 'dxds' value="{$list.WZ.dxds}"></div>-->
+          <!--</div>-->
+
+          <!--<div class="form-group">-->
+            <!--<div class="col-sm-offset-2 col-sm-10"><button type="submit" data-key = 'WZ'  class="btn btn-primary btn_save">保 存</button></div>-->
+          <!--</div>-->
+        <!--</form>-->
+      <!--</div>-->
+      <div role="tabpanel" class="tab-pane  active" id="gj">
+          <form onsubmit="return false" class="form-horizontal form_max">
+            <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中1位</label>
+              <div class="col-sm-10"><input type="text"  class="form-control" data-key = '1' value="{$list.GJ.1}"></div>
+            </div>
+            <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+              <div class="col-sm-10">
+                  <button class="btn btn-select  {eq name='$list.GJ.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.GJ.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                    <input type="hidden"data-key = 'isOpen'  {eq name="$list.GJ.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+            </div>
+    
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit" data-key = 'GJ' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+
+      </div>
+      <div role="tabpanel" class="tab-pane" id="yj">
+          <form onsubmit="return false" class="form-horizontal form_max">
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中1位</label>
+                <div class="col-sm-10"><input type="text"  class="form-control" data-key = '1' value="{$list.YJ.1}"></div>
+              </div>
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中2位</label>
+                <div class="col-sm-10"><input type="text"  class="form-control" data-key = '2' value="{$list.YJ.2}"></div>
+              </div>
+    
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">精准</label>
+                <div class="col-sm-10"><input type="text"  class="form-control" data-key = 'wz' value="{$list.YJ.wz}"></div>
+              </div>
+    
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.YJ.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.YJ.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.YJ.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit" data-key = 'YJ' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+
+      </div>
+      <div role="tabpanel" class="tab-pane" id="jj">
+          <form onsubmit="return false" class="form-horizontal form_max">
+                {for start='1' end='4'}
+                  <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                    <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.JJ[$i]}"></div>
+                  </div>
+                {/for}
+    
+    
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">精准</label>
+                  <div class="col-sm-10"><input type="text"  class="form-control" data-key = 'wz' value="{$list.JJ.wz}"></div>
+                </div>
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.JJ.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.JJ.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.JJ.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'JJ' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+
+      </div>
+      <div role="tabpanel" class="tab-pane" id="qs">
+        
+          <form onsubmit="return false" class="form-horizontal form_max">
+              {for start='1' end='5'}
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                  <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.QS[$i]}"></div>
+                </div>
+              {/for}
+    
+    
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">精准</label>
+                <div class="col-sm-10"><input type="text"  class="form-control" data-key = 'wz' value="{$list.QS.wz}"></div>
+              </div>
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.QS.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.QS.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.QS.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'QS' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+
+      </div>
+      <div role="tabpanel" class="tab-pane" id="qw">
+          <form onsubmit="return false" class="form-horizontal form_max">
+            {for start='1' end='6'}
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.QW[$i]}"></div>
+              </div>
+            {/for}
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.QW.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.QW.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.QW.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'QW' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="ql">
+          <form onsubmit="return false" class="form-horizontal form_max">
+              {for start='1' end='7'}
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                  <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.QL[$i]}"></div>
+                </div>
+              {/for}
+    
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.QL.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.QL.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.QL.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'QL' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="qq">
+          <form onsubmit="return false" class="form-horizontal form_max">
+            
+              {for start='1' end='8'}
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                  <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.QQ[$i]}"></div>
+                </div>
+              {/for}
+    
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.QQ.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.QQ.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.QQ.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'QQ' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="qb">
+          <form onsubmit="return false" class="form-horizontal form_max">
+            
+              {for start='1' end='9'}
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                  <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.QB[$i]}"></div>
+                </div>
+              {/for}
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.QB.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.QB.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.QB.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'QB' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="qj">
+          <form onsubmit="return false" class="form-horizontal form_max">
+            
+              {for start='1' end='10'}
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                  <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.QJ[$i]}"></div>
+                </div>
+              {/for}
+    
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-select  {eq name='$list.QJ.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.QJ.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+                <input type="hidden"data-key = 'isOpen'  {eq name="$list.QJ.isOpen" value= '1'}value="1" {else /} value="0"{/eq}>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'QJ' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="qshi">
+          <form onsubmit="return false" class="form-horizontal form_max">
+              
+              {for start='1' end='11'}
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中{$i}位</label>
+                  <div class="col-sm-10"><input type="text"  class="form-control" data-key = '{$i}' value="{$list.QSHI[$i]}"></div>
+                </div>
+              {/for}
+    
+              <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                <div class="col-sm-10">
+                  <button class="btn btn-select  {eq name='$list.QSHI.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.QSHI.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+          
+                  <input type="hidden"data-key = 'isOpen'  {eq name="$list.QSHI.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'QSHI' class="btn btn-primary btn_save">保 存</button></div>
+              </div>
+            </form>
+      </div>
+
+        <div role="tabpanel" class="tab-pane" id="dw">
+            <form onsubmit="return false" class="form-horizontal form_max">
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中1位</label>
+                    <div class="col-sm-10"><input type="text"  class="form-control" data-key = '1' value="{$list.DW.1}"></div>
+                </div>
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                    <div class="col-sm-10">
+                        <button class="btn btn-select  {eq name='$list.DW.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.DW.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+
+                        <input type="hidden"data-key = 'isOpen'  {eq name="$list.DW.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'DW' class="btn btn-primary btn_save">保 存</button></div>
+                </div>
+            </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="dxds">
+            <form onsubmit="return false" class="form-horizontal form_max">
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">中1位</label>
+                    <div class="col-sm-10"><input type="text"  class="form-control" data-key = '1' value="{$list.DXDS.1}"></div>
+                </div>
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                    <div class="col-sm-10">
+                        <button class="btn btn-select  {eq name='$list.DXDS.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.DXDS.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+
+                        <input type="hidden"data-key = 'isOpen'  {eq name="$list.DXDS.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'DXDS' class="btn btn-primary btn_save">保 存</button></div>
+                </div>
+            </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="lh">
+            <form onsubmit="return false" class="form-horizontal form_max">
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">赔率</label>
+                    <div class="col-sm-10"><input type="text"  class="form-control" data-key = '1' value="{$list.LH.1}"></div>
+                </div>
+                <div class="form-group"><label for="inputEmail3" class="col-sm-2 control-label">开启玩法</label>
+                    <div class="col-sm-10">
+                        <button class="btn btn-select  {eq name='$list.LH.isOpen' value='1'}btn-danger{else /}btn-success{/eq}">{eq name="$list.LH.isOpen"  value='1'}已关闭{else /}已开启{/eq}</button>
+
+                        <input type="hidden"data-key = 'isOpen'  {eq name="$list.LH.isOpen" value= '1'}value="1" {else /} value="0"{/eq}></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10"><button type="submit"  data-key = 'LH' class="btn btn-primary btn_save">保 存</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(".btn-select").click(function(){
+    var _this = $(this);
+    var isOpen = _this.hasClass('btn-danger') ? 0 : 1;
+    var text = isOpen ?  '已关闭' : '已开启';
+    _this.toggleClass('btn-success');
+    _this.toggleClass('btn-danger');
+    _this.text(text)
+    _this.parent().find('input').val(isOpen);
+  })
+  $(".btn_save").click(function(){
+    var _this = $(this);
+    var key = _this.data("key");
+    var ids = key.toLowerCase();
+    var data = [];
+    var config = {};
+    config.selected = $("input[name=options]:checked").val();
+    config.bonus_base = $("input[name=bonus_base]").val();
+    config.mode = $("select[name=mode]").val();
+    $("#"+ids).find("input").each(function(index,e){
+      var news  = {};
+      var _e =  $(e);
+      news.key = _e.data('key');
+      news.value = _e.val();
+      data.push(news)
+    })
+
+    $.post('{:url("edit")}',{key: key, value: data,is_all: $("input[name='is_all']:checked").val(),config: config,name: "{$name}"}, function(res){
+      $.modal.alert(res.msg)
+    })
+  })
+</script>
+{include file='admin@common/foot' /}

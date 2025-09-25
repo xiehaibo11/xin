@@ -1,0 +1,26 @@
+{include file='admin@common/head' /}
+<style>
+  html,body{
+    height: 100%;
+  }
+  .iframe{
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<!-- <nav class="plugin_nav" id="myTab">
+  <a href="#join" class="nav_active" data-toggle="tab" data-url="{:url('record')}">动物击打记录</a>
+  <a href="#code" class="nav_active" data-toggle="tab" data-url="{:url('animal')}">动物管理</a>
+  <a href="#code" data-toggle="tab" data-url="{:url('addAnimal')}">添加动物</a>
+</nav> -->
+<iframe src="{:url('animal')}" class="iframe" id="iframe"></iframe>
+<script>
+    $(function () {
+        $('#myTab').on('click', 'a', function () {
+            $('#myTab a').removeClass('nav_active');
+            $(this).addClass('nav_active');
+            $("#iframe").attr({src: $(this).data('url')});
+        });
+    });
+</script>
+{include file='admin@common/foot' /}

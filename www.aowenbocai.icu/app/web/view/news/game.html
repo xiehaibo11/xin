@@ -1,0 +1,73 @@
+{include file='web@common/head' title="title"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/columns.css">
+<style>
+    .topImg{
+        height: 150px;
+    }
+</style>
+{volist name="banner" id="v"}
+<div class="topImg" style="background: url('{$v.img_url}') no-repeat center"></div>
+{/volist}
+<div id="position" class="position">
+    <div class="web">
+        <div class="el-breadcrumb">
+            <span class="el-breadcrumb__item">
+                <span role="link" class="el-breadcrumb__inner">
+                    <span>您的位置：</span><a href="/web">首页</a>
+                </span>
+                <i class="el-breadcrumb__separator el-icon-arrow-right"></i>
+            </span>
+            <span class="el-breadcrumb__item">
+                <span class="el-breadcrumb__inner">{$nav['title']}</span>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="news web">
+    <div class="row-max news-left">
+        <div>
+            {volist name="newsList" id="vo" empty="暂时没有相关信息"}
+            <a  class="list-item-l flex-box" href="{:url('news/view')}?id={$vo.id}&amp;navid={$vo.nav_id}" target="_blank">
+                {if condition="!empty($vo.pic)"}
+                <div class="list-item-image" style="background: url({$vo.pic}) no-repeat center;background-size: cover"></div>
+                {/if}
+                <div class="list-item-text flex">
+                    <div class="title">{$vo.title}</div>
+                    <div class="summary">
+                        <?php if (mb_strlen($vo['content_index']) > 90){
+                        echo mb_substr($vo['content_index'], 0, 90, 'utf-8')."...";
+                        }else{
+                        echo $vo['content_index'];
+                        }
+                        ?>
+                    </div>
+                    <div class="time"><i class="iconfont icon-shijian"></i> {$vo.create_time}</div>
+                </div>
+            </a>
+            {/volist}
+            <div class="page">{$newsList->render()}</div>
+        </div>
+    </div>
+    <div class="row-small view-news">
+        <div class="news_new" style="padding-top: 15px">
+            <div class="nav_title border-b" style="margin:0;">相关最新</div>
+            <div class="list">
+                <div class="list-group list-arrow">
+                    {volist name="newsList" id="vo" empty="暂时没有相关信息"}
+                    <a class="list-item list-item-image-text border-b" href="{:url('news/view')}?id={$vo.id}&amp;navid={$vo.nav_id}" target="_blank">
+                        <div class="flex-box">
+                            <div class="list-item-image">
+                                <img src="{$vo.pic ?? ''}" alt="">
+                            </div>
+                            <div class="list-item-text flex">
+                                <div class="title ellipsis">{$vo.title}</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='web@common/foot' /}

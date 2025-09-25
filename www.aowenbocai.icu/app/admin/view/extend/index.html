@@ -1,0 +1,228 @@
+{include file='common/head' /}
+<nav class="plugin_nav">
+    <a class="nav_active" href="#">已安装</a>
+     <a href="{:url('shop')}">未安装</a>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+          <li class="active">扩展管理</li>
+        </ol>
+    </div>
+    <div class="table_box">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>ICON</th>
+            <th>标识</th>
+            <th>名称</th>
+            <th>说明</th>
+            <th>当前版本</th>
+            <th>最新版本</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          {foreach $ext_list as $item}
+          <tr data-icon="{$item.logo}" data-name="{$item.name}" data-title="{$item.title}" data-remark="{$item.remark}" data-version="{$item.version}">
+            <td><img src="{$item.logo}" alt="" width="40" height="40"></td>
+            <td>{$item.name}</td>
+            <td>{$item.title}</td>
+            <td class="text-overflow">{$item.remark}</td>
+            <td>{$item.version}</td>
+            <td>{$item.new_version}</td>
+            <td>
+              <div class="btn-group" role="group" aria-label="...">
+                <!-- <a href="{:Url('/'.$item.name.'/setting')}" class="btn btn-primary btn-xs">设置</a> -->
+                <!--<a href="/{$item.name}/admin" class="btn btn-primary ">管理</a>-->
+                <a data-ext="{$item.name}" class="btn btn-primary btn_update">升级</a>
+                <a data-href="{:url('uninstall', ['ext_name' => $item.name])}" class="btn btn-primary  btn_uninstall">卸载</a>
+              </div>
+            </td>
+
+          </tr>
+          {/foreach}
+          </tbody>
+        </table>
+    </div>
+</div>
+    <style>
+        .ext_word {
+            color: #333;
+        }
+        .ext_install_box .progress {
+            margin: 0;
+        }
+        .ext_install_box {
+            margin-top: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fff;
+            padding: 10px;
+
+        }
+        .ext_install_box .ext_memo {
+            position: relative;
+        }
+        .ext_install_box .info {
+            position: absolute;
+            line-height: 25px;
+            top: 0px;
+            left: 90px;
+            right: 0px;
+            height: 80px;
+            color: #999;
+            font-size: 12px;
+        }
+        .ext_install_box .info .ext_title {
+            line-height: 30px;
+            color: #333;
+            font-size: 14px;
+
+        }
+        .ext_install_box .memo {
+            padding: 10px 0;
+            font-size: 13px;
+            color: #444;
+        }
+        .ext_install_box .icon {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+
+        }
+        .ext_install_box .icon img {
+            width: 100%;
+            height: 100%;
+        }
+        .text-overflow {
+            max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .is_install .bottom_btn,
+        .is_install.installing .progress {
+            display: block;
+        }
+        .is_install .progress,
+        .is_install.installing .bottom_btn {
+            display: none;
+        }
+        .template_hide {
+            display: none;
+        }
+        .alert {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+        }
+    </style>
+
+<!-- <div class="alert alert-danger alert-dismissible fade in ext_install_msg" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+  <h4>安装提示</h4>
+  <p></p>
+</div> -->
+
+<div class="template_hide">
+
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="ext_install_box">
+                <h3 class="ext_word text-center">扩展升级</h3>
+                <div class="ext_memo">
+                    <div class="icon"><img src="http://192.168.2.199:99/static/images/JxSsc_Logo.png" class="img_icon" alt=""></div>
+                    <div class="info">
+                        <div class="ext_title">扩展名称：<span class="ext_info_title">新闻资讯</span>（标识：<span class="ext_info_name">news</span>）</div>
+                        <div>升级版本号：<span class="ext_info_version">v0.0.1</span></div>
+                        <div style="color:red;">注：<span>升级扩展会覆盖原有扩展的所有文件。如升级后出现问题，请联系客服！</span></div>
+                    </div>
+                    <div class="memo">
+                        升级明细：<span class="ext_info_explain"></span>
+                    </div>
+                </div>
+                <div class="is_install">
+                    <div class="bottom_btn">
+                        <div class="col-md-6"><button type="button" class="btn btn-success btn-block install">升级</button></div>
+                        <div class="col-md-6"><button type="button" class="btn btn-default btn-block"  data-dismiss="modal">取消</button></div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            扩展升级中，请稍后...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+<script>
+var msg = function(str, dom) {
+    $('<div class="alert alert-danger alert-dismissible fade in ext_install_msg" role="alert">\
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>\
+      <p>' + str + '</p>\
+    </div>').appendTo(dom.find('.ext_install_box')).on('closed.bs.alert', function () {
+      dom.find('.installing').removeClass('installing');
+    });
+}
+    var ExtConfirm = function(data) {
+        var $modal = $('.template_hide .modal').clone(true);
+        $modal.find('.img_icon').attr('src', data.icon);
+        $modal.find('.ext_info_title').html(data.title);
+        $modal.find('.ext_info_name').html(data.name);
+        $modal.find('.ext_info_version').html(data.new_version);
+        $modal.find('.ext_info_explain').html(data.remark);
+        $modal.find('.install').click(function() {
+            $modal.find('.is_install').addClass('installing');
+            $.get('{:url("admin/extend/update_download")}?ext_name=' + data.name, function(res) {
+                if (res.code == 0) {
+                    return msg(res.msg, $modal);
+                }
+                $modal.modal('hide');
+                $.modal.alert('升级成功');
+            })
+        });
+        $modal.modal('show');
+        $modal.on('hidden.bs.modal', function() {
+            $modal.remove();
+        });
+    }
+    $('.btn_update').click(function() {
+        var ext = $(this).data('ext');
+        var data;
+        var _this = $(this);
+        $.post('{:Url("update_version/getVersionArticle")}?type=2&ext_name=' + ext, function(res) {
+            if (res.code == 0) {
+                $.modal.alert(res.msg);
+                return;
+            }
+            data = _this.parents('tr').data();
+            data.remark = res.content;
+            data.new_version = res.version;
+            ExtConfirm(data);
+        });
+    });
+    $('.btn_uninstall').click(function() {
+        var $this = $(this);
+        $.modal.confirm('你是否确定删除', function() {
+            $.get($this.data('href'), function(res) {
+                if (res.code == 0) {
+                    $.modal.alert(res.msg);
+                } else {
+                    $.modal.alert('卸载成功');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000)
+                }
+            });
+        });
+    });
+    
+</script>
+{include file='common/foot' /}

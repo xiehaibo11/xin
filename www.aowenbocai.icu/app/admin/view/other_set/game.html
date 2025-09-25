@@ -1,0 +1,71 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+            <li>游戏设置</li>
+        </ol>
+    </div>
+    <div class="form-horizontal form_max">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">游戏开启</label>
+            <div  class="col-sm-4">
+                <input id="game-state" type="checkbox" name="game_status"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">免费券金额</label>
+            <div class="col-sm-5">
+                <div class="tooltip-test" data-toggle="tooltip" title="免费券所对应的金额">
+                    <input type="text" class="form-control" placeholder="免费券所对应的金额" name="free_coupon_coin" value="{$setting['free_coupon_coin']}">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">游戏币单位</label>
+            <div class="col-sm-5">
+                <div class="tooltip-test" data-toggle="tooltip" title="游戏币单位名称">
+                    <input type="text" class="form-control" placeholder="游戏币单位名称" name="game_unit" value="{$setting['game_unit']}">
+                </div>
+            </div>
+        </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary btn_save">保存设置</button>
+        </div>
+      </div>
+    </div>
+</div>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch-init.js"></script>
+<script>
+$(function(){
+    //网站合买保底 开启 or 关闭
+    var game_status = '{$setting["game_status"]}'
+    var gameState = game_status == 1 ? true : false;
+    var gameValue;
+    $('#game-state').bootstrapSwitch('state', gameState);
+    $('#game-state').on('switchChange.bootstrapSwitch', function (event,state) {
+        gameValue = state ? '1' : '0';
+    });
+
+    $("[data-toggle='tooltip']").tooltip();
+
+	$('.btn_save').click(function() {
+      $.post('{:url("set")}', {
+        data: JSON.stringify({
+            free_coupon_coin: $('input[name=free_coupon_coin]').val(),
+            game_unit: $('input[name=game_unit]').val(),
+            game_status : gameValue,
+        })
+      }, function() {
+        $.modal.alert('修改成功');
+      });
+    });
+})
+</script>
+{include file='common/foot' /}

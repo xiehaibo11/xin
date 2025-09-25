@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="NavSkin" width="200" height="350" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect width="194" height="298" anchorOffsetX="0" anchorOffsetY="0" ellipseWidth="20" top="15" horizontalCenter="0" fillColor="0x83221f"/>
+	<e:Image source="jt_png" x="168" y="7"/>
+	<e:Label id="record_nav" text="投注记录" y="34" size="30" horizontalCenter="-3" textColor="0xffffff"/>
+	<e:Rect width="160" height="1" y="86" horizontalCenter="-1" fillColor="0xffffff"/>
+	<e:Label text="每日任务" y="107" horizontalCenter="-3" size="30" textColor="0xffffff"/>
+	<e:Rect width="160" height="1" y="162" horizontalCenter="-1" fillColor="0xffffff"/>
+	<e:Label id="play_info_nav" text="玩法介绍" y="184" horizontalCenter="-3" size="30" textColor="0xffffff"/>
+	<e:Rect width="160" height="1" y="239" horizontalCenter="-1" fillColor="0xffffff"/>
+	<e:Label id="back_btn" text="大厅首页" y="261" horizontalCenter="-3" size="30" textColor="0xffffff"/>
+</e:Skin>

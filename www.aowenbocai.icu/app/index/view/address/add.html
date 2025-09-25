@@ -1,0 +1,112 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="/static/css/distpicker/ydui.css?rev=@@hash"/>
+
+<style>
+  body{background-color: #25272f}
+  .form {
+    margin: .5rem;
+  }
+  .form button.btn
+  {
+    display: block;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .icon-svg {
+    display: inline-block;
+    margin: .4rem;
+  }
+  .header .header-left{
+  }
+  .input {
+    width: 100%;
+    padding: 0 0.5rem;
+    margin: 0;
+    border-bottom: 0.05rem solid #474e5d;
+    border-radius: 0.4rem;
+    line-height: 1.4rem;
+    color: #fffcfc;
+    background: none;
+  }
+  .item-line .item-title {
+    text-align: center;
+    width: 5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #969bb2;
+  }
+  .item-line{background: none;}
+  .item-line:after{
+    background: #484f5d;
+  }
+  .input.input-lg{
+    background: none;
+  }
+</style>
+<header class="header">
+  <a class="header-left" href="javascript:history.go(-1)">
+    <i class="icon-svg icon_left"></i>
+  </a>
+  <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app">
+  <form class="form" action="{:Url('add')}" id="addressForm">
+    <div class="item-line item-lg">
+      <div class="item-title">姓名：</div>
+      <input type="text" class="input input-line input-lg" name="name" placeholder="输入联系人" >
+        
+    </div>
+    <div class="item-line item-lg">
+      <div class="item-title">电话：</div>
+      <input type="text" class="input input-line input-lg" name="tel" placeholder="输入联系电话" >
+    </div>
+    <div class="item-line item-lg">
+      <div class="item-title">区域：</div>
+      <input type="text" class="input input-line input-lg" readonly name="city" id="J_Address" placeholder="请选择区域" >
+    </div>
+    <div class="item-line item-lg">
+      <div class="item-title">地址：</div>
+      <input type="text" class="input input-line input-lg" name="address" placeholder="输入详细地址" >
+    </div>
+      
+    <div><button class="btn  btn-fill btn-lg">保存</button></div>
+  </form>
+</div>
+
+{include file='common@common/foot' /}
+<script>
+    Zepto(function () {
+        Zepto("#addressForm").formAjax({
+            callback: function (data) {
+                Zepto.msg(data.msg);
+                if (data.code) {
+                    setTimeout(function () {
+                        location.href = "{:Url('index/Address/index')}";
+                    }, 1000);
+                }
+            }
+        });
+    });
+</script>
+<script src="/static/js/jquery-2.0.3.min.js"></script>
+<script src="/static/js/distpicker/ydui.js"></script>
+<script src="/static/js/distpicker/ydui.citys.js"></script>
+<script>
+    !function () {
+        var $target = $('#J_Address');
+
+        $target.citySelect();
+
+        $target.on('click', function (event) {
+            event.stopPropagation();
+            $target.citySelect('open');
+        });
+
+        $target.on('done.ydui.cityselect', function (ret) {
+            $(this).val(ret.provance + ' ' + ret.city + ' ' + ret.area);
+        });
+
+    }();
+
+</script>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RecordItemSkin" width="640" height="142" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Label id="expect" text="121212121212" x="21" y="25" size="28"/>
+	<e:Label id="code" text="开奖:11" x="222" y="26" size="24" anchorOffsetX="0" width="170" textColor="0x328b02"/>
+	<e:Label id="create_time" text="10-12 12:12:12" x="21" y="87" size="24" textColor="0x7b7b7b"/>
+	<e:Label id="betting_money" text="消耗100金豆" x="239" y="87" size="24" textAlign="right" anchorOffsetX="0" width="380" textColor="0x7b7b7b"/>
+	<e:Label id="status" text="未中奖" x="388" y="25" size="28" textAlign="right" anchorOffsetX="0" width="231"/>
+	<e:Rect right="0" height="1" width="640" horizontalCenter="0" bottom="0" fillColor="0x444444"/>
+</e:Skin>

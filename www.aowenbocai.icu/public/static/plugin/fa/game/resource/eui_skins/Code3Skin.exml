@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="Code3Skin" width="150" height="150" currentState="up" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"   states="up,down" >
+	<e:Image id="code_bg" source="code_3" bottom="0" horizontalCenter="0" scaleX.up="0.8" scaleY.up="0.8"/>
+	<e:Label id="num_shadow" text="1000" italic="true" size="52" bold="true" verticalAlign="middle" textAlign="center" textColor="0xce800a" width="150" scaleX.up="0.8" scaleY.up="0.8" left.up="0" right.up="0" horizontalCenter.down="0" verticalCenter.up="16" verticalCenter.down="0"/>
+	<e:Label id="num" text="1000" italic="true" size="50" bold="true" verticalAlign="middle" textAlign="center" scaleX.up="0.8" scaleY.up="0.8" left.up="0" right.up="0" horizontalCenter.down="0" verticalCenter.up="16" verticalCenter.down="0"/>
+</e:Skin>

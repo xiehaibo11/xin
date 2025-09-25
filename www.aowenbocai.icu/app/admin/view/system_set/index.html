@@ -1,0 +1,369 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<link rel="stylesheet" href="__STATIC__/bootstrap-switch/css/bootstrap-switch.min.css"/>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<style>
+    .modal{
+        z-index: 10050;
+    }
+    .col-sm-5 {
+      padding-left:0;
+    }
+    .img-col span{width: 100%;float: right;text-align: center;font-size: 16px;font-weight: bolder}
+    .img-col img{width: 100%}
+</style>
+<link href="__STATIC__/summernote/summernote.css?v=2" rel="stylesheet">
+<script src="__STATIC__/summernote/summernote.min.js?v=2"></script>
+<script src="__STATIC__/summernote/summernote-zh-CN.js?v=2"></script>
+<style>
+  .form-group .dropdown-toggle {
+    padding:5px 10px !important;
+  }
+</style>
+<nav class="plugin_nav">
+  <a class="nav_active">基础设置</a>
+  <a href="{:url('admin/SystemSet/setRecharge')}">充值设置</a>
+  <a href="{:url('admin/SystemSet/user')}">会员设置</a>
+  <a href="{:url('admin/SystemSet/company')}">联系方式</a>
+  <div role="presentation" class="dropdown" style="display: inline-block">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      API接口<span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a href="{:url('admin/OtherSet/index')}">短信验证接口</a></li>
+      <li><a href="{:url('admin/OtherSet/emails')}">邮箱验证接口</a></li>
+      <li><a href="{:url('admin/OtherSet/qqConnect')}">快速登录接口</a></li>
+      <li><a href="{:url('admin/OtherSet/shareImg')}">微信分享接口</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="box-padding">
+  <div class="breadcrumb">
+    <ol >
+      <li class="active"><i class="glyphicon glyphicon-link"></i> 网站设置</li>
+      <li>基础设置</li>
+    </ol>
+  </div>
+    <div class="form-horizontal form_max">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">网站名称</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control" placeholder="网站名" name="site_name" value="{$setting['site_name']}">
+            </div>
+          </div>
+    
+          <div class="form-group">
+            <label class="col-sm-2 control-label">网站LOGO</label>
+            <div class="col-sm-10">
+              <img class="user_photo" src="{$setting['logo_url']}" alt="">
+              <input type="file" class="select_photo_logo" style="display: none;">
+              <button type="button" class="btn btn-primary btn_select_photo_logo">更换</button>
+            </div>
+          </div>
+          
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">登录访问</label>
+            <div  class="col-sm-5">
+              <input id="login-state" type="checkbox" name="login_in"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">公告弹窗</label>
+            <div  class="col-sm-5">
+              <input id="notice-popup" type="checkbox" name="notice_pop_open"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">邀请码注册</label>
+            <div  class="col-sm-5">
+              <input id="code-state" type="checkbox" name="is_reg_code"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">绑定身份证</label>
+            <div class="col-sm-5">
+              <input id="bind-idcard" type="checkbox" name="bind_idcard"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">PC端状态</label>
+            <div class="col-sm-5">
+              <input id="pc-state" type="checkbox" name="pc_status"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">手机端状态</label>
+            <div class="col-sm-5">
+              <input id="wap-state" type="checkbox" name="moblie_status"/>
+            </div>
+          </div>
+          <div class="form-group isCellphone">
+            <label class="col-sm-2 control-label">app下载地址</label>
+            <div class="col-sm-5">
+                <!-- {$setting['moblie_domain']} -->
+              <div class="tooltip-test" data-toggle="tooltip" title="请填写完整下载地址">
+              <input type="text" class="form-control" placeholder="app下载地址" name="moblie_domain" value="{$setting['moblie_domain']}">
+              </div>
+            </div>
+          </div>
+          <div class="form-group isCellphone">
+            <label class="col-sm-2 control-label">WAP访问二维码</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder=""  value="{$setting.wap_pic}" name="wap_pic" >
+                <input type="file" class="select_photo_wap" style="display: none;"  data-id = 'wap'>
+            </div> 
+            <div class="col-sm-3 isCellphone">
+                <button  type="button" class="btn btn-primary btn-delete" data-id = "wap_pic">清除</button>
+                <button type="button" class="btn btn-primary btn_select_photo_wap" data-id = 'wap'>上传二维码</button>
+            </div>
+          </div>
+          
+          <div class="form-group isCellphone">
+            <label class="col-sm-2 control-label">Android APP下载二维码</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder=""  value="{$setting.android_pic}" name="android_pic" >
+                <input type="file" class="select_photo_android" style="display: none;" data-id = 'android'>
+            </div> 
+            <div class="col-sm-3">
+                <button  type="button" class="btn btn-primary btn-delete" data-id = "android_pic">清除</button>
+                <button type="button" class="btn btn-primary btn_select_photo_android" data-id = 'android'>上传二维码</button>
+            </div>
+          </div>
+          <div class="form-group isCellphone">
+            <label class="col-sm-2 control-label">IOS APP下载二维码</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder=""  value="{$setting.ios_pic}" name="ios_pic" >
+                <input type="file" class="select_photo_ios" style="display: none;" data-id = 'ios'>
+            </div> 
+            <div class="col-sm-3">
+                <button  type="button" class="btn btn-primary btn-delete" data-id = "ios_pic">清除</button>
+                <button type="button" class="btn btn-primary btn_select_photo_ios" data-id = 'ios'>上传二维码</button>
+            </div>
+          </div>
+          
+          <div class="form-group isCellphone">
+            <label class="col-sm-2 control-label">二维码管理</label>
+            <div class="col-sm-3 img-col">
+              <span>web访问</span>
+              <img src="{$setting.wap_pic}" alt="" class="wap_src">
+            </div> 
+            <div class="col-sm-3 img-col">
+                <span>android下载</span>
+              <img src="{$setting.android_pic}" alt="" class="android_src">
+            </div> 
+            <div class="col-sm-3 img-col">
+                <span>ios下载</span>
+              <img src="{$setting.ios_pic}" alt="" class="ios_src">
+            </div> 
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">后台入口名</label>
+            <div class="col-sm-5">
+              <div class="tooltip-test" data-toggle="tooltip" title="后台登录方法名">
+              <input type="text" class="form-control" placeholder="后台入口名" name="login_name" value="{$setting['login_name']}">
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-success" role="alert">
+            以下两个条款里面涉及到公司名及平台名请分别用*** 和 %%% 代替
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">用户隐私权保护和个人信息授权条款</label>
+            <div class="col-sm-10">
+              <div class="tooltip-test" data-toggle="tooltip" title="用户隐私权保护和个人信息授权条款里面的公司或平台名请分别用***和 %%%代替">
+                <textarea id="user_service" class="content">{$setting.user_service}</textarea>
+              </div>
+            </div>
+          </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">酷睿科技游戏平台服务条款</label>
+          <div class="col-sm-10">
+            <div class="tooltip-test" data-toggle="tooltip" title="酷睿科技游戏平台服务条款里面的公司或平台名请分别用*** 和 %%%代替">
+              <textarea id="web_service" class="content">{$setting.web_service}</textarea>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="col-sm-2 control-label">网站底部设计</label>
+          <div class="col-sm-10">
+            <div class="tooltip-test" data-toggle="tooltip" title="电脑版网站底部文字设置">
+              <textarea id="web_bottom" class="content">{$setting.web_bottom}</textarea>
+            </div>
+          </div>
+        </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary btn_save">保存设置</button>
+        </div>
+      </div>
+    </div>
+</div>
+<script src="__STATIC__/bootstrap-switch/js/bootstrap-switch-init.js"></script>
+<script>
+      //pc站点是否开启
+      var pcState = '{$setting.pc_status}' == 1 ? true : false;
+      var pcValue;
+      $('#pc-state').bootstrapSwitch('state', pcState);
+      $('#pc-state').on('switchChange.bootstrapSwitch', function (event,state) {
+          pcValue = state ? '1' : '0';
+      });
+
+      //手机端是否开启
+      var wapState = '{$setting.moblie_status}' == 1 ? true : false;
+      wapState ? ($(".isCellphone").show()) : ($(".isCellphone").hide());
+      var wapValue;
+      $('#wap-state').bootstrapSwitch('state', wapState);
+      $('#wap-state').on('switchChange.bootstrapSwitch', function (event,state) {
+          wapValue = state ? '1' : '0';
+          $(".isCellphone").toggle(1000)
+      });
+
+      //登录访问是否开启
+      var loginState = '{$setting.login_in}' == 1 ? true : false;
+      var loginValue;
+      $('#login-state').bootstrapSwitch('state', loginState);
+      $('#login-state').on('switchChange.bootstrapSwitch', function (event,state) {
+         loginValue = state ? '1' : '0';
+      });
+
+      //邀请码注册是否开启
+      var codeState = '{$setting.is_reg_code}' == 1 ? true : false;
+      var codeValue;
+      $('#code-state').bootstrapSwitch('state', codeState);
+      $('#code-state').on('switchChange.bootstrapSwitch', function (event,state) {
+          codeValue = state ? '1' : '0';
+      });
+
+      //公告弹窗是否开启
+      var popupState = '{$setting.notice_popup_open}' == 1 ? true : false;
+      var popupValue;
+      $('#notice-popup').bootstrapSwitch('state', popupState);
+      $('#notice-popup').on('switchChange.bootstrapSwitch', function (event,state) {
+          popupValue = state ? '1' : '0';
+      });
+
+      //绑定身份证是否开启
+      var idcardState = '{$setting.bind_idcard}' == 1 ? true : false;
+      var idcardValue;
+      $('#bind-idcard').bootstrapSwitch('state', idcardState);
+      $('#bind-idcard').on('switchChange.bootstrapSwitch', function (event,state) {
+          idcardValue = state ? '1' : '0';
+      });
+
+      //富文本发送图片
+      function sendFile(Url,file,callback) {
+          var filename = false;
+          try{
+              filename = file['name'];
+          } catch(e){filename = false;}
+          if(!filename){$(".note-alarm").remove();}
+          data = new FormData();
+          data.append("file", file);
+          $.ajax({
+              data: data,
+              type: "POST",
+              url: Url,//路径是你控制器中上传图片的方法，下面controller里面我会写到
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(url) {
+                  callback(url);
+              }
+          });
+      }
+      $(document).ready(function() {
+          $(".content").each(function(){
+              var _this = $(this);
+              _this.summernote({
+                  lang: "zh-CN",
+                  height: 350,
+                  callbacks: {
+                      //调用图片上传
+                      onImageUpload: function (files) {
+                          sendFile("{:Url('editor_upload')}?dir=setting_user", files[0], function(data){
+                              _this.summernote('insertImage',data,'img');
+                          });
+                      }
+                  }
+              })
+          })
+      });
+
+
+    var pic_name = '';
+    $("[data-toggle='tooltip']").tooltip();
+    $('.btn_select_photo_wap,.btn_select_photo_android,.btn_select_photo_ios').click(function () {
+      pic_name = $(this).data('id');
+      $('.select_photo_'+pic_name).click();
+    });
+    $('.select_photo_wap,.select_photo_android,.select_photo_ios').localResizeIMG({
+      quality : 1,
+      success: function (result) {
+        $.post("{:url('setShare')}", { 'base64_data': result.base64,'name': pic_name}, function (res) {
+          $('input[name='+pic_name+'_pic]').attr('value', res.data);
+          $('.'+pic_name+'_src').attr('src', res.data);
+        }, 'json');
+      }
+    });
+
+    $('.btn_select_photo_logo').click(function () {
+      $('.select_photo_logo').click();
+    });
+    $('.select_photo_logo').localResizeIMG({
+      quality : 1,
+      success: function (result) {
+        $('.btn_save').attr('disabled', 'disabled');
+        $('.user_photo').attr('src', result.base64);
+        $.post('{:url("setLogo")}', { 'base64_data': result.base64}, function (res) {
+          $('input[name=photo]').attr('value', res.data);
+          $('.btn_save').attr('disabled', null);
+        }, 'json');
+      }
+    });
+
+    $(".btn-delete").click(function(){
+      var name = $(this).data('id');
+      var arr = name.split('_');
+      $('input[name='+name+']').val('');
+      $("."+arr[0]+'_src').attr('src', '');
+      $.post('{:url("setPicValue")}', {name: name}, function(res) {
+        $.modal.alert('修改成功');
+      })
+    })
+
+    $('.btn_save').click(function() {
+      var pay_way = [];
+      $('input[name=pay_way]:checked').each(function(){
+          pay_way.push($(this).val());
+      });
+      $.post('{:url("set")}', {
+        data: JSON.stringify({
+            login_in : loginValue,
+            recharge_award: $('input[name=recharge_award]').val(),
+            login_name: $('input[name=login_name]').val(),
+            site_name: $('input[name=site_name]').val(),
+            moblie_domain: $('input[name=moblie_domain]').val(),
+            pc_status : pcValue,
+            moblie_status : wapValue,
+            user_service : $('#user_service').val(),
+            web_service : $('#web_service').val(),
+            web_bottom : $('#web_bottom').val(),
+            is_reg_code: codeValue,
+            notice_popup_open: popupValue,
+            bind_idcard: idcardValue
+        })
+      }, function(res) {
+        var msg = res.res ?　'修改成功，入口文件已改变' : '修改成功';
+        $.modal.alert(msg);
+        if(res.res){
+          setTimeout(() => {
+            var url = $('input[name=login_name]').val();
+            location.href = "/"+url+".php"
+          }, 2000);
+        }
+      });
+    });
+</script>
+{include file='common/foot' /}

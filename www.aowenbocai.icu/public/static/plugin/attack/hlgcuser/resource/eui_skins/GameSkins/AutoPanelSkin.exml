@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="AutoPanelSkin" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect left="0" right="0" top="0" bottom="0" fillAlpha="0.5"/>
+	<e:Group id="sc" width="600" scaleX="1" scaleY="1" horizontalCenter="0" bottom="0" anchorOffsetY="0" height="384" locked="true">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xb4712f" ellipseWidth="10"/>
+			<e:Rect fillColor="0xf1d193" left="3" right="3" top="3" bottom="3" ellipseWidth="10"/>
+			<e:Rect left="10" right="10" top="10" bottom="10" fillColor="0xf2debc" ellipseWidth="30"/>
+			<e:Rect left="10" right="10" top="60" bottom="10" fillColor="0xe2b891"/>
+	</e:Group>
+	<e:Image source="sprite-dialog_json.sprite-dialog001" horizontalCenter="0" bottom="320" height="154"/>
+	<e:Label text="自动战斗中" horizontalCenter="0" bottom="385"/>
+	<e:Group width="580" horizontalCenter="0" bottom="40" height="276">
+		<e:Group width="100%" height="50" x="35" y="21">
+			<e:Label text="目标掠夺金豆：" x="29" y="7" verticalAlign="middle" textAlign="center" textColor="0xce7939"/>
+			<e:Label id="winMoney" text="0" x="291" y="7" backgroundColor="0xf2debc" background="true" height="50" verticalAlign="middle" textAlign="center" width="100"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="100" gap="35"/>
+			</e:layout>
+		</e:Group>
+		<e:Group width="100%" height="50" x="45" y="31">
+			<e:Label text="目标被掠夺金豆：" x="29" y="7" verticalAlign="middle" textAlign="center" textColor="0xCE7939"/>
+			<e:Label id="loseMoney" text="0" x="291" y="7" backgroundColor="0xF2DEBC" background="true" height="50" verticalAlign="middle" textAlign="center" width="100"/>
+			<e:layout>
+			<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="100"/>
+			</e:layout>
+		</e:Group>
+		<e:Group width="100%" height="50" x="55" y="41">
+			<e:Label text="当前掠夺金豆：" x="29" y="7" verticalAlign="middle" textAlign="center" textColor="0xe23b3b"/>
+			<e:Label id="NowWinMoney" text="0" x="291" y="7" backgroundColor="0xe23b3b" background="true" height="50" verticalAlign="middle" textAlign="center" width="100"/>
+			<e:layout>
+			<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="100" gap="35"/>
+			</e:layout>
+		</e:Group>
+		<e:Group width="100%" height="50" x="65" y="51">
+			<e:Label text="当前被掠夺金豆：" x="29" y="7" verticalAlign="middle" textAlign="center" textColor="0xe23b3b"/>
+			<e:Label id="NowLoseMoney" text="0" x="291" y="7" backgroundColor="0xe23b3b" background="true" height="50" verticalAlign="middle" textAlign="center" width="100"/>
+			<e:layout>
+			<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle" paddingLeft="100"/>
+			</e:layout>
+		</e:Group>
+		<e:layout>
+			<e:VerticalLayout horizontalAlign="left" verticalAlign="middle" gap="30"/>
+		</e:layout>
+	</e:Group>
+	<e:Button id="cancel" label="" left="20" top="120" width="80" height="80" scaleX="1" scaleY="1">
+		<e:skinName>
+			<e:Skin states="up,down,disabled">
+			<e:Image width="100%" height="100%" source="auto_fight-1_png"/>
+			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+			</e:Skin>
+		</e:skinName>
+	</e:Button>
+</e:Skin>

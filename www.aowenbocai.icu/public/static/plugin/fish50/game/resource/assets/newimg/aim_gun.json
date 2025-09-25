@@ -1,0 +1,8 @@
+{"file":"aim_gun.png",
+"frames":
+{"aimGun005":{"x":0,"y":0,"w":248,"h":248,"offX":0,"offY":0,"sourceW":248,"sourceH":248},
+"aimGun002":{"x":250,"y":0,"w":220,"h":220,"offX":0,"offY":0,"sourceW":220,"sourceH":220},
+"aimGun004":{"x":250,"y":222,"w":193,"h":54,"offX":0,"offY":0,"sourceW":193,"sourceH":54},
+"aimGun003":{"x":445,"y":222,"w":51,"h":38,"offX":0,"offY":0,"sourceW":51,"sourceH":38},
+"aimGun000":{"x":472,"y":0,"w":36,"h":53,"offX":0,"offY":0,"sourceW":36,"sourceH":53},
+"aimGun001":{"x":472,"y":55,"w":36,"h":53,"offX":0,"offY":0,"sourceW":36,"sourceH":53}}}

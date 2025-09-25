@@ -1,0 +1,80 @@
+/**
+ * 公用变量
+ */
+@charset "UTF-8";
+
+@WinWitdh:1200px;
+@mWidth:920px;
+@sWidth:280px;
+@navLeft:229px;
+@navRight:851px;
+@LinkC:#3178e2;
+@white:#ffffff;
+
+@color-base : #de3031;
+@color-secondary : #f47d17;
+@color-tabs : #ff0;
+
+@images : '/static/vipweb/images/';
+
+@gray-base:              #000;
+@gray-darker:            #222;
+@gray-dark:              #333;
+@gray:                   #555;
+@gray-light:             #888;
+@gray-lighter: #c3c3c3;
+@gray-bg:  #f4f4f4;
+
+@font-size-base:          14px;
+@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
+@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+
+//@fonts-size-h1:            floor((@fonts-size-base * 2.6)); // ~36px
+//@fonts-size-h2:            floor((@fonts-size-base * 2.15)); // ~30px
+//@fonts-size-h3:            ceil((@fonts-size-base * 1.7)); // ~24px
+//@fonts-size-h4:            ceil((@fonts-size-base * 1.25)); // ~18px
+//@fonts-size-h5:            @fonts-size-base;
+//@fonts-size-h6:            ceil((@fonts-size-base * 0.85)); // ~12px
+
+.dz(@time:0.25s){  //动画时间
+    -webkit-transition: all @time;
+    -moz-transition: all @time;
+    -o-transition: all @time;
+    transition: all @time;
+}
+.borderRadius(@radius:5px){ //圆角
+    -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+    -o-border-radius: @radius;
+    border-radius: @radius;
+}
+.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) { //渐变
+    background: @color;
+    background: -webkit-gradient(linear,left bottom,left top,color-stop(0, @start),color-stop(1, @stop));
+    background: -ms-linear-gradient(bottom,@start,@stop);
+    background: -moz-linear-gradient(center bottom,@start 0%, @stop 100%);
+    background: -o-linear-gradient(@stop,@start);
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
+}
+/*
+盒子阴影
+@right_left 右边阴影为正数 左边负数
+@bottom_top 下边阴影为正数 上边负数
+@box  阴影大小
+@box_color 阴影颜色
+*/
+.boxshadow(@right_left:5px,@bottom_top:5px,@box :5px,@box_color:#b6b6b6){
+    box-shadow:@arguments;
+    -moz-box-shadow:@arguments;
+    -webkit-box-shadow:@arguments;
+}
+/*
+文字阴影,可以指定多组阴影
+@right_left1 右边阴影为正数 左边负数
+@bottom_top1 下边阴影为正数 上边负数
+@text  阴影大小
+@text_color 阴影颜色
+*/
+.textshadow(@right_left1:5px,@bottom_top1:5px,@text :5px,@tetx_color:#b6b6b6){
+    text-shadow:@arguments;
+}

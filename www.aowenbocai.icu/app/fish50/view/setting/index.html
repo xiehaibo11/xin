@@ -1,0 +1,253 @@
+{include file='admin@common/head' /}
+<nav class="plugin_nav">
+    <a class="nav_active" href="{:url('fish50/setting/index')}">基本设置</a>
+    <a href="{:url('fish50/admin/index')}">玩家道具</a>
+    <a href="{:url('fish50/setting/fishSet')}">鱼种列表</a>
+</nav>
+
+<style>
+  .icon_box {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;
+    width: 80px;
+    height: 80px;
+    background: #C6EAFF;
+    overflow: hidden;
+    border: 1px solid #9ED3FF;
+    border-radius: 3px;
+    position: absolute;
+  }
+  .col-sm-2 {
+      width:14%;
+  }
+  .col-sm-offset-2 {
+      margin-left:14%;
+  }
+  .col-sm-3 {
+      width:16%;
+  }
+  .screen_box .col-sm-1 {
+      width:7%;
+      padding-right:0;
+  }
+  .dis {
+    background: #FFCCCC;
+    border: 1px solid #FF9E9E;
+  }
+  .fish_info {
+    padding: 10px;
+  }
+  .right {
+    margin-left: 88px;
+    line-height: 26px;
+  }
+  .hit, .sp {
+    color: #C32AD6;
+    font-weight: 700;
+  }
+  .sp {
+    color: #23AB92;
+  }
+    .remark {
+        color:#888;
+        line-height:34px;
+        font-size:13px;
+    }
+</style>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li><i class="glyphicon glyphicon-link"></i> 欢乐捕鱼</li>
+            <li class="active">基本设置</li>
+        </ol>
+    </div>
+    <div class="row">
+        <form class="form-horizontal form_max" onsubmit="return false">
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">冰冻卡</label>
+                <div class="col-sm-2">
+                    <input type="text" name="bdk_chance" value="{$setting.bdk_chance}" class="form-control text-center">
+                </div>
+                <div class="col-sm-5">
+                    <span class="remark">掉落概率,单位：千分比</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">锁定卡</label>
+                <div class="col-sm-2">
+                    <input type="text" name="sdk_chance" value="{$setting.sdk_chance}" class="form-control text-center">
+                </div>
+                <div class="col-sm-5">
+                    <span class="remark">掉落概率,单位：千分比</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">加速卡</label>
+                <div class="col-sm-2">
+                    <input type="text" name="jsk_chance" value="{$setting.jsk_chance}" class="form-control text-center">
+                </div>
+                <div class="col-sm-5">
+                    <span class="remark">掉落概率,单位：千分比</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">红包</label>
+                <div class="col-sm-2">
+                    <input type="text" name="hb_chance" value="{$setting.hb_chance}" class="form-control text-center">
+                </div>
+                <div class="col-sm-5">
+                    <span class="remark">掉落概率,单位：千分比</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">话费</label>
+                <div class="col-sm-2">
+                    <input type="text" name="hf_chance" value="{$setting.hf_chance}" class="form-control text-center">
+                </div>
+                <div class="col-sm-5">
+                    <span class="remark">掉落概率,单位：千分比</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">钻石</label>
+                <div class="col-sm-2">
+                    <input type="text" name="zs_chance" value="{$setting.zs_chance}" class="form-control text-center">
+                </div>
+                <div class="col-sm-5">
+                    <span class="remark">掉落概率,单位：千分比</span>
+                </div>
+            </div>
+            <div class="screen_box">
+                {volist name="$setting.fish_screen" id="item"}
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">{eq name="$key" value="0"}经典场{/eq}</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" placeholder="xx-xxx " name="screen" value="{$item.screen}">
+                    </div>
+                    <label for="inputEmail3" class="col-sm-1 control-label">{eq name="$key" value="0"}红包{/eq}</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" placeholder="掉落金额" name="hb_num" value="{$item.hb_num}">
+                    </div>
+                    <label for="inputEmail3" class="col-sm-1 control-label">{eq name="$key" value="0"}话费{/eq}</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" placeholder="掉落金额" name="hf_num" value="{$item.hf_num}">
+                    </div>
+                    <label for="inputEmail3" class="col-sm-1 control-label">{eq name="$key" value="0"}钻石{/eq}</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" placeholder="掉落数量" name="zs_num" value="{$item.zs_num}">
+                    </div>
+                    {neq name="$key" value="0"}
+                    <div class="col-sm-1">
+                        <a href="javascript:;" class="other_dele" style="line-height:34px;">删除</a>
+                    </div>
+                    {/neq}
+                </div>
+                {/volist}
+                {empty  name = "$setting.fish_screen"}
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">经典场</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" placeholder="xx-xxx" name="screen">
+                    </div>
+                    <label for="inputEmail3" class="col-sm-1 control-label">红包</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" placeholder="掉落金额" name="hb_num">
+                    </div>
+                    <label for="inputEmail3" class="col-sm-1 control-label">话费</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" placeholder="掉落金额" name="hf_num" >
+                    </div>
+                    <label for="inputEmail3" class="col-sm-1 control-label">钻石</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" placeholder="掉落数量" name="zs_num" >
+                    </div>
+                </div>
+                {/empty}
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2">
+                    <a href="javascript:;" class="add_screen" style="display: block; line-height:34px;">增加数据</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary  btn_save">确认保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{include file='admin@common/foot' /}
+
+<script>
+    $(function(){
+        $(".add_screen").click(function(){
+            var html = '<div class="form-group">\
+                <label for="inputEmail3" class="col-sm-2 control-label"></label>\
+                <div class="col-sm-3">\
+                  <input type="text" class="form-control" placeholder="xx-xxx" name="screen">\
+                </div>\
+                <label for="inputEmail3" class="col-sm-1 control-label"></label>\
+                <div class="col-sm-2">\
+                  <input type="text" class="form-control" placeholder="掉落金额" name="hb_num">\
+                </div>\
+                <label for="inputEmail3" class="col-sm-1 control-label"></label>\
+                <div class="col-sm-2">\
+                <input type="text" class="form-control" placeholder="掉落金额" name="hf_num">\
+                </div>\
+                <label for="inputEmail3" class="col-sm-1 control-label"></label>\
+                <div class="col-sm-2">\
+                <input type="text" class="form-control" placeholder="掉落数量" name="zs_num">\
+                </div>\
+                <div class="col-sm-1">\
+                  <a href="javascript:;" class="other_dele" style="line-height:34px;">删除</a>\
+                </div>\
+            </div>';
+            $(".screen_box").append(html);
+        })
+        $(document).on('click','.other_dele',function () {
+            $(this).closest('.form-group').remove();
+        })
+
+        $(document).on('click','.btn_save',function () {
+            var fish_screen_array = [];
+            var has_empty = 1;
+            $('input[name=screen]').each(function(i){
+                var obj = {};
+                obj.screen = $(this).val();
+                obj.hb_num = $('input[name=hb_num]').eq(i).val();
+                obj.hf_num = $('input[name=hf_num]').eq(i).val();
+                obj.zs_num = $('input[name=zs_num]').eq(i).val();
+                if (obj.screen == '' || obj.hb_num == ''  || obj.hf_num == ''|| obj.zs_num == '' ) {
+                    has_empty = 0;
+                }
+                fish_screen_array.push(obj);
+            })
+            if (!has_empty) {
+                return $.modal.alert('请完善场景设置项!');
+            }
+            var fish_screen_string = JSON.stringify(fish_screen_array);
+            $.post('{:url("add_setting")}', {
+                data: JSON.stringify({
+                    bdk_chance: $('input[name=bdk_chance]').val(),
+                    sdk_chance: $('input[name=sdk_chance]').val(),
+                    jsk_chance: $('input[name=jsk_chance]').val(),
+                    hf_chance: $('input[name=hf_chance]').val(),
+                    hb_chance: $('input[name=hb_chance]').val(),
+                    zs_chance: $('input[name=zs_chance]').val(),
+                    fish_screen: fish_screen_string,
+                })
+            }, function(data) {
+                $.modal.alert(data.msg);
+            });
+        });
+
+    })
+</script>

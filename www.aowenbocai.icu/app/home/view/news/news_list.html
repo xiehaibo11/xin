@@ -1,0 +1,81 @@
+{include file='home@common/head' title="新闻资讯"/}
+
+<!--顶部主题图-->
+<div class="product-banner top-banner">
+    <div class="web_ banner-detail">
+        <div class="b_title animated fadeInUp wow column_name"></div>
+        <div class="b_info animated fadeInDown wow column_info"></div>
+    </div>
+</div>
+<!--顶部主题图 end-->
+
+<div class="web_ news-list bg-white hidden" style="min-height: 455px;margin: 20px auto 0">
+    <div class="animated fadeInUp wow"  data-wow-duration="1s">
+        <div class="location c-4"><i class="iconfont icon-dizhi1 c-5"></i><a href="{:url('./')}"> 首页</a> / <span class="column_name"></span></div>
+        {volist name="newsList" id="vo" empty="暂时没有数据"}
+        <a class="list-item cf" href="{:url('news/view')}?id={$vo.id}&amp;navid={$vo.nav_id}" target="_blank">
+            {if condition="!empty($vo.pic)"}
+            <div class="list-item-image fl" style="background: url({$vo.pic}) no-repeat center;background-size: cover"></div>
+            <div class="list-item-text fl" style="width: 66%">
+                <h3 class="title ellipsis">{$vo.title}</h3>
+                <div class="memo ellipsis-2 c-4">
+                    <?php if (mb_strlen($vo['content_index']) > 100){
+                    echo mb_substr($vo['content_index'], 0, 100, 'utf-8')."...";
+                    }else{
+                    echo $vo['content_index'];
+                    }
+                    ?>
+                </div>
+            </div>
+            {else/}
+            <div class="list-item-text fl" style="width: 88%">
+                <h3 class="title ellipsis">{$vo.title}</h3>
+                <div class="memo ellipsis-2 c-4">
+                    <?php if (mb_strlen($vo['content_index']) > 100){
+                    echo mb_substr($vo['content_index'], 0, 100, 'utf-8')."...";
+                    }else{
+                    echo $vo['content_index'];
+                    }
+                    ?>
+                </div>
+                <div class="time c-5"><i class="iconfont icon-shijian"></i> {$vo.create_time}</div>
+            </div>
+            {/if}
+            <div class="fr tr list-item-time">
+            <span>
+                 <em>
+                {$vo.create_time|substr=###, 8, 2}
+                </em>
+                {$vo.create_time|substr=###, 0, 7}
+            </span>
+            </div>
+        </a>
+        {/volist}
+        <div class="page">{$newsList->render()}</div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var id = GetUrlParam('navid');
+        if(id == {$newsId}){
+            $('.nav-news').addClass('active')
+            $('.column_name').text('新闻资讯')
+            $('.column_info').text('了解最新公司新闻动态')
+        }
+        if(id == {$noticeId}){
+            $('.nav-notice').addClass('active')
+            $('.column_name').text('网站公告')
+            $('.column_info').text('了解最新公司网站公告')
+        }
+        $(".list-item").each(function(){
+            $(this).mouseenter(function(){
+                $(this).addClass('active')
+            });
+            $(this).mouseleave(function(){
+                $(this).removeClass('active')
+            });
+        })
+    });
+</script>
+{include file='home@common/foot' /}

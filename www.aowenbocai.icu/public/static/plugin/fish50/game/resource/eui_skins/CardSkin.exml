@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CardSkin" currentState="bdk" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="bdk,sdk,jsk"  width.jsk="90" height.jsk="94">
+	<e:Rect ellipseWidth="21" anchorOffsetX="0" left="0" right="0" top="0" bottom="0" fillAlpha="0.48" fillColor="0xff9300" visible="false"/>
+	<e:Image id="icon" horizontalCenter="0" verticalCenter="0" source="3002_png" source.sdk="3001_png" source.jsk="jsk_png" horizontalCenter.jsk="0" verticalCenter.jsk="0"/>
+	<e:Group right="4" y="67" left="4" anchorOffsetY="0" height="24" bottom.jsk="3" left.jsk="4" right.jsk="4">
+		<e:Rect left="0" right="0" top="0" bottom="3" ellipseWidth="20" fillAlpha="0.5"/>
+		<e:Group id="num_group" left="0" right="0" top="0" bottom="0" left.jsk="0" right.jsk="0" top.jsk="0" bottom.jsk="0" visible="false">
+			<e:Label id="time" text="X 1" textAlign="center" anchorOffsetX="0" size="20" scaleX="1" scaleY="1" textColor="0xffffff" verticalAlign="middle" left="0" right="0" top="0" bottom="0" left.sdk="0" right.sdk="0" top.sdk="0" bottom.sdk="0" bold.sdk="true" text.bdk="22" bold.bdk="true" fontFamily="Helvetica"/>
+			<e:layout>
+				<e:BasicLayout/>
+			</e:layout>
+		</e:Group>
+		<e:Group id="diamonds_group" bottom="0" left="0" right="0" scaleX="1" scaleY="1" top="0">
+			<e:Image x="0" y="-2.33" anchorOffsetX="0" width="28" anchorOffsetY="0" height="24.25" source="Shopping Mall2_json.钻石"/>
+			<e:Label id="diamonds" text="x 20" x="28" y="0" size="20" textColor="0xedf6ff" fontFamily="Helvetica"/>
+			<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+	<e:Image id="cd" source="cdBg_png" scaleY="0" horizontalCenter.bdk="0" top.sdk="0" scaleY.sdk="0" left="0" right="0" left.sdk="0" right.sdk="0" top.jsk="6" left.jsk="3" right.jsk="3" top.bdk="0" height.bdk="94" top="0" height.sdk="94" height.jsk="80"/>
+</e:Skin>

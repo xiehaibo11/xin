@@ -1,0 +1,77 @@
+{include file='common/head' /}
+<style>
+    html{
+        height: 100%;
+    }
+    body {
+        background: url("/static/admin/images/login_bg.png") no-repeat center;
+        background-size: cover;
+        height: 100%;
+    }
+
+    .top-center {
+        background: url("/static/admin/images/form_bg.png") no-repeat center;
+        position: absolute;
+        padding: 20px 30px;
+        width: 437px;
+        margin: auto;
+        top: 30%;
+        left: 50%;
+        margin-left: -180px;
+        border-radius: 4px;
+        height: 308px;
+        padding-right: 80px;
+    }    
+    .verify_input{
+        width: 100px;
+        display: inline-block;
+    }
+    .reload_verify{
+        color: #313131;
+    }
+    .reload_verify,.reload_verify:hover{cursor: pointer;font-size: 12px;color: #000000}
+</style>
+<form class="top-center" action="" method="post">
+    <h3 style="color: #ffffff;padding: 10px 0 10px 0">
+        后台管理
+    </h3>
+    <div class="form-group">
+    <input type="text" class="form-control" placeholder="账号" name="username">
+    </div>
+    <div class="form-group">
+    <input type="password" class="form-control" placeholder="密码" name="password">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control verify_input" name="verify" placeholder="验证码">
+        <img src="{:url('getVerify')}" class="verify" >
+        <a class="reload_verify" onclick="getVerify()" >看不清，重新获取</a>
+    </div>
+    <button type="button" class="btn btn-default btn-block">登录后台</button>
+</form>
+
+
+
+<script>
+    function getVerify()
+    {
+        $(".verify").attr('src', "{:url('getVerify')}") 
+    }
+    setTimeout(() => {
+        getVerify();
+    }, 100);
+    $(function () {
+        $(document).on('click', '.btn-block', function () {
+            var param = $('form').serializeArray();
+            $.post('{:Url("login/index")}', param, function(data){
+                $.modal.alert(data.msg);
+                if (data.code) {
+                    window.location.href = data.url;
+                } else {
+                    getVerify();
+                }
+            },"json");
+        })
+    })
+</script>
+
+{include file='common/foot' /}

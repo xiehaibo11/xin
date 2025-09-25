@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="NumSkin" width="50" height="50" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  states="up,down,disabled" >
+	<e:Group width="100%" height="100%" horizontalCenter="0" verticalCenter="0">
+		<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillColor="0xec00ff" fillColor.up="0x9e11aa"/>
+		<e:Label id="labelDisplay" text="0" verticalAlign="middle" textAlign="center" horizontalCenter="0" verticalCenter="0" size="50"/>
+	</e:Group>
+</e:Skin>

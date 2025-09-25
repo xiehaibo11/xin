@@ -1,0 +1,163 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+
+<style>
+    .n_title {
+        padding: .5rem;
+        font-size: .9rem;
+        font-weight: 700;
+        color: #444;
+
+    }
+    .info {
+        position: relative;
+        padding: .5rem 0;
+        padding-top: 0;
+        margin: 0 .5rem;
+        font-size: .6rem;
+        color: #999;
+
+    }
+    .content {
+        position: relative;
+        font-size: .75rem;
+        line-height: 1.3rem;
+        padding: .5rem;
+        background: #FFF;
+    }
+    .content img{
+        max-width: 100%;
+    }
+    .main_box {
+        background: #FFF;
+
+    }
+    .news_new {
+        position: relative;
+
+        padding: .5rem;
+        font-size: .9rem;
+        margin-top: .5rem;
+        background: #FFF;
+    }
+</style>
+<style>
+
+.list {
+    padding-left: .5rem;
+    background: #FFF;
+}
+.list .list-item-text {
+    padding: .25rem .5rem;
+    padding-right: 1rem;
+    color: #777;
+    font-size: .6rem;
+}
+.list .list-item-text div {
+    text-align: left;
+}
+.list .list-item-text .memo {
+    line-height: .8rem;
+    height: 1.6rem;
+}
+.list .list-item-text .title {
+    color: #333;
+    font-weight: 700;
+
+    font-size: .75rem;
+}
+.list .list-item-image {
+    padding: .15rem;
+}
+</style>
+<header class="header">
+    <a class="header-nav" href="/news">
+      <i class="icon-svg icon_left"></i>
+  </a>
+    <div class="header-center">资讯频道|查看</div>
+    </div>
+</header>
+<div id="app" class="app_init">
+    <div>
+        <div class="main_box">
+            <div class="n_title">{{info.title}}</div>
+            <div class="info border-b">阅读：{{info.read_count}} 发表：{{info.create_time}}</div>
+            <div class="content border-b" v-html="info.content"></div>
+        </div>
+        <div class="news_new ">
+            <div class="nav_title border-b">相关最新</div>
+            <list-group url="/news/index/list/"></list-group>
+        </div>
+    </div>
+</div>
+
+
+<template id="list-group">
+    <div>
+        <div class="list">
+            <div class="list-group list-arrow">
+                <a v-for="item of list" class="list-item list-item-image-text border-b" :href="'/news/index/view/?id=' + item.id">
+                    <list-line :item="item"></list-line>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="list-line">
+    <div>
+        <div class="list-item-image">
+            <img :src="item.pic || '/static/plugin/news/bg.svg'" alt="">
+        </div>
+        <div class="list-item-text">
+            <div class="title ellipsis">{{item.title}}</div>
+            <div class="memo ellipsis-2">{{item.content_index}}</div>
+        </div>
+    </div>
+</template>
+<script>
+Vue.component('list-line', {
+    props: ['item'],
+    template: '#list-line',
+    methods: {
+    }
+});
+
+Vue.component('list-group', {
+    data() {
+        var loadPage = new LoadPage(this.url);
+        return {
+            list: [],
+            loadPage
+        }
+    },
+    props: ['url'],
+    template: '#list-group',
+    created() {
+        this.loadPage.on('first', (res) => {
+            this.$set(this, 'list', res.data);
+        });
+        this.loadPage.first();
+    }
+});
+
+    let vm = new Vue({
+        el: '#app',
+        data: {
+            info: {
+                title: '文章加载中...',
+                read_count: '',
+                create_time: ''
+            }
+        },
+        created() {
+            var id = $.urlGet()['id'] || '0';
+            $.get('/news/index/view/?id=' + id, (res) => {
+                this.$set(this, 'info', res.data);
+                //_this.info = res.data;
+                $('#app').removeClass('app_init');
+            });
+        }
+    });
+</script>
+{include file='common@common/foot' /}

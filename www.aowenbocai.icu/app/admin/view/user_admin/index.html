@@ -1,0 +1,125 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style media="screen">
+  .add-botton{
+    float: right;
+  }
+  .form-group-left{
+    margin-left:15px;
+  }
+</style>
+<nav class="plugin_nav">
+    <a class="nav_active" href="#">管理员管理</a>
+    <a href="{:url('admin/UserAdmin/add')}">添加管理员</a>
+</nav>
+  <div class="box-padding">
+      <div class="breadcrumb">
+          <ol>
+              <li class="active">
+                  <i class="glyphicon glyphicon-link"></i> 权限管理
+              </li>
+              <li>管理员管理</li>
+          </ol>
+      </div>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+      <tr>
+        <th class="tc" width="100">ID</th>
+        <th>管理员</th>
+        <th>状态</th>
+        <th class="tc" width="100">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {foreach $list as $item}
+      <tr>
+        <td class="tc" width="100">{$item.user.id}</td>
+        <td>{$item.user.username}</td>
+        <td>{$item.status}</td>
+        <td class="tc">
+            <div class="btn-group" role="group" aria-label="...">
+                <!--<a href="{:url('admin/UserAdmin/edit')}?id={$item.user.id}" class="btn btn-info btn-xs">修改</a>-->
+                {notin name="$item.user.username" value="xie080886,1019683427"}<a href="#" class="btn btn-info btn-xs isdelete" data-url="{:url('admin/UserAdmin/delete', 'id='.$item.id)}">删除</a>{/notin}
+            </div>
+        </td>
+      </tr>
+      {/foreach}
+      </tbody>
+    </table>
+    {$list->render()}
+  </div>
+</div>
+
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            var _this = $(this);
+
+            $.modal.confirm('你是否确定删除此管理员？', function() {
+                // 显示加载状态
+                _this.text('删除中...').prop('disabled', true);
+
+                // 使用AJAX请求替代页面跳转
+                $.ajax({
+                    url: _url,
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: 10000,
+                    success: function(response) {
+                        if (response.code == 1) {
+                            // 删除成功
+                            $.modal.msg('删除成功', 'success');
+                            // 移除表格行
+                            _this.closest('tr').fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        } else {
+                            // 删除失败
+                            $.modal.msg(response.msg || '删除失败', 'error');
+                            _this.text('删除').prop('disabled', false);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // 请求失败
+                        var errorMsg = '删除失败';
+                        if (status === 'timeout') {
+                            errorMsg = '请求超时，请重试';
+                        } else if (xhr.status === 403) {
+                            errorMsg = '权限不足';
+                        } else if (xhr.status === 404) {
+                            errorMsg = '删除接口不存在';
+                        } else if (xhr.responseJSON && xhr.responseJSON.msg) {
+                            errorMsg = xhr.responseJSON.msg;
+                        }
+
+                        $.modal.msg(errorMsg, 'error');
+                        _this.text('删除').prop('disabled', false);
+
+                        // 记录错误到控制台
+                        console.error('删除请求失败:', {
+                            status: status,
+                            error: error,
+                            response: xhr.responseText
+                        });
+                    }
+                });
+            });
+        });
+
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>
+
+{include file='common/foot' /}

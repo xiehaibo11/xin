@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BetsSkin" currentState="bet" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="bet"  width.bet="80" height.bet="150" width="80" height="140">
+	<e:Group includeIn="bet" bottom="0" left="0" right="0" top="0">
+		<e:Label id="allBet" text="0" y="2" size="20" verticalAlign="middle" textAlign="center" width="80" height="30"/>
+		<e:Label id="youBet" text="0" y="2" size="20" verticalAlign="middle" textAlign="center" width="80" height="30" textColor="0x05ff63"/>
+		<e:Group width="80" height="80" x="1" y="78">
+			<e:Image source="bet_json.bet34" horizontalCenter="0" verticalCenter="0"/>
+			<e:Image id="logo" source="bet_json.bet8" horizontalCenter="0" verticalCenter="0"/>
+			<e:Label id="logoBet" text="22" horizontalCenter="0" bottom="5" textColor="0xffffff" size="22" border="false" bold="false" stroke="3"/>
+		</e:Group>
+		<e:layout>
+			<e:VerticalLayout horizontalAlign="center" verticalAlign="bottom" gap="0" paddingTop="0"/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

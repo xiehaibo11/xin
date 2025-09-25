@@ -1,0 +1,575 @@
+body{background-color: #313153;
+    padding-bottom: 70px;
+    padding-top: 0;
+}
+html{
+    background-color: #313153;
+}
+.fr {
+    float: right;
+}
+.index_init{
+    background-color: #313153;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    position: absolute;
+    z-index: 500;
+    animation: all .3s;
+}
+.index_init i{
+    font-size: 2.5rem;
+    color: #8d8db9;
+    animation: rotation 1.2s linear infinite;
+    -moz-animation: rotation 1.2s linear infinite;
+    -webkit-animation: rotation 1.2s linear infinite;
+    -o-animation: rotation 1.2s linear infinite;
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 7rem auto 0;
+}
+
+header a.icon-svg {
+    margin: .6rem;
+}
+.index-head{
+    padding:0.5rem 0.3rem;
+    color: #f3f3f5;
+    position: relative;
+}
+.all-msg-box{
+    position: absolute;
+    right: 0.5rem;
+    top: 0.6rem;
+}
+.all-msg-box a{margin: 0 .3rem}
+.msg_box{
+    position: relative;
+}
+.newmsg {
+     display: none;
+    position: absolute;
+    width: .7rem;
+    font-size: .4rem;
+    height: .7rem;
+    line-height: .7rem;
+    top: -.2rem;
+    right: -.4rem;
+    border-radius: 50%;
+    text-align: center;
+    color: #FFF;
+    background: #f00;
+}
+.msg_show{display: block}
+.huadong {padding-left:0.2rem; position:relative;}
+.huadong .notice_active {height: 24px;padding: 0;overflow: hidden;position: relative;}
+.huadong .notice_active li{list-style-type:none;overflow: hidden;}
+.huadong .notice_active li.notice_active_ch span {color: #ffffff;font-size:.65rem;display: block;overflow: hidden;height: 1.2rem}
+.user-photo img{
+    display: block;
+    height: 3.0rem;
+    width: 3.0rem;
+    border-radius:50%;
+    border:3px solid #5858ab;
+    margin-right: 0.3rem;
+}
+.user-name{
+    font-size: 0.8rem;
+    text-align: left;
+}
+.list_title {
+    padding: .3em;
+    background: #49426e;
+    color: #fff;
+    text-align: center;
+    font-size: 0.75rem;
+    margin: 0 0.5rem;
+    border-radius: .3rem;
+}
+.index-list{overflow: hidden;padding: 0 0.3rem}
+.index-list-group{width: 50%;float: left;display: inline-block;overflow: hidden;border-bottom:1px solid #3f3f66;
+    padding: 0.5rem 0.3rem;max-height:85px
+}
+.index-list .list-item-image img{
+    width: 3.0rem;
+    height: 3.0rem;
+    border-radius: 0.5rem;
+    margin-right: 0.3rem;
+}
+.index-list .list-item-text{
+    color: #ffffff;
+}
+.index-list .list-item-text .memo{color: #6e6e92;font-size: 0.6rem;margin-top: 0.3rem}
+.run_room .icon-svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+.banner{position: relative;}
+.swiper-container{max-height:165px;}
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction {
+    bottom: 5px;}
+.swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet {
+    margin: 0 3px;
+}
+.user-property{margin-top: 0.5rem}
+.user-property span.user-jd,  .user-property span.user-flower {width: 49%;height: 1.4rem;border:2px solid #474780;border-radius:0.8rem;padding:0.1rem 0.3rem; }
+.user-jd span, .user-flower span{display: inline-block;}
+.user-flower{margin-left: 2%}
+.user-property span img{width: 100%}
+.h-img-left ,.h-img-rig{width: 1.0rem;height: 1.0rem;display: inline-block;}
+.user-flower .h-img-left { width: 1.3rem;;height: 1.3rem;}
+/*公告*/
+/*.icon_point{width: 0.4rem;height: 0.4rem;background-color: #ffa200;border-radius: 50%;display: inline-block;margin:0 0.3rem 0.05rem 0.8rem}*/
+.index-inform{border-top:2px solid #42427d;border-bottom:2px solid #42427d; padding: 0.1rem 0.5rem}
+.index-inform span{
+    height: 1.2rem;
+    display: inline-block;
+    line-height: 1.2rem;
+    font-size: .65rem;
+}
+.inform-style span{color: #fff;font-size: 0.72rem}
+.tit-blue{padding: 0.2rem;background-color: #dc453e;margin-right: 0.1rem;border-radius: 0.2rem;margin-left: 0.5rem;color: #fffdef}
+/*页面链接*/
+.index-link{padding: 0.5rem 0.1rem;font-size: 0.75rem;}
+.index-link div{flex:1;justify-content:center;font-size: .7rem;}
+.index-link i{font-size: 0.9rem;margin-right: 0.2rem}
+.modal .modal-footer .modal-btn{line-height: 1.5rem}
+/*活跃任务样式开始*/
+.v-modal-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+}
+.v-modal-p{
+    display: flex;
+    align-items: center;
+    z-index: 10000;
+    width: 100%;
+    position: fixed;
+    top: 40px;
+    bottom: 40px;
+    left: 0;
+}
+.v-modal {
+    width: 90%;
+    z-index: 10080;
+    border-radius: 0.5rem;
+    text-align: center;
+    background: #262932;
+    color: #fff;
+    margin-left: 5%;
+    font-size: .75rem;
+    line-height: 1.1rem;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    max-height: 100%;
+}
+.v-modal img{
+    max-width: 100%;
+    margin: .3rem auto;
+    display: block;
+}
+.v-modal .v-modal-header{
+    position: relative;
+    padding-top: 45px;
+    width: 100%;
+}
+.v-modal .v-modal-header .m-title{
+    position: absolute;left: 0;top: -40px;width: 100%;
+    background-position: 0 0;
+    background-size: cover;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.v-modal .v-modal-header .m-title img{width: 100%;max-height:80px}
+.v-modal .v-modal-header .m-close{
+    position: absolute;right: 1rem;
+    top:-0.5rem;
+}
+.m-tit-name{
+    position: absolute;right:0;
+    top:1.1rem;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+.v-modal .v-modal-content {
+    padding:0rem 0.5rem 0.5rem 0.5rem;
+    overflow-y: auto;
+}
+.v-modal .v-modal-footer {
+    position: relative;
+    display: flex;
+    text-align: center;
+    padding: 0.5rem;
+}
+.tab-position{position:relative;margin: 0.3rem 0 0.5rem;padding-top: 1.8rem;}
+.modal-tab .tab-header{
+    background: #2e323c;
+    line-height: 1.8rem;
+    width: 100%;
+    height: 1.8rem;
+    position: absolute;
+    left: 0;top: 0;
+    z-index: 100;
+}
+.tab .tab-header .tab-link.tab-active{
+    border-bottom: none;
+}
+.tab .tab-header .tab-link span{
+    color: #838b96;font-size: 0.75rem;
+}
+.tab .tab-header .tab-link.tab-active span{
+    display: inline-block;border-bottom:3px solid #d54535; color: #ffffff;width: 80%;
+}
+.tab .tab-content{padding: 0}
+.tab .tab-header .tab-link{margin: 0}
+.v-modal p{margin: 0;padding: 0}
+.modal-tab .mission-img img{width: 2.2rem;height: 2.2rem;border-radius: 0.3rem;margin-right: 0.3rem;margin-top: .1rem}
+.tab-content ul li{padding: 0.4rem 0;border-bottom: 1px dashed #353844;}
+.tab-content .summary p{text-align: left;font-size: .75rem}
+.tab-content .summary .gain{font-size: 0.65rem;color: #dbac2f;margin-top: 0.2rem}
+.tab-content .summary .gain i{margin-right: .1rem;}
+.tab-content .summary .gain .exp{color: #55d488;margin-left: .2rem}
+.tab-content .summary .gain .coin{color: #f4f427;margin-left: .2rem}
+.modal-btn{background-color: #f34c44;border-radius: 0.2rem;color: #fffdef;text-align: center;display: inline-block;font-size: .7rem;}
+.modal-btn-gray{background-color: #848282}
+.modal-btn-blue{background-color: #0092ea  }
+.btn-w{width: 3rem;}
+.tab-content .progress{font-size: 0.65rem;color: #83899a;margin-bottom: 0.1rem;text-align: center}
+.v-modal p.active-tit{margin-bottom: 0.7rem;font-size: 0.65rem;text-align: left;}
+.active-cont{position: relative;}
+.chest p{position: absolute;margin-left: -.7rem;}
+.chest p img{width: 1.4rem;}
+.tBlock{display:block; margin-top: -0.4rem;font-size: .6rem;margin-right: 0.2rem}
+
+.modal-chest{padding: 1.5rem 0;position: relative;background-color: #153969;border: 1px solid #3568a3;}
+.modal-chest .m-close{position: absolute;right: -.2rem;top: -.2rem;width: 1.5rem;height: 1.5rem;background-color: #fffdef;border-radius:50% ;line-height: 1.5rem;}
+.modal-chest .m-close i{font-size: 1.5rem;color: #d0554d;}
+.modal-chest .gain h5{margin: 0 0 .5rem;padding: 0;font-size: 1.0rem;color: #fffdef;}
+.modal-chest .gain i{font-size: 1.0rem;margin-right: .2rem;}
+.modal-chest .gain .active{color:#dbac2f }
+.modal-chest .gain .exp{color:#55d488 }
+.modal-chest .gain .coin{color:#f4f427 }
+.modal-chest .btn-p{padding: .2rem .8rem;margin-top: .8rem}
+.tips{font-size: .45rem;
+    padding: 0 .2rem;
+    border: 1px solid #de433f;
+    transform: rotate(30deg);
+    position: absolute;
+    top: 0;
+    height: .8rem;
+    line-height: .6rem;
+    border-radius: .2rem;
+    font-style: normal;
+    color: #de433f;
+    background-color: rgba(0, 0, 0, 0.2);
+    margin-right: -.9rem}
+.yellow{
+    color: #efef2d;
+    border: 1px solid #efef2d;
+}
+.awardNum{
+    position: absolute;
+    left: -0.5rem;
+    top: -.2rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: rgb(255, 0, 0);
+    border: 1px solid #afaeae;
+}
+/*活跃任务样式结束*/
+/*通用弹出窗样式 开始*/
+.v-modal .v-modal-header-red .m-title{
+    padding: .9rem 0.5rem .5rem;
+    font-size: .75rem;
+    background-color: #12243c;
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+    color: #ffffff;
+}
+.v-modal .v-modal-header-red .m-close{
+    position: absolute;
+    right: -.5rem;
+    top:-0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: #fff;
+    line-height: 1.5rem;
+}
+.v-modal .v-modal-header-red .m-close  i{
+    font-size: 1.5rem;
+    color: #d0554d;
+}
+.v-modal .v-modal-content-red {
+    padding: .5rem;
+    text-align: left;
+    min-height: 5.5rem;
+    background-color: #ededed;
+    color: #333;
+    border-bottom-left-radius: .2rem;
+    border-bottom-right-radius: .2rem;
+    overflow-y: auto;
+}
+.modal-time{
+    padding: .1rem;
+    background-color: #d4d4d4;
+    border-radius: .2rem;
+    font-size: .65rem;
+    margin-bottom: .2rem;
+    text-align: center;
+}
+/*通用弹出窗样式 结束*/
+/*签到 样式开始*/
+.sign-modal{
+    position: fixed;
+    width: 90%;
+    z-index: 10011;
+    border-radius: 0.8rem;
+    text-align: center;
+    background: #4982d7;
+    color: #f8f8f8;
+    left: 5%;
+    padding-bottom: 0.75rem;
+    border:2px solid #1b51a1;
+    border-radius: 8px;
+    /*min-height: 400px;*/
+}
+.sign-modal-header{background-color: #006cba;margin: 0.6rem 0.1rem;padding: 0.5rem 0;color: #bceafc;font-size: 0.8rem;font-weight: bold;}
+.sign-modal-content ul{padding: 0 0.2rem;overflow: hidden}
+.sign-modal-content ul li{
+    width: 23.4%;
+    background-color: #4982d7;
+    margin: 0.2rem .8%;
+    float: left;
+    display: inline-block;
+    overflow: hidden;}
+.coins-border{border:2px solid #b9f1ff;border-radius: 0.3rem;margin: 0}
+.sign-modal-content ul li.cur{background-color: #4982d7;}
+.sign-modal-foot .sign-modal-btn{display: inline-block;padding: 0.4rem 2.5rem;background-color: #df5e4b;color: #fffdef;font-size: 0.9rem;font-weight: bold ;border-radius: 0.5rem;
+    margin-top: 0.6rem;}
+.sign-modal-content span{display: block;text-align: center;}
+.coins-img{background-color: #4982d7;}
+.coins-img img{width: 100%;}
+.coins-day{padding: 0.2rem;background-color: #1b51a1;color:#81b3db;font-size: 0.7rem; font-weight: bold}
+.coins-num{color: #eae522}
+.sign-overlay{background-color: rgba(0,0,0,0.4);width: 100%;height: 100%;position: absolute;left: 0;top: 0;margin: 0;border-radius: 0.3rem;z-index:1000}
+.sign-img{margin: 0}
+.sign-img img{position: absolute;
+    right: 0;
+    bottom: 1rem;
+    margin: 0;
+    width: 2.0rem;
+    height: 2.0rem;
+}
+/*签到成功样式*/
+.sign-suc-modal{position: fixed;
+    left: 15%;
+    width: 70%;
+    z-index: 10011;
+    text-align: center;
+}
+.positon-relative{position: relative}
+.positon-relative div{width: 100%}
+.sign-suc-modal .img-tit{position: absolute;bottom: 3.8rem;left: 0;}
+.sign-suc-modal .img-tit img{width: 100%;}
+.sign-suc-modal .img-jd img{width: 40%}
+.sign-suc-modal .img-jd{
+    position: absolute;
+    left: 0;
+    top: 30%;
+    font-size: 1.5rem;
+    color: #ffef31;
+    font-weight: bold;
+    text-shadow: 0 0 4px #b53817;
+}
+.sign-suc-modal .img-cont{
+    background-color: rgba(202, 137, 8, 0.82);
+    padding: 0.7rem;
+    color: #fff;
+    border-radius: 0.5rem;
+    line-height: 1.2rem;
+    font-size: 0.8rem;
+}
+.sign-suc-modal .img-light img{
+    width: 90%;
+    animation: rotation 4s linear infinite;
+    -moz-animation: rotation 4s linear infinite;
+    -webkit-animation: rotation 4s linear infinite;
+    -o-animation: rotation 4s linear infinite;
+}
+@-webkit-keyframes rotation{
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}
+}
+/*签到 样式结束*/
+
+/*充值弹出窗  样式 开始*/
+.recharge-content ul li{justify-content: center;border-bottom: 1px solid #30343d;padding: .2rem 0;font-size: .65rem}
+.recharge-msg{padding:.2rem;background-color: #1f2025;margin: .2rem 0;}
+.recharge-mine div{margin: 0 .2rem}
+.charge-img{width: 2.0rem;margin-right: .2rem;}
+.charge-img img{width: 1.8rem;padding: .5rem 0 0 .0rem;}
+.charge-info{text-align: left;}
+.giving{padding: 0.1rem 0.2rem;border-radius: .2rem;background-color: #e08100;color: #ffe9da;font-size: .65rem;margin-top: .2rem;display: inline-block;}
+.charge-pay{
+    padding-top: .5rem; }
+/*充值弹出窗  样式 结束*/
+
+.gameplay-list{border-bottom: 1px solid #30343d;padding: .5rem 0;font-size: .8rem;justify-content: center;}
+
+/*客服*/
+.contact{position: relative}
+.contact img{width: 80%;
+    max-width: 280px;
+    /*padding: 1000px;*/
+    /*margin: -1000px;*/
+    box-sizing: content-box;
+}
+.close-normal{
+    font-size: 1.5rem;
+    color: #888888;
+    padding-top: .5rem;
+    /* position: absolute; */
+    /* z-index: 1000; */
+    /* top: -1.5rem; */
+    width: 100%;
+    margin-left: 40%;
+    margin-bottom: .5rem;
+}
+.contact p{padding: .1rem 0}
+/*提示*/
+.inter-tip{background-color: #153969;border:2px solid #4078b7}
+.inter-img img{width: 100%}
+.inter-cont h5{font-size: .85rem;padding: .5rem;text-align: center;margin: 0}
+.inter-cont p{text-align: left;font-size: .8rem;padding: .1rem 0rem .1rem 1.5rem;}
+/*分享*/
+.share{position: fixed;bottom: 3.2rem;right:5px;width: 67px;animation: moveud 4s infinite;}
+.share-box{
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding: 1rem .5rem;
+    font-size: .55rem;
+}
+.share-box .icon{
+    width: 3em;
+    height: 3em;
+    vertical-align: 0em;
+    fill: currentColor;
+    overflow: hidden;
+     margin-top: 0;
+     margin-left: 0;
+    margin-bottom: .2rem;
+}
+.red-point{
+    position: absolute;
+    top: .2rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background-color: rgb(255, 0, 0);
+    border: 1px solid #ffffff;
+    right: .3rem;
+}
+
+@keyframes moveud{
+    0% {
+        transform: translate(0px, 0px);
+    }
+    5% {
+        transform: translate(0px, -10px);
+    }
+    10% {
+        transform: translate(0px, 0px);
+    }
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+/*调整兼容性*/
+@media screen and (min-width: 320px)  {
+    .v-modal .v-modal-content {
+        padding:0em 0.5rem 0.5rem 0.5rem;
+    }
+    .v-modal .v-modal-info{
+        padding:0em 0.5rem 0.5rem 0.5rem;
+    }
+    .m-tit-name{top: .9rem;}
+    .m-close img{width: 35px}
+    .v-modal .v-modal-header{
+        padding-top: 40px;
+    }
+    .inter-cont p{
+        padding: .1rem 0rem .1rem .2rem;
+    }
+}
+@media screen and (min-width: 375px)  {
+    .v-modal .v-modal-content {
+        padding:0rem 0.5rem 0.5rem 0.5rem;
+    }
+    .v-modal .v-modal-info{
+        padding:0em 0.5rem 0.5rem 0.5rem;
+    }
+    .m-tit-name{top: 1.4rem;}
+    .m-close img{width: 45px}
+    .inter-cont p{
+        padding: .1rem 0rem .1rem 1.5rem;
+    }
+}
+@media screen and (min-width: 414px)  {
+    .v-modal .v-modal-content {
+        padding:0rem 0.5rem 0.5rem 0.5rem;
+    }
+    .v-modal .v-modal-info{
+        padding:0em 0.5rem 0.5rem 0.5rem;
+    }
+    .m-tit-name{top: 1.3rem;}
+    .m-close img{width: 45px}
+    .v-modal .v-modal-header{
+        padding-top: 50px;
+    }
+    .inter-cont p{
+        padding: .1rem 0rem .1rem 1.5rem;
+    }
+}
+@media screen and (min-width: 768px) {
+    .v-modal .v-modal-content {
+        padding:0rem 0.5rem 0.5rem 0.5rem;
+    }
+    .v-modal .v-modal-info{
+        padding:0em 0.5rem 0.5rem 0.5rem;
+    }
+    .m-tit-name{top: 1.5rem;}
+    .m-close img{width: 45px}
+    .v-modal .v-modal-header{
+        padding-top: 55px;
+    }
+    .inter-cont p{
+        padding: .1rem 0rem .1rem 1.5rem;
+    }
+}
+@media screen and (min-width: 1024px) {
+    .v-modal .v-modal-content {
+        padding:0rem 0.5rem 0.5rem 0.5rem;
+    }
+    .v-modal .v-modal-info{
+        padding:0em 0.5rem 0.5rem 0.5rem;
+    }
+    .m-tit-name{top: 1.6rem;}
+    .m-close img{width: 45px}
+    .inter-cont p{
+        padding: .1rem 0rem .1rem 1.5rem;
+    }
+}
+.modal{z-index: 50000}

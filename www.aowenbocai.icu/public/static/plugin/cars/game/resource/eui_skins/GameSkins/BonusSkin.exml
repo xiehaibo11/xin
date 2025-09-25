@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BonusSkin" width="1334" height="750" currentState="index" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" states="index,win,lose" >
+	<w:Declarations>
+		<tween:TweenGroup id="remove"/>
+	</w:Declarations>
+	<e:Rect left="0" right="0" top="0" bottom="0" fillAlpha="0.5"/>
+	<e:Group includeIn="win" horizontalCenter="0" top="200">
+		<e:Image source="win_json.win42" includeIn="win" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image source="win_json.win39" includeIn="win" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image source="win_json.win9" left="82" verticalCenter="0"/>
+		<e:Image source="win_json.win5" verticalCenter="0" right="82"/>
+	</e:Group>
+	<e:Group width="200" height="200" includeIn="win" horizontalCenter="0" verticalCenter="100">
+		<e:Image source="win_json.win45" horizontalCenter="0" verticalCenter="0"/>
+		<e:Label id="bonus" text="20000" includeIn="win" verticalAlign="middle" textAlign="center" scaleX="1" scaleY="1" textColor="0xef2113" size="50" horizontalCenter="0" verticalCenter="-28"/>
+		<e:Label text="金豆" includeIn="win" verticalAlign="middle" textAlign="center" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="31" textColor="0xE09228" size="50"/>
+	</e:Group>
+	<e:Image id="sure1" source="result_json.result1" includeIn="win" horizontalCenter="0" bottom="50"/>
+	<e:Group includeIn="index" horizontalCenter.lose="0" top.lose="0" width.lose="200" height.lose="200" horizontalCenter="0" verticalCenter="0">
+		<e:Image source="result_json.result4" x="-54.5" y="75.5" scaleX="1" scaleY="1" horizontalCenter.lose="0" verticalCenter.lose="0"/>
+		<e:Image source="result_json.result11" includeIn="lose" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image source="result_json.result5" horizontalCenter="0" verticalCenter="-200" x="-30" y="64" scaleX="1" scaleY="1" includeIn="index,win"/>
+		<e:Image source="result_json.result3" x="229" y="79" scaleX="1" scaleY="1"/>
+		<e:Image source="result_json.result17" includeIn="lose" x="207" y="20"/>
+		<e:layout.win>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+		</e:layout.win>
+		<e:layout.index>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+		</e:layout.index>
+	</e:Group>
+	<e:Image id="sure" source="result_json.result1" horizontalCenter="0" verticalCenter.win="0" includeIn="index,lose" horizontalCenter.lose="0" bottom.lose="50" bottom.index="50"/>
+	<e:Group includeIn="lose" horizontalCenter="0" top="200">
+		<e:Image source="result_json.result11" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image source="result_json.result17" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image source="result_json.result8" verticalCenter="0" right="82"/>
+		<e:Image source="result_json.result7" verticalCenter="0" left="82"/>
+	</e:Group>
+	<e:Group includeIn="lose" horizontalCenter="0" verticalCenter="100">
+		<e:Image source="result_json.result9" includeIn="lose" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+		<e:Label text="未中奖" size="50" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+</e:Skin>

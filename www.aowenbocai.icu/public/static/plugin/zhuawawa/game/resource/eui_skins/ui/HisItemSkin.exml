@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HisItemSkin" width="674" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" height="140">
+	<w:Config id="160676eb356"/>
+	<e:Rect left="0" right="0" top="0" bottom="0" fillAlpha="0.44" ellipseWidth="22" strokeColor="0xf29c1a" strokeWeight="5" fillColor="0xf2a00c" anchorOffsetY="0"/>
+	<e:Rect width="90" height="90" x="27" verticalCenter="0" ellipseWidth="10" fillColor="0x000000" fillAlpha="0.4" strokeWeight="2" strokeColor="0x86e02c" strokeAlpha="0.66"/>
+	<e:Image width="80" height="80" x="32" anchorOffsetX="0" anchorOffsetY="0" source="1_json.豆子" verticalCenter="0"/>
+	<e:Label id="title" x="290" y="30" anchorOffsetX="0" anchorOffsetY="0" verticalAlign="middle" text="标题" size="26"/>
+	<e:Label text="目标奖品：" x="147" y="31" size="24"/>
+	<e:Label text="夹子型号：" x="147" y="82" size="24"/>
+	<e:Label id="bet_money" x="291" y="81" text="型号" size="26"/>
+	<e:Label id="is_hit_str" text="未夹中" y="28" x="557" textColor="0xff1e1e"/>
+	<e:Label id="create_time" text="时间" y="83" anchorOffsetX="0" width="245" textAlign="right" size="22" x="402"/>
+</e:Skin>

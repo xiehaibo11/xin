@@ -1,0 +1,154 @@
+{include file='common@common/head' /}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<link rel="stylesheet" href="/static/font/iconfont.css"/>
+<link rel="stylesheet" href="__STATIC__/plugin/bbs/css/style.css?a=2">
+<div id="app" class="app_init foot_nav_padding">
+    <loading-box url="/index/bbs/mainData/userid/0" class="bbs-list-arrow" >
+        <template scope="props">
+            <template v-for="item of props.list">
+                <action-list :item="item"></action-list>
+            </template>
+            <!--<div v-if="props.list.length == 0" class="black_block">历史里面什么都没有__(；′⌒`)</div>-->
+        </template>
+    </loading-box>
+<button class="icon_ft"><a href="/index/bbs/add"><i style="color:#fff;font-size: .85rem;padding-right: 8px;" class="iconfont icon-fatie"></i>我要发帖</a></button>
+</div>
+
+<template id="actionList">
+    <div class="card card-line">
+        <div @click="toDetail"   :class="{'touch':now}" @touchstart="now = true" @touchmove="now = true"  @touchend="now = false" >
+            <div class="user flex-box">
+                <i class="icon-svg" :style="{backgroundImage: 'url(' + item.userinfo.photo +')'}"></i>
+                <a class="username">{{item.userinfo.nickname}}</a>
+                <span class="bt_icon flex text-align-right"><i class="iconfont icon-icon" style="font-size: 1.0rem;color: #999;"></i></span>
+            </div>
+            <div class="detail">
+                <div class="card-content">
+                    <div class="card-content-inner">
+                        <div class="con-summary" v-html="contents"></div>
+                        <div v-for="img in imgArr" v-if="img.length!==0 ">
+                            <div v-if="item.imginfo.imgnum == 1">
+                                <div class="img1" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                            </div>
+                            <div v-if="item.imginfo.imgnum == 2">
+                                <div class="img2" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                            </div>
+                            <div v-if="item.imginfo.imgnum == 3">
+                                <div class="img3" :style="{backgroundImage: 'url(' + img +')'}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="massage_info flex-box">
+            <div class="card-time">
+                <span class="datetime"><i class="iconfont icon-shijian"  style="padding-right:0.2rem;font-weight: bold;"></i>{{item.create_time}}</span>
+            </div>
+            <div class="reply_info flex">
+                <span><i class="iconfont icon-code"></i><em >{{item.takenum}}</em></span>
+                <span  class="reply_good"><i  @click.stop ="replayGood" style="margin-left: 10px;"  :class="['iconfont','icon-dianzan',{ 'blue': code == 1 },{ 'zblue': isz == 1 }]"></i><em :class="{ 'blue': code == 1 }">{{num}}</em></span>
+            </div>
+        </div>
+    </div>
+</template>
+<!--底部开始-->
+<footer>
+    <div class="flex-box foot_nav">
+        <a class="flex" onclick="build()">
+            <i class="iconfont icon-liwu1"></i>
+            兑换
+        </a>
+        <a class="flex" href="/index/user/action">
+            <i class="iconfont icon-icon02"></i>
+            动态
+        </a>
+        <a class="flex" href="/index">
+            <i class="iconfont icon-youxi4" style="font-size: 1.5rem"></i>
+            大厅
+        </a>
+        <a class="flex cur" href="/index/bbs">
+            <i class="iconfont icon-quanzi2"></i>
+        </a>
+        <a class="flex" href="/index/user/ranking">
+            <i class="iconfont icon-paihangbang"></i>
+            排行
+        </a>
+    </div>
+</footer>
+<!--底部结束-->
+</body>
+<script type="text/javascript">
+'use strict';
+function build() {
+    Zepto.alert('兑换商城建设中, 敬请期待！')
+};
+$(function () {
+    Vue.component('action-list', {
+        props: ['item'],
+        template: '#actionList',
+        data: function data() {
+            return {
+                imgArr: this.item.imginfo.images, //缩略图组
+                num: this.item.goodnum, //点赞数
+                code: this.item.good, //点赞状态
+                isz: "", //添加点赞样式
+                now: false, //添加触摸状态
+                contents: ''
+            };
+        },
+        methods: {
+            toDetail: function toDetail() {
+                //进入详情页
+                window.location.href = "/index/bbs/detail/id/" + this.item.id;
+                this.now = true;
+            },
+            replayGood: function replayGood() {
+                //点赞
+                var _this = this;
+                $.post("/index/bbs/gooder", {
+                    id: this.item.id
+                }, function (res) {
+                    if (res.code == 1) {
+                        $.msg(res.msg);
+                        _this.num = _this.num + 1;
+                        _this.code = 1;
+                        _this.isz = 1;
+                    } else if (res.code == 0) {
+                        $.msg(res.msg);
+                        _this.num = _this.num - 1;
+                        _this.code = 0;
+                        _this.isz = 0;
+                    }
+                });
+            }
+        },
+        created: function created() {
+            this.contents = replace_em(this.item.content);
+        }
+    });
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            list: []
+        },
+        created: function created() {
+            //                var _this = this;
+            $('#app').removeClass('app_init');
+        }
+    });
+    //替换表情
+    var replace_em = function replace_em(str) {
+        str = str.replace(/\</g, '&lt;');
+        str = str.replace(/\>/g, '&gt;');
+        str = str.replace(/\n/g, '<br/>');
+        str = str.replace(/\[em_([0-9]*)\]/g, '<img src="/static/images/emoji/$1.gif" border="0" />');
+        return str;
+    };
+});
+</script>
+{include file='common@common/foot' /}

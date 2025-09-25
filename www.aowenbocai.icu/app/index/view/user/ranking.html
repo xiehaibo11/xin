@@ -1,0 +1,323 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<script src="/static/font/iconfont.js"></script>
+<style>
+    .btn{margin: 0;
+        text-align: center;
+        border:none;
+        padding-top: 0.3rem;
+        color: #9aa1bb;
+        font-size: 0.85rem;}
+    .tab .tab-header{
+        background-color: #172149;
+        border-bottom: 3px solid #6376b7;
+        line-height: 2.5rem;
+        height: 2.5rem;
+        top: 0;
+        left: 0;
+        position: fixed;
+        width: 100%;
+        z-index: 100;
+    }
+    .tab .tab-header .tab-link{
+        margin: 0;
+        color: #d7dae4;
+    }
+    .tab .tab-header .tab-link.tab-active{
+        background-color: #253773;
+        color: #fff;
+    }
+    .self-exp{
+        background-color: #344a94;
+        padding:.5rem .75rem;
+        color: #dcdada;
+    }
+    .self-exp .user-info{
+        position: relative;
+    }
+    .icon{
+        width: 1.6rem;
+        height: 1.6rem;
+         margin-top: 0;
+         margin-left: 0;
+    }
+    .user-info .user-lv{
+        position: absolute;
+        top: 0;
+        right:50%;
+        margin-right: -2.7rem;
+    }
+    .self-exp span{
+        display: block;
+    }
+    .self-exp .rank-tit{
+        color: #62adee;
+        font-size: .75rem;
+        padding: .7rem 0;
+    }
+    .self-exp .rank_photo{
+        margin: 0 auto;
+        border:2px solid #fffcfc;
+    }
+    .self-exp .rank-name{
+        padding: .3rem 0;
+        color: #ffeb00;
+        font-size: .65rem;
+    }
+    .tablebox{
+        width: 100%;
+        font-size: .65rem;
+    }
+    .tablebox th, .tablebox td{
+        text-align: center;
+    }
+    .rank_box .tit th{
+        background-color: #253773;
+        padding: .5rem;
+        border-bottom: 2px solid #6376b7;
+        color: #8b98c1;
+        border-top: 1px solid #41559a;
+    }
+    .card{
+        box-shadow:none;
+    }
+    .rank_box .card td{
+        background-color: #253773;
+        border-bottom: 1px solid #1b2857;
+        color: #9caad8;
+        font-size: .65rem;
+        padding: .3rem 0;
+    }
+    .rank_box .rank-name{
+        color: #fffcfc;
+    }
+    .rank_box .rank_photo{
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+    .rank_box .lv{
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+    .rank_box .index-num{
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+        border-radius: 50%;
+        background-color: #172149;
+    }
+</style>
+<div id="app" class="app_init foot_nav_padding" v-cloak>
+    <div class="tab">
+        <div class="tab-header">
+            <!--<div class="tab-link tab-active" id="tab1" onclick="setTab('tab',1,2)">今日中奖榜</div>-->
+            <div class="tab-link tab-active" id="tab2">经验排行榜</div>
+        </div>
+        <div style="height: 2.5rem"></div>
+        <div class="tab-content">
+            <div class="tab-page tab1" id="con_tab_1">
+                <div class="self-exp flex-box">
+                    <div class="flex">
+                        <span class="rank-tit">今日中奖</span>
+                        <span class="rank-info">{{selfRank.money}}</span>
+                    </div>
+                    <div class="user-info flex">
+                        <span class="rank_photo" :style="'background-image:url(' + selfLv.photo + ')'"></span>
+                        <span class="rank-name">{{selfLv.nickname}}</span>
+                        <span class="icon user-lv">Lv{{lv}}</span>
+                        <!--<svg class="icon user-lv" aria-hidden="true"><use :xlink:href="'#icon-ic_userlevel_' + lv"></use></svg>-->
+                    </div>
+                    <div class="flex">
+                        <span class="rank-tit">我的排行</span>
+                        <span class="rank-info">{{selfRank.sort}}</span>
+                    </div>
+                </div>
+                <loading-box url="/index/user/getRankingList"  class="rank_box">
+                    <template scope="props">
+                        <table class="tablebox" cellspacing="0" cellpadding="0"  border="0">
+                            <tr class="tit">
+                                <th width="20%">排名</th>
+                                <th width="50%" style="text-align: left">用户</th>
+                                <th width="30%">今日中奖 <img src="/static/images/index/common_jd.png" alt="" width="17"></th>
+                            </tr>
+                            <template v-for="(item, key) of props.list">
+                                <action-list  :item="item" :k="key"></action-list>
+                            </template>
+                        </table>
+                    </template>
+                </loading-box>
+            </div>
+            <div class="tab-page tab2 tab-active"  id="con_tab_2">
+                <div class="self-exp flex-box">
+                    <div class="flex">
+                        <span class="rank-tit">我的经验值</span>
+                        <span class="rank-info">{{selfLv.exp}}</span>
+                    </div>
+                    <div class="user-info flex">
+                        <span class="rank_photo" :style="'background-image:url(' + selfLv.photo + ')'"></span>
+                        <span class="rank-name">{{selfLv.nickname}}</span>
+                        <span class="icon user-lv">Lv{{lv}}</span>
+                        <!--<svg class="icon user-lv" aria-hidden="true"><use :xlink:href="'#icon-ic_userlevel_' + lv"></use></svg>-->
+                    </div>
+                    <div class="flex">
+                        <span class="rank-tit">我的排行</span>
+                        <span class="rank-info">{{selfLv.sort}}</span>
+                    </div>
+                </div>
+                <loading-box url="/index/user/getLevelList"  class="rank_box">
+                    <template scope="props">
+                        <table class="tablebox" cellspacing="0" cellpadding="0"  border="0">
+                            <tr class="tit">
+                                <th width="17%">排名</th>
+                                <th style="text-align: left;" width="40%">用户</th>
+                                <th width="20%">称号</th>
+                                <th width="23%">经验值</th>
+                            </tr>
+                            <template v-for="(item, key) of props.list">
+                                <exp-list :item="item" :k="key"></exp-list>
+                            </template>
+                        </table>
+                    </template>
+                </loading-box>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<footer>
+    <div class="flex-box foot_nav">
+        <a class="flex" onclick="build()">
+            <i class="iconfont icon-liwu1"></i>
+            兑换
+        </a>
+        <a class="flex" href="/index/user/action">
+            <i class="iconfont icon-icon02"></i>
+            动态
+        </a>
+        <a class="flex" href="/index">
+            <i class="iconfont icon-youxi4" style="font-size: 1.5rem"></i>
+            大厅
+        </a>
+        <a class="flex" href="/index/bbs">
+            <i class="iconfont icon-quanzi2"></i>
+            圈子
+        </a>
+        <a class="flex cur" href="/index/user/ranking">
+            <i class="iconfont icon-paihangbang"></i>
+        </a>
+    </div>
+</footer>
+<!--底部结束-->
+<template id="expList">
+    <tr class="card" @click="toDetail">
+        <td>
+            <span v-if="index==1"><img src="/static/theme/default/svg/guanjun.png" alt="" width="40"></span>
+            <span v-if="index==2"><img src="/static/theme/default/svg/yajun.png" alt="" width="40"></span>
+            <span v-if="index==3"><img src="/static/theme/default/svg/jijun.png" alt="" width="40"></span>
+            <span class="index-num" v-if="index > 3">{{index}}</span>
+        </td>
+        <td style="text-align: left">
+            <div class="flex-box">
+                <div class="rank_photo" :style="'background-image:url(' + item.photo + ');'"></div>
+                <div>
+                    <div class="rank-name">{{item.nickname}}</div>
+                    <span class="icon user-lv">Lv{{item.level.level}}</span>
+                    <!--<svg class="icon lv" aria-hidden="true"><use :xlink:href="'#icon-ic_userlevel_' + item.level.level"></use></svg>-->
+                </div>
+            </div>
+        </td>
+        <td>{{item.level.level_name}} </td>
+        <td>{{item.exp}}</td>
+    </tr>
+</template>
+<template id="actionList">
+    <tr class="card" @click="toDetail" v-if = "item.money > 0">
+        <td>
+            <span v-if="index==1"><img src="/static/theme/default/svg/guanjun.png" alt="" width="40"></span>
+            <span v-if="index==2"><img src="/static/theme/default/svg/yajun.png" alt="" width="40"></span>
+            <span v-if="index==3"><img src="/static/theme/default/svg/jijun.png" alt="" width="40"></span>
+            <span class="index-num" v-if="index > 3">{{index}}</span>
+        </td>
+        <td style="text-align: left">
+            <div class="flex-box">
+                <div class="rank_photo" :style="'background-image:url(' + item.photo + ');'"></div>
+                <div class="rank-name">{{item.nickname}}</div>
+            </div>
+        </td>
+        <td>{{item.money}}</td>
+    </tr>
+</template>
+
+
+<script>
+    function build() {
+        Zepto.alert('兑换商城建设中, 敬请期待！')
+    };
+    $(function () {
+        Vue.component('action-list', {
+            props: ['item', 'k'],
+            template: '#actionList',
+            computed: {
+                index:function() {
+                    return this.k + 1
+                }
+            },
+            methods:{
+                toDetail:function(){
+                    window.location.href='/index/user/ushow?userid=' + this.item.userid;
+                }
+             },
+        });
+        Vue.component('exp-list', {
+            props: ['item', 'k'],
+            template: '#expList',
+            computed: {
+                index:function() {
+                    return this.k + 1
+                }
+            },
+            methods:{
+                toDetail:function(){
+                    window.location.href='/index/user/ushow?userid=' + this.item.id;
+                }
+            },
+        });
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: [],
+                selfRank:[], //当前用户盈利
+                selfLv:[],  //当前用户经验
+                lv:''  //用户等级
+            },
+            methods: {
+            },
+            created: function () {
+                var _this = this;
+                $.get('/index/user/getSelfRanking',function(res){ //当前用户盈利
+                    _this.$set(_this, 'selfRank', res.data);
+                })
+                $.get('/index/user/getSelfLevel',function(res){ //当前用户经验值
+                    _this.$set(_this, 'selfLv', res.data);
+                    _this.$set(_this, 'lv', res.data.level.level);
+                    $('#app').removeClass('app_init');
+                })
+            }
+        });
+    });
+    //选项卡JS
+    function setTab(name,cursel,n){
+        for(i=1;i<=n;i++){
+            var menu=document.getElementById(name+i);
+            var con=document.getElementById("con_"+name+"_"+i);
+            menu.className=i==cursel?"tab-link tab-active":"tab-link";
+            con.style.display=i == cursel?"block":"none";
+        }
+    }
+
+</script>
+{include file='common@common/foot' /}

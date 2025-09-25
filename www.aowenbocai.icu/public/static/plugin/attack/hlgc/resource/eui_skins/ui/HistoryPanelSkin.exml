@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HistoryPanelSkin" height="1136" currentState="history" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="640" states="history,help" >
+	<e:Group width="640" top="300" anchorOffsetY.help="0" top.help="0" anchorOffsetY.history="0" top.history="0" bottom.history="0" bottom.help="0" left.history="0" right.history="0" left.help="0" right.help="0">
+		<e:Rect id="back2" includeIn="help" left="0" right="0" top="0" bottom="0" fillAlpha="0"/>
+		<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillAlpha="0.5" x.history="0" y.history="0" scaleX.history="1" scaleY.history="1" includeIn="history"/>
+		<e:Group id="sc" width="640" height="500" horizontalCenter="0" top="100" x="0" y="120" scaleX="1" scaleY="1" anchorOffsetY.help="0" horizontalCenter.help="0" top.help="250" height.help="553" anchorOffsetY.history="0" horizontalCenter.history="0" top.history="250" height.history="640.79">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xb4712f" ellipseWidth="10"/>
+			<e:Rect fillColor="0xf1d193" left="3" right="3" top="3" bottom="3" ellipseWidth="10"/>
+			<e:Rect left="10" right="10" top="10" bottom="10" fillColor="0xf2debc" ellipseWidth="30"/>
+			<e:Rect left="10" right="10" top="60" bottom="10" fillColor="0xe2b891"/>
+		</e:Group>
+		<e:Image source="sprite-dialog_json.sprite-dialog001" scaleX="1" scaleY="1" horizontalCenter="0" top="0" top.history="150" top.help="150"/>
+		<e:Label text="历史出兵" top="60" horizontalCenter="0" text.help="玩法介绍" textColor.help="0xffffff" top.history="210" top.help="210"/>
+		<e:Group id="back1" y="67" width="40" height="40" top.history="210" right.history="70" right.help="70" top.help="210">
+			<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="40" fillColor="0xf78d02" strokeWeight="3" strokeColor="0x845625"/>
+			<e:Image source="sprite-dialog_json.sprite-dialog000" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Scroller id="scroller" scaleX="1" scaleY="1" width="620" top="220" horizontalCenter="0" height="370" anchorOffsetY.help="0" horizontalCenter.help="0" top.help="320" height.help="420" anchorOffsetY.history="0" horizontalCenter.history="0" top.history="370" height.history="508.67">
+			<e:Group>
+				<e:List id="scrollerList" horizontalCenter="0" top="0" width="100%" itemRendererSkinName="ItemSkin" includeIn="history"/>
+				<e:Image source="sprite-dialog_json.sprite-dialog003" includeIn="help" top="0" horizontalCenter="0"/>
+				<e:Label text="玩法说明：选择兵种和人数，招募士兵\n\n出战，每招募100士兵消耗100金豆粮草,\n\n战胜或者打平获得一定数量奖励，打输\n\n没有奖励。" includeIn="help" textColor="0xd17727" left="90" top="200"/>
+				<e:Rect width="10" height="10" includeIn="help" left="70" top="205" ellipseWidth="10" ellipseHeight="0" fillColor="0xd17727"/>
+			</e:Group>
+		</e:Scroller>
+		<e:Label text="出战时间" textColor="0x381a1a" top="180" left="100" top.history="330" visible.help="false"/>
+		<e:Label text="遣兵记录" textColor="0x381A1A" top="180" right="100" visible.help="false" right.history="90" top.history="330"/>
+		<e:Label id="zero" text="暂无记录哦！" includeIn="history" y="297" horizontalCenter="0" textColor="0x381a1a" visible="false"/>
+	</e:Group>
+</e:Skin>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CodeListSkin" width="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" height="1136">
+	<w:Declarations>
+		<tween:TweenGroup id="show">
+			<tween:TweenItem target="{group}">
+				<tween:Set>
+					<tween:props>
+						<e:Object height="{0}" alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object height="{384}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect id="back" left="0" right="0" top="0" bottom="80" fillAlpha="0"/>
+	<e:Group id="group" width="220" height="384" bottom="80" horizontalCenter="0">
+		<e:Image source="inputImg_png" left="0" right="0" top="0" bottom="0" scale9Grid="82,30,156,8" x="0" y="0" scaleX="1" scaleY="1"/>
+		<e:List id="_codeList" left="0" right="0" top="0" bottom="0" height="384" itemRendererSkinName="CodeItemSkin" x="0" y="0" scaleX="1" scaleY="1"/>
+	</e:Group>
+</e:Skin>

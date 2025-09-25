@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{present name="$title"}{$title}{else/}[title]{/present}{:isset($site_name) ? '-' . $site_name : ''}</title>
+    {include file='web@common/link'/}
+</head>
+<body>
+<div id="top">
+    <div class="top bg web_">
+        <div class="web flex-box">
+            <div class="flex">您好，欢迎来到{$site_name}！</div>
+            <!--<div class="tr flex">-->
+            <!--<em class="red">适龄提示：本站游戏适合18岁以上玩家</em><em style="color: green;padding-left: 5px">未满18岁的玩家需在家长监督下进行游戏</em>-->
+            <!--<a href="http://www.99wan.com/jiazhang/index.htm" class="link" target="_blank" style="padding-right: 25px;">家长监护工程</a>-->
+            <!--</div>-->
+        </div>
+    </div>
+    <div class="header flex-box web">
+        <div class="logo"><a href="{:url('./')}"><img src="{$company['logo_url']}" alt=""></a></div>
+        {present name="$topImg"}
+        {volist name="topImg" id="v"}
+        <div><a href="{$v.url}" target="_blank"><img src="{$v.img_url}" alt=""></a></div>
+        {/volist}
+        {/present}
+        <div class="info tr flex">
+            {if condition = "!empty($company['company_img_qq']) || !empty($company['company_qq'])"}
+            <div class="reference">
+                <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover">
+                    <div v-cloak  class="tc">
+                        <p>{present name="$company['company_img_qq']"}<img src="{$company['company_img_qq']}" width="160">{/present}</p>
+                        <p>{present name="$company['company_qq']"}{$company['company_qq']}{/present}</p>
+                    </div>
+                    <span slot="reference">
+                         <a href="tencent://message/?uin={$qq_num}&amp;Site={$site_name}&amp;Menu=yes">
+                            <i class="iconfont icon-qq-copy"></i>
+                         </a>
+                    </span>
+                </el-popover>
+            </div>
+            {/if}
+            {if condition = "!empty($company['company_img']) || !empty($company['company_wx'])"}
+            <div class="reference tc">
+                <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover">
+                    <div v-cloak class="tc">
+                        <p>{present name="$company['company_img']"}<img src="{$company['company_img']}" alt="" width="160">{/present}</p>
+                        <p>{present name="$company['company_wx']"}{$company['company_wx']}{/present}</p>
+                    </div>
+                    <span slot="reference"><i class="iconfont icon-big-WeChat"></i></span>
+                </el-popover>
+            </div>
+            {/if}
+            {notempty name="$company['company_tel']"}
+            <div class="reference">
+                <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover">
+                    <div v-cloak class="tc">
+                        {$company['company_tel']}
+                    </div>
+                    <span slot="reference"><i class="iconfont icon-phone"></i></span>
+                </el-popover>
+            </div>
+            {/notempty}
+        </div>
+    </div>
+    <div class="nav">
+        <div class="web flex-box">
+            <div class="nav-game" @mouseenter="show = true" @mouseleave="show=false" @touch="show = !show">
+                <div class="flex-box">
+                    <div class="flex">全部游戏</div>
+                    <i class="el-icon-arrow-down" :class="show ? 'is-active' : 'no-active'"></i>
+                </div>
+                <div class="nav-game-list" v-show="show" style="display: none">
+                    <div class="hot-game-list cf">
+                        <div class="fl hot-title"><em>热门推荐</em></div>
+                        <div class="fl" style="margin-right: 25px;line-height: 1">
+                            <img src="/static/vipweb/images/hot_new.gif" alt="">
+                        </div>
+                        <ul class="links fl">
+                            {volist name='$recs' id='v'}
+                            <li class="dib">
+                                <a @click="link('{$v.name}',{$v.type})">{$v.title}</a>
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                    <ul>
+                        <template v-if="{$company['lottery_status']}">
+                            <li class="class-A cf" v-for="(item,index) in navList"  @mouseenter="cur = index" @mouseleave="cur = -1" :class="{'active' : cur == index}">
+                                <span class="fl class-A-icon">
+                                    <em v-if="item.type == 'syxw'" class="cz-icon iconfont icon-xuan" style="color: #6c609e;;"></em>
+                                    <em v-if="item.type == 'pk10'" class="cz-icon iconfont icon-icon-test" style="color: #fab62f"></em>
+                                    <em v-if="item.type == 'pc28'" class="cz-icon iconfont icon-xingyun1" style="color: #a666b1"></em>
+                                    <em v-if="item.type == 'ks'" class="cz-icon iconfont icon-kuai1" style="color: #759e60;"></em>
+                                    <em  v-if="item.type == 'ssc'"class="cz-icon iconfont icon-shishicai1" style="color: #e36a6f;"></em>
+                                </span>
+                                <ul class="fl class-A-list">
+                                    <li class="class-A-title">{{item.label}}</li>
+                                    <li class="class-A-grounp" v-for="(nav,i) in item.data" v-if="i < 4">
+                                        <a @click="link(nav.name,nav.type)">{{nav.label}}</a></a>
+                                    </li>
+                                </ul>
+                                <ul class="lottery-item cf" v-show="cur == index">
+                                    <li v-for="(nav,i) in item.data" class="class-B"  @click="link(nav.name,nav.type)" >
+                                        <i class="iconfont icon-yitingshou" v-if="nav.pause" style="font-size: 46px"></i>
+                                        <span><img :src="nav.image" alt=""></span>
+                                        <p>{{nav.label}}</p>
+                                    </li>
+                                </ul>
+                            </li>
+                        </template>
+                        <template v-if="{$company['game_status']}">
+                            <li class="class-A cf" @mouseenter="cur = 101" @mouseleave="cur = -1" :class="{'active' : cur == 101}">
+                                <span class="fl class-A-icon">
+                                      <em class="cz-icon iconfont icon-youxi1"></em>
+                                </span>
+                                <ul class="fl class-A-list">
+                                    <li class="class-A-title">休闲游戏</li>
+                                    <li class="class-A-grounp" v-for="(nav,i) in navGame" v-if="i < 4">
+                                        <a @click="link(nav.name,nav.type)">{{nav.title}}</a></a>
+                                    </li>
+                                </ul>
+                                <!--<i class="el-icon-arrow-right fl"></i>-->
+                                <ul class="lottery-item cf" v-show="cur == 101">
+                                    <li v-for="(nav,i) in navGame" class="class-B"  @click="link(nav.name,nav.type)" >
+                                        <span><img :src="nav.image" alt=""></span>
+                                        <p>{{nav.title}}</p>
+                                    </li>
+                                </ul>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-list">
+                <ul>
+                    <li><a :class="{'cur': curUrl == '/web/' || curUrl == '/web' || curUrl == '/web/index'}" href="{:url('./')}">网站首页</a></li>
+                    <li><a :class="{'cur': curUrl == '{:url('index/gameCenter')}'}" href="{:url('index/gameCenter')}">游戏大厅</a></li>
+                    {if condition = "$company.lottery_status eq 1"}
+                    {if condition = "$company.join_isOpen eq 1"}
+                    <li><a :class="{'cur': curUrl == '/web/join'}" href="{:url('./join')}">合买大厅</a></li>
+                    {/if}
+                    <li><a :class="{'cur': curUrl == '{:url('index/kaijiang')}'}" href="{:url('index/kaijiang')}">开奖公告</a></li>
+                    {/if}
+                    <li><a :class="{'cur': curUrl == '/web/news/game/navid/{$newsId}'}" href="/web/news/game/navid/{$newsId}">游戏资讯</a></li>
+                    <li><a :class="{'cur': curUrl == '/web/news/game/navid/{$noticeId}'}" href="/web/news/game/navid/{$noticeId}">网站公告</a></li>
+                    <li style="position: relative">
+                        <a :class="{'cur': curUrl == '/web/news/activity/navid/{$activityId}'}" href="/web/news/activity/navid/{$activityId}">优惠活动</a>
+                        <img src="/static/vipweb/images/hot_new.gif" alt="" style="position: absolute;right: 0;top: 0px;z-index: 10">
+                    </li>
+                </ul>
+            </div>
+            {if condition = "$company.moblie_status eq 1"}
+            <div class="flex tc nav-wap">
+                <el-popover
+                        placement="bottom" @show="addName" @hide="removeName"
+                        width="250"
+                        trigger="hover">
+                    <div class="down" v-cloak>
+                        {if condition = "isset($company['android_pic']) && !empty($company['android_pic'])"}
+                        <div class="ma flex-box">
+                            <div class="img"><img src="{$company['android_pic']}" alt="" width="86"></div>
+                            <div>
+                                <el-button size="mini"><i class="iconfont icon-anzhuo-copy-copy"></i> 安卓APP</el-button>
+                            </div>
+                        </div>
+                        {/if}
+                        {if condition = "isset($company['ios_pic']) && !empty($company['ios_pic'])"}
+                        <div class="ma flex-box">
+                            <div class="img"><img src="{$company['ios_pic']}" alt="" width="86"></div>
+                            <div>
+                                <el-button size="mini"><i class="iconfont icon-ios-copy"></i> 苹果APP</el-button>
+                            </div>
+                        </div>
+                        {/if}
+                        {if condition = "isset($company['wap_pic']) && !empty($company['wap_pic'])"}
+                        <div class="ma flex-box">
+                            <div class="img"><img src="{$company['wap_pic']}" alt="" width="86"></div>
+                            <div>
+                                <el-button size="mini"><i class="iconfont icon-shouji"></i> 手机WAP</el-button>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                    <a slot="reference" class="flex-box wap"><i class="iconfont icon-shouji" style="font-size: 18px;padding-right: 3px"></i>手机网站</a>
+                </el-popover>
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        var vm = new Vue({
+            el:'#top',
+            data:{
+                curUrl : GetUrlRelativePath(),
+                show : false,
+                navList:{$navList},
+                navGame:{$navGame},
+                cur:-1
+            },
+            computed:{
+                showIcon:function () {
+                    return function (type) {
+                        console.log(type)
+                        return type
+                    }
+                }
+            },
+            methods:{
+                addName:function(){
+                    $('.wap').addClass('hover')
+                },
+                removeName:function(){
+                    $('.wap').removeClass('hover')
+                },
+                link:function(a,type){
+                    if(!type){
+                        window.location = '{:url("./game")}?ext='+ a//休闲类游戏跳转路径
+                    }else {
+                        window.location = '{:url("./'+ a + '")}'//开奖类游戏跳转路径
+                    }
+                }
+            }
+        })
+    })
+
+</script>

@@ -1,0 +1,354 @@
+{include file='common/head' /}
+<script src="__STATIC__/js/reszieimg.js"></script>
+<div class="box-padding">
+	<div class="breadcrumb">
+		<ol>
+			<li class="active">
+				<i class="glyphicon glyphicon-link"></i> {$title}管理
+			</li>
+			<li>{$title}列表</li>
+		</ol>
+		<div class="add-botton fr">
+			<!--<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-plus"></i> 添加游戏</button>-->
+			<!-- 添加游戏（Modal） -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								添加游戏
+							</h4>
+						</div>
+						<div class="modal-body" style="overflow: hidden">
+							<div class=" content add_games">
+								<form action="{:url('addGame')}" method="post" id="addgame">
+									<div class="input-group ">
+										<span class="input-group-addon input-label">选择游戏</span>
+										<input type="hidden" name="datas">
+										<div class="dropdown ">
+											<button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" >选择游戏
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu choice_game" role="menu" aria-labelledby="dropdownMenu1">
+												{foreach name="extList" item="it" key="k"}
+												<li role="presentation">
+													<a role="menuitem" tabindex="-1" data-logo='{$it.logo}|{$it.name}|{$it.title}' >{$it.title}</a>
+												</li>
+												{/foreach}
+												<li role="presentation">
+													<a role="menuitem" tabindex="-1" data-logo='自定义' >自定义</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+
+									<div class="input-group ">
+										<span class="input-group-addon input-label">游戏类型</span>
+										<input type="hidden" name="type">
+										<div class="dropdown ">
+											<button type="button" class="btn dropdown-toggle type_show" id=" " data-toggle="dropdown" >选择类型
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu game_type" role="menu" aria-labelledby="dropdownMenu1">
+												<li role="presentation">
+													<a role="menuitem" tabindex="-1" data-logo='0' >休闲游戏</a>
+												</li>
+												<li role="presentation">
+													<a role="menuitem" tabindex="-1" data-logo='1' >彩票游戏</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div class="input-group custom">
+										<span class="input-group-addon input-label">游戏模块名</span>
+										<input type="text"   class="form-control" id="extname" >
+									</div>
+									<div class="input-group custom">
+										<span class="input-group-addon input-label">游戏名称</span>
+										<input type="text"  class="form-control"  id="exttilte" >
+									</div>
+
+									<div class="input-group custom">
+										<span class="input-group-addon input-label">游戏LOGO</span>
+										<input type="file" class="hidden select_photo">
+										<input type="text"  class="form-control"  id="extlogo" >
+										<span class="input-group-addon btn_select_photo">点击上传logo</span>
+									</div>
+
+
+									<div class="input-group">
+										<span class="input-group-addon input-label">游戏宣传图</span>
+										<input type="file" class="hidden select_photo_img">
+										<input type="text"  class="form-control" name="img" id="extlogo_img" >
+										<span class="input-group-addon btn_select_photo_img">点击上传宣传图</span>
+									</div>
+
+									<div class="input-group">
+										<span class="input-group-addon input-label">游戏描述</span>
+										<input type="text"  class="form-control"  name="remark">
+									</div>
+									<div class="input-group">
+										<span class="input-group-addon input-label">游戏简介</span>
+										<input type="text"  class="form-control"  name="info">
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+									data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary sendBtn">
+								确认添加
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</div>
+	</div>
+ <div class=" content games_list"  style="display: block;">
+	 <div class="notice">
+		<div class="alert alert-warning">
+			<a href="#" class="close" data-dismiss="alert1">&times;</a>
+			<strong>警告！</strong><span class="notice-info">您的网络连接有问题。</span>
+		</div>
+	 </div>
+	 <div class="table_box">
+		 <table class="table table-striped table-bordered table-hover">
+			<thead class="trst-group ul-nav">
+				<tr>
+					<th class="pic tc">logo</th>
+					<th class="tc">游戏名</th>
+					<th class="tc">描述</th>
+					<th class="tc" width="250">状态(启停|推荐)</th>
+					<th class="tc" width="350">操作</th>
+				</tr>
+			</thead>
+			{volist name="showList" id="item"}
+				<tr data-sort='{$item.sort}'>
+			<td class="pic tc"><img src="{$item.image}"></td>
+			<td class="tc">{$item.title}</td>
+			<td class="tc">{$item.remark}</td>
+			<td class="tc">
+					<button class='statusType btn {neq name = "$item.status|strip_tags"  value = "显示"}btn-success{/neq}' data-value='{eq name = "$item.status|strip_tags"  value = "显示"}0{else /}1{/eq}' data-id="{$item.id}" title="点击切换状态">{eq name = "$item.status|strip_tags"  value = "显示"}已禁用{else /}已开启{/eq}</button>
+					<button class='pauseType btn {neq name = "$item.pause"  value = "1"}btn-warning{/neq}' data-value='{eq name = "$item.pause"  value = "1"}0{else /}1{/eq}' data-id="{$item.id}" title="点击切换状态">{eq name = "$item.pause"  value = "1"}已暂停{else /}已启动{/eq}</button>
+					<button class='recType btn {neq name = "$item.reco"  value = "0"}btn-warning{/neq}' data-value='{eq name = "$item.reco"  value = "0"}1{else /}0{/eq}' data-id="{$item.id}" title="点击切换状态">{eq name = "$item.reco"  value = "0"}不推荐{else /}已推荐{/eq}</button>
+
+				<!-- {eq name = "$item.status|strip_tags"  value = "显示"}<button class="statusType btn" data-value="0" data-id="{$item.id}" title="点击切换状态">已禁用</button> {else/} <button class="statusType btn btn-success" title="点击切换状态" data-id="{$item.id}" data-value="1">已开启 </button>{/eq}|{if condition = "$item.reco eq 1"} <button class="recType btn btn-primary" title="点击切换状态" data-value="0" data-id="{$item.id}" >推荐</button>{else /} <button class="recType btn" title="点击切换状态" data-value="1" data-id="{$item.id}" >不推荐</button>{/if} -->
+			</td>
+			<td class="tc">
+				<div class="btn-group">
+				<span class="hidden_span ext_show_id">{$item.id}</span>
+			 	<button type="button" class="btn btn-primary btn-move btn-sm" data-toggle="button"> 上移</button>
+				<button type="button" class="btn btn-success btn-move btn-sm" data-toggle="button"> 下移</button>
+				<a class="btn btn-danger btn-sm"  role="button" href="{:url('modify',['id'=>$item.id])}"> 修改</a>
+				{eq name="$item.admin_url" value=''}<span class="btn btn-default btn-sm btn-disabled"  role="button"> 设置</span>{else /}<a class="btn btn-warning btn-sm"  role="button" href='{$item.admin_url}'> 管理</a>{/eq}
+				<!--<a class="btn btn-default btn-sm delete"  role="button"  name="{:url('deleteData',['id'=>$item.id])}"> 删除</a>-->
+			</div>
+			</td>
+			</tr>
+			{/volist}
+			{eq name="_empty" value='0'}
+				<tr data-sort='1'>
+				<td colspan="4">该项暂时没有数据......</td>
+				</tr>
+			{/eq}
+
+		</table>
+	 </div>
+ </div>
+</div>
+{include file='common/foot' /}
+<style>
+	.content{margin: 20px;}
+	.pic{padding: 0 20px}
+	.pic img{height: 30px;}
+	.hidden_span{display: none;}
+	.notice{display: none;}
+	.input-group {margin: 10px 0;width: 100%;}
+	.input-label{width: 100px;text-align: right}
+	.dropdown-toggle{
+		width: 100%;
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 0 4px 4px 0;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+		-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; 
+		transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	}
+	ul.dropdown-menu{width: 100%;text-align: center}
+	.dropdown-menu li {height: 30px;line-height: 30px;border-bottom: 1px dashed #ccc;}
+	/* .custom{display: none} */
+</style>
+<script type="text/javascript">
+$(function() {
+	var customN = 1;
+	$('.close').click(function(){
+		$('.notice').hide();
+	})
+
+	$(".delete").click(function(){
+		if(confirm('你确定要删除该数据吗?')){
+			window.location.href = $(this).attr('name');
+		}
+	})
+
+	/**推荐状态切换*/
+	$(".recType").click(function(){
+		var _this = $(this);
+		var id = _this.data('id');
+		var value = _this.data('value');
+		$.post("{:url('setStatus')}", {id: id, value: value, name: 'reco'}, function(res){
+			$.modal.alert(res.msg);
+			if(!res.err){
+				if(value == 1){
+					_this.addClass('btn-primary'); 
+					_this.data('value', 0); 
+					_this.text('已推荐'); 
+				}else{
+					_this.removeClass('btn-primary');
+					_this.data('value', 1); 
+					_this.text('未推荐'); 
+				}
+			}
+		})
+		
+	})
+	/**开启状态切换*/
+	$(".statusType").click(function(){
+		var _this = $(this);
+		var id = _this.data('id');
+		var value = _this.data('value');
+		$.post("{:url('setStatus')}", {id: id, value: value, name: 'status'}, function(res){
+			$.modal.alert(res.msg);
+			if(!res.err){
+				if(value == 0){
+					_this.addClass('btn-success'); 
+					_this.data('value', 1); 
+					_this.text('已启用'); 
+				}else{
+					_this.removeClass('btn-success');
+					_this.data('value', 0); 
+					_this.text('已禁用'); 
+				}
+			}
+		})
+	})
+    /**暂停状态切换*/
+    $(".pauseType").click(function(){
+        var _this = $(this);
+        var id = _this.data('id');
+        var value = _this.data('value');
+        $.post("{:url('setStatus')}", {id: id, value: value, name: 'pause'}, function(res){
+            $.modal.alert(res.msg);
+            if(!res.err){
+                if(value == 0){
+                    _this.addClass('btn-warning');
+                    _this.data('value', 1);
+                    _this.text('已启动');
+                }else{
+                    _this.removeClass('btn-warning');
+                    _this.data('value', 0);
+                    _this.text('已暂停');
+                }
+            }
+        })
+    })
+
+	// 移动游戏进行排序
+	$(".btn-move").click(function(){
+		var up = $(this).hasClass("btn-primary") ? 1 : -1;
+		var parent = $(this).parents('tr');
+		var id = parseInt($(this).parent().find(".ext_show_id").text());
+		var sort = parent.index();
+		if((sort == 0 && up==1 )|| ( $('.table').find("tr").length-2 == sort && up == -1)){
+			$('.notice').fadeOut().fadeIn();
+			var msg = sort == 0 ? '这已经是第一个了，不能再上移了' : '这已经是最后一个了，不能再下移了'
+			$(".notice-info").text(msg)
+			return;
+		}
+		var data = {
+			'up' : up,
+			'id' : id,
+		};
+		$.post('{:url("setSort")}',data,function(datas){
+			if(datas.code == 1){
+				up == 1 ? parent.fadeOut().fadeIn().insertBefore(parent.prev()) : parent.fadeOut().fadeIn().insertAfter(parent.next())  ;
+			}
+		},'json');
+
+	});
+	// 切换页面
+	$(".navbar-nav li").click(function(){
+		var _this = $(this);
+		$(".navbar-nav li").removeClass('active');
+		_this.addClass('active');
+		$(".content").hide();
+		$("."+_this.attr("id")).show()
+	})
+	$(".choice_game li").click(function(){
+		customN = 0;
+		$(".custom").hide();		
+		var a_this = $(this).find('a');
+		$("#dropdownMenu1").html(a_this.text()+'<span class="caret"></span>');
+		if(a_this.data('logo') == '自定义'){
+			$(".custom").show();
+			customN = 1;
+		}else{
+			$("input[name=datas]").val(a_this.data('logo'))
+		}
+	})
+	$(".game_type li").click(function(){
+		var a_this = $(this).find('a');
+		$(".type_show").html(a_this.text()+'<span class="caret"></span>');
+		$("input[name=type]").val(a_this.data('logo'))
+	})
+	$(".sendBtn").click(function(){
+		if(customN == 1){
+			var logo = $("#extlogo").val();
+			var name = $("#extname").val();
+			var exttilte = $("#exttilte").val();
+			if(!name || !exttilte) {
+				$.modal.alert('游戏名字和模块名必须填写');
+				return false;
+			}
+			var data= logo+"|"+name+"|"+exttilte;
+			$("input[name=datas]").val(data);
+		}
+		$("#addgame").submit();
+	})
+
+	$('.btn_select_photo').click(function () {
+      $('.select_photo').click();
+    });
+    $('.select_photo').localResizeIMG({
+      quality :1,
+		maxSize : 2*1024*1024, 
+      success: function (result) {
+        $('.btn_save').attr('disabled', 'disabled');
+        $.post("{:url('base64Upload')}", {'base64_data': result.base64}, function(res) {
+          $('#extlogo').attr('value', res.data);
+        }, 'json');
+      }
+    });
+
+	$('.btn_select_photo_img').click(function () {
+      $('.select_photo_img').click();
+    });
+    $('.select_photo_img').localResizeIMG({
+		quality :1,
+		maxSize : 2*1024*1024, 
+      success: function (result) {
+        $.post("{:url('base64Upload')}", {'base64_data': result.base64}, function(res) {
+          $('#extlogo_img').attr('value', res.data);
+        }, 'json');
+      }
+    });
+})
+</script>

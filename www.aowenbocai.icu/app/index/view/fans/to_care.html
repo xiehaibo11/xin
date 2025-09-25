@@ -1,0 +1,131 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<link rel="stylesheet" href="__STATIC__/css/fans.css">
+
+
+<div class="page page-current">
+    <header class="bar bar-nav">
+      <a class="button button-link button-nav pull-left back">
+        <span class="icon icon-left"></span>
+      </a>
+      <h1 class="title">{$title}</h1>
+    </header>
+    <div class="p-height"></div>
+    <div id="app" class="app_init content">
+        <div>
+        <div class="user_top">
+            <div class="user_photo"></div>
+            <div class="user_top_right">
+                <div>{{info.nickname}} <span class="user_lv">LV.{{info.lv}}</span></div>
+                <div>(签名){{info.explan}}</div>
+            </div>
+        </div>
+    <div class="row fans_nav">
+      <div class="col-50 b-r">关注(25)</div>
+      <div class="col-50">粉丝(125)</div>
+    </div>
+    <div class="buttons-tab">
+        <a href="#tab1" class="tab-link active button">全部</a>
+        <a href="#tab2" class="tab-link button">待付款</a>
+        <a href="#tab3" class="tab-link button">待发货</a>
+      </div>
+
+        <div class="fans_list">
+            <div class="search_padded">
+            <div class="searchbar row">
+    <div class="search-input col-80">
+      <label class="icon icon-search" for="search"></label>
+      <input type="search" id='search' placeholder='输入关键字...'/>
+    </div>
+    <a class="button button-fill button-primary col-20">搜索</a>
+  </div>
+  </div>
+    <div class="list-block media-list">
+        <ul>
+          <li v-for="item of list">
+            <div class="item-content">
+              <div class="item-media">
+                  <img :src="item.user.photo" style='width: 2.2rem;'>
+              </div>
+              <div class="item-inner">
+                <div class="item-title-row">
+                  <a :href="'/index/user/show?userid=' + item.to_userid" class="item-title">{{item.user.nickname}}(LV.{{item.user.lv}})</a>
+                </div>
+                <div class="item-subtitle">（签名）{{item.user.explan}}</div>
+                <span @click="care(item.to_userid)" class="button btn_right">取消关注</span>
+              </div>
+
+            </div>
+          </li>
+        </ul>
+      </div>
+        </div>
+    </div>
+  </div>
+  </div>
+
+<script>
+var vm = new Vue({
+    el:'#app',
+    data:{
+        info: {
+            'nickname': '', //昵称
+            'photo': '', //头像
+            'userid': '', //用户ID
+            'lv': 0, //等级
+            'explan': '', //签名
+        },
+        list: [
+            {
+                to_userid: 0,
+                user: {
+                    nickname: '游侠123',
+                    lv: 24,
+                    photo: '',
+                    explan: '奥术大师多撒大声地撒大所sad阿萨德阿萨德阿萨德阿萨德阿萨德撒多'
+                }
+            }
+        ]
+    },
+    methods: {
+        care: function(userid) {
+            var _this = this;
+            $.get('/index/fans/care/?to_userid=' + userid, function(res) {
+                $.toast(res.msg);
+                if (res.code) {
+                    for (var p in _this.list) {
+                        if (_this.list[p].to_userid == userid) {
+                            _this.list.splice(p, 1);
+                        }
+                    }
+                }
+            },'json');
+        }
+    },
+    computed: {
+        care_str: function() {
+            return this.info.care_status ? '取消关注' : '关注';
+        }
+    },
+    created:function(){
+        var _this = this;
+
+        setTimeout(function(){
+            console.log(window.location.href);
+
+            var userid = $.urlGet()['userid'] || '0';
+            $.get('/index/user/show/?userid=' + userid, function(res) {
+                _this.$set(_this, 'info', res.data);
+                //_this.info = res.data;
+                $('#app').removeClass('app_init');
+            });
+            $.get('/index/fans/careList/type=1', function(res) {
+                _this.$set(_this, 'list', res.data);
+                //_this.info = res.data;
+                //$('#app').removeClass('app_init');
+            });
+        }, 0);
+    }
+});
+</script>
+{include file='common@common/foot' /}

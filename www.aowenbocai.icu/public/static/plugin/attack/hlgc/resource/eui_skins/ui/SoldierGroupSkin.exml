@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SoldierGroupSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*">
+	<e:Group id="soldiers" width="640" y="0" x="0">
+		<ns1:Soldier id="soldier0" xmlns:ns1="*" x="92" y="72" skinName="SoldierSkin" currentState="index"/>
+		<ns1:Soldier id="soldier1" xmlns:ns1="*" x="102" y="82" skinName="SoldierSkin" soldierType="1"/>
+		<ns1:Soldier id="soldier2" xmlns:ns1="*" x="112" y="92" skinName="SoldierSkin" soldierType="2"/>
+		<e:layout>
+		<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" gap="0"/>
+		</e:layout>
+	</e:Group>
+	<ns1:Fight id="fight" skinName="FightSkin" horizontalCenter="0" top="-100" visible="false"/>
+</e:Skin>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ArticleSkin" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  width="640">
+	<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0x1a232c"/>
+	<e:Group height="110" anchorOffsetY="0" anchorOffsetX="0" horizontalCenter="0" top="0" left="0" right="0">
+		<e:Rect fillColor="0x26323e" anchorOffsetY="0" left="0" right="0" top="0" bottom="0"/>
+		<e:Image source="zoo_sheet2_json.zoo_sheet2010" y="18" scaleX="0.9" scaleY="0.9" left="0"/>
+		<e:Image source="zoo_sheet2_json.zoo_sheet2010" y="18" scaleX="0.9" skewY="180" scaleY="0.9" right="0"/>
+		<e:Image source="zoo_sheet2_json.zoo_sheet2004" y="48" left="222"/>
+		<e:Image source="zoo_sheet2_json.zoo_sheet2004" y="48" right="220"/>
+		<e:Label id="title" text="玩法介绍" y="44" horizontalCenter="0"/>
+	</e:Group>
+	<e:Group anchorOffsetY="0" anchorOffsetX="0" left="0" right="0" bottom="0" height="84" horizontalCenter="0">
+		<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0x26323E"/>
+		<e:Group id="close_btn" width="249.21" anchorOffsetX="0" verticalCenter="0" height="59.39" horizontalCenter="0" anchorOffsetY="0">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xed503f" ellipseWidth="30" ellipseHeight="30"/>
+			<e:Label text="返回游戏" horizontalCenter="0" verticalCenter="0" size="24"/>
+		</e:Group>
+	</e:Group>
+	<e:Group id="article_box" anchorOffsetY="0" left="0" right="0" top="121" bottom="94" height="921"/>
+</e:Skin>

@@ -1,0 +1,116 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-c-component.js"></script>
+<style>
+    .inform-list{padding-top: .5rem}
+    .card-list-c{border-bottom: 1px solid #3c404f;color: #fffcfc;padding: .2rem 0;}
+    .card-list-c .card-content{padding: .2rem 1rem 0;position: relative;}
+    .card-list-c .card-footer{padding: 0.2rem 1rem}
+    .status{position: absolute;width:.4rem;height: .4rem;background-color: #ff4239;border-radius: 50%;left: .4rem;top: .5rem}
+    .card-list-c .datetime{text-align: left;color: #adb0c1;font-size: .65rem;line-height: 23px}
+    .card-list-c .control{padding: .1rem .5rem;background-color: #484967;border-radius: .2rem;}
+    .card-list-c .control a{font-size: .6rem;}
+    .delete-all{
+        line-height: 25px;
+        font-size: 0.7rem;
+        background-color: #ff4239;
+        padding: 0 .3rem;
+        border-radius: .2rem;
+        height: 25px;
+        margin-top: 3px;
+    }
+</style>
+<div id="app">
+    <header class="header">
+        <div class="header-nav">
+            <a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);"><i class="icon-svg icon_left"></i> </a>
+        </div>
+        <div class="header-title">系统通知</div>
+        <div class="header-nav"><a class="delete-all" href="javascript:;" @click="deleteAll">清除全部</a></div>
+    </header>
+    <div class="p-height"></div>
+    <div class="inform-list">
+        <loading-box url="/index/user/getInform" :list="list">
+            <template scope="props">
+                <template v-for="(item,index) of props.list">
+                    <msg-list :item="item" :index="index" ></msg-list>
+                </template>
+            </template>
+        </loading-box>
+    </div>
+</div>
+<template id="msgList">
+    <div class="card-list-c" v-if="this_show" @click="item.statuss ='已读'">
+        <div class="card-content msg-content" v-html="item.content">
+            <span class="status" v-if="item.statuss =='未读'"></span>
+        </div>
+        <div class="flex-box card-footer">
+            <span class="datetime flex">{{item.create_time}}</span>
+            <span class="control">
+                <a href="javascript:;" @click="dataDelete">删除</a>
+            </span>
+        </div>
+    </div>
+</template>
+<script>
+'use strict';
+
+$(function () {
+    Vue.component('msg-list', {
+        props: ['item', 'index'],
+        template: '#msgList',
+        data: function data() {
+            return {
+                this_show: true
+            };
+        },
+
+        methods: {
+            dataDelete: function dataDelete() {
+                var _this = this;
+
+                $.confirm('确定删除吗', {
+                    yes: function yes() {
+                        $.get('/index/User/deleteInform/', {
+                            id: _this.item.id
+                        }, function (res) {
+                            $.msg(res.msg);
+                            _this.this_show = false;
+                        });
+                    }
+                });
+            }
+        }
+    });
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            list: []
+        },
+        created: function created() {
+            var _this2 = this;
+
+            $.get('/index/user/getInform', function (res) {
+                _this2.$set(_this2, 'list', res.data);
+                console.log(_this2.list);
+            });
+        },
+        methods: {
+            deleteAll: function deleteAll() {
+                var _this3 = this;
+
+                $.confirm('确定删除全部吗', {
+                    yes: function yes() {
+                        $.get('/index/User/deleteInform/', { day: '1' }, function (res) {
+                            _this3.list = [];
+                            $.msg(res.msg);
+                        });
+                    }
+                });
+            }
+        }
+    });
+});
+</script>
+{include file='common@common/foot' /}

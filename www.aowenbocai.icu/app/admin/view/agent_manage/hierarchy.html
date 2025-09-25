@@ -1,0 +1,371 @@
+{include file='common/head' /}
+
+<style>
+.hierarchy-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.agent-tree {
+    margin-top: 20px;
+}
+.agent-node {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 10px 0;
+    position: relative;
+    transition: all 0.3s;
+}
+.agent-node:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+.agent-node.level-1 {
+    border-left: 4px solid #007bff;
+    background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+}
+.agent-node.level-2 {
+    border-left: 4px solid #28a745;
+    background: linear-gradient(135deg, #e8f5e8, #f8f9fa);
+    margin-left: 30px;
+}
+.agent-node.level-3 {
+    border-left: 4px solid #ffc107;
+    background: linear-gradient(135deg, #fff8e1, #f8f9fa);
+    margin-left: 60px;
+}
+.agent-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.agent-details {
+    display: flex;
+    align-items: center;
+}
+.agent-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.agent-name {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+.agent-stats {
+    font-size: 12px;
+    color: #666;
+}
+.agent-actions {
+    display: flex;
+    gap: 5px;
+}
+.expand-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 18px;
+    margin-right: 10px;
+}
+.expand-btn:hover {
+    color: #0056b3;
+}
+.children-count {
+    background: #007bff;
+    color: white;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 11px;
+    margin-left: 10px;
+}
+.search-box {
+    margin-bottom: 20px;
+}
+.breadcrumb-nav {
+    background: #e9ecef;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+</style>
+
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li><a href="{:url('index')}">代理管理</a></li>
+            <li class="active">代理层级结构</li>
+        </ol>
+    </div>
+    
+    <div class="hierarchy-container">
+        <h3 style="margin-bottom: 20px; color: #333;">
+            <i class="glyphicon glyphicon-tree-deciduous"></i> 代理层级结构
+        </h3>
+        
+        <!-- 面包屑导航 -->
+        {if condition="$parentId > 0"}
+        <div class="breadcrumb-nav">
+            <a href="{:url('hierarchy')}" class="btn btn-sm btn-default">
+                <i class="glyphicon glyphicon-home"></i> 返回顶级
+            </a>
+            <span style="margin: 0 10px;">></span>
+            <span>当前查看的代理下级</span>
+        </div>
+        {/if}
+        
+        <!-- 搜索框 -->
+        <div class="search-box">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchAgent" placeholder="搜索代理用户名或昵称...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="searchAgent()">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-info btn-sm" onclick="expandAll()">
+                        <i class="glyphicon glyphicon-resize-full"></i> 展开全部
+                    </button>
+                    <button class="btn btn-warning btn-sm" onclick="collapseAll()">
+                        <i class="glyphicon glyphicon-resize-small"></i> 收起全部
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 代理树 -->
+        <div class="agent-tree" id="agentTree">
+            {if condition="empty($agents)"}
+            <div class="text-center" style="padding: 50px; color: #999;">
+                <i class="glyphicon glyphicon-info-sign" style="font-size: 48px; margin-bottom: 15px;"></i>
+                <p>暂无代理数据</p>
+                <a href="{:url('create')}" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-plus"></i> 创建第一个代理
+                </a>
+            </div>
+            {else /}
+            {foreach $agents as $agent}
+            <div class="agent-node level-1" data-agent-id="{$agent.id}">
+                <div class="agent-info">
+                    <div class="agent-details">
+                        <button class="expand-btn" onclick="toggleChildren({$agent.id})" title="展开/收起下级">
+                            <i class="glyphicon glyphicon-plus" id="icon-{$agent.id}"></i>
+                        </button>
+                        <img src="{$agent.photo|default='/static/admin/images/default_avatar.png'}" 
+                             alt="" class="agent-avatar">
+                        <div>
+                            <div class="agent-name">
+                                {$agent.username}
+                                {if condition="$agent.nickname"}({$agent.nickname}){/if}
+                                <span class="children-count" id="count-{$agent.id}">0</span>
+                            </div>
+                            <div class="agent-stats">
+                                余额: ¥{$agent.money} | 游戏币: {$agent.game_money} | 
+                                注册: {$agent.create_time|date='Y-m-d'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn btn-xs btn-primary" onclick="takeoverAgent({$agent.id})" title="接管登录">
+                            <i class="glyphicon glyphicon-log-in"></i>
+                        </button>
+                        <a href="{:url('admin/User/edit')}?id={$agent.id}" class="btn btn-xs btn-info" title="编辑">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </a>
+                        <button class="btn btn-xs btn-success" onclick="viewDetails({$agent.id})" title="详情">
+                            <i class="glyphicon glyphicon-eye-open"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="children-container" id="children-{$agent.id}" style="display: none;">
+                    <!-- 下级代理将通过AJAX加载 -->
+                </div>
+            </div>
+            {/foreach}
+            {/if}
+        </div>
+    </div>
+</div>
+
+<!-- 代理详情模态框 -->
+<div class="modal fade" id="agentDetailModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">代理详情</h4>
+            </div>
+            <div class="modal-body" id="agentDetailContent">
+                <!-- 详情内容将通过AJAX加载 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function() {
+    // 页面加载时获取所有一级代理的下级数量
+    $('.agent-node.level-1').each(function() {
+        var agentId = $(this).data('agent-id');
+        loadChildrenCount(agentId);
+    });
+});
+
+// 加载下级代理数量
+function loadChildrenCount(agentId) {
+    $.get('{:url("getChildrenCount")}', {parentId: agentId}, function(res) {
+        if (res.err == 0) {
+            $('#count-' + agentId).text(res.count);
+            if (res.count > 0) {
+                $('#icon-' + agentId).removeClass('glyphicon-plus').addClass('glyphicon-plus');
+            } else {
+                $('#icon-' + agentId).removeClass('glyphicon-plus').addClass('glyphicon-minus');
+            }
+        }
+    });
+}
+
+// 切换下级显示
+function toggleChildren(agentId) {
+    var container = $('#children-' + agentId);
+    var icon = $('#icon-' + agentId);
+    
+    if (container.is(':visible')) {
+        container.slideUp();
+        icon.removeClass('glyphicon-minus').addClass('glyphicon-plus');
+    } else {
+        if (container.html().trim() === '') {
+            // 首次加载，通过AJAX获取下级数据
+            loadChildren(agentId);
+        } else {
+            container.slideDown();
+            icon.removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        }
+    }
+}
+
+// 加载下级代理
+function loadChildren(agentId) {
+    $.get('{:url("getChildren")}', {parentId: agentId}, function(res) {
+        if (res.err == 0) {
+            var html = '';
+            $.each(res.data, function(index, agent) {
+                html += buildAgentNode(agent, 'level-2');
+            });
+            
+            $('#children-' + agentId).html(html).slideDown();
+            $('#icon-' + agentId).removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        }
+    });
+}
+
+// 构建代理节点HTML
+function buildAgentNode(agent, levelClass) {
+    return `
+        <div class="agent-node ${levelClass}" data-agent-id="${agent.id}">
+            <div class="agent-info">
+                <div class="agent-details">
+                    <img src="${agent.photo || '/static/admin/images/default_avatar.png'}" 
+                         alt="" class="agent-avatar">
+                    <div>
+                        <div class="agent-name">
+                            ${agent.username}
+                            ${agent.nickname ? '(' + agent.nickname + ')' : ''}
+                        </div>
+                        <div class="agent-stats">
+                            余额: ¥${agent.money} | 游戏币: ${agent.game_money} | 
+                            注册: ${agent.create_time}
+                        </div>
+                    </div>
+                </div>
+                <div class="agent-actions">
+                    <button class="btn btn-xs btn-primary" onclick="takeoverAgent(${agent.id})" title="接管登录">
+                        <i class="glyphicon glyphicon-log-in"></i>
+                    </button>
+                    <a href="/admin.php/admin/User/edit?id=${agent.id}" class="btn btn-xs btn-info" title="编辑">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <button class="btn btn-xs btn-success" onclick="viewDetails(${agent.id})" title="详情">
+                        <i class="glyphicon glyphicon-eye-open"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 代理接管
+function takeoverAgent(agentId) {
+    $.modal.confirm('确认要接管此代理账号吗？', function() {
+        $.post('{:url("takeover")}', {agentId: agentId}, function(res) {
+            if (res.err == 0) {
+                $.modal.alert(res.msg, function() {
+                    window.open(res.redirect, '_blank');
+                });
+            } else {
+                $.modal.alert(res.msg);
+            }
+        });
+    });
+}
+
+// 查看代理详情
+function viewDetails(agentId) {
+    $('#agentDetailModal').modal('show');
+    $('#agentDetailContent').html('<div class="text-center"><i class="fa fa-spinner fa-spin"></i> 加载中...</div>');
+    
+    $.get('{:url("getAgentDetail")}', {agentId: agentId}, function(res) {
+        if (res.err == 0) {
+            $('#agentDetailContent').html(res.html);
+        } else {
+            $('#agentDetailContent').html('<div class="alert alert-danger">' + res.msg + '</div>');
+        }
+    });
+}
+
+// 搜索代理
+function searchAgent() {
+    var keyword = $('#searchAgent').val().trim();
+    if (!keyword) {
+        location.reload();
+        return;
+    }
+    
+    $('.agent-node').hide();
+    $('.agent-node').each(function() {
+        var text = $(this).text().toLowerCase();
+        if (text.indexOf(keyword.toLowerCase()) !== -1) {
+            $(this).show();
+        }
+    });
+}
+
+// 展开全部
+function expandAll() {
+    $('.agent-node.level-1').each(function() {
+        var agentId = $(this).data('agent-id');
+        var container = $('#children-' + agentId);
+        if (!container.is(':visible')) {
+            toggleChildren(agentId);
+        }
+    });
+}
+
+// 收起全部
+function collapseAll() {
+    $('.children-container').slideUp();
+    $('.expand-btn i').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+}
+</script>
+
+{include file='common/foot' /}

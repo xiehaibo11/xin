@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<e:Skin class="skins.RankButtonSkin" states="up,down" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" width="136" height="117">
+	<e:Image x="0" y="0" source="dt_json.排行榜" source.up="dt_json.排行榜" source.down="dt_json.排行榜"/>
+</e:Skin>

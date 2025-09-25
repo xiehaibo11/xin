@@ -1,0 +1,459 @@
+{
+	"groups": [
+		{
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,load_bg_png,load_ui_bg_png,load_ui_box_png,loading_bar_png,loading_msg_png,bg_png,history_png,turntable_png,lucky_button_up_png,lucky_button_down_png,gongcheng_png,ice_card_png,jiawawa_png,locking_png,lucky_star_png,masonry_png,poker_png,speed_png,thanks_png,again_png,baoma_png,fa_png,fruit_png,gold_coin_png,3_png,4_png,5_png,6_png,7_png,1_png,2_png,use_up_png,back2_png,bingo_png,use_down_png,back_down_png,back_up_png,leave_up_png,leave_down_png,use_down2_png,use_up2_png,dialog_panel_png,sure_png,dialog_bg_png,loading_png,description_json,timer_png,light2_png,light1_png,bgm_mp3,bingo_mp3,win_mp3,music_crr001_png,music_crr000_png,reelSpin_mp3,btn_mp3,turn_png,bg_img_png,load_bg2_png,load_ui_bg2_png,load_ui_box2_png,loading2_png,loading_bar2_png,loading_msg2_png",
+			"name": "preload"
+		},
+		{
+			"keys": "load_bg_png,load_ui_bg_png,load_ui_box_png,loading_bar_png,loading_msg_png",
+			"name": "load"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/CheckBox/checkbox_select_disabled.png",
+			"type": "image",
+			"name": "checkbox_select_disabled_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_down.png",
+			"type": "image",
+			"name": "checkbox_select_down_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_select_up.png",
+			"type": "image",
+			"name": "checkbox_select_up_png"
+		},
+		{
+			"url": "assets/CheckBox/checkbox_unselect.png",
+			"type": "image",
+			"name": "checkbox_unselect_png"
+		},
+		{
+			"url": "assets/ItemRenderer/selected.png",
+			"type": "image",
+			"name": "selected_png"
+		},
+		{
+			"url": "assets/Panel/border.png",
+			"type": "image",
+			"name": "border_png"
+		},
+		{
+			"url": "assets/Panel/header.png",
+			"type": "image",
+			"name": "header_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_disabled.png",
+			"type": "image",
+			"name": "radiobutton_select_disabled_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_down.png",
+			"type": "image",
+			"name": "radiobutton_select_down_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_select_up.png",
+			"type": "image",
+			"name": "radiobutton_select_up_png"
+		},
+		{
+			"url": "assets/RadioButton/radiobutton_unselect.png",
+			"type": "image",
+			"name": "radiobutton_unselect_png"
+		},
+		{
+			"url": "assets/ScrollBar/roundthumb.png",
+			"type": "image",
+			"name": "roundthumb_png"
+		},
+		{
+			"url": "assets/Slider/thumb.png",
+			"type": "image",
+			"name": "thumb_png"
+		},
+		{
+			"url": "assets/Slider/track.png",
+			"type": "image",
+			"name": "track_png"
+		},
+		{
+			"url": "assets/Slider/tracklight.png",
+			"type": "image",
+			"name": "tracklight_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/handle.png",
+			"type": "image",
+			"name": "handle_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/off.png",
+			"type": "image",
+			"name": "off_png"
+		},
+		{
+			"url": "assets/ToggleSwitch/on.png",
+			"type": "image",
+			"name": "on_png"
+		},
+		{
+			"url": "assets/Button/button_down.png",
+			"type": "image",
+			"name": "button_down_png"
+		},
+		{
+			"url": "assets/Button/button_up.png",
+			"type": "image",
+			"name": "button_up_png"
+		},
+		{
+			"url": "assets/ProgressBar/thumb_pb.png",
+			"type": "image",
+			"name": "thumb_pb_png"
+		},
+		{
+			"url": "assets/ProgressBar/track_pb.png",
+			"type": "image",
+			"name": "track_pb_png"
+		},
+		{
+			"url": "assets/ScrollBar/track_sb.png",
+			"type": "image",
+			"name": "track_sb_png"
+		},
+		{
+			"url": "assets/bg.jpg",
+			"type": "image",
+			"name": "bg_jpg"
+		},
+		{
+			"url": "assets/egret_icon.png",
+			"type": "image",
+			"name": "egret_icon_png"
+		},
+		{
+			"url": "assets/Images/Load/load_bg.png",
+			"type": "image",
+			"name": "load_bg_png"
+		},
+		{
+			"url": "assets/Images/Load/load_ui_bg.png",
+			"type": "image",
+			"name": "load_ui_bg_png"
+		},
+		{
+			"url": "assets/Images/Load/load_ui_box.png",
+			"type": "image",
+			"name": "load_ui_box_png"
+		},
+		{
+			"url": "assets/Images/Load/loading_bar.png",
+			"type": "image",
+			"name": "loading_bar_png"
+		},
+		{
+			"url": "assets/Images/Load/loading_msg.png",
+			"type": "image",
+			"name": "loading_msg_png"
+		},
+		{
+			"name": "bg_png",
+			"type": "image",
+			"url": "assets/Images/Bg/bg.png"
+		},
+		{
+			"name": "history_png",
+			"type": "image",
+			"url": "assets/Images/Bg/history.png"
+		},
+		{
+			"name": "turntable_png",
+			"type": "image",
+			"url": "assets/Images/Bg/turntable.png"
+		},
+		{
+			"name": "lucky_button_up_png",
+			"type": "image",
+			"url": "assets/Images/Bg/lucky_button_up.png"
+		},
+		{
+			"name": "lucky_button_down_png",
+			"type": "image",
+			"url": "assets/Images/Bg/lucky_button_down.png"
+		},
+		{
+			"name": "gongcheng_png",
+			"type": "image",
+			"url": "assets/Images/Gift/gongcheng.png"
+		},
+		{
+			"name": "ice_card_png",
+			"type": "image",
+			"url": "assets/Images/Gift/ice_card.png"
+		},
+		{
+			"name": "jiawawa_png",
+			"type": "image",
+			"url": "assets/Images/Gift/jiawawa.png"
+		},
+		{
+			"name": "locking_png",
+			"type": "image",
+			"url": "assets/Images/Gift/locking.png"
+		},
+		{
+			"name": "lucky_star_png",
+			"type": "image",
+			"url": "assets/Images/Gift/lucky_star.png"
+		},
+		{
+			"name": "masonry_png",
+			"type": "image",
+			"url": "assets/Images/Gift/masonry.png"
+		},
+		{
+			"name": "poker_png",
+			"type": "image",
+			"url": "assets/Images/Gift/poker.png"
+		},
+		{
+			"name": "speed_png",
+			"type": "image",
+			"url": "assets/Images/Gift/speed.png"
+		},
+		{
+			"name": "thanks_png",
+			"type": "image",
+			"url": "assets/Images/Gift/thanks.png"
+		},
+		{
+			"name": "again_png",
+			"type": "image",
+			"url": "assets/Images/Gift/again.png"
+		},
+		{
+			"name": "baoma_png",
+			"type": "image",
+			"url": "assets/Images/Gift/baoma.png"
+		},
+		{
+			"name": "fa_png",
+			"type": "image",
+			"url": "assets/Images/Gift/fa.png"
+		},
+		{
+			"name": "fruit_png",
+			"type": "image",
+			"url": "assets/Images/Gift/fruit.png"
+		},
+		{
+			"name": "gold_coin_png",
+			"type": "image",
+			"url": "assets/Images/Gift/gold_coin.png"
+		},
+		{
+			"name": "3_png",
+			"type": "image",
+			"url": "assets/Images/Golds/3.png"
+		},
+		{
+			"name": "4_png",
+			"type": "image",
+			"url": "assets/Images/Golds/4.png"
+		},
+		{
+			"name": "5_png",
+			"type": "image",
+			"url": "assets/Images/Golds/5.png"
+		},
+		{
+			"name": "6_png",
+			"type": "image",
+			"url": "assets/Images/Golds/6.png"
+		},
+		{
+			"name": "7_png",
+			"type": "image",
+			"url": "assets/Images/Golds/7.png"
+		},
+		{
+			"name": "1_png",
+			"type": "image",
+			"url": "assets/Images/Golds/1.png"
+		},
+		{
+			"name": "2_png",
+			"type": "image",
+			"url": "assets/Images/Golds/2.png"
+		},
+		{
+			"name": "use_up_png",
+			"type": "image",
+			"url": "assets/Images/Show/use_up.png"
+		},
+		{
+			"name": "back2_png",
+			"type": "image",
+			"url": "assets/Images/Show/back.png"
+		},
+		{
+			"name": "bingo_png",
+			"type": "image",
+			"url": "assets/Images/Show/bingo.png"
+		},
+		{
+			"name": "use_down_png",
+			"type": "image",
+			"url": "assets/Images/Show/use_down.png"
+		},
+		{
+			"name": "back_down_png",
+			"type": "image",
+			"url": "assets/Images/UI/back_down.png"
+		},
+		{
+			"name": "back_up_png",
+			"type": "image",
+			"url": "assets/Images/UI/back_up.png"
+		},
+		{
+			"name": "leave_up_png",
+			"type": "image",
+			"url": "assets/Images/Show/leave_up.png"
+		},
+		{
+			"name": "leave_down_png",
+			"type": "image",
+			"url": "assets/Images/Show/leave_down.png"
+		},
+		{
+			"name": "use_down2_png",
+			"type": "image",
+			"url": "assets/Images/UI/use_down.png"
+		},
+		{
+			"name": "use_up2_png",
+			"type": "image",
+			"url": "assets/Images/UI/use_up.png"
+		},
+		{
+			"name": "dialog_panel_png",
+			"type": "image",
+			"url": "assets/Images/Alert/dialog_panel.png"
+		},
+		{
+			"name": "sure_png",
+			"type": "image",
+			"url": "assets/Images/Alert/sure.png"
+		},
+		{
+			"name": "dialog_bg_png",
+			"type": "image",
+			"url": "assets/Images/Alert/dialog_bg.png"
+		},
+		{
+			"name": "loading_png",
+			"type": "image",
+			"url": "assets/Images/Load/loading.png"
+		},
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "timer_png",
+			"type": "image",
+			"url": "assets/Images/UI/timer.png"
+		},
+		{
+			"name": "light2_png",
+			"type": "image",
+			"url": "assets/Images/UI/light2.png"
+		},
+		{
+			"name": "light1_png",
+			"type": "image",
+			"url": "assets/Images/UI/light1.png"
+		},
+		{
+			"name": "bgm_mp3",
+			"type": "sound",
+			"url": "assets/Music/bgm.mp3"
+		},
+		{
+			"name": "bingo_mp3",
+			"type": "sound",
+			"url": "assets/Music/bingo.mp3"
+		},
+		{
+			"name": "win_mp3",
+			"type": "sound",
+			"url": "assets/Music/win.mp3"
+		},
+		{
+			"name": "music_crr001_png",
+			"type": "image",
+			"url": "assets/Images/UI/music_crr001.png"
+		},
+		{
+			"name": "music_crr000_png",
+			"type": "image",
+			"url": "assets/Images/UI/music_crr000.png"
+		},
+		{
+			"name": "reelSpin_mp3",
+			"type": "sound",
+			"url": "assets/Music/reelSpin.mp3"
+		},
+		{
+			"name": "btn_mp3",
+			"type": "sound",
+			"url": "assets/Music/btn.mp3"
+		},
+		{
+			"name": "turn_png",
+			"type": "image",
+			"url": "assets/Images/UI/turn.png"
+		},
+		{
+			"name": "bg_img_png",
+			"type": "image",
+			"url": "assets/Images/UI/bg_img.png"
+		},
+		{
+			"name": "load_bg2_png",
+			"type": "image",
+			"url": "assets/Images/Load/load_bg.png"
+		},
+		{
+			"name": "load_ui_bg2_png",
+			"type": "image",
+			"url": "assets/Images/Load/load_ui_bg.png"
+		},
+		{
+			"name": "load_ui_box2_png",
+			"type": "image",
+			"url": "assets/Images/Load/load_ui_box.png"
+		},
+		{
+			"name": "loading2_png",
+			"type": "image",
+			"url": "assets/Images/Load/loading.png"
+		},
+		{
+			"name": "loading_bar2_png",
+			"type": "image",
+			"url": "assets/Images/Load/loading_bar.png"
+		},
+		{
+			"name": "loading_msg2_png",
+			"type": "image",
+			"url": "assets/Images/Load/loading_msg.png"
+		}
+	]
+}

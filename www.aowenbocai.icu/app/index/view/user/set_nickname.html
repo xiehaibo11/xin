@@ -1,0 +1,50 @@
+{include file='common@common/head' /}
+
+<style>
+  .form {
+    margin: .5rem;
+  }
+  .form button.btn
+  {
+    display: block;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .form .icon-svg {
+    margin: .4rem;
+  }
+  .item-line{
+    border-radius: .2rem;
+  }
+
+</style>
+
+<header class="header">
+  <div class="header-title">{$title}</div>
+</header>
+<div class="p-height"></div>
+<form class="form" action="{:Url('index/User/setNickname')}" id="nickname">
+  <div class="item-line item-lg">
+    <i class="icon-svg icon_user"></i>
+    <input type="text" class="input input-line input-lg" placeholder="设置您的昵称" name="nickname">
+  </div>
+
+  <div><button class="btn btn-fill btn-lg">下一步</button></div>
+</form>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        $("#nickname").formAjax({
+            callback: function (data) {
+                $.msg(data.msg);
+                if (data.code) {
+                    setTimeout(function () {
+                        location.href = "/index/User/setPhoto";
+                    }, 2000);
+                }
+            }
+        });
+    });
+</script>

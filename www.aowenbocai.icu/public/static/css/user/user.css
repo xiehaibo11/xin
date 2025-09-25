@@ -1,0 +1,220 @@
+    .tab .tab-content {
+        padding: 0;
+    }
+
+    .list_title {
+        margin-top: .5rem;
+        padding: .5rem;
+        border-left: 2px solid #09f;
+        background: #FFF;
+    }
+
+    .list .list-item-text {
+        padding: .25rem .5rem;
+        padding-right: 3.2rem;
+        color: #777;
+        font-size: .6rem;
+    }
+
+    .list .list-item-text div {
+        text-align: left;
+    }
+
+    .list .list-item-text .memo {
+        line-height: .8rem;
+    }
+
+    .list .list-item-text .title {
+        color: #333;
+        font-size: .75rem;
+    }
+
+    .list .list-item-image {
+        padding: .15rem;
+    }
+
+    .list .btn_right {
+        position: absolute;
+        top: 1.2rem;
+        right: .5rem;
+    }
+
+    .icon-good,
+    .icon-comments,
+    .icon-share {
+        display: inline-block;
+        vertical-align: -.2rem;
+        width: .9rem;
+        height: .9rem;
+        background-image: url(/static/theme/default/svg/good.svg);
+    }
+
+    .icon-comments {
+        background-image: url(/static/theme/default/svg/comments.svg);
+    }
+
+    .icon-share {
+        background-image: url(/static/theme/default/svg/share.svg);
+    }
+
+    .reply_good {
+        color: #333;
+    }
+
+    .massage_info {
+        margin: 0 .75rem;
+        color: #999;
+        font-size: .65rem;
+        padding-left: 0;
+    }
+
+    .ext_head {
+        position: relative;
+        font-size: .6rem;
+        color: #A6CDE4;
+    }
+
+    .card-content .user:after,
+    .ext_head:after {
+        content: '';
+        position: absolute;
+        right: 0.55rem;
+        top: 50%;
+        margin-top: -0.5rem;
+        width: 0.8rem;
+        height: 0.8rem;
+        background-image: url(/static/theme/default/svg/arrow-right.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+    }
+
+    .ssc_bg {
+        background-image: url(/static/images/game_icon/cqssc.svg);
+        background-repeat: no-repeat;
+        background-position: top -.9rem right 1.5rem;
+        background-size: 6rem 6rem;
+        background-color: #fff;
+    }
+
+    .ext_bg {
+        background-image: url(/static/images/game_icon/cqssc.svg);
+        background-repeat: no-repeat;
+        background-position: top -.9rem right 1.5rem;
+        background-size: 6rem 6rem;
+        background-color: #fff;
+    }
+
+    .ext_bg>* {
+        background: rgba(255, 255, 255, .9);
+    }
+
+    .ext_head .icon-svg {
+        display: inline-block;
+        vertical-align: -.125rem;
+        background-image: url(/static/images/game_icon/cqssc.svg);
+    }
+
+    .card-content {
+        font-size: .75rem;
+    }
+
+    .user .icon-svg {
+        display: inline-block;
+        /* width: 1.5rem;
+        height: 1.5rem; */
+        margin-right: .25rem;
+        vertical-align: -.25rem;
+        border-radius: .1rem;
+    }
+
+    .user .username {
+        color: #333;
+        font-size: .7rem;
+    }
+
+    .user .datetime {
+        color: #666;
+        font-size: .5rem;
+    }
+
+    .card-content .user {
+        position: relative;
+        margin-bottom: .5rem;
+    }
+
+    .card-content .user .icon-svg {
+        float: left;
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .show_bg {
+        position: absolute;
+        width: 100%;
+        height: 7.00rem;
+        background-image: url(/static/images/show_bg2.jpg);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% auto;
+        z-index: -1;
+    }
+
+    .user_info {
+        background: none;
+    }
+
+    .tab .tab-header {
+        color: #fff;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .tab .tab-header .tab-link {
+        margin: 0;
+    }
+
+    .tab .tab-header .tab-link.tab-active {
+        background: rgba(0, 0, 0, .1);
+        border-bottom: 1px solid #0894ec;
+    }
+
+    .user_set {
+        position: absolute;
+        padding: .1rem;
+        border-radius: .1rem;
+        right: 1rem;
+        top: 2rem;
+        color: #FFF;
+        background: rgba(0, 0, 0, .1);
+    }
+
+    .user_set .icon-svg {
+        display: inline-block;
+        vertical-align: -.25rem;
+        background-image: url(/static/theme/default/svg/set.svg);
+    }
+
+    .red {
+        color: #f33;
+        font-size: 18px;
+    }
+
+    .bbs-content {
+        padding: .25rem 0;
+    }
+
+    .newly-game {
+        height: 4.1rem;
+    }
+    .nav_list a{
+        color: #444;
+    }
+    .nav_list img {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+        .ext_head .datetime {
+        float: right;
+        margin-right: .7rem;
+        color: #666;
+    }

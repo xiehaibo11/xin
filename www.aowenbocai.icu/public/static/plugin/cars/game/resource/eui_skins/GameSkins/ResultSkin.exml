@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ResultSkin" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="lingt">
+			<tween:TweenItem target="{light0}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{2}" scaleY="{2}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1.2}" scaleY="{1.2}" alpha="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{2}" scaleY="{2}" alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="500"/>
+				<tween:Set/>
+				<tween:Wait duration="1000"/>
+				<tween:Set/>
+			</tween:TweenItem>
+			<tween:TweenItem target="{light1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{1.5}" scaleY="{1.5}" alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}" alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="500"/>
+				<tween:Set/>
+				<tween:Wait duration="500"/>
+				<tween:Set/>
+				<tween:Wait duration="1000"/>
+				<tween:Set/>
+			</tween:TweenItem>
+			<tween:TweenItem target="{showImg}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{2}" scaleY="{2}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="250">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+				<tween:Wait duration="750"/>
+				<tween:Set/>
+				<tween:Wait duration="500"/>
+				<tween:Set/>
+				<tween:Wait duration="1000"/>
+				<tween:Set/>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Rect left="0" right="0" top="0" bottom="0" fillAlpha="0.5"/>
+	<e:Group horizontalCenter="0" verticalCenter="0" width="494" height="477">
+		<e:Image source="result (1)_json.result (1)1" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image id="light0" source="result (1)_json.result (1)2" horizontalCenter="0" verticalCenter="0" scaleX="1" scaleY="1"/>
+		<e:Image id="light1" source="result (1)_json.result (1)18" horizontalCenter="0" verticalCenter="0"/>
+		<e:Image id="showImg" source="draw_json.draw0" horizontalCenter="0" verticalCenter="22.5"/>
+		<e:Group id="stars" left="0" right="0" top="0" bottom="0" locked="true">
+			<e:Image id="image" source="result (1)_json.result (1)10" horizontalCenter="0" top="35"/>
+			<e:Image id="image0" source="result (1)_json.result (1)11" horizontalCenter="22" top="68"/>
+			<e:Image id="image1" source="result (1)_json.result (1)11" horizontalCenter="38" top="106"/>
+			<e:Image id="image2" source="result (1)_json.result (1)11" horizontalCenter="56" top="144"/>
+			<e:Image source="result (1)_json.result (1)11" horizontalCenter="96" top="159"/>
+			<e:Image source="result (1)_json.result (1)11" horizontalCenter="154" top="166"/>
+			<e:Image source="result (1)_json.result (1)11" horizontalCenter="192" top="176"/>
+			<e:Image source="result (1)_json.result (1)11" horizontalCenter="162" top="208"/>
+			<e:Image source="result (1)_json.result (1)11" horizontalCenter="128" top="240"/>
+			<e:Image source="result (1)_json.result (1)11" horizontalCenter="96" top="278"/>
+			<e:Image source="result (1)_json.result (1)11" horizontalCenter="109" top="329"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-23" top="68"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-42" top="111"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-61" top="150"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-101" top="159"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-152" top="166"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-192" top="174"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-162" top="209"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-130" top="239"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-101" top="278"/>
+			<e:Image source="result (1)_json.result (1)12" horizontalCenter="-111" top="331"/>
+		</e:Group>
+		<e:Group horizontalCenter="0" bottom="0" width="401" height="106">
+			<e:Image source="result (1)_json.result (1)52" horizontalCenter="0" bottom="0" x="-25" y="94" scaleX="1" scaleY="1"/>
+			<e:Label id="times" text="22.71倍" verticalAlign="middle" textAlign="center" size="80" textColor="0xedbf23" stroke="3" left="15" right="10" top="10" bottom="0"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>

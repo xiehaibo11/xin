@@ -1,0 +1,30 @@
+{include file='admin@common/head' /}
+
+<style media="screen">
+    .form{
+      margin:20px;
+    }
+</style>
+<div class="box-padding">
+  <ol class="breadcrumb">
+    <li><a href="{:url('system_code')}"><i class="glyphicon glyphicon-link"></i> 系统开奖</a></li>
+    <li class="active"> 系统开奖彩种管理</li>
+  </ol>
+<form class="form" action="{:url('system_code_admin')}" method="post">
+  {volist name="list" id="v"}
+  <div class="form-group">
+    <label class="col-sm-1 control-label">{$v.title}</label>
+    <div  class="col-sm-8">
+        {volist name="$v.data" id="row"}
+        <label class="radio-inline">
+          <input type="checkbox" name="system_code[]" value="{$row.id}"  {if condition="in_array($row['id'], $select)"} checked {/if}> {$row.title}
+        </label>
+        {/volist}
+    </div>
+    <div class="clear"></div>
+  </div>
+  {/volist}
+  <button type="submit" class="btn btn-primary btn_save"> 确认提交 </button>
+</form>
+</div>
+{include file='admin@common/foot' /}

@@ -1,0 +1,303 @@
+{include file='web@common/link' title="下级开户"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<script src="/static/vipweb/js/clipboard.min.js"></script>
+<script src="/static/vipweb/js/qrcode/jquery.qrcode.min.js"></script>
+<script src="/static/vipweb/js/qrcode/html2canvas.min.js"></script>
+<script src="/static/vipweb/js/qrcode/canvas2image.js"></script>
+
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">邀请码管理</span>
+        </div>
+        <div class="el-tabs el-tabs--card el-tabs--top">
+            <div class="el-tabs__header is-top">
+                <div class="el-tabs__nav-wrap is-top">
+                    <div class="el-tabs__nav-scroll">
+                        <div role="tablist" class="el-tabs__nav" style="transform: translateX(0px);">
+                            <div @click="toInvite(1)" id="tab-1" aria-controls="pane-1" role="tab" tabindex="-1" class="el-tabs__item is-top">下级开户</div>
+                            <div @click="toInvite(2)" id="tab-2" aria-controls="pane-2" role="tab" tabindex="0" class="el-tabs__item is-top is-active" aria-selected="true">邀请码管理</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <invite-code :lottery-show="lotteryShow" :user-rebate="userRebate"></invite-code>
+    </el-card>
+</div>
+<!--邀请码管理-->
+<template id="inviteCode">
+    <div class="invite-box invite-code">
+        <div class="invite-head bg">
+            <div class="flex-box">
+                开户类型：
+                <el-radio-group v-model="type">
+                    <el-radio :label="2">代理类型</el-radio>
+                    <el-radio :label="1">玩家类型</el-radio>
+                </el-radio-group>
+                <div class="flex tr org" style="font-size: 12px;">温馨提示：“邀请码” 与 “注册链接” 功能一致，可以使用邀请码，也可以使用注册链接。</div>
+            </div>
+        </div>
+        <div class="inviteCode-cont">
+            <page-nation :url="url" v-if="isrefresh">
+                <el-table-column prop="code" label="邀请码"  width="150">
+                    <template slot-scope="scope">
+                        <div class="flex-box">
+                            <div class="code-input-1 el-input el-input--small">
+                                <input :id="'code'+ scope.$index" type="text" v-model="scope.row.code" type="text" autocomplete="off" class="el-input__inner">
+                            </div>
+                            <a class="copy-btn link" data-clipboard-action="copy" :data-clipboard-target="'#code'+ scope.$index">复制</a>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="code" label="注册链接" width="200">
+                    <template slot-scope="scope">
+                        <div class="flex-box">
+                            <div class="code-input-2 el-input el-input--small">
+                                <input :id="'url'+ scope.$index" type="text" v-model="'http://'+ host + '/web/reg?code='+ scope.row.code" type="text" autocomplete="off" class="el-input__inner">
+                            </div>
+                            <a class="copy-btn link" data-clipboard-action="copy" :data-clipboard-target="'#url'+ scope.$index">复制</a>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="remark" label="备注"  width="">
+                    <template slot-scope="scope">
+                        <a  @click="openSet(scope.$index, scope.row)">{{scope.row.remark || '未设置'}}</a>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="create_time" label="生成时间"  width="150"></el-table-column>
+                <el-table-column prop="num" label="状态"  width="">
+                    <template slot-scope="scope">
+                        注册（<em :class="{'red':scope.row.num > 0}">{{scope.row.num}}</em>）
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作"  width="150">
+                    <template slot-scope="scope">
+                        <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
+                            <i class="iconfont icon-chakanbaogao info-c f-lg" @click="viewDetail(scope.row.rebate)"></i>
+                        </el-tooltip>
+                        <el-tooltip class="item" effect="dark" content="二维码" placement="bottom"><!--wap地址-->
+                            <i class="iconfont icon-erweima info-c f-lg" @click="getImage('http://' + host + '/wap/#/reg?code=' + scope.row.code)"></i>
+                        </el-tooltip>
+                        <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
+                            <i class="iconfont icon-shanchu info-c f-lg" @click="handleDelete(scope.$index, scope.row)"></i>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+            </page-nation>
+            <!--邀请码详情 dialog-->
+            <el-dialog title="详情" :visible.sync="dialogTableVisible" top="0" width="500">
+                <el-form class="invite-cont" label-width="100px">
+                    <template v-for="(item,index) in lotteryShow">
+                        <el-form-item :label="item.label" :key="index" size="small"  :prop="item.type">
+                            <el-input v-model="setInfo[item.type]" :disabled="true"></el-input>
+                            <span class="input-tips">（自身返点{{userRebate[item.type]}}）</span>
+                        </el-form-item>
+                    </template>
+                </el-form>
+            </el-dialog>
+            <!--邀请码详情 dialog end-->
+            <!--邀请码生成二维码图片 dialog-->
+            <el-dialog title="二维码" :visible.sync="picVisible" top="0" width="450">
+                <!--二维码生成-->
+                <div id="capture" class="invite-code-img" v-show="show">
+                    <div id="qrcode"></div>
+                </div>
+                <!--二维码图片-->
+                <div id="extend-capture" class="tc invite-code-img" v-show="!show"></div>
+                <!--二维码图片 end-->
+            </el-dialog>
+            <!--邀请码生成二维码图片 dialog end-->
+        </div>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        //邀请码管理
+        Vue.component('invite-code',{
+            template:'#inviteCode',
+            props:['lotteryShow','userRebate'],
+            data:function () {
+                return{
+                    host : '{$Think.server.HTTP_HOST}',
+                    type : 2, //开户类型
+                    dialogTableVisible : false,
+                    picVisible:false,
+                    load:false,
+                    maCont:'',
+                    show:true,//生成内容显示
+                    setInfo:{
+                        ssc:'',
+                        ks:'',
+                        pk10:'',
+                        syxw:'',
+                        pc28:''
+                    },
+                    isrefresh: true
+                }
+            },
+            computed:{
+                url:function () {
+                    return "{:url('get_invite')}?type=" + this.type
+                }
+            },
+            methods:{
+                //备注设置
+                openSet:function(index, row) {
+                    var _this = this;
+                    _this.$prompt('请输入备注内容', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /\S/,
+                        inputErrorMessage: '备注内容不能为空'
+                    }).then(function(action) {
+                        $.post('{:Url("add_invite_remark")}',{
+                            'id' :row.id,
+                            'remark' : action.value
+                        },function (res) {
+                            var type = 'error'
+                            if(!res.err){
+                                _this.$set(row,'remark',action.value)
+                                type = 'success'
+                            }
+                            _this.$alert( res.msg, '提示', {
+                                confirmButtonText: '确定',
+                                type: type,
+                                center: true
+                            });
+                        })
+                    }).catch(function(){
+
+                    });
+                },
+                //查看详情
+                viewDetail:function (cont) {
+                    this.dialogTableVisible = true
+                    this.setInfo = cont
+                },
+                //删除
+                handleDelete:function(index, row) {
+                    console.log(index, row);
+                    var _this = this;
+                    _this.$confirm('您确定要删除这条邀请码吗？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function(){
+                        var type = 'error'
+                        $.post('{:Url("delete_invite")}',{
+                            'id' :row.id
+                        },function (res) {
+                            if(!res.err){
+                                type = 'success'
+                                _this.isrefresh = false
+                                setTimeout(function () {
+                                    _this.isrefresh = true
+                                },10)
+                            }
+                            _this.$message({
+                                type: type,
+                                message: res.msg
+                            })
+                        })
+                    }).catch(function(){
+                    });
+                },
+                //生成二维码
+                _getQart: function(text) {
+                    $('#qrcode').qrcode({
+                        render: "canvas",
+                        text: text,
+                        width: 180,
+                        height: 180
+                    });
+                },
+                // 生成图片
+                getImage: function(text) {
+                    var _this = this;
+                    _this.show = true
+                    this.maCont = ''
+                    $('#qrcode').html('');
+                    $('#extend-capture').html('');
+                    _this.maCont = text
+                    _this.picVisible = true
+
+                    setTimeout(function () {
+                        _this._getQart(text);
+                    },100)
+                    setTimeout(function () {
+                        var cntElem = $('#capture')[0];
+                        var shareContent = cntElem; //需要截图的包裹的（原生的）DOM 对象
+                        var width = shareContent.offsetWidth; //获取dom 宽度
+                        var height = shareContent.offsetHeight; //获取dom 高度
+                        var canvas = document.createElement("canvas"); //创建一个canvas节点
+                        var scale = 2; //定义任意放大倍数 支持小数
+                        canvas.width = width * scale; //定义canvas 宽度 * 缩放
+                        canvas.height = height * scale; //定义canvas高度 *缩放
+                        console.log(width,height)
+                        canvas.getContext("2d").scale(scale, scale); //获取context,设置scale
+                        var opts = {
+                            scale: scale, // 添加的scale 参数
+                            canvas: canvas, //自定义 canvas
+                            // logging: true, //日志开关，便于查看html2canvas的内部执行流程
+                            width: width, //dom 原始宽度
+                            height: height,
+                            backgroundColor: 'transparent'
+                            //  useCORS: true // 【重要】开启跨域配置
+                        };
+                        html2canvas(shareContent, opts).then(function (canvas) {
+                            var context = canvas.getContext('2d');
+                            // 【重要】关闭抗锯齿
+                            context.mozImageSmoothingEnabled = false;
+                            context.webkitImageSmoothingEnabled = false;
+                            context.msImageSmoothingEnabled = false;
+                            context.imageSmoothingEnabled = false;
+                            // 【重要】默认转化的格式为png,也可设置为其他格式
+                            var img = Canvas2Image.saveAsPNG(canvas, canvas.width, canvas.height);
+                            var s = document.getElementById('extend-capture');
+                            s.appendChild(img);
+                            $(img).css({
+                                "width": canvas.width / 2 + "px",
+                                "height": canvas.height / 2 + "px"
+                            }).addClass('f-full');
+                            _this.show = false
+                        });
+                    },500)
+
+                }
+            },
+            created:function () {
+                var _this = this;
+                var clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', function(e) {
+                    _this.$alert( '复制成功', '提示', {
+                        confirmButtonText: '确定',
+                        type: 'success',
+                        center: true
+                    });
+                });
+                clipboard.on('error', function(e) {
+                    alert('请选择“拷贝”进行复制!')
+                });
+            }
+        })
+
+        new Vue({
+            el: "#app",
+            data: {
+                //用户对应返点
+                userRebate:{$rebate},
+                //彩票分类列表
+                lotteryShow: {$navList},
+            },
+            methods: {
+                toInvite:function(n){
+                    var url = n == 1 ? "{:url('invite')}" : "{:url('inviteCode')}"
+                    window.location.href = url
+                }
+            }
+        });
+    });
+</script>

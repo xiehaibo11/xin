@@ -1,0 +1,139 @@
+{include file='admin@common/head' /}
+<link rel="stylesheet" href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+	
+    .add-botton {
+        float: right;
+        margin-right: 30px;
+    }
+	.addGoods{
+		margin-top: 10px;
+		display: none;
+	}
+	.split{margin: 0 5px;}
+	.open{color:rgb(52, 226, 8)}
+	.stopUse{color:rgb(202, 69, 29)}
+</style>
+<div id="app" class="box-padding">
+	<div class="breadcrumb">
+		<ol class="">
+			<li><i class="glyphicon glyphicon-link"></i> 超级幸运星</li>
+			<li class="active">游戏管理</li>
+		</ol>
+		<form class="form-inline" action="">
+			<div class="add-botton">
+				{if condition='$pid == 0'}
+				<!--<a href="{:url('changeSp')}" class="btn btn-info" role="button">修改中奖率</a>-->
+				<div class="form-group form-group-left">
+					<label>网站盈利</label>
+					<input type="text" class="form-control profit" value='{$profit}' style="width: 60px" onkeyup="value=value.replace(/[^\d\.]/g,'')"> %
+					<a class="btn btn-info profit_post" data-value = '{$profit}'>设置</a>
+				</div>
+				{else /}
+				<span  class="btn btn-default"> 关联普通奖：{$info.planList}</span>
+				{/if}
+			</div>
+			<div class="clear"></div>
+		</form>
+	</div>
+	<div class="alert alert-success" role="alert">
+		小提示：<span class="text-danger">100% - 设置百分比 = 实际盈利率</span>（以100%为参考），例如100% - 90%（设置的盈利率） = 10%（实际盈利率）
+	</div>
+
+		<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>规则</th>
+				<th>倍数</th>
+				<th>权重</th>
+				<!--<th>状态</th>-->
+				<th>类型</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $list as $item}
+			<tr>
+				<td>{$item.id}</td>
+				<td>{$item.planList}</td>
+				<td>{$item.multiple}</td>
+				<td>{$item.sp}</td>
+				<!--<td>-->
+					<!--{eq name = "$item.status" value = "1"}-->
+					<!--<span class="open">已启用</span><span class="split">|</span><a href="{:url('setAwardStatus',['value'=> 0,'id' => $item.id])}">禁用</a>-->
+					<!--{else /}-->
+					<!--<span class="stopUse">已禁用</span><span class="split">|</span><a href="{:url('setAwardStatus',['value'=> 1,'id' => $item.id])}">启用</a>-->
+					<!--{/eq}-->
+				<!--</td>-->
+				<td>
+					{eq name ="$item.type" value="1"}
+					<span class="open">幸运奖</span>
+					{else /}
+					<span class="stopUse">普通奖</span>
+					{/eq}
+				</td>
+
+				<td>
+					<div class="btn-group" role="group" aria-label="...">
+						{if condition = "$pid eq 0"}
+						<a class="btn btn-primary btn-move btn-sm" href="{:url('', ['pid' => $item.id])}">查看幸运奖</a>
+						{/if}
+						<a class="btn btn-info btn-xs" href="{:url('edit', ['id' => $item.id])}">修改</a>
+						<!--<button class="btn btn-danger btn-xs remove" data-href="{:url('removeAward', ['id' => $item.id])}">删除</button>-->
+					</div>
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+	{$list->render()}
+</div>
+<script>
+	$('.remove').click(function() {
+		var href = $(this).data('href');
+		var msg = {$pid} == 0 ? '将删除相关的幸运奖' : ''
+		$.modal.confirm('你是否确定删除'+msg, ()=>{
+			location.href = href;
+		});
+	});
+	$(".addLucky").click(function(){
+		$(".addGoods").show();
+	})
+	$(".close_btn").click(function(){
+		$(".addGoods").hide();
+	})
+	$(".toPost").click(function(){
+		var goodsname = $("input[name = goodsname]").val();
+		$.post('{:url("addLucky")}',{goodsname : goodsname}, function(res){
+			$.modal.alert(res.msg)
+			if(!res.err){
+				location.reload()
+			}
+
+		})
+	})
+    $(".profit_post").click(function(){
+        var before = $(this).data('value');
+        var now = $(".profit").val();
+        if(before == now){
+            $.modal.alert('盈利未修改');
+            return;
+        }
+        if(now > 100){
+            $.modal.alert('盈利率不能大于100%');
+            return;
+        }
+        $.post("{:url('setProfit')}", {value: now}, function(res){
+            $.modal.alert(res.msg);
+            if(!res.err){
+                setTimeout(() => {
+                    location.reload();
+            }, 2000);
+            }
+        })
+    })
+</script>
+{include file='admin@common/foot' /}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RuleSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillAlpha="0.5"/>
+	<e:Scroller id="ruleScroller" width="750" height="1334" horizontalCenter="0" verticalCenter="0">
+		<e:Group>
+			<e:List id="ruleList" itemRendererSkinName="ItemSkin" x="0" y="0">
+				<e:layout>
+					<e:TileLayout orientation="rows" horizontalGap="0" verticalGap="0" requestedColumnCount="7"/>
+				</e:layout>
+			</e:List>
+		</e:Group>
+	</e:Scroller>
+	<e:Image id="back" source="star_poolsNewxiu_json.star_poolsNewxiu008" top="20" right="20"/>
+	<e:Group id="numBox" width="400" height="50" left="50" top="30">
+		<e:layout>
+			<e:HorizontalLayout gap="15" paddingLeft="10" paddingRight="10"/>
+		</e:layout>
+		<e:ToggleButton id="num" label="" x="6" y="2" skinName="NumSkin"/>
+	</e:Group>
+</e:Skin>

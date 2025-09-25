@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HomeMainSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="ylc_tw">
+			<tween:TweenItem target="{yl_game}">
+				<tween:Set>
+					<tween:props>
+						<e:Object y="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object y="{-20}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object y="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{jj_game}">
+				<tween:Set>
+					<tween:props>
+						<e:Object y="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object y="{-20}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object y="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image source="datin_bg_png" y="0" left="0" right="0"/>
+	<e:Group id="logo" width="396" height="132" horizontalCenter="0" anchorOffsetX="196" anchorOffsetY="66" top="0">
+		<e:layout>
+			<e:BasicLayout/>
+		</e:layout>
+		<e:Image source="dt_json.logo欢乐捕鱼" left="0" top="0"/>
+	</e:Group>
+	<e:Group x="131" top="9">
+		<e:Image id="photo" width="50" height="50" anchorOffsetY="0" anchorOffsetX="0" source="" verticalCenter="0" left="2"/>
+		<e:Image y="0" scale9Grid="62,56,117,0" right="0" left="0" source="dt_json.头像"/>
+		<e:Label id="nick_name" text="XXXXXX" verticalCenter="0" left="66" size="18" right="20"/>
+	</e:Group>
+	<e:Group anchorOffsetX="0" top="12" width="190" horizontalCenter="285" visible="false">
+		<e:Image source="datin_json.钻石输入-中间拉伸条" y="7.49" scale9Grid="17,36,20,0" anchorOffsetX="0" left="16" right="0"/>
+		<e:Image source="datin_json.钻石图标" x="0" y="2.66"/>
+		<e:Image source="datin_json.充值" y="-3.99" right="-12"/>
+		<e:BitmapLabel height="20" font="code_font_fnt" text="42342" left="54" letterSpacing="-3" right="50" verticalCenter="-2" scaleX="1" scaleY="1"/>
+	</e:Group>
+	<e:Group anchorOffsetX="0" top="12" width="229.33" right="22" locked="true">
+		<e:Image y="7.49" scale9Grid="17,36,20,0" anchorOffsetX="0" left="16" right="0" source="dt_json.钻石输入-中间拉伸条"/>
+		<e:Image x="0" y="2.66" source="dt_json.金豆"/>
+		<e:Image id="recharge_btn" y="-3.99" right="-12" source="dt_json.充值"/>
+		<e:BitmapLabel id="money" height="20" font="code_font_fnt" text="" left="49" letterSpacing="-3" scaleX="1" scaleY="1" verticalCenter="-1.5" right="20"/>
+	</e:Group>
+	<e:Group horizontalCenter="0" bottom="17" locked="true">
+		<e:Button id="rank_btn" label="Button" x="186" y="61" skinName="skins.RankButtonSkin"/>
+		<e:Button id="task_btn" label="Button" x="205" y="44" skinName="skins.TaskButtonSkin"/>
+		<e:Button id="sound_btn" label="Button" x="362" y="35" skinName="skins.SoundOnButtonSkin"/>
+		<e:Button id="shop_btn" label="Button" x="444" y="40" skinName="skins.ShopButtonSkin"/>
+		<e:layout>
+			<e:HorizontalLayout gap="80"/>
+		</e:layout>
+	</e:Group>
+	<e:Button id="back_btn" label="Button" y="-3" skinName="skins.BackButtonSkin" left="18"/>
+	<e:Group width="352" height="382" horizontalCenter="-312" verticalCenter="-15">
+		<e:Group id="yl_game" x="0" y="0" height="382">
+			<e:Image source="ylc_img_png" bottom="0" horizontalCenter="0" x="-36.00000000000003" y="-24" scaleX="1" scaleY="1"/>
+		</e:Group>
+	</e:Group>
+	<e:Group width="352" height="382" horizontalCenter="276" verticalCenter="-15">
+		<e:Group id="jj_game" x="0" y="0" height="382">
+			<e:Image source="jjc_img_png" bottom="0" horizontalCenter="0" x="-158.0000000000001" y="-138" scaleX="1" scaleY="1"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>

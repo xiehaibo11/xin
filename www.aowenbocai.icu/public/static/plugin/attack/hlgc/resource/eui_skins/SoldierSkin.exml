@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SoldierSkin" width="190" height="254" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*"   >
+	<w:Declarations>
+		<tween:TweenGroup id="loseHarf">
+			<tween:TweenItem target="{life}">
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object x="{0}" width="{75}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+		<tween:TweenGroup id="loseAll">
+			<tween:TweenItem target="{life}">
+				<tween:Set>
+					<tween:props>
+						<e:Object x="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="2000">
+					<tween:props>
+						<e:Object x="{0}" width="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image id="soldier" source="sprite-game-soldier_json.sprite-game-soldier000" horizontalCenter="0" bottom="77"/>
+	<e:Group width="150" height="10" horizontalCenter="0" y="194" scrollEnabled="true">
+		<e:Rect width="150" height="10" ellipseWidth="16" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" fillColor="0xffffff" fillAlpha="0" strokeColor="0xf75151" strokeWeight="2"/>
+		<e:Rect id="life" width="150" height="10" ellipseWidth="16" fillColor="0xF75151" scaleX="1" scaleY="1" x="0" y="0"/>
+	</e:Group>
+	<e:Label id="s_name" text="枪兵" y="215" horizontalCenter="0"/>
+</e:Skin>

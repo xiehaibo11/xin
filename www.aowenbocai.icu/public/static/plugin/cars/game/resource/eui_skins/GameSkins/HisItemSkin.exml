@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HisItemSkin" width="840" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*">
+	<e:Rect left="0" right="0" top="0" bottom="0" strokeWeight="5" ellipseWidth="20" strokeColor="0x2fbc4f" fillColor="0x3546c4" visible="false"/>
+    <e:Group id="line" width="840" height="3" bottom="0" horizontalCenter="0" locked="true">
+		<e:Rect width="20" height="3" fillColor="0x808080" x="50" verticalCenter="0"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="60" verticalCenter="0" y="10"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="70" verticalCenter="0" y="20"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="80" verticalCenter="0" y="30"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="90" verticalCenter="0" y="40"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="100" verticalCenter="0" y="50"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="110" verticalCenter="0" y="60"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="120" verticalCenter="0" y="70"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="130" verticalCenter="0" y="80"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="140" verticalCenter="0" y="90"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="60" verticalCenter="0" y="10"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="70" verticalCenter="0" y="20"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="80" verticalCenter="0" y="30"/>
+			<e:Rect width="20" height="3" fillColor="0x808080" x="90" verticalCenter="0" y="40"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="80" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="110" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="140" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="170" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="200" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="230" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="260" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="290" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="320" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="350" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="380" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="410" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="440" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="470" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="500" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="530" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" verticalCenter="0" x="560"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+			</e:layout>
+	</e:Group>
+	<e:Label id="create_time" text="2018-04-12 09:54:44" left="20" top="10" width="280" height="30" size="25" verticalAlign="middle"/>
+	<e:Group top="10" right="20">
+		<e:Label text="期号：" top="20" height="30" right="40" x="12" y="12" scaleX="1" scaleY="1" size="25" verticalAlign="middle"/>
+		<e:Label id="issue" text="201804120950" top="20" height="30" right="20" x="32" y="12" scaleX="1" scaleY="1" textAlign="right" size="25" verticalAlign="middle"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="left" verticalAlign="middle"/>
+		</e:layout>
+	</e:Group>
+	<e:Label id="bouns" text="获得1000000金豆" width="300" right="20" textAlign="right" textColor="0xffffff" verticalCenter="20"/>
+	<e:Label id="code" text="法拉利：100金豆" size="25" top="50" left="20" width="280"/>
+</e:Skin>

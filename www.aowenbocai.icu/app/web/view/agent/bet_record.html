@@ -1,0 +1,234 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    body{ overflow-y: auto;}
+    .el-input{
+        width: auto;
+    }
+    .el-input__inner {
+        margin-right: 3px;
+    }
+    .options .el-input__inner {
+        width: 140px;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">投注明细 <em class="org" v-if="{$userid} == {$user.id}">（我的会员）</em><em class="org" v-else>（{$userinfo['nickname']}的会员）</em></span>
+        </div>
+        <!--搜索条件-->
+        <div class="options flex-box">
+            时间：
+            <el-radio-group v-model="time" size="mini" @change="handleTime">
+                <el-radio-button label="1">今天</el-radio-button>
+                <el-radio-button label="2">昨天</el-radio-button>
+                <el-radio-button label="3">本月</el-radio-button>
+                <el-radio-button label="4">上月</el-radio-button>
+            </el-radio-group>
+            <el-date-picker v-model="value"  style="width:270px"
+                            type="daterange"
+                            size="mini"
+                            format="yyyy 年 MM 月 dd 日"
+                            value-format="yyyy-MM-dd"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions0">
+            </el-date-picker>
+            <!--方案状态-->
+            <el-select @change="search()" size="mini" v-model="status" placeholder="方案状态">
+                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <div class="flex tr">
+                <el-input v-model="searchName" type="text" size="mini" placeholder="账号/昵称查询" prefix-icon="el-icon-search" @keyup.enter.native="idSearch"></el-input>
+                <el-button plain size="mini" type="info" @click.native="idSearch">搜索</el-button>
+            </div>
+        </div>
+        <!--搜索条件 end-->
+        <div>
+            <game-record :url="url" @sort-change="sortChange"></game-record>
+        </div>
+    </el-card>
+</div>
+<!--//所有彩种-->
+<template id="gameRecord" key="all">
+    <div>
+        <page-nation :url="url" @game-record="sortC">
+            <el-table-column prop="user_name" label="会员" width="120">
+                <template slot-scope="scope">
+                    <span>{{scope.row.user_name}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="ext_txt" label="投注彩种" width="100"></el-table-column>
+            <el-table-column prop="BuyInfo.expect" label="期号"></el-table-column>
+            <el-table-column label="合买" width="100">
+                <template slot-scope="scope">
+                    <span :class="{'red': scope.row.BuyInfo.is_join}">{{scope.row.BuyInfo.is_join ? '是' : '否'}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="money" label="投注金额" width="110" sortable="custom">
+                <template slot-scope="scope">
+                    <span>{{scope.row.money}}{$company.lottery_unit}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="方案状态" width="100">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.BuyInfo.statusCode == 0">
+                        <template v-if="scope.row.BuyInfo.is_join">
+                             <em v-if="!scope.row.BuyInfo.finsh">合买中</em>
+                             <em v-else>未出票</em>
+                        </template>
+                        <template v-else>
+                            未出票
+                        </template>
+                    </span>
+                    <span v-if="scope.row.BuyInfo.statusCode == 1" class="green">等待开奖</span>
+                    <span v-if="scope.row.BuyInfo.statusCode == 2 && scope.row.bonus > 0" class="red">已中奖</span>
+                    <span v-if="scope.row.BuyInfo.statusCode == 2 && scope.row.bonus == 0" class="c-3">未中奖</span>
+                    <span v-if="scope.row.BuyInfo.statusCode == 6" class="c-3">流产撤单</span>
+                    <span v-if="scope.row.BuyInfo.statusCode == 7" class="c-3">系统撤单</span>
+                    <span v-if="scope.row.BuyInfo.statusCode == 8" class="c-3">用户撤单</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="bonus" label="奖金" sortable="custom" width="100">
+                <template slot-scope="scope">
+                    <span><em :class="{'green':scope.row.bonus > 0}">{{scope.row.bonus}}</em>{$company.lottery_unit}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="create_time" label="投注时间" width="145" sortable="custom">
+                <template slot-scope="scope">
+                    <span>{{scope.row.create_time}}</span>
+                </template>
+            </el-table-column>
+            <!--<el-table-column label="操作" width="85">-->
+                <!--<template slot-scope="scope">-->
+                    <!--<div class="flex-box">-->
+                        <!--<el-button type="text" size="mini" @click.native="toDetail(scope.row.buy_id,scope.row.BuyInfo.lottery_id)">详情</el-button>-->
+                        <!--<el-button type="text" size="mini" @click.native="cancelOrder(scope.row.BuyInfo.lottery_id)" v-if="scope.row.BuyInfo.statusCode <= 1 && !scope.row.BuyInfo.is_join">撤单</el-button>-->
+                    <!--</div>-->
+                <!--</template>-->
+            <!--</el-table-column>-->
+        </page-nation>
+    </div>
+</template>
+{include file='web@common/end'/}
+
+<script>
+    'use strict';
+
+    $(function () {
+        //所有彩种
+        Vue.component('game-record', {
+            template: '#gameRecord',
+            props: ['url'],
+            data: function() {
+                return {
+                    sort: ''
+                };
+            },
+
+            methods: {
+                toDetail: function(id, orderid) {
+                    var u = '?lottery_id=' + orderid + '&id=' + id;
+                    window.open('{:url("./orders")}' + u);
+                },
+                sortC: function (val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 0; //降序
+                        } else {
+                            s = 1; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                    this.$emit('sort-change', this.sort);
+                }
+            }
+        });
+        new Vue({
+            el: "#app",
+            data: {
+                allUrl: '{:url("Details/games")}?userid='+ '{$userid}', //所有彩种
+                urlType: '', //游戏type
+                gameName: '', //游戏名
+                time : '1',//快捷时间值
+                statusOptions: "{$company['join_isOpen']}" == 1 ? [
+                    { value: '', label: '所有方案状态' },
+                    { value: '311', label: '合买中' },
+                    { value: '0', label: '等待开奖' },
+                    { value: '1', label: '已中奖' },
+                    { value: '2', label: '未中奖' },
+                    { value: '6', label: '流产撤单' },
+                    { value: '8', label: '用户撤单' },
+                    { value: '7', label: '系统撤单' }] : [
+                    { value: '', label: '所有方案状态' },
+                    { value: '0', label: '等待开奖' },
+                    { value: '1', label: '已中奖' },
+                    { value: '2', label: '未中奖' },
+                    { value: '8', label: '用户撤单' },
+                    { value: '7', label: '系统撤单' }], //方案状态选项
+                checkStatus: [],
+                timeTemp: '',
+                value: '', //自定义时间值
+                status: '', //方案状态
+                name: '', //方案编号
+                searchName: '',
+                sort: '', //排序条件
+
+                //设置选择六个月之前到今天的日期
+                pickerOptions0: {
+                    disabledDate: function(time) {
+                        var curDate = new Date().getTime();
+                        var three = 180 * 24 * 3600 * 1000;
+                        var threeMonths = curDate - three;
+                        return time.getTime() > Date.now() || time.getTime() < threeMonths;;
+                    }
+                }
+            },
+            watch:{
+                value:function (val) {
+                    if(val){
+                        this.time = ''
+                    }
+                }
+            },
+            computed: {
+                url: function() {
+                    var name, status, sort,time; //方案编号，方案状态，排序条件
+                    status =this.status.length ?  '&bounsStatus=' + this.status : '';
+                    sort = this.sort.length ? this.sort : ''
+                    name = this.name.length ?  '&name=' + this.name : '';
+                    time = this.value.length ? '&starttime=' + this.value[0] + '&endtime=' + this.value[1] :  '&time=' + this.time
+                    //所有彩种
+                    return this.allUrl + time + status + sort + name;
+                }
+            },
+            methods: {
+                handleTime(){
+                    //自定义时间切换为快捷时间选择
+                    this.value = '';
+                },
+                //搜索条件
+                search: function() {
+                    this.name = ''; //清空查询条件
+                    this.searchName = ''; //清空查询条件
+                },
+                //排序条件
+                sortChange: function(val) {
+                    this.sort = val;
+                },
+                //方案编号查询
+                idSearch: function() {
+                    this.name = this.searchName;
+                }
+            },
+            created: function() {
+                this.status = this.statusOptions[0].value;
+            }
+        });
+    });
+</script>

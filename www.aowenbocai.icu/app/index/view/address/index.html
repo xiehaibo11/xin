@@ -1,0 +1,182 @@
+{include file='common@common/head' /}
+<script src="/static/js/loadpage.js"></script>
+<style>
+    p {
+        padding:0;
+        margin:0;
+    }
+    .fr {
+        float: right;
+    }
+    .fl {
+        float: left;
+    }
+    i {
+        font-style: normal;
+    }
+    .box_list ul li {
+        padding:0.8rem 0.5rem;
+        position: relative;
+    }
+    .box_list ul li a {
+        display: block;
+        padding-right:1.5rem;
+    }
+    .box_list ul li p {
+        line-height:1rem;
+        color: #fff;
+        overflow: hidden;
+    }
+    i.my_border {
+        display: inline-block;
+        padding: .2rem 0.5rem;
+        line-height: 1rem;
+        font-size: 0.6rem;
+        color: #fff;
+        background-color: #929292;
+        border: none;
+        border-radius: .2rem;
+    }
+    i.default {
+        background-color:#0a8ddf;
+    }
+    .box_list ul li p.city {
+        color: #adb0c1;
+        font-size:0.7rem;
+        margin-top:0.2rem;
+    }
+    .fd_height {
+        height:2rem;
+    }
+    .add_btn {
+        height:2rem;
+        line-height:2rem;
+        position: fixed;
+        bottom: 0;
+        left:0;
+        width:100%;
+        border-radius: 0;
+    }
+    .delete_btn {
+        position: absolute;
+        top:.6rem;
+        right:0.5rem;
+        width:0.8rem;
+    }
+    i.my_border {
+        position: absolute;
+        top:0.3rem;
+        right:2rem;
+        z-index:999;
+    }
+    .more {
+        clear: both;
+        height:3rem;
+        line-height:3rem;
+        text-align: center;
+        color: #999;
+        font-size:0.75rem;
+    }
+    .address_list{
+        display: block;
+        padding: 0.6rem 1.7rem 0.6rem 0.8rem;
+        position: relative;
+        background-color: #3b3c44;
+        color: #fff;
+        margin: 0.5rem;
+        border-radius: 0.3rem;
+    }
+
+</style>
+<header class="header">
+    <div class="header-nav" >
+        <a class="" href="javascript:history.go(-1)">
+            <i class="icon-svg icon_left"></i>
+        </a>
+    </div>
+    <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div class="box_list app_init" id="app">
+    <ul>
+        <li class="address_list" v-for="(item, index) in list">
+            <a :href="'{:Url('edit')}?id='+item.id">
+                <p>
+                    {{item.name}}  {{item.tel}}</p>
+                <p class="city">{{item.city}} {{item.address}}</p>
+            </a>
+            <i class="fr my_border" @click="defaultChange(item)" v-if="!item.status">设为默认</i>
+            <i class="fr my_border default" v-else>默认地址</i>
+            <i class="iconfont icon-shanchu delete_btn" @click="deleteAddress(item,index)"></i>
+        </li>
+    </ul>
+    <template v-if="has_more">
+        <div class="more" @click="loadMore" v-show="list.length > 0">点击查看更多</div>
+    </template>
+    <template v-else>
+        <div class="more" v-show="list.length > 0">没有更多了</div>
+    </template>
+</div>
+<div class="fd_height"></div>
+<a class="btn btn-fill add_btn" href="{:Url('add')}">新增地址</a>
+{include file='common@common/foot' /}
+<script>
+    var page = 1;
+    var vm = new Vue({
+        el:'.box_list',
+        data: {
+            loadPage: new LoadPage('{:Url("index/Address/getList")}'),
+            has_more: 1,
+            list:[]
+        },
+        mounted: function(){
+            this.$nextTick(function(){
+                this.loadPage.on('first', function(res) {
+                    if(res.data.list.data.length == res.data.list.total){
+                        vm.has_more = 0;
+                    }
+                    Vue.set(vm, 'list', res.data.list.data);
+                });
+                this.loadPage.on('next',  function(res) {
+                    if(res.data.list.data.length > 0){
+                        vm.list.push(res.data.list.data);
+                    }else{
+                        vm.has_more = 0;
+                    }
+                });
+                this.loadPage.first();
+            });
+            $('#app').removeClass('app_init');
+        },
+        methods: {
+            loadMore:function(){
+                this.loadPage.next();
+            },
+            deleteAddress:function(item, index){
+                $.confirm('确认删除吗', {
+                    yes: function() {
+                        $.get('{:Url("delete")}',{id:item.id} ,function(res) {
+                            $.msg(res.msg);
+                            if (res.code) {
+                                vm.list.splice(index, 1);
+                            }
+                        });
+                    }
+                });
+
+            },
+            defaultChange:function(item){
+                $.get('{:Url("changeDefault")}',{id:item.id} ,function(res) {
+                    $.msg(res.msg);
+                    if (res.code) {
+                        vm.list.forEach(function(value, index) {
+                            value.status = 0;
+                            item.status = 1;
+                        })
+                    }
+                });
+            },
+        }
+    });
+
+</script>

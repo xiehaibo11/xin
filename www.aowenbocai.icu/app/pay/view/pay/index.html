@@ -1,0 +1,500 @@
+{include file='common@common/head' /}
+<!--<script src="/static/js/jquery-3.2.1.min.js"></script>-->
+<script src="/static/font/iconfont.js"></script>
+<style>
+    #app{color: #fffcfc}
+    .info{margin-bottom: .5rem;justify-content: center;border-bottom: 1px solid #545866;margin: 0 0.75rem;color: #adb0c1;}
+    .info input{flex: 1;border-radius: .2rem;border:none;background:none;color: #fffcfc;padding: .5rem}
+    .info .info-title{line-height: 35px;}
+    .pay-title{padding: 0.4rem .75rem;background-color: #3b3c44;margin-bottom: .5rem;font-size: .75rem}
+    .p-fixed{position: fixed;bottom: 0;left: 0;width: 100%;}
+    .new-btn-login-sp{text-align:center }
+    .new-btn-login-sp .btn{width: 100%;border-radius: 0;line-height: 1.8rem;font-size: .8rem;}
+    .note-help{
+        text-align: center;
+        color: #a5a5a5;
+        padding: 0.3rem.2rem;
+        font-size: .6rem;
+        background-color: #3b3c44;
+    }
+    .icon {
+        width: 3em; height: 3em;
+        vertical-align: 0em;
+        fill: currentColor;
+        overflow: hidden;
+        margin-top: -.2rem;
+        margin-left: -.2rem;
+    }
+    .pay-list{padding: 0 .75rem}
+    .pay-list ul li{
+        padding: .8rem 0;
+        border-bottom: 1px solid #545866;
+    }
+    .pay-img{width: 1.7rem;height: 1.7rem;background-color: #fffcfc;border-radius: .2rem;margin-right: .5rem}
+    .mark{font-size: .6rem;color: #adb0c1;}
+    .pay-check{flex: 1;text-align: right}
+    .pay-check span{display: inline-block;width: 22px;height: 22px;border-radius: 50%;border: 1px solid #fff;margin-top:8px;line-height: 22px}
+    .pay-check span.checked{background-color: #de433f;color: #fffcfc}
+    .pay-check span.checked i{font-size: .6rem;padding-right: .1rem;}
+
+    .pay-cont{
+        padding: 1rem;
+        text-align: center;
+        display: flex;
+    }
+    .pay-cont .ma{
+        flex: 1;
+        margin: 0 10px;
+        padding: .8rem 0;
+        background-color: #3b3c44;
+        color: #9e9e9e;
+        border:1px solid #3b3c44;
+    }
+    .pay-cont .checked{
+        border:1px solid #fff;
+        color: #fff;
+        background-color: #de433f;
+    }
+    .ewm-img{
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: #303440;
+        position: fixed;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 0 2rem;
+    }
+    .ewm-img p{
+        padding: 5px 0;
+    }
+    .ewm-img img{
+        max-width: 100%;
+    }
+    .ewm-img .close{
+        height: 40px;
+        line-height: 40px;
+        position: absolute;
+        right: 20px;
+        top: 0;
+        font-size: .9rem;
+    }
+    .ewm-img-fl {
+        width:50%;
+        float: left;
+        margin-top:20px;
+    }
+    .ewm-img-fl img {
+        width:100%;
+    }
+    .ewm-img-fr {
+        width:50%;
+        padding-left:5%;
+        float: right;
+        margin-top:20px;
+    }
+    .ewm-img-fr p {
+        margin-bottom:0.5rem;
+    }
+    .ewm-img-fr p.tips {
+        color:#adb0c1;
+    }
+    .ewm-img-fr .input.input-lg {
+        padding:0 0.5rem;
+        font-size:0.5rem;
+        margin-top:0.5rem;
+    }
+    .ewm-img-fr a {
+        font-size:0.6rem;
+        color:#09f;
+        padding:0.5rem 0;
+        display: block;
+    }
+</style>
+<header class="header">
+    <a class="header-nav" i-type="back" href="javascript:window.history.go(-1)">
+      <i class="icon-svg icon_left"></i>
+  </a>
+    <div class="header-center">支付信息确认</div>
+</header>
+<div class="p-height"></div>
+<div id="app" v-cloak class="app_init">
+    <div class="pay-title">虚拟币支付</div>
+    <div class="pay-list">
+        <ul>
+            <li class="flex-box"  @click="numCoinChose(index + 4,item.yue,item.huansuan,item.value)" v-for="(item,index) in coinInfo">
+                <div class="img"><img :src="item.img" alt="" width="36px" style="border-radius: 50%;margin-right: 5px"></div>
+                <div class="pay-name">
+                    <p style="padding-top: 8px;">{{item.title}}({{item.value.toUpperCase()}})</p>
+                    <!--<p class="mark">余额：{{item.yue}} ￥：{{item.huansuan}}</p>-->
+                </div>
+                <div class="pay-check">
+                    <span :class="{'checked': checkWay== index+ 4}"> <i v-if="checkWay==index+4" class="iconfont icon-gou"></i></span>
+                </div>
+            </li>
+        </ul>
+        <div class="p-fixed">
+            <div class="note-help" style="text-align: left">可用余额：{{yue}}  ￥：{{huansuan}}</div>
+            <div class="new-btn-login-sp">
+                <button class="btn s"  style="text-align:center;" @click="numCoinSubmit">立即兑换</button>
+            </div>
+        </div>
+    </div>
+    <div v-if="otherAlipay || otherWei"  style="margin-bottom: 15px">
+        <div v-if="!iswei && checkWay==1">
+            <div class="pay-title">三方支付</div>
+            <div class="pay-list">
+                <ul>
+                    <li class="flex-box"  @click="checkPay(1)" v-if="otherWei">
+                        <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weixin1"></use></svg></div>
+                        <div class="pay-name">
+                            <p>微信</p>
+                            <p class="mark">无手续费</p>
+                        </div>
+                        <div class="pay-check">
+                            <span :class="{'checked': checkWay==1}"> <i v-if="checkWay==1" class="iconfont icon-gou"></i></span>
+                        </div>
+                    </li>
+                    <template v-if="otherAlipay">
+                        <li class="flex-box" @click="checkPay(0)" v-if="!iswei">
+                            <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhifubao1"></use></svg></div>
+                            <div class="pay-name">
+                                <p>支付宝</p>
+                                <p class="mark">急速到账，无手续费</p>
+                            </div>
+                            <div class="pay-check">
+                                <span :class="{'checked': checkWay==0}"> <i v-if="checkWay==0" class="iconfont icon-gou"></i></span>
+                            </div>
+                        </li>
+                        <li class="flex-box" v-else @click="tip">
+                            <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhifubao1"></use></svg></div>
+                            <div class="pay-name">
+                                <p>支付宝</p>
+                                <p class="mark">急速到账，无手续费</p>
+                            </div>
+                            <div class="pay-check">
+                                <span :class="{'checked': checkWay==0}"> <i v-if="checkWay==0" class="iconfont icon-gou"></i></span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            <div class="p-fixed">
+                <div class="note-help">如果您点击“提交”按钮，即表示您同意该次的执行操作。</div>
+                <div class="new-btn-login-sp">
+                    <button class="btn s"  style="text-align:center;" @click="doSubmit">提交</button>
+                </div>
+            </div>
+        </div>
+        <form v-else name=alipayment :action='actionUrl' method='get' target="_blank">
+            <div style="display: none">
+            <div class="pay-title">充值信息</div>
+            <div class="flex-box info">
+                <span class="info-title">金额：</span>
+                <input id="WIDtotal_amount" name="total_amount"  value = "{$money}"  readonly="readonly"/>
+            </div>
+            <div class="flex-box info" style="margin-bottom: .8rem;border:none">
+                <span class="info-title">备注：</span>
+                <input id="WIDbody" name="info"  value = "{$remark}"  />
+            </div>
+            <div class="flex-box info" style="margin-bottom: .8rem;border:none">
+                <span class="info-title">备注：</span>
+                <input name="type"  value = "{$type}"  />
+            </div>
+            </div>
+            <div class="pay-title">三方支付</div>
+            <div class="pay-list">
+                <ul>
+                    <li class="flex-box"  @click="checkPay(1)" v-if="otherWei">
+                        <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weixin1"></use></svg></div>
+                        <div class="pay-name">
+                            <p>微信</p>
+                            <p class="mark">无手续费</p>
+                        </div>
+                        <div class="pay-check">
+                            <span :class="{'checked': checkWay==1}"> <i v-if="checkWay==1" class="iconfont icon-gou"></i></span>
+                        </div>
+                    </li>
+                    <template v-if="otherAlipay">
+                        <li class="flex-box" @click="checkPay(0)" v-if="!iswei">
+                            <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhifubao1"></use></svg></div>
+                            <div class="pay-name">
+                                <p>支付宝</p>
+                                <p class="mark">急速到账，无手续费</p>
+                            </div>
+                            <div class="pay-check">
+                                <span :class="{'checked': checkWay==0}"> <i v-if="checkWay==0" class="iconfont icon-gou"></i></span>
+                            </div>
+                        </li>
+                        <li class="flex-box" v-else @click="tip">
+                            <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhifubao1"></use></svg></div>
+                            <div class="pay-name">
+                                <p>支付宝</p>
+                                <p class="mark">急速到账，无手续费</p>
+                            </div>
+                            <div class="pay-check">
+                                <span :class="{'checked': checkWay==0}"> <i v-if="checkWay==0" class="iconfont icon-gou"></i></span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            <div class="p-fixed" v-if="checkWay==0">
+                <div class="note-help">如果您点击“提交”按钮，即表示您同意该次的执行操作。</div>
+                <div class="new-btn-login-sp">
+                    <button class="btn s" type="submit"  style="text-align:center;" v-if="!iswei && checkWay==1">提交</button>
+                    <button class="btn" type="submit"  style="text-align:center;" v-else >提交</button>
+                </div>
+            </div>
+        </form>
+        <iframe v-if = "turnurl != ''" :src="turnurl" width="" name="微信充值" style="width:90%; margin-left:5%"></iframe>
+    </div>
+    <template  v-if="payAlipay || payWei">
+        <div class="pay-title">扫码支付</div>
+        <div class=" pay-list">
+            <ul>
+                <li class="flex-box"  @click="checkPay(2)">
+                    <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weixin1"></use></svg></div>
+                    <div class="pay-name">
+                        <p>微信</p>
+                        <p class="mark">长按识别二维码</p>
+                    </div>
+                    <div class="pay-check">
+                        <span :class="{'checked': checkWay==2}"> <i v-if="checkWay==2" class="iconfont icon-gou"></i></span>
+                    </div>
+                </li>
+                <li class="flex-box" @click="checkPay(3)">
+                    <div class="pay-img"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhifubao1"></use></svg></div>
+                    <div class="pay-name">
+                        <p>支付宝</p>
+                        <p class="mark">长按识别二维码</p>
+                    </div>
+                    <div class="pay-check">
+                        <span :class="{'checked': checkWay==3}"> <i v-if="checkWay==3" class="iconfont icon-gou"></i></span>
+                    </div>
+                </li>
+            </ul>
+            <div>
+                <div class="ewm-img-fl" v-if="checkWay==2"><img :src="weiImg" alt=""></div>
+                <div class="ewm-img-fl" v-if="checkWay==3"><img :src="alipayImg" alt=""></div>
+                <div class="ewm-img-fr" v-if="checkWay==2">
+                    <p>长按识别图中二维码</p>
+                    <p class="tips">
+                        支付成功后请填写交易订单号
+                    </p>
+                    <input name="pay_order_id" class="input input-line input-lg" placeholder="交易订单号后六位" />
+                    <a href="">查看填写帮助</a>
+                </div>
+                <div class="ewm-img-fr" v-if="checkWay==3">
+                    <p>长按识别图中二维码</p>
+                    <p class="tips">
+                        支付成功后请填写交易订单号
+                    </p>
+                    <input name="pay_order_id" v-model="remark" class="input input-line input-lg" placeholder="交易订单号后六位" />
+                    <a href="">查看填写帮助</a>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+            <!--<span class="ma" @click="showWeiImg = !showWeiImg">微信扫码支付</span>-->
+            <!--<span class="ma" @click="showAlipayImg = !showAlipayImg">支付宝扫码支付</span>-->
+        </div>
+        <div class="p-fixed" v-if="checkWay==2 || checkWay==3">
+            <div class="note-help">如果您点击“提交”按钮，即表示您同意该次的执行操作。</div>
+            <div class="new-btn-login-sp">
+                <button class="btn" type="button"  style="text-align:center;" @click="saoSubmit">提交</button>
+            </div>
+        </div>
+
+    </template>
+    <div class="ewm-img" v-if="showWeiImg">
+        <div>
+            <p class="close" @click="showWeiImg = !showWeiImg">× 关闭</p>
+            <p><img :src="weiImg"></p>
+            <p>微信支付二维码</p>
+            <p class="tips">
+                长按识别图中二维码进行支付,支付成功后请填写交易订单号
+            </p>
+            <p style="color:red;"></p>
+        </div>
+    </div>
+    <div class="ewm-img" v-if="showAlipayImg">
+        <div>
+            <p class="close" @click="showAlipayImg = !showAlipayImg">× 关闭</p>
+            <p><img :src="alipayImg"></p>
+            <p>支付宝支付二维码</p>
+            <p class="tips">
+                长按识别图中二维码进行支付
+            </p>
+        </div>
+    </div>
+    <div style="height: 64px"></div>
+</div>
+<script language="javascript">
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            payWay:'',
+            checkWay:'4',
+            checkWayTxt:'',
+            actionUrl:'/pay/pay/payToWei',
+            loginWay:'',
+            iswei:1,
+            money:{$money},
+            info:'{$remark}',
+            url:'',
+            turnurl : '',
+            weiImg:'',
+            alipayImg:'',
+            showWeiImg:false,
+            showAlipayImg:false,
+            remark: '',
+
+            coinScale:'',//金豆金额比
+            dScale:'',//钻石金额比
+            coinInfo:[],
+            yue:'',
+            huansuan:'',
+            numVal:''
+        },
+        computed:{
+            otherAlipay(){ //三方支付-支付宝是否开启
+                if(this.payWay.indexOf('other_alipay') !== -1){
+                    return true
+                }else {
+                    return false
+                }
+            },
+            otherWei(){ //三方支付-微信是否开启
+                if(this.payWay.indexOf('other_wx') !== -1){
+                    return true
+                }else {
+                    return false
+                }
+            },
+            payAlipay(){ //扫码支付-支付宝是否开启
+                if(this.payWay.indexOf('pay_alipay') !== -1){
+                    return true
+                }else {
+                    return false
+                }
+            },
+            payWei(){ //三方支付 支付宝是否开启
+                if(this.payWay.indexOf('pay_wx') !== -1){
+                    return true
+                }else {
+                    return false
+                }
+            },
+        },
+        methods:{
+            checkPay:function(way){
+                this.checkWay = way;
+                if(way == 0){
+                    this.actionUrl = '/pay/pay/payToAlipay'
+                }else if(way == 1){
+                    this.actionUrl = '/pay/pay/payToWei/'
+                }
+            },
+            numCoinChose:function(way,yue,hs,val){
+                this.checkWay = way;
+                this.yue = yue
+                this.huansuan = hs
+                this.numVal = val
+            },
+            tip:function(){
+                $.alert("支付宝充值请使用浏览器打开该网址 "+ this.url + " 进行充值")
+            },
+            doSubmit:function(){
+                var html = '/pay/pay/payToWei/?total_amount=' + this.money + '&type={$type}';
+                var _this = this;
+                // _this.turnurl = 'https://www.baidu.com';
+                $.get(html,(res) =>{
+                    _this.turnurl = res;
+                    var time = setInterval(function(){
+                        $.post('/pay/pay/getResult',(res)=>{
+                            if(!res.err){
+                                clearInterval(time);
+                                location.href = '/index'
+                            }
+                        })
+                    }, 2000);
+                })
+            },
+            saoSubmit:function(){
+                var html = '/pay/pay/saoToPay/?way='+ this.checkWay +'&total_amount=' + this.money + '&type={$type}&info=' + this.remark;
+                var _this = this;
+                $.get(html,(res) =>{
+                    $.alert(res.msg);
+                    if(!res.err){
+                        setTimeout(function () {
+                            location.href = "/index/User/index";
+                        }, 2000)
+                    }
+                })
+            },
+            numCoinSubmit:function () {
+                var data ={}
+                if({$type} == 1){
+                    data={
+                        coin: this.numVal,
+                        coinnum: 1,
+                        money:this.money * this.coinScale, //金豆数
+                        type:{$type},
+                    }
+                }else {
+                    data={
+                        coin: this.numVal,
+                        coinnum: 1,
+                        diamonds:this.money * this.dScale, //钻石数
+                        type:{$type},
+                    }
+                }
+                $.post('/web/pay/duihuan',data,function(res){
+                    $.alert(res.msg);
+                    if(!res.err){
+                        setTimeout(function () {
+                            window.history.go(-1)
+                        }, 2000)
+                    }
+                })
+            }
+        },
+        created(){
+            _this = this;
+            $.get('/index/Recharge/getPayWay',{money:{$money}},function(res){
+                _this.$set(_this, 'payWay', res.data.ways);
+                _this.loginWay = res.data.default;
+                _this.iswei = res.data.isWei;
+                _this.url = res.data.url;
+                if(res.img_url){
+                    _this.weiImg = res.img_url.pay_wx;
+                    _this.alipayImg = res.img_url.pay_alipay;
+                }
+                if(res.data.default == 'other_wx'){
+//                    _this.checkWay = 1,
+                    _this.actionUrl = '/pay/pay/payToWei/'
+                }else if(res.data.default == 'other_alipay'){
+//                    _this.checkWay = 0,
+                    _this.actionUrl = '/pay/pay/payToAlipay'
+                }
+                console.log(_this.checkWay)
+            });
+            $.get('/web/pay/getPayInfo',function(res){
+                _this.$set(_this, 'coinScale', res.paysetting.recharge_award);
+                _this.$set(_this, 'dScale', res.paysetting.flower_money);
+            });
+            $.get('/index/user/getinfo',function(res){
+                _this.$set(_this, 'coinInfo', res.data.data1);
+                _this.$set(_this, 'yue', res.data.data1[0].yue);
+                _this.$set(_this, 'huansuan', res.data.data1[0].huansuan);
+                _this.$set(_this, 'numVal', res.data.data1[0].value);
+                $('#app').removeClass('app_init');
+            });
+        }
+    })
+</script>
+{include file='common@common/foot' /}

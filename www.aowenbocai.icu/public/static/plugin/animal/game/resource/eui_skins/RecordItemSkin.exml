@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RecordItemSkin" width="640" height="142" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image id="pic" width="100" height="100" x="27" y="20.5" anchorOffsetX="0" anchorOffsetY="0"/>
+	<e:Label id="m_name" text="河马" x="153" y="25" size="30"/>
+	<e:Label id="create_time" text="10-12 12:12:12" x="153" y="87" textColor="0x485f77" size="24"/>
+	<e:Label id="hit_money" text="消耗100金豆" x="388" y="87" textColor="0x485F77" size="24" textAlign="right" anchorOffsetX="0" width="231"/>
+	<e:Label id="status" text="未捕获" x="388" y="25" size="30" textAlign="right" anchorOffsetX="0" width="231"/>
+	<e:Rect right="0" height="1" width="640" horizontalCenter="0" bottom="0" fillColor="0x1e2933"/>
+</e:Skin>

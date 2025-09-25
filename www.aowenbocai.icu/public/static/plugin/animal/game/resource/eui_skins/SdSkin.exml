@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SdSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" width="500" height="500">
+	<w:Declarations>
+		<tween:TweenGroup id="play">
+			<tween:TweenItem target="{image}">
+				<tween:Wait duration="250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image0}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image1}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="500"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="250"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image2}">
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:Wait duration="750"/>
+				<tween:Set>
+					<tween:props>
+						<e:Object alpha="{1}"/>
+					</tween:props>
+				</tween:Set>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Group id="sdSkill" height="200" anchorOffsetX="50" anchorOffsetY="100" rotation="0" x="12" y="250">
+		<e:Image id="image" source="efc-1002_png" horizontalCenter="0" verticalCenter="0" x="-102" y="2" scaleX="1" scaleY="1" width="100%"/>
+		<e:Image id="image0" source="efc-1005_png" horizontalCenter="0" verticalCenter="0" x="-107" y="4" scaleX="1" scaleY="1" width="100%" alpha="0"/>
+		<e:Image id="image1" source="efc-1006_png" horizontalCenter="0" verticalCenter="0" x="-112" y="-15" scaleX="1" scaleY="1" width="100%" alpha="0"/>
+		<e:Image id="image2" source="efc-1007_png" horizontalCenter="0" verticalCenter="0" x="-90" y="19" scaleX="1" scaleY="1" width="100%" alpha="0"/>
+	</e:Group>
+</e:Skin>

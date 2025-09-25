@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ItemSkin" width="620" height="50" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*">
+	<e:Label id="time" text="create_time" left="0" verticalCenter="0" verticalAlign="middle" textAlign="center" width="300" textColor="0xce7939"/>
+	<e:Group width="70" height="40" right="100" verticalCenter="0">
+		<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xd97b31"/>
+		<e:Label id="soldier" text="弓兵" verticalAlign="middle" textAlign="center" textColor="0xf9dd8f" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+</e:Skin>

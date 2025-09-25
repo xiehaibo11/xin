@@ -1,0 +1,198 @@
+{include file='common/head' /}
+<nav class="plugin_nav">
+    <a href="{:url('index')}">已安装</a>
+    <a class="nav_active" href="#">未安装</a>
+</nav>
+<ol class="breadcrumb">
+  <li class="active">扩展管理</li>
+</ol>
+	<table class="table">
+	  <thead>
+	  <tr>
+		<th>ICON</th>
+		<th>标识</th>
+		<th>名称</th>
+		<th>说明</th>
+		<th>版本</th>
+		<th>操作</th>
+	  </tr>
+	  </thead>
+	  <tbody>
+	  {foreach $ext_list as $item}
+	  <tr data-icon="{$item.logo}" data-name="{$item.name}" data-title="{$item.title}" data-remark="{$item.remark}" data-version="{$item.version}">
+		<td><img src="{$item.logo}" alt="" width="40" height="40"></td>
+		<td>{$item.name}</td>
+		<td>{$item.title}</td>
+		<td class="text-overflow">{$item.remark}</td>
+		<td>{$item.version}</td>
+		<td>
+		  <div class="btn-group" role="group" aria-label="...">
+			<a data-href="{:Url('admin/Extend/download','ext_name='.$item.name)}" class="btn btn-primary btn-xs btn_install">安装</a>
+		  </div>
+		</td>
+
+	  </tr>
+	  {/foreach}
+	  </tbody>
+	</table>
+    <style>
+        .ext_word {
+            color: #333;
+        }
+        .ext_install_box .progress {
+            margin: 0;
+        }
+        .ext_install_box {
+            margin-top: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fff;
+            padding: 10px;
+
+        }
+        .ext_install_box .ext_memo {
+            position: relative;
+        }
+        .ext_install_box .info {
+            position: absolute;
+            line-height: 25px;
+            top: 0px;
+            left: 90px;
+            right: 0px;
+            height: 80px;
+            color: #999;
+            font-size: 12px;
+        }
+        .ext_install_box .info .ext_title {
+            line-height: 30px;
+            color: #333;
+            font-size: 14px;
+
+        }
+        .ext_install_box .memo {
+            padding: 10px 0;
+            font-size: 13px;
+            color: #444;
+        }
+        .ext_install_box .icon {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+
+        }
+        .ext_install_box .icon img {
+            width: 100%;
+            height: 100%;
+        }
+        .text-overflow {
+            max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .is_install .bottom_btn,
+        .is_install.installing .progress {
+            display: block;
+        }
+        .is_install .progress,
+        .is_install.installing .bottom_btn {
+            display: none;
+        }
+        .template_hide {
+            display: none;
+        }
+        .alert {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+        }
+    </style>
+
+<!-- <div class="alert alert-danger alert-dismissible fade in ext_install_msg" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+  <h4>安装提示</h4>
+  <p></p>
+</div> -->
+
+<div class="template_hide">
+
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="ext_install_box">
+                <h3 class="ext_word text-center">扩展安装</h3>
+                <div class="ext_memo">
+                    <div class="icon"><img src="http://192.168.2.199:99/static/images/JxSsc_Logo.png" class="img_icon" alt=""></div>
+                    <div class="info">
+                        <div class="ext_title">扩展名称：<span class="ext_info_title">新闻资讯</span>（标识：<span class="ext_info_name">news</span>）</div>
+                        <div>更新时间：<span class="ext_info_datetime">2017年6月30日10:30:23</span></div>
+                        <div>版本号：<span class="ext_info_version">v0.0.1</span></div>
+                    </div>
+                    <div class="memo">
+                        简介：<span class="ext_info_explain">新闻发布系统(News Release System or Content Management System)又叫做内容管理系统,是一个基于新闻和内容管理的全站管理系统，新闻发布系统是基于B/S模式的WEBMIS系统，本系统可以将杂乱无章的信息（包括文字，图片和影音）经过组织，合理有序地呈现在大家面前。当今社会是一个信息化的社会，新闻作为信息的一部分有着信息量大，类别繁多，形式多样的特点，新闻发布系统的概念就此提出。新闻发布系统的提出使电视不再是唯一的新闻媒体，从此以后网络也充当了一个重要的新闻媒介的功能。</span>
+                    </div>
+                </div>
+                <div class="is_install">
+                    <div class="bottom_btn">
+                        <div class="col-md-6"><button type="button" class="btn btn-success btn-block install">安装</button></div>
+                        <div class="col-md-6"><button type="button" class="btn btn-default btn-block"  data-dismiss="modal">取消</button></div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+<script>
+var msg = function(str, dom) {
+    $('<div class="alert alert-danger alert-dismissible fade in ext_install_msg" role="alert">\
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>\
+      <p>' + str + '</p>\
+    </div>').appendTo(dom.find('.ext_install_box')).on('closed.bs.alert', function () {
+      dom.find('.installing').removeClass('installing');
+    });
+}
+    var ExtConfirm = function(data) {
+        var $modal = $('.template_hide .modal').clone(true);
+        $modal.find('.img_icon').attr('src', data.icon);
+        $modal.find('.ext_info_title').html(data.title);
+        $modal.find('.ext_info_name').html(data.name);
+        $modal.find('.ext_info_datetime').html(data.datetime);
+        $modal.find('.ext_info_version').html(data.version);
+        $modal.find('.ext_info_explain').html(data.remark);
+        $modal.find('.install').click(function() {
+            $modal.find('.progress-bar').text('扩展安装中，请稍后...');
+            $modal.find('.progress-bar').removeClass('progress-bar-warning');
+            $modal.find('.is_install').addClass('installing');
+            $.get('{:url("admin/Extend/download")}?ext_name=' + data.name, function(res) {
+                if (res.code <= 0) {
+                    $modal.find('.progress-bar').text('安装失败');
+                    $modal.find('.progress-bar').addClass('progress-bar-warning');
+                    var alert_msg = res.msg;
+                    if (res.code == -1) {
+                        alert_msg +=  '<a href="http://www.ocrm.cc/" target="_blank">立即购买</a>';
+                    }
+                    return msg(alert_msg , $modal);
+                }
+                $modal.modal('hide');
+                $.modal.alert('安装成功');
+            })
+        });
+        $modal.modal('show');
+        $modal.on('hidden.bs.modal', function() {
+            $modal.remove();
+        });
+    }
+    $('.btn_install').click(function() {
+        ExtConfirm($(this).parents('tr').data());
+    });
+</script>
+{include file='common/foot' /}

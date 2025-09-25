@@ -1,0 +1,6 @@
+{"file":"sprite-dialog.png",
+"frames":
+{"sprite-dialog001":{"x":0,"y":0,"w":512,"h":154,"offX":0,"offY":0,"sourceW":512,"sourceH":154},
+"sprite-dialog003":{"x":514,"y":0,"w":461,"h":155,"offX":0,"offY":0,"sourceW":461,"sourceH":155},
+"sprite-dialog002":{"x":0,"y":156,"w":358,"h":136,"offX":0,"offY":0,"sourceW":358,"sourceH":136},
+"sprite-dialog000":{"x":977,"y":0,"w":22,"h":22,"offX":0,"offY":0,"sourceW":22,"sourceH":22}}}

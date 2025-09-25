@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="DiamondsItemSkin" width="661" height="104" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<w:Config id="160c5dabcd2"/>
+	<e:Group left="0" right="0" top="0" bottom="0">
+		<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0x262932"/>
+		<e:Group anchorOffsetY="0" right="22" verticalCenter="0">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xde433f" ellipseWidth="20"/>
+			<e:Group left="0" right="0" top="0" bottom="0">
+				<e:Label id="money" text="￥100 购买" horizontalCenter="0" verticalCenter="0" x="26" y="35" scaleX="1" scaleY="1" size="26"/>
+				<e:layout>
+					<e:HorizontalLayout paddingLeft="15" paddingRight="15" paddingTop="20" paddingBottom="20"/>
+				</e:layout>
+			</e:Group>
+		</e:Group>
+		<e:Group width="288" height="37" x="92" anchorOffsetY="0" anchorOffsetX="0" verticalCenter="-20.5">
+			<e:Label id="diamonds" x="10" y="3" scaleX="1" scaleY="1" text="100" textColor="0xf2a204" size="30"/>
+			<e:Label x="20" y="13" scaleX="1" scaleY="1" text="钻石" size="28" textColor="0xffffff"/>
+			<e:layout>
+				<e:HorizontalLayout verticalAlign="middle"/>
+			</e:layout>
+		</e:Group>
+		<e:Group x="92" y="54" anchorOffsetY="0" anchorOffsetX="0">
+			<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xE08100" ellipseWidth="20"/>
+			<e:Group left="0" right="0" top="0" bottom="0">
+			<e:Label id="award" text="额外赠送" horizontalCenter="0" verticalCenter="0" size="22" x="31" y="9" scaleX="1" scaleY="1"/>
+			<e:layout>
+				<e:HorizontalLayout paddingLeft="8" paddingRight="8" paddingTop="8" paddingBottom="8"/>
+			</e:layout>
+			</e:Group>
+		</e:Group>
+		<e:Image x="20" verticalCenter="0" y="27" scaleX="1" scaleY="1" source="datin_json.钻石图标"/>
+	</e:Group>
+</e:Skin>

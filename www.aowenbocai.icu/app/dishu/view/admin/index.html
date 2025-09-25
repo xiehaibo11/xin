@@ -1,0 +1,22 @@
+{include file='admin@common/head' /}
+
+<style>
+  html,body{
+    height: 100%;
+  }
+  .iframe{
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<iframe src="{:url('record')}" class="iframe" id="iframe"></iframe>
+<script>
+    $(function () {
+        $('#myTab').on('click', 'a', function () {
+            $('#myTab a').removeClass('nav_active');
+            $(this).addClass('nav_active');
+            $("#iframe").attr({src: $(this).data('url')});
+        });
+    });
+</script>
+{include file='admin@common/foot' /}

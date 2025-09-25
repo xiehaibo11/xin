@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="AnimSkin" currentState="boom2" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*" states="index,ice,boom1,boom0,boom2"  width="400" height="400">
+	<w:Declarations>
+		<tween:TweenGroup id="yao">
+			<tween:TweenItem target="{image0}">
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{-5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{-5}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{money}">
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{-5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{5}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object rotation="{-5}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{image}">
+				<tween:To duration="4000">
+					<tween:props>
+						<e:Object rotation="{1000}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{group}">
+				<tween:Set>
+					<tween:props>
+						<e:Object scaleX="{0}" scaleY="{0}"/>
+					</tween:props>
+				</tween:Set>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object scaleX="{1}" scaleY="{1}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Group id="boom_box" left.ice="0" left.index="0" right.ice="0" right.index="0" top.ice="0" top.index="0" bottom.ice="0" bottom.index="0" visible.index="false" visible.ice="false" horizontalCenter.ice="0" horizontalCenter.index="0" verticalCenter.ice="0" verticalCenter.index="0" verticalCenter.boom1="70" horizontalCenter.boom1="0" verticalCenter.boom2="70" horizontalCenter.boom2="0" touchEnabled.boom0="false" width.boom0="0" height.boom0="0" verticalCenter.boom0="102.5" horizontalCenter.boom0="8.5"/>
+	<e:Group includeIn="boom0" left="0" right="0" top="0" bottom="0">
+		<e:BitmapLabel id="money0" width="358" height="78" anchorOffsetY="0" anchorOffsetX="0" textAlign="center" verticalAlign="middle" text="+123" scaleX="0.8" scaleY="0.8" verticalCenter="-61" includeIn="boom0" touchEnabled="false" horizontalCenter="0" font="my_bit_fnt" x="35" y="-11"/>
+		<e:Group id="animal0" includeIn="boom0" horizontalCenter="0" bottom="-10" touchEnabled="false" x="78" y="91" scaleX="1" scaleY="1"/>
+		<e:layout>
+		<e:VerticalLayout horizontalAlign="center" verticalAlign="bottom"/>
+		</e:layout>
+	</e:Group>
+	<e:Group id="group" bottom.boom0="0" bottom.ice="0" bottom.index="0" visible.index="false" visible.ice="false" visible.boom0="false" anchorOffsetX.boom1="203" anchorOffsetY.boom1="276" height="400" width="400" horizontalCenter="0" height.boom1="400" width.boom1="400" x.boom1="203" y.boom1="276" touchEnabled.boom1="false" scaleX.boom1="1" scaleY.boom1="1" anchorOffsetX.boom2="203" anchorOffsetY.boom2="276" height.boom2="400" width.boom2="400" x.boom2="203" y.boom2="276" touchEnabled.boom2="false" scaleX.boom2="1" scaleY.boom2="1">
+		<e:Image id="image" source="zoo_sheet2_json.zoo_sheet2020" horizontalCenter.boom0="0" horizontalCenter.ice="0" horizontalCenter.index="0" verticalCenter="0" x="68" y="-38" scaleX="1" scaleY="1" anchorOffsetX="123.5" anchorOffsetY="123.5" horizontalCenter.boom1="0.5" verticalCenter.boom1="75.5" horizontalCenter.boom2="0.5" verticalCenter.boom2="75.5" source.boom2="zoo_sheet2_json.zoo_sheet2012" width.boom2="247" width.boom1="247" height.boom1="247" height.boom2="247"/>
+		<e:Group id="animal1" width="200" height="200" horizontalCenter="0" verticalCenter="0" horizontalCenter.boom1="0" verticalCenter.boom1="75" horizontalCenter.boom2="0" verticalCenter.boom2="75"/>
+		<e:Image id="image0" source="zoo_sheet2_json.zoo_sheet2016" horizontalCenter="0" x="39" scaleX="1" scaleY="1" verticalCenter="67" horizontalCenter.boom1="0" verticalCenter.boom1="142" horizontalCenter.boom2="0" verticalCenter.boom2="142" source.boom2="zoo_sheet2_json.zoo_sheet2015" width.boom2="304" height.boom2="78" width.boom1="304" height.boom1="78"/>
+		<e:BitmapLabel id="money" width="358" height="78" y.ice="202.5" y.index="202.5" anchorOffsetY="0" anchorOffsetX="0" textAlign="center" verticalAlign="middle" font="my_bit_fnt" text="123" scaleX="0.5" scaleY="0.5" horizontalCenter="0.5" visible.index="false" visible.ice="false" horizontalCenter.boom1="0.5" text.boom0="123" verticalCenter.boom1="135.5" horizontalCenter.boom0="0.5" verticalCenter.boom0="160.5" horizontalCenter.boom2="0.5" verticalCenter.boom2="135.5"/>
+	</e:Group>
+	<e:Group left="0" right="0" top="0" bottom="0" visible.boom1="false" touchEnabled.ice="false" touchEnabled.index="false" visible.boom2="false" visible.boom0="false">
+		<e:Image id="shadow" source="zoo_sheet3_json.zoo_sheet3002" scaleX="1" scaleY="1" left="0" bottom="-13" horizontalCenter.index="0" left.index="105" bottom.index="-13" horizontalCenter.ice="0" touchEnabled.ice="false" visible.boom0="false"/>
+		<e:Group id="animal" left.boom0="0" left.boom1="0" right.boom0="0" right.boom1="0" top.boom0="0" top.boom1="0" bottom="0" bottom.index="0" horizontalCenter.index="0" horizontalCenter.ice="0" left.boom2="0" right.boom2="0" top.boom2="0"/>
+		<e:Image id="ice_image" source="zoo_sheet3_json.zoo_sheet3011" scaleX="1" scaleY="1" left="0" bottom="0" visible.index="false" horizontalCenter.ice="0" bottom.ice="0" touchEnabled.ice="false" visible.boom0="false"/>
+	</e:Group>
+</e:Skin>

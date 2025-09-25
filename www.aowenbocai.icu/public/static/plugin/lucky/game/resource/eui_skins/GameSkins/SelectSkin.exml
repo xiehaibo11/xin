@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="SelectSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" >
+	<e:Image id="backImg" source="spxiu_json.spxiu005" horizontalCenter="0" verticalCenter="0" scaleX="0.8"/>
+	<e:Image id="off" source="spxiu_json.spxiu006" verticalCenter="0" right="0" visible.up="false" visible.down="false" visible.disabled="false"/>
+	<e:Image id="on" source="spxiu_json.spxiu009" verticalCenter="0" left="0" visible.upAndSelected="false" visible.downAndSelected="false" visible.disabledAndSelected="false"/>
+</e:Skin>

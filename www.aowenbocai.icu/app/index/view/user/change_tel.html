@@ -1,0 +1,161 @@
+{include file='common@common/head' /}
+
+<style>
+  .form {
+    margin: .5rem;
+  }
+  .form button.btn
+  {
+    display: block;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .icon-svg {
+    display: inline-block;
+    margin: .4rem;
+  }
+  .btn-yzm{    width: 12rem; margin: 0;line-height: 1.7rem;margin-right: 0.3rem;}
+</style>
+
+<header class="header">
+  <a class="header-left" href="/index/user/set">
+    <i class="icon-svg icon_left"></i>
+  </a>
+  <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div class="form" id="edit_password" v-cloak>
+  <div v-if='before_'>
+    <div class="item-line item-lg">
+      <i class="icon-svg icon_phone"  style="width: 1.8rem"></i>
+      <input type="text"  disabled class="input input-line input-lg" placeholder="输入原来手机号"value ="{$tel}">
+      <span class="btn btn-lg btn-yzm" v-on:click="nowSend">{{oldmsg}}</span>
+    </div>
+    <div class="item-line item-lg">
+      <i class="icon-svg icon_password"></i>
+      <input type="text" class="input input-line input-lg" placeholder="输入验证码" v-model="oldyzm">
+    </div>
+    <div><button class="btn btn-fill btn-lg" v-on:click="nowsubmit">确认</button></div>
+  </div>
+  <div v-if='update_'>
+    <div class="item-line item-lg">
+      <i class="icon-svg icon_phone"  style="width: 1.8rem"></i>
+      <input type="text" class="input input-line input-lg" placeholder="输入新手机号" v-model="newtel">
+      <span class="btn btn-lg btn-yzm" v-on:click="newsend">{{newmsg}}</span>
+    </div>
+    <div class="item-line item-lg">
+      <i class="icon-svg icon_password"></i>
+      <input type="text" class="input input-line input-lg" placeholder="输入验证码" v-model="newyzm">
+    </div>
+    <div><button class="btn btn-fill btn-lg" v-on:click = "newsubmit">保存</button></div>
+  </div>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        var vue = new Vue({
+            el : '#edit_password',
+            data : {
+              countDown : 120,
+              countDownNew : 120,
+              oldtel : "{$usertel}",
+              oldyzm : '',
+              oldmsg : '发送验证码',
+              newtel : '',
+              newyzm : '',
+              newmsg : '发送验证码',
+              before_ : 1,
+              update_ : 0,
+            },
+            methods :{
+              nowSend : function(){
+                  var _this = this; 
+                  if(_this.countDown != 120) return false;
+                  $.get('/index/user/sendSmsEdit',{tel : _this.oldtel},function(res) {
+                    if(res.err == 0) {
+                      var interval = setInterval(function(){
+                          _this.countDown = _this.countDown - 1;
+                          if(_this.countDown == 0){
+                            _this.oldmsg = '发送验证码';
+                            _this.countDown = 120;
+                            clearInterval(interval);
+                            return;
+                          }
+                          _this.oldmsg = "消息已发送("+_this.countDown+")";
+                      },1000)
+                    }else{
+                      $.alert(res.msg);
+                    }
+                  });
+              },
+              nowsubmit : function(){
+                var _this = this;
+                if(_this.oldyzm == ''){
+                  $.alert("验证码不能为空");
+                  return false;
+                }
+                $.post('/index/user/changeTel',{tel : _this.oldtel,yzm : _this.oldyzm},function(res) {
+                    if (!res.err) {
+                        _this.before_ = 0;
+                        _this.update_ = 1;
+                        _this.countDown = 120;
+                    }else{
+                      $.msg(res.msg);
+                    }
+                })
+              },
+              newsend : function(){
+                  var _this = this; 
+                  if(_this.countDownNew != 120) return false;
+                  var reg = /^1[3|4|5|7|8][0-9]{9}$/;
+                  var res = reg.test(_this.newtel);
+                  if(!res){
+                    $.alert('手机号格式不正确，请输入正确的手机号');
+                    return false;
+                  }
+                  $.get('/index/user/sendSmsChange',{tel : _this.newtel},function(res) {
+                    if(res.err == 0) {
+                      var interval = setInterval(function(){
+                          _this.countDownNew = _this.countDownNew - 1;
+                          if(_this.countDownNew == 0){
+                            _this.newmsg = '发送验证码';
+                            _this.countDownNew = 120;
+                            clearInterval(interval);
+                            return;
+                          }
+                          _this.newmsg = "消息已发送("+_this.countDownNew+")";
+                      },1000)
+                    }else{
+                      $.alert(res.msg);
+                    }
+                  });
+              },
+              newsubmit : function(){
+                var _this = this;
+                if(_this.newyzm == ''){
+                  $.alert("验证码不能为空");
+                  return false;
+                }
+                $.post('/index/user/writePhone',{tel : _this.newtel,yzm : _this.newyzm},function(res) {
+                    $.msg(res.msg);
+                    if (res.code == 0) {
+                        setTimeout(function () {
+                            location.href = "/index/User/";
+                        }, 2000);
+                    }
+                })
+              },
+            },
+            created(){
+                if({$isTel} == 0){
+                    $.alert('请先绑定手机号，再修改信息');
+                    setTimeout(function () {
+                        location.href = "/index/User/LockInfo";
+                    }, 2000)
+                }
+            }
+        })
+    });
+</script>

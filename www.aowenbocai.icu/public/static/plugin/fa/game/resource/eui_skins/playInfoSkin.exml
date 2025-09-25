@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="PlayInfoSkin" width="640" height="1173" xmlns:e="http://ns.egret.com/eui">
+	<e:Scroller id="scroller" anchorOffsetY="0" left="0" right="0" top="0" height="1178">
+		<e:Group anchorOffsetY="0" height="1169" x="0" y="-108">
+			<e:Rect left="0" right="0" top="0" bottom="-98" scaleX="1" scaleY="1" anchorOffsetY="0" fillColor="0x2d2d2d"/>
+			<e:Image source="role_png" anchorOffsetX="0" anchorOffsetY="0" height="775.29" left="0" top="0" right="0"/>
+		</e:Group>
+	</e:Scroller>
+</e:Skin>

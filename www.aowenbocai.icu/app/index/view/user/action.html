@@ -1,0 +1,86 @@
+{include file='common@common/head' /}
+<link rel="stylesheet" href="__STATIC__/css/user.css">
+<script src="/static/js/loadpage.js"></script>
+<script src="/static/js/vue-component.js"></script>
+<div id="app" class="app_init foot_nav_padding">
+    <loading-box url="/index/user/getAction/?userid=0">
+        <template scope="props">
+            <template v-for="item of props.list">
+                <action-list :item="item"></action-list>
+            </template>
+        </template>
+    </loading-box>
+</div>
+<template id="actionList">
+    <div class="card-list card-list ext_bg" :style="{backgroundImage: 'url(' + item.ext_info.logo +')'}">
+        <a class="card-header ext_head" :href="item.ext_name ? '/' + item.ext_name : ''">
+            来自: {{item.ext_info.title}}
+        </a>
+        <div class="card-content">
+            <div class="card-content-inner" v-html="item.content"></div>
+        </div>
+        <div>
+            <div class="card-footer massage_info border-t flex-box">
+                <div class="user">
+                    <a class="username" :href="'/index/user/ushow?userid=' + item.userid"><i class="icon-svg" :style="{backgroundImage: 'url(' + item.user_info.photo +')'}"></i> {{item.user_info.nickname}}</a>
+                    <span class="datetime">{{item.friend_time}}</span>
+                </div>
+                <div class="reply_good">
+                    <span><i  class="iconfont icon-dianzan"></i>{{item.good_count}}</span>
+                    <!-- <a :href="'/index/message/send?userid='+item.send_userid" data-no-cache="true">评论({{item.reply_count}})</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!--底部开始-->
+<footer>
+    <div class="flex-box foot_nav">
+        <a class="flex" onclick="build()">
+            <i class="iconfont icon-liwu1"></i>
+            兑换
+        </a>
+        <a class="flex cur" href="/index/user/action">
+            <i class="iconfont icon-icon02"></i>
+        </a>
+        <a class="flex" href="/index">
+            <i class="iconfont icon-youxi4" style="font-size: 1.5rem"></i>
+            大厅
+        </a>
+        <a class="flex" href="/index/bbs">
+            <i class="iconfont icon-quanzi2"></i>
+            圈子
+        </a>
+        <a class="flex" href="/index/user/ranking">
+            <i class="iconfont icon-paihangbang"></i>
+            排行
+        </a>
+    </div>
+</footer>
+<!--底部结束-->
+<script>
+    function build() {
+        Zepto.alert('兑换商城建设中, 敬请期待！')
+    };
+    $(function () {
+        Vue.component('action-list', {
+            props: ['item'],
+            template: '#actionList'
+        });
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: []
+            },
+            methods: {
+            },
+            created: function () {
+                var _this = this;
+                $('#app').removeClass('app_init');
+            }
+        });
+    });
+
+</script>
+{include file='common@common/foot' /}

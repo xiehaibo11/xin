@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HelpSkin" width="1004.52" height="643" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="bg_close" left="0" right="0" top="0" bottom="0" fillAlpha="0"/>
+	<e:Group width="762.45" height="460" anchorOffsetY="0" anchorOffsetX="0" verticalCenter="0" horizontalCenter="0">
+		<e:Image source="ui015_png" left="0" right="0" top="0" bottom="0" scale9Grid="42,47,5,3"/>
+		<e:Rect left="0" right="0" top="0" bottom="0" fillAlpha="0.4" ellipseWidth="20" visible="false"/>
+		<e:Label text="游戏说明" y="35.23" horizontalCenter="0.7749999999999773" size="30" textColor="0xffffff"/>
+		<e:Rect height="1" y="91" left="0" right="0.4500000000000455" fillColor="0xffcd56"/>
+		<e:Scroller width="668.04" height="305.03" y="126.18" anchorOffsetX="0" anchorOffsetY="0" scrollPolicyH="off" horizontalCenter="-0.22500000000002274">
+			<e:Group>
+				<e:Label id="str" text="欢乐捕鱼游戏说明 \n1、玩家需注册游戏帐号方可参与该游戏；\n2、玩家可以选择50 - 1000炮弹，点击屏幕中的鱼进行攻击，有一定的几率击中目标，并且获得对应的奖励（炮弹数 * 鱼的倍数）。\n3、子弹射击后到屏幕边缘会反弹，直到击中鱼； \n4、玩家击中目标后有一定的几率获得技能卡片。\n5、消耗技能卡可以获得对应的技能效果。 \n6、用户不得利用外挂、爬虫软件或其它恶意手段获得奖励，一经发现，我们有权对所有使用非法手段的账号进行不予发奖、冻结、查封等操作。在法律许可的范围内酷睿游戏拥有本游戏的解释权；\n7、受网络影响，页面动画表现可能存在误差，最终中奖结果请以订单详情中的结果为准；" x="0" y="57.58" scaleX="1" scaleY="1" wordWrap="true" width="668.04" size="28" lineSpacing="10" anchorOffsetY="0" textColor="0xf2f3ff"/>
+				<e:layout>
+					<e:HorizontalLayout/>
+				</e:layout>
+			</e:Group>
+		</e:Scroller>
+	</e:Group>
+</e:Skin>

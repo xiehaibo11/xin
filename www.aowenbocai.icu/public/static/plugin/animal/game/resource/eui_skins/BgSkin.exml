@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<e:Skin class="skins.BgSkin" minHeight="50" minWidth="100" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" width="640" height="1136">
+	<e:Group id="bg" top="0" left="0" right="0" bottom="0">
+		<e:Image y="70.23" source="bg3_png" anchorOffsetX="0" anchorOffsetY="0" height="272.77" left="0" right="0"/>
+		<e:Image y="138.72" anchorOffsetX="0" width="803.57" anchorOffsetY="0" height="211.07" source="bg2_png" horizontalCenter="0"/>
+		<e:Image scaleX="1" scaleY="1" left="0" right="0" top="302" bottom="176" anchorOffsetY="0" source="bg1_png"/>
+		<e:Group id="animal_group" height="572" y="304.58" anchorOffsetY="0" left="0" right="0">
+		</e:Group>
+	</e:Group>
+	<e:Group id="top_group" height="180.37" y="0" anchorOffsetY="0" left="0" right="0" scrollEnabled="false" touchEnabled="false">
+		<e:Group id="top" height="72.73" anchorOffsetY="0" left="0" right="0" top="0" x="0" y="0" scaleX="1" scaleY="1">
+			<e:Rect height="72" anchorOffsetY="0" left="0" right="0" top="0" fillColor="0x212b35"/>
+			<e:Group width="198.49" height="50" y="10.92" anchorOffsetY="0" anchorOffsetX="0" right="15">
+				<e:Image id="rank_btn" source="zoo_sheet3_json.zoo_sheet3016" width="50" height="50" left="0" top="0"/>
+				<e:Image id="nav_btn" source="zoo_sheet3_json.zoo_sheet3006" width="50" height="50" x="70"/>
+				<e:Image id="back_btn" source="zoo_sheet3_json.zoo_sheet3010" width="50" height="50" left="139" top="0"/>
+			</e:Group>
+			<e:Group width="233.33" height="50" anchorOffsetY="0" y="10.92" left="21">
+			<e:Rect ellipseWidth="50" fillColor="0x3a5978" anchorOffsetX="0" scaleX="1" scaleY="1" strokeAlpha="0" left="0" top="0" right="0" bottom="0" strokeColor="0x161111" strokeWeight="0"/>
+			<e:Image source="zoo_sheet2_json.zoo_sheet2009" x="14.560000000000002" y="7.0500000000000025" scaleX="1" scaleY="1" anchorOffsetX="0" width="39.79" anchorOffsetY="0" height="33.91"/>
+			<e:Label id="money" text="0" x="62.04" y="14.6" size="24" scaleX="1" scaleY="1"/>
+			<e:Button id="add_btn" label="+" x="187.04" y="7.5600000000000005" skinName="skins.AddButtonSkin" anchorOffsetX="0" width="50" anchorOffsetY="0" height="50" scaleX="0.7" scaleY="0.7"/>
+			</e:Group>
+		</e:Group>
+		<e:Group id="task_group" width="245.36" height="102" x="0" y="71.37" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0">
+			<e:Image source="zoo_sheet2_json.zoo_sheet2002" anchorOffsetX="0" width="244.95" anchorOffsetY="0" height="99.73" scaleX="1" scaleY="1" left="0" top="0"/>
+			<e:Image source="zoo_sheet3_json.zoo_sheet3015" x="12" y="7" anchorOffsetX="0" width="61" anchorOffsetY="0" height="61"/>
+			<e:Group id="task_animal" width="65" height="65" x="10" y="5">
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+				</e:layout>
+			</e:Group>
+			<e:Label id="task_num" text="0/3" x="84" y="10.31" size="20" textColor="0xf2b24b" anchorOffsetX="0" width="143" textAlign="center"/>
+			<e:Label id="task_title" text="捕获动物3只" x="84" y="38.31" size="20" anchorOffsetX="0" width="143" textAlign="center" textColor="0xffffff"/>
+			<e:Label text="奖励" x="11" y="78" size="18"/>
+			<e:Image source="zoo_sheet2_json.zoo_sheet2006" x="80" y="85"/>
+			<e:Image source="zoo_sheet2_json.zoo_sheet2006" x="148" y="85"/>
+			<ns1:TaskSatus id="task_1" width="20" height="20" x="62" y="76"/>
+			<ns1:TaskSatus id="task_2" width="20" height="20" x="133" y="76"/>
+			<ns1:TaskSatus id="task_3" width="20" height="20" x="205" y="76"/>
+		</e:Group>
+		<e:Group height="80" x="278" y="88" anchorOffsetY="0" anchorOffsetX="0" width="80">
+			<ns1:Ice id="bing_group" scaleX="1" scaleY="1" left="0" right="0" top="0" bottom="0" skinName="IceSkin"/>
+		</e:Group>
+	</e:Group>
+	<e:Group id="bottom_group" height="171.48" anchorOffsetY="0" left="0" right="0" bottom="0">
+		<e:Group height="174.23" anchorOffsetY="0" left="0" right="0" bottom="0">
+			<e:Rect strokeColor="0x385674" strokeWeight="1" anchorOffsetX="0" left="0" right="0" top="0" bottom="0" anchorOffsetY="0" fillColor="0x212b35"/>
+			<e:Image source="zoo_sheet2_json.zoo_sheet2010" y="112" anchorOffsetX="0" width="192.24" anchorOffsetY="0" height="46.74" left="24"/>
+			<e:Image source="zoo_sheet2_json.zoo_sheet2010" y="112" anchorOffsetX="0" width="192.24" anchorOffsetY="0" height="46.74" skewY="180" right="25"/>
+			<e:Group width="200" height="29" y="140" anchorOffsetY="0" horizontalCenter="0">
+				<e:Label text="每次消耗金币" x="-45.150000000000006" y="55" size="20" fontFamily="Microsoft YaHei" scaleX="1" scaleY="1"/>
+				<e:Label id="code_show" text="100" x="85.89999999999998" y="55" size="21" textColor="0xed3b3b" scaleX="1" scaleY="1"/>
+				<e:layout>
+					<e:HorizontalLayout horizontalAlign="center"/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="code_group" height="58" y="53" anchorOffsetX="0" anchorOffsetY="0" width="325" x="18">
+				<e:ToggleButton label="100" skinName="skins.CodeButtonSkin" scaleX="1" scaleY="1" x="18" bottom="6" height="58"/>
+				<e:ToggleButton label="500" skinName="skins.CodeButtonSkin" scaleX="1" scaleY="1" x="144" bottom="0" height="58"/>
+				<e:ToggleButton label="1000" skinName="skins.CodeButtonSkin" scaleX="1" scaleY="1" x="270" bottom="0" height="58"/>
+				<e:layout>
+					<e:TileLayout rowAlign="justifyUsingHeight" columnAlign="justifyUsingWidth" horizontalGap="0" horizontalAlign="left" paddingLeft="0" paddingRight="0"/>
+				</e:layout>
+			</e:Group>
+			<e:Group height="35" y="10.5" anchorOffsetX="0" anchorOffsetY="0" left="18" width="325">
+				<e:Label text="基础法力" size="22" scaleX="1" scaleY="1" anchorOffsetY="0" verticalAlign="middle" top="0" bottom="0" horizontalCenter="0" textColor="0x6186aa"/>
+				<e:Image source="zoo_sheet2_json.zoo_sheet2011" y="11" scaleX="0.7" scaleY="0.7" left="93"/>
+				<e:Image source="zoo_sheet2_json.zoo_sheet2011" y="11" scaleX="0.7" scaleY="0.7" right="95"/>
+				<e:layout>
+					<e:BasicLayout/>
+				</e:layout>
+			</e:Group>
+			<e:Group height="35" y="10.5" anchorOffsetX="0" anchorOffsetY="0" width="160" right="18">
+				<e:Label text="法力倍数" size="22" scaleX="1" scaleY="1" anchorOffsetY="0" verticalAlign="middle" top="0" bottom="0" horizontalCenter="0" textColor="0x6186AA"/>
+				<e:Image source="zoo_sheet2_json.zoo_sheet2011" y="11" scaleX="0.7" scaleY="0.7" left="137"/>
+				<e:Image source="zoo_sheet2_json.zoo_sheet2011" y="11" scaleX="0.7" scaleY="0.7" right="139"/>
+				<e:layout>
+				<e:BasicLayout/>
+				</e:layout>
+			</e:Group>
+			<e:Group id="code_sp_group" height="58" y="53" anchorOffsetX="0" anchorOffsetY="0" width="160" right="18">
+				<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="29" fillColor="0x3a5978"/>
+				<e:Rect width="80" anchorOffsetX="0" horizontalCenter="0" fillColor="0x212b35" height="50" verticalCenter="0"/>
+				<e:Label id="code_sp_jia" text="+" right="0" anchorOffsetX="0" top="0" bottom="0" width="40" verticalAlign="middle" textAlign="center"/>
+				<e:Label id="code_sp_jian" text="-" anchorOffsetX="0" top="0" bottom="6" width="40" verticalAlign="middle" textAlign="center" left="0" size="36" anchorOffsetY="0"/>
+				<e:Label id="code_sp_num" text="1" width="80" height="50" verticalCenter="0" horizontalCenter="0" verticalAlign="middle" textAlign="center" size="26"/>
+				<e:layout>
+				<e:BasicLayout/>
+				</e:layout>
+			</e:Group>
+		</e:Group>
+		<e:layout>
+			<e:BasicLayout/>
+		</e:layout>
+	</e:Group>
+	<e:Image left="-4" right="0" x="0" scaleX="1" scaleY="1" bottom="169" anchorOffsetY="0" height="180.52" touchEnabled="false" source="top_png"/>
+	<e:Group id="my_group" width="183" height="186" anchorOffsetX="0" anchorOffsetY="0" touchEnabled="false" horizontalCenter="0" bottom="172.48">
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+		</e:layout>
+	</e:Group>
+	<e:Group id="user_group" left="0" right="0" bottom="171.48">
+		<ns1:UserPhoto id="user0" skinName="UserPhotoSkin" left="20" name="red"/>
+		<ns1:UserPhoto id="user1" skinName="UserPhotoSkin" strokeColor="0x01b5fe" left="130" name="blue"/>
+		<ns1:UserPhoto id="user2" skinName="UserPhotoSkin" strokeColor="0x89ff48" right="130" name="green"/>
+		<ns1:UserPhoto id="user3" skinName="UserPhotoSkin" strokeColor="0xc601fe" right="20" name="zise"/>
+	</e:Group>
+	<e:Group id="main_group" scaleX="1" scaleY="1" anchorOffsetY="0" height="572" y="304.58" horizontalCenter="0" left="0" right="0" touchEnabled="false" touchChildren="false"/>
+</e:Skin>

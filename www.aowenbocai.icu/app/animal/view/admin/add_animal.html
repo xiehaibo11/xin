@@ -1,0 +1,52 @@
+{include file='admin@common/head' /}
+<style>
+  html,body{
+    height: 100%;
+    padding: 0;
+  }
+    .form{
+      margin:20px;
+    }
+</style>
+<div id="app" class="box-padding">
+  <div class="breadcrumb">
+    <ol class="">
+      <li><i class="glyphicon glyphicon-link"></i> 呆萌动物园</li>
+      <li class="active">添加动物</li>
+    </ol>
+  </div>
+  <div class="form-horizontal form_max">
+<form class="form" action="{:url('addAnimal')}" method="post">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">名称</label>
+    <div class="col-sm-3">
+    <input type="text" class="form-control" placeholder="输入动物名称" name="title">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">类型</label>
+    <div class="col-sm-3">
+    <input type="number" class="form-control" placeholder="输入动物类型" name="type">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">倍率</label>
+    <div class="col-sm-3">
+    <input type="text" class="form-control" placeholder="输入动物倍率" name="sp">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">命中率</label>
+    <div class="col-sm-3">
+    <input type="text" class="form-control" placeholder="输入动物命中率" name="hit">
+    </div>
+  </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label"></label>
+      <div class="col-sm-3">
+      <button type="submit" class="btn btn-primary btn_save">提交</button>
+      </div>
+</form>
+  </div>
+</div>
+{include file='admin@common/foot' /}

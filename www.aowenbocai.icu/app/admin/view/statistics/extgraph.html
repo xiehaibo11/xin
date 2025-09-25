@@ -1,0 +1,226 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/static/admin/echarts.min.js"></script>
+<style>
+    .box-padding-bottom{margin-left: 1rem;margin-top: 1%;}
+</style>
+<nav class="plugin_nav">
+    <a href="{:url('index')}">资金统计</a>
+    <a href="{:url('graphList')}">柱形统计图</a>
+    <a class="nav_active" href="">消费中奖比</a>
+    <a href="{:url('extOfGraph')}">模块统计</a>
+    <a href="{:url('getTodayList')}">今日数据统计</a>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 消费中奖比</li>
+        </ol>
+        <form class="form-inline">
+            <div class="form-group form-group-left">
+                <label>时间</label>
+                <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="starttime"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <label>到</label>
+                <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                    <input type='text' class="form-control" name="endtime"  />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default form-group-left btn-sm" onclick="getAll()" >搜索历史比</button>
+        </form>
+    </div>
+    <div id="main" style = "width:100%; height:400px"></div>
+    <div id="main2" style = "width:100%; height:400px;margin-top: 15px"></div>
+</div>
+<script>
+    getAll();
+    getToday() 
+    function getAll(){
+        var starttime = $("input[name=starttime]").val();
+        var endtime = $("input[name=endtime]").val();
+        var data = {};
+        if(starttime != '' || endtime != ''){
+            data = {
+                startTime : starttime,
+                endtime : endtime,
+            }
+        }
+        $.get('{:url("serachGraph")}', data, function(res){
+            var dom = document.getElementById("main");
+            var myChart = echarts.init(dom);
+            var app = {};
+            option = null;
+            option = {
+                backgroundColor: '#2c343c',
+
+                title: {
+                    text: '历史消费 - 中奖比',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#ccc'
+                    }
+                },
+
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+
+                visualMap: {
+                    show: false,
+                },
+                series : [
+                    {
+                        name:'历史消费中奖比',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '50%'],
+                        data:[
+                            {value:res.spend, name:'消费总数'},
+                            {value:res.award, name:'中奖总数'}
+                        ].sort(function (a, b) { return a.value - b.value; }),
+                        roseType: 'radius',
+                        label: {
+                            normal: {
+                                textStyle: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                lineStyle: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                },
+                                smooth: 0.2,
+                                length: 10,
+                                length2: 20
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#c23531',
+                                shadowBlur: 200,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function (idx) {
+                            return Math.random() * 200;
+                        }
+                    }
+                ]
+            };
+            if (option && typeof option === "object") {
+                myChart.setOption(option, true);
+            }
+        })
+    }
+    function getToday(){
+        $.get('{:url("todayGraph")}', '', function(res){
+            var dom = document.getElementById("main2");
+            var myChart = echarts.init(dom);
+            var app = {};
+            option1 = null;
+            option = {
+                backgroundColor: '#2c343c',
+
+                title: {
+                    text: '今日消费 - 中奖比',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#ccc'
+                    }
+                },
+
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+
+                visualMap: {
+                    show: true,
+                },
+                series : [
+                    {
+                        name:'今日消费中奖比',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '50%'],
+                        data:[
+                            {value:res.spend, name:'消费总数'},
+                            {value:res.award, name:'中奖总数'}
+                        ].sort(function (a, b) { return a.value - b.value; }),
+                        roseType: 'radius',
+                        label: {
+                            normal: {
+                                textStyle: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                lineStyle: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                },
+                                smooth: 0.2,
+                                length: 10,
+                                length2: 20
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#c23531',
+                                shadowBlur: 200,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function (idx) {
+                            return Math.random() * 200;
+                        }
+                    }
+                ]
+            };
+            if (option && typeof option === "object") {
+                myChart.setOption(option, true);
+            }
+        })
+    }
+    $('#begintime,#endtime').datetimepicker({
+      language: 'zh-CN',
+      weekStart: 1,
+      todayBtn: 1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+			endDate : new Date(),
+      minView: 2,
+      forceParse: 0
+    });
+    $('#begintime').on('changeDate',function(e){  
+        var startTime = e.date;  
+        $('#endtime').datetimepicker('setStartDate',startTime);  
+    });
+    $('#endtime').on('changeDate',function(e){  
+        var startTime = e.date;  
+        $('#begintime').datetimepicker('setEndDate',startTime);  
+    });
+</script>
+{include file='common/foot' /}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="FishSkin" width="400" height="300" xmlns:e="http://ns.egret.com/eui">
+	<e:Group width="200" height="200" x="68" y="47"/>
+</e:Skin>

@@ -1,0 +1,4 @@
+[2025-09-24 12:06:29] ALERT: 在 /tmp 发现核心转储文件: /tmp/core_dump_security_backup.txt
+[2025-09-24 12:06:29] ALERT: 在 /root 发现核心转储文件: /root/.dotnet/corefx
+/root/.vscode-server/cli/servers/Stable-6f17636121051a53c88d3e605c491d22af2ba755/server/node_modules/undici/lib/core
+[2025-09-24 12:06:29] ALERT: 总共发现 2 个位置存在核心转储文件

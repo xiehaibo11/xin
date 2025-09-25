@@ -1,0 +1,26 @@
+{include file='admin@common/head' /}
+
+<style media="screen">
+    .form{
+      margin:20px;
+      width: 400px;
+    }
+</style>
+<div class="box-padding">
+  <ol class="breadcrumb">
+    <li><a href="{:url('system_code')}"><i class="glyphicon glyphicon-link"></i> 系统开奖</a></li>
+    <li class="active"> 开奖修改</li>
+  </ol>
+<form class="form" action="{:url('edit_system_code', ['name' => $name, 'expect' => $info.expect])}" method="post">
+  <div class="form-group">
+    <label>期数</label>
+    <input type="text" class="form-control"   value="{$info.expect}" disabled>
+  </div>
+  <div class="form-group">
+    <label>开奖号码</label>
+    <input type="text" class="form-control" placeholder="输入开奖号码" name="code" value="{$info.code}">
+  </div>
+  <button type="submit" class="btn btn-primary btn_save"> 修改 </button>
+</form>
+</div>
+{include file='admin@common/foot' /}

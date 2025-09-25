@@ -1,0 +1,17 @@
+{
+  "name": "by",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node ./src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bufferhelper": "^0.2.1",
+    "express": "^4.15.4",
+    "mysql": "^2.14.1",
+    "socket.io": "^2.0.3"
+  }
+}

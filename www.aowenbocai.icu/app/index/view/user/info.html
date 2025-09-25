@@ -1,0 +1,126 @@
+{include file='common@common/head' /}
+
+<style>
+  .form {
+    margin: .5rem;
+  }
+  .form button.btn
+  {
+    display: block;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .icon-svg {
+    display: inline-block;
+    margin: .4rem;
+  }
+  .header .header-left{
+    margin-top: .2rem;
+  }
+  .btn-yzm{  margin: 0;line-height: 1.7rem;margin-right: 0.3rem;}
+</style>
+
+<header class="header">
+  <a class="header-left" href="/index/user/set">
+    <i class="icon-svg icon_left"></i>
+  </a>
+  <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="app_init">
+  <form class="form" action="{:Url('info')}" id="info">
+    <div class="item-lg-radius">
+    <div class="item-line item-lg">
+      <div class="item-title">昵称</div>
+      <input type="text" class="input input-line input-lg" placeholder="输入昵称" name="nickname" :value="info.nickname">
+    </div>
+    <div class="item-line item-lg">
+      <div class="item-title">邮箱</div>
+      <input type="text" class="input input-line input-lg" placeholder="输入邮箱" name="email" :value="info.email">
+    </div>
+    <div class="item-line item-lg">
+      <div class="item-title">手机</div>
+      <input type="tel" class="input input-line input-lg" disabled placeholder="输入手机号码" :value="info.tel">
+    </div>
+    <div class="item-line item-lg flex-box">
+        <div class="item-title">验证码</div>
+        <input type="text" class="input input-line input-lg flex" style="text-align: left" placeholder="输入验证码" name="yzm" >
+        <span class="btn btn-lg btn-yzm" v-on:click="msgsubmit">{{btnmsg}}</span>
+      </div>
+    </div>
+    <div><button class="btn btn-fill btn-lg">保存</button></div>
+  </form>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                info:{
+                    username: '',
+                    email: '',
+                    photo:'/static/images/photo.jpeg'
+                },
+                tel : '',
+                btnmsg : '发送验证码',
+                countDown : 120,
+            },
+            created: function() {
+                var _this = this;
+                $.get('/index/user/getChangeInfo', function(data) {
+                    if(data.err){
+                      $.alert('请先绑定手机号，再修改信息');
+                      setTimeout(function () {
+                        location.href = "/index/User/LockInfo";
+                      }, 2000)
+                    }
+                    _this.info = data.info;
+                    $("#app").removeClass("app_init");
+                });
+            },
+            methods: {
+              msgsubmit : function() {
+                var _this = this;
+                if(_this.countDown != 120) {
+                  return false;
+                }
+                $.get('/index/user/sendSmsInfo','',function(res) {
+                  if(res.err == 0) {
+                    var interval = setInterval(function(){
+                        _this.countDown = _this.countDown - 1;
+                        if(_this.countDown == 0){
+                          _this.btnmsg = '发送验证码';
+                          _this.countDown = 120;
+                          clearInterval(interval);
+                          return;
+                        }
+                        _this.btnmsg = "消息已发送("+_this.countDown+")";
+                    },1000)
+                  }else{
+                    $.alert(res.msg);
+                    if(res.err == 2001){
+                      setTimeout(function () {
+                        location.href = "/index/User/LockInfo";
+                      }, 2000)
+                    }
+                  }
+                });
+              }
+            }
+        });
+
+        $("#info").formAjax({
+            callback: function (data) {
+                $.msg(data.msg);
+                if (data.err) {
+                    setTimeout(function () {
+                        location.href = "/index/User/";
+                    }, 2000);
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,159 @@
+{include file='admin@common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<div id="app" class="box-padding">
+        <div class="form-group form-group-left" style="margin:-10px 0 0 -10px;display:inline-block">
+            <div class="btn-group" data-toggle="buttons" style="margin:1rem">
+                <label class="btn btn-primary isdelete" data-url="{:url('deleteFish')}?day=all">
+                    <input type="checkbox"> 清除全部数据
+                </label>
+                <label class="btn btn-primary isdelete" data-url="{:url('deleteFish')}?day=30">
+                    <input type="checkbox"> 清除30天前数据
+                </label>
+                <label class="btn btn-primary isdelete" data-url="{:url('deleteFish')}?day=15">
+                    <input type="checkbox"> 清除15天前数据
+                </label>
+                <label class="btn btn-primary isdelete" data-url="{:url('deleteFish')}?day=7">
+                    <input type="checkbox"> 清除7天前数据
+                </label>
+                <label class="btn btn-primary isdelete" data-url="{:url('deleteFish')}?day=3">
+                    <input type="checkbox"> 清除3天前数据
+                </label>
+            </div>
+        </div>
+        <div class="breadcrumb">
+            <div class="fl">
+                <label>选择游戏：</label>
+                <div class="dropdown" style="display: inline-block;">
+                    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">欢乐捕鱼
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        {volist name = "extList" id = "item"}
+                        <li role="presentation"  class="toTurn"   href="">
+                            <a role="menuitem" tabindex="-1" href="{:Url('/'.$item.name)}">{$item.title}</a>
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+            </div>
+            <form class="form-inline" id="search" style="display:inline-block">
+                <div class="form-group form-group-left">
+                    <label>会员名:</label>
+                    <input type="text" name="username" class="form-control"{present name ="$query.username" } value="{$query.username}"{/present} placeholder="会员名">
+                </div>
+                <div class="form-group form-group-left">
+                    <label>时间</label>
+                    <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+                        <input type='text' class="form-control" name="starttime" {present name ="$query.starttime" } value="{$query.starttime}"{/present} />
+                        <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+                    </div>
+                    <label>到</label>
+                    <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+                        <input type='text' class="form-control" name="endtime"{present name ="$query.endtime" } value="{$query.endtime}"{/present}  />
+                        <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+                    </div>
+                </div>
+                <div class="form-group form-group-left">
+                    <label>动物:</label>
+                    <select name="name" class="form-control" id="">
+                        <option value="">全部</option>
+                        {volist name = "$fishlist" id = "item"}
+                        <option value="{$item.name}">{$item.title}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="dropdown form-group">
+                    <label>排序:</label>
+                    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1"
+                            data-toggle="dropdown">
+                    <span class="result">
+                        {if condition = "isset($query.sort)"}
+                            {if condition = "$query.sort eq 1"}奖金降序
+                            {else /}奖金升序
+                            {/if}
+                        {else /}
+                        默认排序
+                        {/if}
+                    </span>
+                        <span class="caret"></span>
+                    </button>
+                    <input type="hidden" name="sort" {present name ="$query.sort" } value="{$query.sort}"{/present}>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="text-align:right">
+                        <li role="presentation" class="choice">
+                            <a role="menuitem" data-value =''>默认排序</a>
+                        </li>
+                        <li role="presentation" class="choice">
+                            <a role="menuitem"  data-value = 0>奖金升序</a>
+                        </li>
+                        <li role="presentation" class="choice">
+                            <a role="menuitem" data-value = 1>奖金降序</a>
+                        </li>
+                    </ul>
+                </div>
+                <button type="submit" class="btn btn-default form-group-left btn-sm" @click="getData(1)">搜索</button>
+            </form>
+            <div class="clear"></div>
+        </div>
+
+        <div class="table_box">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>昵称（用户名）</th>
+                    <th>攻击对象</th>
+                    <th>消耗金豆</th>
+                    <th>奖金</th>
+                    <th>时间</th>
+                    <th class="tc">操作</th>
+                </tr>
+                </thead>
+                {volist name="$list.data" id = "item"}
+                <tr>
+                    <td>{$item.user_name.nickname}({$item.user_name.username})</td>
+                    <td>{$item.title}</td>
+                    <td>{$item.bet_money}</td>
+                    <td {if condition="$item.bouns > 0"} style="color:brown;font-weight:700"{/if}> {$item.bouns}</td>
+                    <td>{$item.create_time}</td>
+                    <td class="tc"> <a href="#" class="btn btn-info isdelete btn-sm" data-url="{:url('deleteFish')}?id={$item.id}">删除</a></td>
+                </tr>
+                {/volist}
+            </table>
+        </div>
+        <div>
+            <div class="text-right">{$page}</div>
+        </div>
+</div>
+
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+        $(".choice").click(function(){
+            var _this = $(this).find('a');
+            $(".result").text(_this.text());
+            $("input[name=sort]").val(_this.data('value'))
+        })
+    });
+</script>
+
+{include file='admin@common/foot' /}

@@ -1,0 +1,143 @@
+{include file='common@common/head' /}
+<script type='text/javascript' src="__JS__/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__CSS__/upload/cropper.min.css">
+<style>
+    .btn
+    {
+        display: block;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    .photo_img{
+        width: 5rem;
+        margin: 0 auto;
+        margin-top: 1rem;
+        display:block;
+    }
+    .showEdit {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    #report img{
+        width: 15rem;
+        height: 15rem;
+    }
+    .header .header-nav{
+        padding: 0.6rem 0.55rem;
+    }
+    #cancleBtn, #confirmBtn, #image{
+        cursor:pointer
+    }
+</style>
+
+<header class="header">
+    <div></div>
+    <div class="header-center">{$title}</div>
+    <div class="header-nav">
+        <!--<a style="padding: 0;line-height: 20px" class="nav-word" href="/index">跳过</a>-->
+        <a style="padding: 0;line-height: 20px" class="nav-word" href="/fish50">跳过</a>
+        <i class="icon-svg icon_right"></i>
+    </div>
+</header>
+<div class="p-height"></div>
+<div id="showResult">
+    <input id="image" type="file" style="display: none"/>
+    <label for="image">
+        <img src="/static/images/default_photo.jpg" id="changeAvatar" class="photo_img">
+    </label>
+</div>
+
+<form action="{:Url('index/User/setPhoto')}" id="setPhoto">
+    <input type="hidden" name="photo" id="basetxt">
+    <div><button class="btn btn-fill btn-lg">下一步</button></div>
+</form>
+
+<div id="showEdit" class="showEdit">
+    <header class="header">
+        <div class="header-nav">
+            <a class="nav-word" id="cancleBtn">取消</a>
+        </div>
+        <div class="header-center">{$title}</div>
+        <div class="header-nav">
+            <a class="nav-word" id="confirmBtn">保存</a>
+        </div>
+    </header>
+    <div id="report" style="position: relative;height: 100%;">
+        <img src="">
+    </div>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        $.getScript('__JS__/upload/lrz.all.bundle.js');
+        $.getScript('__JS__/upload/cropper.js');
+        // 取消按钮
+        $('#cancleBtn').on('click', function() {
+            $("#showEdit").fadeOut();
+        });
+        // 确定裁剪按钮
+        $('#confirmBtn').on('click', function() {
+            $("#showEdit").fadeOut();
+            var $image = $('#report > img');
+            var dataURL = $image.cropper("getCroppedCanvas");
+            var imgurl = dataURL.toDataURL("image/jpeg", 0.5);
+            $("#changeAvatar").attr("src", imgurl);
+            $("#basetxt").val(imgurl);
+        });
+        $('#image').on('change', function() {
+            // 利用的 lrz.all.bundle 插件读取本机图片信息
+            lrz(this.files[0], {
+                width: 800,
+                height: 800,
+                quality: 0.7
+            }).then(function(rst) {
+                $("#report").html('<img src="' + rst.base64 + '">');
+                $("#showEdit").fadeIn();
+                var option = {
+                    'aspectRatio' : 1/1,// 图片宽高比例
+                    // 裁剪图片大小,0.7 = 原图片的70%
+                    'autoCropArea': 0.7,
+                    'strict': true,
+                    'guides': true,
+                    'center': true,
+                    'highlight': false,
+                    'dragCrop': false,
+                    'cropBoxMovable': true,
+                    'cropBoxResizable': false,
+                    'zoom': -0.2,
+                    'checkImageOrigin': true,
+                    'background': false,
+                    'movable ':true
+                };
+                // 利用的 jqery cropper 裁剪图片插件 打开裁剪画面
+                $("#report > img").cropper(option)
+                return rst;
+            }).catch(function(err) {
+                // 万一出错了，这里可以捕捉到错误信息
+                // 而且以上的then都不会执行
+                alert(err);
+            }).always(function() {
+                // 不管是成功失败，这里都会执行
+            });
+            this.value = "";
+        });
+
+        Zepto("#setPhoto").formAjax({
+            callback: function (data) {
+                Zepto.msg(data.msg);
+                if (data.code) {
+                    setTimeout(function () {
+//                        location.href = "/index/";
+                        location.href = "/fish50";
+                    }, 2000);
+                }
+            }
+        });
+    });
+</script>

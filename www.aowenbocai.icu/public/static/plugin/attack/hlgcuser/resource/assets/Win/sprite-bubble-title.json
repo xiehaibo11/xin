@@ -1,0 +1,11 @@
+{"file":"sprite-bubble-title.png",
+"frames":
+{"sprite-bubble-title004":{"x":0,"y":0,"w":256,"h":149,"offX":54,"offY":25,"sourceW":364,"sourceH":183},
+"sprite-bubble-title003":{"x":258,"y":0,"w":240,"h":156,"offX":48,"offY":22,"sourceW":364,"sourceH":183},
+"sprite-bubble-title008":{"x":500,"y":0,"w":257,"h":140,"offX":53,"offY":40,"sourceW":364,"sourceH":183},
+"sprite-bubble-title006":{"x":759,"y":0,"w":257,"h":139,"offX":53,"offY":37,"sourceW":364,"sourceH":183},
+"sprite-bubble-title000":{"x":500,"y":142,"w":266,"h":134,"offX":54,"offY":17,"sourceW":364,"sourceH":183},
+"sprite-bubble-title005":{"x":768,"y":141,"w":241,"h":145,"offX":47,"offY":25,"sourceW":364,"sourceH":183},
+"sprite-bubble-title007":{"x":0,"y":158,"w":265,"h":131,"offX":49,"offY":30,"sourceW":364,"sourceH":183},
+"sprite-bubble-title002":{"x":267,"y":158,"w":193,"h":136,"offX":86,"offY":17,"sourceW":364,"sourceH":183},
+"sprite-bubble-title001":{"x":462,"y":278,"w":164,"h":157,"offX":100,"offY":7,"sourceW":364,"sourceH":183}}}

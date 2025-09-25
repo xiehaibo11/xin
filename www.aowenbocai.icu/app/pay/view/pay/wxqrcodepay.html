@@ -1,0 +1,117 @@
+{include file='common@web/head' title="收银台"/}
+<link rel="stylesheet" href="/static/web/css/user.css">
+<style>
+    .qr-box {
+        margin: 20px auto;
+        /* border: 1px solid #ddd; */
+    }
+
+    .qr-title {
+        line-height: 60px;
+        text-align: center;
+        background: #FFFFFF;
+    }
+
+    .qr-pp {
+        padding: 10px;
+        font-weight: 700;
+        color: #FFFFFF;
+    }
+
+    .qr-show {
+        border-top: 1px solid #ddd;
+        padding: 80px 0;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .qr-img {
+        padding-bottom: 20px;
+        width: 202px;
+        height: auto;
+        min-height: 202px;
+        margin: 0 auto;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #FFF;
+    }
+
+    .qrbox img {
+        float: left;
+        margin-top: 3px;
+        margin-left: 34px;
+    }
+
+    .qrbox div {
+        float: left;
+        color: #333;
+        margin-left: 10px;
+        text-align: left;
+        font-size: 12px;
+    }
+
+    .pay-money {
+        line-height: 60px;
+        font-size: 26px;
+        font-weight: 700;
+        color: #f60;
+    }
+    .qr-imgt {
+        padding: 60px;
+        padding-top: 20px;
+        background: #09bb07;
+        border-radius: 0 0 10px 10px;
+
+    }
+    .qr-l {
+        display: inline-block;
+
+    }
+
+    .qr-r {
+        display: inline-block;
+        width: 510px;
+        vertical-align: bottom;
+    }
+    .wxpay-logo {
+        padding: 20px;
+        border: 1px #09bb07 solid;
+        border-radius: 10px 10px 0 0;
+        background: #ffffff;
+    }
+</style>
+<h1 class="column">
+    <div class="container">
+        <span>收银台-微信支付</span>
+    </div>
+</h1>
+<div class="container qr-box">
+    <div class="qr-title">打开手机微信，点击右上角加号展开，使用扫一扫 扫描该二维码进行支付。</div>
+    <div class="qr-show">
+
+        <div class="qr-l">
+            <div class="wxpay-logo">
+                <img src="/static/web/images/wxpaylogo.png" alt="微信支付">
+            </div>
+            <div class="qr-imgt">
+                <div style="color: #FFFFFF">扫一扫继续付款（元）</div>
+                <div class="pay-money">{$total_amount}</div>
+                <div class="qr-img">
+                    <img src="{$qrcode}" alt="微信扫码支付" width="200">
+                    <div class="qrbox">
+                        <img src="/static/web/images/sao.png" alt="扫一扫">
+                        <div>
+                            打开手机微信
+                            <br> 扫一扫继续付款
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="qr-r">
+            <img src="/static/web/images/weixin.png" alt="扫一扫">
+        </div>
+    </div>
+</div>
+{include file='common@web/foot' /}

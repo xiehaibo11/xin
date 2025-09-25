@@ -1,0 +1,169 @@
+{include file='common/head' /}
+<script src="/static/admin/echarts.min.js"></script>
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<nav class="plugin_nav">
+  <a href="{:url('admin/user_action/')}">动态管理</a>
+  <a href="{:url('admin/user_action/statis')}">动态统计</a>
+  <a class="nav_active"  href="{:url('admin/user_action/actiongraph')}">柱形统计图</a>
+</nav>
+<div class="box-padding">
+  <div class="breadcrumb">
+    <ol class="">
+      <li class="active"><i class="glyphicon glyphicon-link"></i> 柱形统计图</li>
+    </ol>
+    <form class="form-inline" action="">
+      <div class="form-group form-group-left">
+        <label>时间</label>
+        <div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+          <input type='text' class="form-control" name="starttime" value="{$query.starttime}" />
+          <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+        </div>
+        <label>到</label>
+        <div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+          <input type='text' class="form-control" name="endtime" value="{$query.endtime}" />
+          <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-default form-group-left searchData btn-sm">搜索</button>
+    </form>
+  </div>
+  <div id="main" style="width:100%; height:500px"></div>
+  <div id="no_main"></div>
+</div>
+<script>
+$(function () {
+    getData();
+    $(".searchData").click(function(){
+        var data = {
+            'starttime' : $("input[name=starttime]").val(),
+            'endtime' : $("input[name=endtime]").val(),
+        }
+        getData(data);
+    })
+    function  getData(data = ''){
+        $.get('{:url("admin/user_action/actionGraph")}',data, function (res) {
+            var data = res.data.list;
+            var combine = res.data.combine;
+            var length = data.length;
+            var option = '';
+            var legendData = ['总条数'];
+            var value = [
+                    {
+                        name : '总条数',
+                        type : 'bar',
+                        data : [res.data.allnum],
+                        markPoint : {
+                            data : [
+                                {name : '年最高', value : res.data.allnum, xAxis:0, yAxis:res.data.allnum },
+                            ]
+                        },
+                    }
+                ];
+            for(i = 0; i < length; i++){
+                legendData.push(data[i]["extinfo"]);
+                value.push({
+                    name : data[i]["extinfo"],
+                    type : 'bar',
+                    data : [data[i]['num']],
+                    markPoint : {
+                        data : [
+                            {name : '年最高', value : data[i]['num'], xAxis:0, yAxis:data[i]['num'] },
+                        ]
+                    },
+
+                })
+            }
+
+            for (const key in combine) {
+                    legendData.push(combine[key]);
+                    value.push({
+                        name : combine[key],
+                        type : 'bar',
+                        data : [0],
+                        markPoint : {
+                            data : [
+                                {name : '年最高', value : 0, xAxis:0, yAxis:0 },
+                            ]
+                        },
+
+                    })
+            }
+            option = {
+                "color": [
+                    "rgba(75, 192, 192, .6)",
+                    "rgba(255, 92, 92, .6)",
+                    "#6666ff",
+                    "#ff3399",
+                    "#33ffff",
+                    "#33cc66",
+                    "red",
+                    "#9999ff",
+                    '#ff33ff',
+                    '#666600',
+                    '#333399'
+                    ],
+                title : {
+                    text: '',
+                },
+                tooltip : {
+                    trigger: 'axis',
+                },
+                legend: {
+                    data:legendData
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['总统计']
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : value
+            };
+                                
+            var myChart2 = echarts.init(document.getElementById('main'));
+            myChart2.setOption(option);
+        })
+    }
+    $('#begintime,#endtime').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+            endDate : new Date(),
+        minView: 2,
+        forceParse: 0
+    });
+    $('#begintime').on('changeDate',function(e){  
+            var startTime = e.date;  
+            $('#endtime').datetimepicker('setStartDate',startTime);  
+        });
+        $('#endtime').on('changeDate',function(e){  
+            var startTime = e.date;  
+            $('#begintime').datetimepicker('setStartDate',startTime);  
+        });
+});
+
+</script>
+{include file='common/foot' /}

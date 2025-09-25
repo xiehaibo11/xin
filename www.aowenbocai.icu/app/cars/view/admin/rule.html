@@ -1,0 +1,114 @@
+{include file='admin@common/head' /}
+<link rel="stylesheet" href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style>
+	
+    .add-botton {
+        float: right;
+        margin-right: 30px;
+    }
+	.addGoods{
+		margin-top: 10px;
+		display: none;
+	}
+	.split{margin: 0 5px;}
+	.open{color:rgb(52, 226, 8)}
+	.stopUse{color:rgb(202, 69, 29)}
+</style>
+<nav class="plugin_nav">
+		<a href="{:url('index')}">物品管理</a>
+		<a  class="nav_active">中奖规则</a>
+
+	  </nav>
+	  
+<ol class="breadcrumb">
+         <li><a href="/{$loginName}.php/extend">扩展管理</a></li>
+    <li class="active">中奖规则</li>
+</ol>
+<div class="box-padding">
+	<form class="form-inline" action="">
+		<div class="form-group">
+			关键字
+			<input type="text" name="words" class="form-control" value="{$query.words}" placeholder="物品名">
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+		<div class="add-botton">
+			<a href="{:url('addAward')}" class="btn btn-info" role="button">添加规则</a>
+		</div>
+		
+	</form>
+</div>
+
+<div class="box-padding">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>规则</th>
+				<th>倍数</th>
+				<th>命中（‰）</th>
+				<th>状态</th>
+				<th>类型</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $list as $item}
+			<tr>
+				<td>{$item.id}</td>
+				<td>{$item.planList}</td>
+				<td>{$item.multiple}</td>
+				<td>{$item.sp}</td>
+				<td>
+					{eq name = "$item.status" value = "1"}
+					<span class="open">已启用</span><span class="split">|</span><a href="{:url('setAwardStatus',['value'=> 0,'id' => $item.id])}">禁用</a>
+					{else /}
+					<span class="stopUse">已禁用</span><span class="split">|</span><a href="{:url('setAwardStatus',['value'=> 1,'id' => $item.id])}">启用</a>
+					{/eq}
+				</td>
+				<td>
+					{eq name = "$item.type" value = "1"}
+					<span class="open">幸运奖</span>
+					{else /}
+					<span class="stopUse">普通奖</span>
+					{/eq}
+				</td>
+				<td>
+					<div class="btn-group" role="group" aria-label="...">
+						<a class="btn btn-info btn-xs" href="{:url('edit', ['id' => $item.id])}">修改</a>
+						<button class="btn btn-danger btn-xs remove" data-href="{:url('removeAward', ['id' => $item.id])}">删除</button>
+					</div>
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+	{$list->render()}
+</div>
+<script>
+	$('.remove').click(function() {
+		var href = $(this).data('href');
+
+		$.modal.confirm('你是否确定删除', ()=>{
+			location.href = href;
+		});
+	});
+	$(".addLucky").click(function(){
+		$(".addGoods").show();
+	})
+	$(".close_btn").click(function(){
+		$(".addGoods").hide();
+	})
+	$(".toPost").click(function(){
+		var goodsname = $("input[name = goodsname]").val();
+		$.post('{:url("addLucky")}',{goodsname : goodsname}, function(res){
+			$.modal.alert(res.msg)
+			if(!res.err){
+				location.reload()
+			}
+
+		})
+	})
+</script>
+{include file='admin@common/foot' /}

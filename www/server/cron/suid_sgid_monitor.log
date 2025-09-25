@@ -1,0 +1,28 @@
+[2025-09-24 11:49:22] 开始SUID/SGID权限监控检查
+[2025-09-24 11:49:22] 开始扫描新的SUID/SGID文件...
+[2025-09-24 11:49:22] 发现SUID文件: /usr/bin/passwd
+[2025-09-24 11:49:22] 发现SUID文件: /usr/bin/fusermount3
+[2025-09-24 11:49:22] 发现SUID文件: /usr/bin/at
+[2025-09-24 11:49:22] 发现SUID文件: /usr/bin/su
+[2025-09-24 11:49:22] 发现SUID文件: /usr/bin/sudo
+[2025-09-24 11:49:22] 发现SGID文件: /usr/bin/expiry
+[2025-09-24 11:49:22] 发现SGID文件: /usr/bin/ssh-agent
+[2025-09-24 11:49:22] 发现SGID文件: /usr/bin/crontab
+[2025-09-24 11:49:22] 发现SGID文件: /usr/bin/at
+[2025-09-24 11:49:22] 发现SGID文件: /usr/sbin/pam_extrausers_chkpwd
+[2025-09-24 11:49:22] 发现SGID文件: /usr/sbin/unix_chkpwd
+[2025-09-24 11:49:22] SUID/SGID权限监控检查完成
+[2025-09-25 02:00:01] 开始SUID/SGID权限监控检查
+[2025-09-25 02:00:01] 开始扫描新的SUID/SGID文件...
+[2025-09-25 02:00:01] 发现SUID文件: /usr/bin/passwd
+[2025-09-25 02:00:01] 发现SUID文件: /usr/bin/fusermount3
+[2025-09-25 02:00:01] 发现SUID文件: /usr/bin/at
+[2025-09-25 02:00:01] 发现SUID文件: /usr/bin/su
+[2025-09-25 02:00:01] 发现SUID文件: /usr/bin/sudo
+[2025-09-25 02:00:01] 发现SGID文件: /usr/bin/expiry
+[2025-09-25 02:00:01] 发现SGID文件: /usr/bin/ssh-agent
+[2025-09-25 02:00:01] 发现SGID文件: /usr/bin/crontab
+[2025-09-25 02:00:01] 发现SGID文件: /usr/bin/at
+[2025-09-25 02:00:01] 发现SGID文件: /usr/sbin/pam_extrausers_chkpwd
+[2025-09-25 02:00:01] 发现SGID文件: /usr/sbin/unix_chkpwd
+[2025-09-25 02:00:01] SUID/SGID权限监控检查完成

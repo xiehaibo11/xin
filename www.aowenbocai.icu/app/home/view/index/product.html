@@ -1,0 +1,95 @@
+{include file='home@common/head' title="产品介绍"/}
+<link rel="stylesheet" href="/static/css/swiper.min.css">
+<script src="__JS__/swiper.min.js"></script>
+
+<!--顶部主题图-->
+<div class="product-banner top-banner">
+    <div class="web_ banner-detail">
+        <div class="b_title animated fadeInUp wow">产品介绍</div>
+        <div class="b_info animated fadeInDown wow">我们为您提供最优的产品，最完善的解决方案和最全面的技术服务</div>
+    </div>
+</div>
+<!--顶部主题图 end-->
+<div class="web_ tc">
+    <div class="c-title animated fadeInUp wow">丰富的彩票游戏</div>
+    <div class="c-sub-title animated fadeInDown wow">可根据自己所需要在后台开启或关闭彩种,自定义配置彩种信息</div>
+    <!--开奖游戏列表-->
+    <div class="all-game game-list web_">
+        <ul>
+            {volist name="lotterryGame" id="v"}
+            <li class="fadeInUp animated wow bg-white" data-wow-duration="1s" style="border-radius: 6px">
+                <div class="image"><img class="normal" src="{$v.img}" alt="" width="279" height="150"></div>
+                <div class="info tl">
+                    <h4 class="f-large c-1 flex-box"><img class="fl" src="{$v.image}" alt="" width="26"><span style="padding-left: 10px">{$v.title}</span></h4>
+                    <p class="c-4 f-sm">{$v.remark}</p>
+                    <p class="c-4 f-sm">{$v.info}</p>
+                    <div class="tr btn-box">
+                        <a href="{:url('./news')}?title={$v.title}" target="_blank" class="btn-play"><i class="iconfont icon-gongnengjieshao"></i> 游戏介绍</a>
+                        <a onclick="urlLink('{$v.name}')" class="btn-play"><i class="iconfont icon-wanyouxi"></i> 去玩游戏</a>
+                    </div>
+                </div>
+                <!--<div class="info animated" style="display: none">-->
+                    <!--<p class="title c-2 cf">-->
+                        <!--<img class="fl" src="{$v.image}" alt="" width="36">-->
+                        <!--<span class="fl" style="padding-left: 8px;height: 36px;line-height: 36px;">{$v.title}</span>-->
+                        <!--<a style="bottom: 8px" onclick="urlLink('{$v.name}')" class="btn-play">去玩游戏 <i class="iconfont icon-youjiantou"></i></a>-->
+                    <!--</p>-->
+                <!--</div>-->
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+
+<!--休闲游戏-->
+<div class="web bg-white">
+    <div class="web_ tc">
+        <div class="c-title animated fadeInUp wow">好玩的休闲小游戏</div>
+        <div class="c-sub-title animated fadeInDown wow">丰富多彩、好玩的休闲小游戏，更多小游戏开发中...</div>
+    </div>
+
+    <div class="all-game game-list web_">
+        <ul>
+            {volist name="smallGame" id="v"}
+            <li class="fadeInUp animated wow" data-wow-duration="1s">
+                <div class="image"><img class="normal" src="{$v.img}" alt="" width="279" height="150"></div>
+                <div class="info tl">
+                    <h4 class="f-large c-1 flex-box"><img class="fl" src="{$v.image}" alt="" width="26"><span style="padding-left: 10px">{$v.title}</span></h4>
+                    <p class="c-4 f-sm">{$v.remark}</p>
+                    <p class="c-4 f-sm">{$v.info}</p>
+                    <div class="tr btn-box">
+                        <a href="{:url('./news')}?title={$v.title}" target="_blank" class="btn-play"><i class="iconfont icon-gongnengjieshao"></i> 游戏介绍</a>
+                        <a onclick="urlLink('{$v.name}')" class="btn-play"><i class="iconfont icon-wanyouxi"></i> 去玩游戏</a>
+                    </div>
+                </div>
+                <!--<div class="info animated" style="display: none">-->
+                    <!--<p class="title c-2 cf">-->
+                        <!--<img class="fl" src="{$v.image}" alt="" width="36">-->
+                        <!--<span class="fl" style="padding-left:8px;height: 36px;line-height: 36px;">{$v.title}</span>-->
+                        <!--<a style="bottom: 8px" href="/web/game?ext={$v.name}" target="_blank" class="btn-play">去玩游戏 <i class="iconfont icon-youjiantou"></i></a>-->
+                    <!--</p>-->
+                <!--</div>-->
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.nav-product').addClass('active')
+    $(function (){
+        //游戏列表
+        $(".all-game ul li").each(function(){
+            $(this).mouseenter(function(){
+                $(this).addClass('active')
+                $(this).children('.image').find('img').removeClass('normal')
+                $(this).children('.image').find('img').addClass('scale')
+            });
+            $(this).mouseleave(function(){
+                $(this).removeClass('active')
+                $(this).children('.image').find('img').removeClass('scale')
+                $(this).children('.image').find('img').addClass('normal')
+            });
+        });
+    });
+</script>
+{include file='home@common/foot' /}

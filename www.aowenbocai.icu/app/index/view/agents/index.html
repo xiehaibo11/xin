@@ -1,0 +1,123 @@
+{include file='common/head' /}
+<link rel="stylesheet" href="//at.alicdn.com/t/font_613146_hxet5uekdak.css">
+<style>
+    body {
+        padding:0;
+    }
+    .link_item i {
+        opacity: 0.4;
+        padding-right: 5px;
+    }
+</style>
+<nav class="top_nav navbar navbar-static-top flex-box">
+    <div class="p_left">
+        <button type="button" class="navbar-toggle show_nav" data-toggle="collapse" data-target="#left-nav"></button>
+        <a href="{:url('index')}">代理管理系统</a>
+    </div>
+    <div class="menu flex">
+        <div class="flex-box">
+            <div class="flex">
+                <div class="menu-item active" data-index="0">控制台</div>
+                <div class="menu-item" data-index="1">用户管理</div>
+                <div class="menu-item" data-index="2">佣金管理</div>
+                <div class="menu-item" data-index="3">额度管理</div>
+                <div class="menu-item" data-index="4">数据报表</div>
+            </div>
+            <div class="flex-box" style="align-items: center">
+                <div class="tooltip-top" data-toggle="tooltip" title="网站首页" data-placement="bottom">
+                    <a href="{:url('/../index')}" target="_blank"><i class="glyphicon glyphicon-home"></i></a>
+                </div>
+                <div class="flex-box" style='align-items: center;padding-right: 30px;height: 30px;line-height: 30px;padding-left: 10px'>
+                    <div class="dropdown">
+                        <span class="admin_info" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {$agent.nickname|default=$agent.username}
+                            <span class="caret"></span>
+                        </span>
+                        <ul class="dropdown-menu dropdown-menu-top" aria-labelledby="dropdownMenu1" style="min-width: 90px;">
+                            <li><a href="{:url('logout')}">退出登录</a></li>
+                        </ul>
+                    </div>
+                    <span><i class="icon_photo"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="main">
+    <div class="collapse navbar-collapse" id="left-nav">
+        <!-- 控制台菜单组 -->
+        <div class="menu-nav-group menu-nav-show" data-index="0">
+            <div data-url="{:url('main')}" class="link_item"><i class="glyphicon glyphicon-dashboard"></i> 控制台概览</div>
+            <div data-url="{:url('stats')}" class="link_item"><i class="glyphicon glyphicon-stats"></i> 数据统计</div>
+        </div>
+        
+        <!-- 用户管理菜单组 -->
+        <div class="menu-nav-group" data-index="1">
+            <div data-url="{:url('userList')}" class="link_item"><i class="glyphicon glyphicon-user"></i> 下级用户</div>
+            <div data-url="{:url('createAgent')}" class="link_item"><i class="glyphicon glyphicon-plus"></i> 开通代理</div>
+            <div data-url="{:url('userManage')}" class="link_item"><i class="glyphicon glyphicon-cog"></i> 用户管理</div>
+        </div>
+        
+        <!-- 佣金管理菜单组 -->
+        <div class="menu-nav-group" data-index="2">
+            <div data-url="{:url('brokerageList')}" class="link_item"><i class="glyphicon glyphicon-usd"></i> 佣金记录</div>
+            <div data-url="{:url('brokerageStats')}" class="link_item"><i class="glyphicon glyphicon-signal"></i> 佣金统计</div>
+            <div data-url="{:url('brokerageSettings')}" class="link_item"><i class="glyphicon glyphicon-wrench"></i> 佣金设置</div>
+        </div>
+        
+        <!-- 额度管理菜单组 -->
+        <div class="menu-nav-group" data-index="3">
+            <div data-url="{:url('quotaList')}" class="link_item"><i class="glyphicon glyphicon-credit-card"></i> 额度列表</div>
+            <div data-url="{:url('quotaAdjust')}" class="link_item"><i class="glyphicon glyphicon-transfer"></i> 额度调整</div>
+            <div data-url="{:url('quotaHistory')}" class="link_item"><i class="glyphicon glyphicon-list-alt"></i> 额度记录</div>
+        </div>
+        
+        <!-- 数据报表菜单组 -->
+        <div class="menu-nav-group" data-index="4">
+            <div data-url="{:url('reportOverview')}" class="link_item"><i class="glyphicon glyphicon-th-large"></i> 数据概览</div>
+            <div data-url="{:url('reportIncome')}" class="link_item"><i class="glyphicon glyphicon-piggy-bank"></i> 收益分析</div>
+            <div data-url="{:url('reportTeam')}" class="link_item"><i class="glyphicon glyphicon-users"></i> 团队报表</div>
+        </div>
+    </div>
+    <div class="iframe_main">
+        <iframe src="{:url('main')}" frameborder="0" id="iframe"></iframe>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $("[data-toggle='tooltip']").tooltip();
+        
+        // 菜单切换功能
+        $('.menu-item').click(function(){
+            var index = $(this).data('index');
+            $('.menu-item').removeClass('active');
+            $(this).addClass('active');
+            
+            $('.menu-nav-group').removeClass('menu-nav-show');
+            $('.menu-nav-group[data-index="' + index + '"]').addClass('menu-nav-show');
+            
+            // 自动点击第一个菜单项
+            var firstLink = $('.menu-nav-group[data-index="' + index + '"] .link_item').first();
+            if(firstLink.length > 0) {
+                firstLink.click();
+            }
+        });
+        
+        // 左侧菜单点击功能
+        $('.link_item').click(function(){
+            var url = $(this).data('url');
+            if(url) {
+                $('#iframe').attr('src', url);
+                $('.link_item').removeClass('link_active');
+                $(this).addClass('link_active');
+            }
+        });
+        
+        // 默认激活第一个菜单项
+        $('.menu-nav-group.menu-nav-show .link_item').first().addClass('link_active');
+    });
+</script>
+
+{include file='common/foot' /}

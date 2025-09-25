@@ -1,0 +1,256 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div id="app" v-cloak class="loading" v-loading="loading">
+    <el-card class="box-card" v-if="!loading">
+        <div slot="header" class="clearfix">
+            <span class="title">安全中心</span>
+        </div>
+        <safe-center :lock-info = 'lockInfo'></safe-center>
+    </el-card>
+</div>
+
+<!--安全中心列表-->
+<template id="safeCenter">
+    <div class="safe-center">
+        <ul class="mb-ul">
+            <li v-if="Number({$company['bind_idcard']})">
+                <el-row :gutter="0">
+                    <el-col :span="3" class="tc">
+                        <i class="iconfont icon-shimingrenzheng" :class="{'red': {$isCard}==1}"></i>
+                    </el-col>
+                    <el-col :span="14">
+                        <p class="title">实名制管理</p>
+                        <p class="desc" v-if="{$isCard}">姓名:{$idname} 居民身份证:{$idnum}</p>
+                        <p class="desc" v-else>未认证</p>
+                        <p class="sub-desc" style="color: #ff6c08;">实名信息是领取大奖的重要核对依据，请填写真实信息，填写后不可修改！</p>
+                    </el-col>
+                    <el-col :span="5" :offset="2" class="tr">
+                        <a href="{:url('idCard')}" v-if="!{$isCard}"><el-button size="small">立即认证</el-button></a>
+                        <a href="{:url('idCard')}" v-else><el-button size="small" type="primary">已认证</el-button></a>
+                    </el-col>
+                </el-row>
+            </li>
+            <li>
+                <el-row :gutter="0">
+                    <el-col :span="3" class="tc">
+                        <i class="iconfont icon-shouji" :class="{'red': lockInfo.tel!==1}"></i>
+                    </el-col>
+                    <el-col :span="14">
+                        <p class="title">手机管理</p>
+                        <p class="desc" v-if="lockInfo.tel!==1">已绑定：{{lockInfo.tel}}</p>
+                        <p class="desc" v-else>未绑定</p>
+                        <p class="sub-desc">绑定手机，提高帐号安全状态</p>
+                    </el-col>
+                    <el-col :span="5" :offset="2" class="tr">
+                        <el-button size="small" type="primary" @click.native="setTel" v-if="lockInfo.tel!==1">修 改</el-button>
+                        <el-button size="small" @click.native="setTel" v-else>绑 定</el-button>
+                    </el-col>
+                </el-row>
+            </li>
+            <li>
+                <el-row :gutter="0">
+                    <el-col :span="3" class="tc">
+                        <i class="iconfont icon-ceoyouxiangmb" :class="{'red': lockInfo.email!==1}"></i>
+                    </el-col>
+                    <el-col :span="14">
+                        <p class="title">绑定邮箱</p>
+                        <p class="desc" v-if="lockInfo.email!==1">已绑定：{{lockInfo.email}}</p>
+                        <p class="desc" v-else>未绑定</p>
+                        <p class="sub-desc">绑定邮箱，提高帐号安全状态</p>
+                    </el-col>
+                    <el-col :span="5" :offset="2" class="tr">
+                        <a href="{:url('setEmail')}" target="_blank">
+                            <el-button size="small" type="primary" v-if="lockInfo.email!==1">修 改</el-button>
+                            <el-button size="small" v-else>绑 定</el-button>
+                        </a>
+                    </el-col>
+                </el-row>
+            </li>
+            <li>
+                <el-row :gutter="0">
+                    <el-col :span="3" class="tc">
+                        <i class="iconfont icon-denglu_mima" :class="{'red': lockInfo.username!==1}"></i>
+                    </el-col>
+                    <el-col :span="14">
+                        <p class="title">登录密码</p>
+                        <p class="desc" v-if="lockInfo.username!==1">已绑定用户名：{{lockInfo.username}}</p>
+                        <p class="desc" v-else>未设置</p>
+                        <p class="sub-desc">可以使用用户名+密码进行登录</p>
+                    </el-col>
+                    <el-col :span="5" :offset="2" class="tr">
+                        <el-button size="small" type="primary" @click.native="setPwd" v-if="lockInfo.username!==1">修 改</el-button>
+                        <el-button size="small" @click.native="setPwd" v-else>绑 定</el-button>
+                    </el-col>
+                </el-row>
+            </li>
+            <li>
+                <el-row :gutter="0">
+                    <el-col :span="3" class="tc">
+                        <i class="iconfont icon-iconfontanquan" :class="{'red': lockInfo.safe_pwd!==1}"></i>
+                    </el-col>
+                    <el-col :span="14">
+                        <p class="title">安全密码</p>
+                        <p class="desc" v-if="lockInfo.safe_pwd!==1">已设置安全密码</p>
+                        <p class="desc" v-else>未设置</p>
+                        <p class="sub-desc">可以兑换时进行安全验证</p>
+                    </el-col>
+                    <el-col :span="5" :offset="2" class="tr">
+                        <el-button size="small" type="primary" @click.native="setSafePwd" v-if="lockInfo.safe_pwd!==1">修 改</el-button>
+                        <el-button size="small" @click.native="setSafePwd" v-else>设 置</el-button>
+                    </el-col>
+                </el-row>
+            </li>
+            <li v-if="{$data.qq_checked} == 1">
+                <el-row :gutter="0">
+                    <el-col :span="3" class="tc">
+                        <i class="iconfont icon-qq" :class="{'red': lockInfo.qq!==1}"></i>
+                    </el-col>
+                    <el-col :span="14">
+                        <p class="title">绑定QQ</p>
+                        <p class="desc" v-if="lockInfo.qq!==1">已绑定</p>
+                        <p class="desc" v-else>未绑定</p>
+                        <p class="sub-desc">绑定QQ，提高帐号安全状态</p>
+                    </el-col>
+                    <el-col :span="5" :offset="2" class="tr">
+                        <a v-if="lockInfo.qq!==1"><el-button size="small" type="primary" @click.native="unlockQW(1)">解绑</el-button></a>
+                        <a v-else href="/web/User/lockQQ" target="_blank"><el-button size="small">绑 定</el-button></a>
+                    </el-col>
+                </el-row>
+            </li>
+            <li  v-if="{$data.wxsm_checked} == 1">
+                <el-row :gutter="0">
+                    <el-col :span="3" class="tc">
+                        <i class="iconfont icon-weixin" :class="{'red': lockInfo.wei!==1}"></i>
+                    </el-col>
+                    <el-col :span="14">
+                        <p class="title">绑定微信</p>
+                        <p class="desc" v-if="lockInfo.wei!==1">已绑定</p>
+                        <p class="desc" v-else>未绑定</p>
+                        <p class="sub-desc">绑定微信，提高帐号安全状态</p>
+                    </el-col>
+                    <el-col :span="5" :offset="2" class="tr">
+                        <el-button v-if="lockInfo.wei!==1" size="small" type="primary" @click.native="unlockQW(2)">解 绑</el-button>
+                        <el-button v-else size="small" @click="lockWei">绑 定</el-button></a>
+                    </el-col>
+                </el-row>
+                <div v-show="weiDialogVisible">
+                    <div class="tc">
+                        <div class="lockwei-box bg">
+                            <div id="login_container"></div>
+                            <div class="title">微信绑定</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</template>
+{include file='web@common/end'/}
+<style>
+    #login_container iframe{height: 420px;}
+    .lockwei-box{position: relative;padding: 20px 0;}
+    .lockwei-box .title{text-align: center;font-size: 20px;position: absolute;top: 25px;left: 0;width: 100%;background-color: #f4f4f4;}
+</style>
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+<script>
+    'use strict';
+
+    $(function () {
+        //安全中心列表
+        Vue.component('safe-center', {
+            template: '#safeCenter',
+            props: ['lockInfo'],
+            data: function () {
+                return {
+                    weiImg: '/index/User/setQrcode?type=1',
+                    weiDialogVisible: false
+                };
+            },
+
+            methods: {
+                //绑定手机
+                setTel: function () {
+                    window.open('{:url("setTel")}');
+                },
+                //登录密码管理
+                setPwd: function () {
+                    window.open('{:url("setPwd")}');
+                },
+                //安全密码管理
+                setSafePwd:function () {
+                    window.open('{:url("setSafePwd")}');
+                },
+                //绑定微信
+                lockWei: function () {
+                    this.weiDialogVisible = true;
+                    new WxLogin({
+                        self_redirect: false,
+                        id: "login_container",
+                        appid: "{$data['weiopenappid']}",
+                        scope: "snsapi_login",
+                        redirect_uri: '{$data["weiopenurl"]}',
+                        state: '{$data["state"]}',
+                        style: 'black'
+                    });
+                },
+                //解绑微信、QQ
+                unlockQW: function (way) {
+                    var _this = this;
+
+                    var words;
+                    if (way == 1) {
+                        words = 'QQ';
+                    }
+                    if (way == 2) {
+                        words = '微信';
+                    }
+                    this.$confirm('此操作将解除已绑定' + words + ', 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                    }).then(function () {
+                        $.post('{:url("unlockQW")}', {
+                            way: way
+                        }, function (res) {
+                            if (!res.err) {
+                                _this.$message({
+                                    message: '解绑成功',
+                                    type: 'success'
+                                });
+                                setTimeout(function () {
+                                    window.location.href = '{:url("safe")}';
+                                    _this.loading = false;
+                                }, 1000);
+                            } else {
+                                _this.$message({
+                                    message: res.msg,
+                                    type: 'error'
+                                });
+                            }
+                        });
+                    }).catch(function () {});
+                }
+            }
+
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                tabs: 'first',
+                loading: true,
+                lockInfo: {}
+            },
+            created: function () {
+                var _this2 = this;
+
+                $.get('/index/user/lockInfo', function (res) {
+                    _this2.$set(_this2, 'lockInfo', res.data);
+                    _this2.loading = false;
+                });
+            }
+        });
+    });
+</script>

@@ -1,0 +1,63 @@
+{include file='admin@common/head' /}
+<style media="screen">
+    .form{
+      margin:20px;
+      width: 500px;
+    }
+    .btn-group{margin-left: 10px;width: 120px;height: 30px;line-height: 30px;border-radius: 2px;}
+    .dropdown-toggle, .dropdown-menu{min-width: 122px  !important;}
+</style>
+
+<nav class="plugin_nav">
+  <a class="nav_active" href="{:url('index')}">汽车列表</a>
+  <a class="" href="{:url('changeSp')}">概率设置</a>
+  <a href="{:url('getOpenList')}">开奖记录</a>
+</nav>
+<div class="box-padding">
+  <div class="breadcrumb">
+    <ol class="">
+      <li class="active"><i class="glyphicon glyphicon-link"></i> 汽车列表</li>
+      <li class="active">汽车设置</li>
+    </ol>
+  </div>
+<div class="form-horizontal form_max">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">中奖规则</label>
+    <div class="col-sm-3">
+    <input type="text" class="form-control" disabled value="{$data.name}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">中奖标识</label>
+    <div class="col-sm-3">
+    <input type="text" class="form-control" disabled value="{$data.sign}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="exampleInputPassword1">奖金倍数</label>
+    <div class="col-sm-3">
+      <input name="multiple" type="text" class="form-control" value="{$data.multiple}" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-8">
+      <button class="btn btn-primary btn_save">提交</button>
+    </div>
+  </div>
+</div>
+<script>
+  var id = "{$data.id}";
+$(".toPost").click(function(){
+  var multiple = $("input[name=multiple]").val();
+  var relust = multiple;
+  if(!relust){
+    $.modal.alert('请认真填写信息');
+    return false;
+  }
+  $.post('{:url()}',{multiple: multiple,id: id},function(res){
+    $.modal.alert(res.msg)
+  })
+})
+</script>
+{include file='admin@common/foot' /}

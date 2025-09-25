@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="BetItemSkin" width="620" height="150" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group id="soldier" width="220" height="30" left="25" top="30">
+		<e:Label id="betting" text="矛兵" x="4" y="-6" height="30" scaleX="1" scaleY="1" verticalAlign="middle" textColor="0x4a2d15" bold="true"/>
+		<e:Label text="VS" x="87" y="-5" scaleX="1" scaleY="1" size="20" textColor="0x4a2d15" bold="true" italic="true"/>
+		<e:Label id="enemy_betting" text="矛兵" x="138" y="-5" height="30" scaleX="1" scaleY="1" textColor="0x4a2d15" bold="true"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" gap="6"/>
+		</e:layout>
+	</e:Group>
+    <e:Group id="line" width="620" height="3" bottom="0" horizontalCenter="0" locked="true">
+		<e:Rect width="20" height="3" fillColor="0x808080" x="50" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="80" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="110" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="140" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="170" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="200" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="230" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="260" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="290" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="320" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="350" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="380" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="410" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="440" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="470" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="500" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" x="530" verticalCenter="0"/>
+		<e:Rect width="20" height="3" fillColor="0x808080" verticalCenter="0" x="560"/>
+	</e:Group>
+	<e:Label id="result" text="胜+290金豆" width="300" top="30" right="30" textAlign="right" textColor="0x4a2d15"/>
+	<e:Label id="create_time" text="2018-02-08 17:35:17" width="300" bottom="20" left="55" textColor="0x4f4747"/>
+	<e:Label id="money" text="投注200金豆" width="200" textAlign="right" bottom="20" right="30" textColor="0x4f4747"/>
+</e:Skin>

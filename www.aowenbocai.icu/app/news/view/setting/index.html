@@ -1,0 +1,18 @@
+{include file='admin@common/head' /}
+<style>
+    form {
+        max-width: 800px;
+    }
+</style>
+<ol class="breadcrumb">
+  <li><a href='{:url("@admin/user/")}'>扩展管理{$loginName}</a></li>
+  <li class="active">设置</li>
+</ol>
+<form>
+  <div class="form-group">
+    <label for="exampleInputEmail1">列表显示条数</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+  </div>
+  <button type="submit" class="btn btn-default">保存设置</button>
+</form>
+{include file='admin@common/foot' /}

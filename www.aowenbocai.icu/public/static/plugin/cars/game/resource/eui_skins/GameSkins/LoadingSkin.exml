@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="LoadingSkin" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*">
+	<w:Declarations>
+		<tween:TweenGroup id="load">
+			<tween:TweenItem target="{light1}">
+				<tween:Set/>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object scaleX="{3}" scaleY="{3}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+			<tween:TweenItem target="{light2}">
+				<tween:Set/>
+				<tween:To duration="1000">
+					<tween:props>
+						<e:Object scaleX="{3}" scaleY="{3}"/>
+					</tween:props>
+				</tween:To>
+				<tween:To duration="500">
+					<tween:props>
+						<e:Object alpha="{0}"/>
+					</tween:props>
+				</tween:To>
+			</tween:TweenItem>
+		</tween:TweenGroup>
+	</w:Declarations>
+	<e:Image source="start_ani (1)_json.start_ani (1)4" left="0" right="0" top="0" bottom="0"/>
+	<e:Image source="start_ani (1)_json.start_ani (1)1" horizontalCenter="0" verticalCenter="0" scaleX="2" scaleY="2"/>
+	<e:Image source="start_ani (1)_json.start_ani (1)9" left="96" top="83"/>
+	<e:Label id="loading" text="正在加载中。。。0%" horizontalCenter="0" bottom="80"/>
+	<e:Image id="light1" source="start_ani (1)_json.start_ani (1)13" horizontalCenter="-400" verticalCenter="0"/>
+	<e:Image id="light2" source="start_ani (1)_json.start_ani (1)14" horizontalCenter="400" verticalCenter="0"/>
+</e:Skin>

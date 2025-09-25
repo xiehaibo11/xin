@@ -1,0 +1,331 @@
+{include file='web@common/link' title="实名认证"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+
+<div id="app" v-cloak>
+    <el-card class="box-card id-card">
+        <div slot="header" class="clearfix">
+            <span class="title">实名认证</span>
+        </div>
+        <template v-if="isCard">
+            <id-card-info :name="idname" :num="idnum"></id-card-info>
+        </template>
+       <template v-else>
+           <id-card @bind-success="bindSuccess"></id-card>
+       </template>
+    </el-card>
+</div>
+
+<!--实名认证 ** 已认证-->
+<template id="idCardInfo">
+    <div>
+        <h4>您的账号 已完成实名注册</h4>
+        <div class="title">您的认证信息如下：</div>
+        <div class="info">
+            <div class="tips">如需重新认证，请联系客服！</div>
+            <p><span class="n_left tr">真实姓名：</span> <span>{{name}}</span></p>
+            <p><span class="n_left tr">居民身份证：</span> <span>{{num}}</span></p>
+        </div>
+    </div>
+</template>
+
+<!--实名认证 ** 未认证-->
+<template id="idCard">
+    <div>
+        <h4>您还未进行实名认证</h4>
+        <div class="tips" style="margin: 0 0 30px 0">
+           <i class="el-icon-info"></i> 实名信息是领取大奖的重要核对依据，请填写真实信息，填写后不可修改！{$isName}
+        </div>
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="ruleForm form login">
+            <el-form-item label="真实姓名" v-if="isName">
+                <el-input v-model="idname" placeholder="请输入真实姓名" disabled></el-input>
+            </el-form-item>
+            <el-form-item prop="name" label="真实姓名" v-else>
+                <el-input v-model="ruleForm.name" placeholder="请输入真实姓名"></el-input>
+            </el-form-item>
+            <el-form-item prop="num"  label="居民身份证">
+                <el-input v-model="ruleForm.num" placeholder="请输入正确的居民身份证 "></el-input>
+            </el-form-item>
+            <!--选择验证方式-->
+            <el-form-item v-if="chose"  label="验证方式选择：">
+                <div class="flex-box bg" style="padding: 5px 0 5px 10px;border: 1px solid #dcdfe6;border-radius: 4px;">
+                    <a v-if="isYzm" class="chose flex" @click="checkTel"><el-button type="success" size="mini" icon="el-icon-mobile-phone" circle ></el-button> 验证已绑定手机</a>
+                    <a v-if="isEmail" class="chose flex" @click="checkEmail"><el-button type="warning" size="mini" icon="el-icon-message" circle></el-button> 验证已绑定邮箱</a>
+                </div>
+            </el-form-item>
+            <template v-if="changeWay == 1">
+                <div class="tr yz-way"><a class="link" @click="choseBack">更改验证方式</a></div>
+                <el-form-item prop="tel"  label="已绑定手机：">
+                    <el-input v-model="ruleForm.showTel" type="tel" placeholder="已绑定手机" disabled></el-input>
+                </el-form-item>
+                <el-form-item prop="yzm"  label="验证码" :error="telErr">
+                    <el-input v-model="ruleForm.yzm" type="tel" class="yzm" placeholder="请输入验证码" @focus="telErr=''"></el-input>
+                    <el-button type="primary" class="btn-yzm" plain @click.native="sendSms" v-if="smsState">{{text}}</el-button>
+                    <el-button type="info" class="btn-yzm" plain disabled v-else>{{text}}</el-button>
+                </el-form-item>
+            </template>
+            <template v-if="changeWay == 2">
+                <div class="tr yz-way"><a class="link" @click="choseBack">更改验证方式</a></div>
+                <el-form-item  prop="email" label="已绑定邮箱">
+                    <el-input v-model="ruleForm.email" type="text" placeholder="请已绑定邮箱" disabled></el-input>
+                </el-form-item>
+                <el-form-item prop="yzmEmail"  label="验证码" :error="emailErr">
+                    <el-input v-model="ruleForm.yzmEmail" type="tel" class="yzm" placeholder="请输入验证码"  @focus="emailErr=''" ></el-input>
+                    <el-button type="primary" plain @click.native="sendEmail" class="btn-yzm" v-if="smsState2" :loading="loadingEmail">{{text2}}</el-button>
+                    <el-button type="info" class="btn-yzm" plain disabled v-else>{{text2}}</el-button>
+                </el-form-item>
+            </template>
+            <el-form-item>
+                <el-button  type="danger" @click="submitForm('ruleForm')">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+{include file='web@common/end'/}
+<script>
+    'use strict';
+
+    $(function () {
+        //实名认证 **已认证
+        Vue.component('id-card-info', {
+            template: '#idCardInfo',
+            props: ['name', 'num'],
+            data: function () {
+                return {};
+            }
+        });
+
+        //实名认证 ** 未认证
+        Vue.component('id-card', {
+            template: '#idCard',
+            data: function () {
+                return {
+                    telErr: '',
+                    emailErr: '',
+                    chose: parseInt('{$data.tel.isOpen}') || parseInt('{$data.email.isOpen}') ? true : false,
+                    changeWay: 0, //验证方式选择 1 手机 2邮箱
+                    isYzm: parseInt('{$data.tel.isOpen}'), //是否开启短信接口
+                    isEmail: parseInt('{$data.email.isOpen}'), //是否开启邮箱验证
+                    loading: false,
+                    loadingEmail: false,
+                    isName:{$isName},
+                    idname:'{$idname}',
+                    ruleForm: {
+                        name: '',
+                        num: '',
+                        showTel: '{$data.tel.number}',
+                        email: '{$data.email.number}',
+                        yzm: '',
+                        yzmEmail: ''
+                    },
+                    rules: {
+                        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+                        num: [{ required: true, message: '身份证号码不能为空', trigger: 'blur' }, { pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|[X|x])$/, message: '格式有误，身份证为15位或18位数字和字母', trigger: 'blur' }],
+                        yzm: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                        yzmEmail: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+                    },
+                    text: '获取验证码',
+                    smsState: true,
+                    countDown: 120,
+                    text2: '获取验证码',
+                    countDown2: 120,
+                    smsState2: true
+                };
+            },
+
+            methods: {
+                //发送手机验证码
+                sendSms: function () {
+                    var _this2 = this;
+
+                    if (this.countDown != 120) return false;
+                    $.get('{:url("sendTrueMsg")}', function (res) {
+                        if (!res.err) {
+                            _this2.smsState = false;
+                            _this2.text = "已发送(" + _this2.countDown + "秒)";
+                            var interval = setInterval(function () {
+                                _this2.countDown = _this2.countDown - 1;
+                                if (_this2.countDown == 0) {
+                                    _this2.text = '获取验证码';
+                                    _this2.countDown = 120;
+                                    clearInterval(interval);
+                                    _this2.smsState = true;
+                                    return;
+                                }
+                                _this2.text = "已发送(" + _this2.countDown + "秒)";
+                            }, 1000);
+                        } else {
+                            _this2.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+                },
+
+                //发送邮箱验证码
+                sendEmail: function () {
+                    var _this3 = this;
+
+                    this.loadingEmail = true;
+                    if (this.countDown2 != 120) return false;
+                    $.get('{:url("sendIdCardEmail")}', function (res) {
+                        if (!res.err) {
+                            _this3.smsState2 = false;
+                            _this3.text2 = "已发送(" + _this3.countDown2 + "秒)";
+                            _this3.loadingEmail = false;
+                            var interval = setInterval(function () {
+                                _this3.countDown2 = _this3.countDown2 - 1;
+                                if (_this3.countDown2 == 0) {
+                                    _this3.text2 = '获取验证码';
+                                    _this3.countDown2 = 120;
+                                    clearInterval(interval);
+                                    _this3.smsState2 = true;
+                                    return;
+                                }
+                                _this3.text2 = "已发送(" + _this3.countDown2 + "秒)";
+                            }, 1000);
+                        } else {
+                            _this3.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: 'error'
+                            });
+                            _this3.loadingEmail = false;
+                        }
+                    });
+                },
+
+                //选择验证方式
+                choseBack: function () {
+                    this.changeWay = 0;
+                    this.chose = true;
+                },
+
+                //验证是否绑定手机
+                checkTel: function checkTel() {
+                    if (!parseInt('{$data.tel.islock}')) {
+                        this.$confirm('您还未绑定手机！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setTel")}');
+                        }).catch(function () {});
+                    } else {
+                        this.chose = false;
+                        this.changeWay = 1;
+                    }
+                },
+
+                //验证是否绑定邮箱
+                checkEmail: function () {
+                    if (!parseInt('{$data.email.islock}')) {
+                        this.$confirm('您还未绑定邮箱！', '提示', {
+                            confirmButtonText: '立即去绑定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                            lockScroll: false
+                        }).then(function () {
+                            window.open('{:url("setEmail")}');
+                        }).catch(function () {});
+                    } else {
+                        this.chose = false;
+                        this.changeWay = 2;
+                    }
+                },
+                submitForm: function (formName) {
+                    var _this4 = this;
+
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            var yzm, changeWay;
+                            if (_this4.isYzm || _this4.isEmail) {
+                                if (_this4.changeWay == 0) {
+                                    _this4.$alert('请选择1种验证方式', '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'warning',
+                                        center: true,
+                                        lockScroll: false,
+                                        showClose: false
+                                    });
+                                    return;
+                                } else if (_this4.changeWay == 1) {
+                                    if (!_this4.ruleForm.yzm) {
+                                        _this4.telErr = '请输入验证码';
+                                        return false;
+                                    }
+                                    changeWay = 1; //短信验证
+                                    yzm = _this4.ruleForm.yzm;
+                                } else if (_this4.changeWay == 2) {
+                                    if (!_this4.ruleForm.yzmEmail) {
+                                        _this4.emailErr = '请输入验证码';
+                                        return false;
+                                    }
+                                    changeWay = 2; //邮箱验证
+                                    yzm = _this4.ruleForm.yzmEmail;
+                                }
+                            }
+                            var data = {
+                                changeWay: changeWay,
+                                yzm: yzm,
+                                idnum: _this4.ruleForm.num
+                            }
+                            if(!_this4.isName){
+                                data['idname'] = _this4.ruleForm.name
+                            }
+                            $.post('{:url("trueName")}', data, function (res) {
+                                if (!res.err) {
+                                    _this4.$alert( res.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        center: true,
+                                        callback: function(){
+                                          _this4.$emit('bind-success');
+                                        }
+                                    });
+                                    return;
+                                }
+                                _this4.$alert( res.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type: 'warning',
+                                    center: true
+                                });
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                isCard: {$isCard }, //实名认证状态
+                idname: '{$idname}', //姓名
+                idnum: '{$idnum}' //身份证
+            },
+            methods: {
+                bindSuccess: function() {
+                    if (window != top){
+                        top.location.href = '/web/user/my?ac=0-2';
+                        return;
+                    }
+                    window.location.href = '/web/user/my?ac=0-2';
+//                    var _this = this;
+//                    $.get('{:url("getTrueInfo")}', function (res) {
+//                        if (!res.err) {
+//                            _this.idname = res.data.idname;
+//                            _this.idnum = res.data.idnum;
+//                        }
+//                    });
+//                    _this.isCard = 1;
+                }
+            }
+        });
+    });
+</script>

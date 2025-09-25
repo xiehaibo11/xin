@@ -1,0 +1,4 @@
+[2025-09-24 11:56:32] ALERT: 在sudoers.d目录中发现活跃的NOPASSWD配置: /etc/sudoers.d/90-cloud-init-users:# SECURITY: NOPASSWD removed for security hardening - $(date)
+/etc/sudoers.d/90-cloud-init-users:# Original: root ALL=(ALL) NOPASSWD:ALL
+/etc/sudoers.d/90-cloud-init-users:# root ALL=(ALL) NOPASSWD:ALL
+[2025-09-24 11:57:23] ALERT: 在sudoers.d目录中发现活跃的NOPASSWD配置: /etc/sudoers.d/90-cloud-init-users:# root ALL=(ALL) NOPASSWD:ALL

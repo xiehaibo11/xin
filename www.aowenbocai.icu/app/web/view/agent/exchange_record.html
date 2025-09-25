@@ -1,0 +1,156 @@
+{include file='web@common/link'/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/user.css">
+<script src="/static/vipweb/vue-component/page-nation.js"></script>
+<style>
+    body{
+        overflow-y: auto;
+    }
+    .el-input{
+        width: auto;
+    }
+    .el-input__inner{
+        margin-right: 3px;
+    }
+    .options .el-input__inner{
+        width: 170px;
+    }
+</style>
+<div id="app" v-cloak>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span class="title">兑换明细 <em class="org" v-if="{$userid} == {$user.id}">（我的会员）</em><em class="org" v-else>（{$userinfo['nickname']}的会员）</em></span>
+        </div>
+        <el-radio-group v-model="label" size="small">
+            <el-radio-button @click.native="link('{:url('billRecord')}')" label="账户明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('rechargeRecord')}')" label="充值明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('exchangeRecord')}')" label="兑换明细"></el-radio-button>
+            <el-radio-button @click.native="link('{:url('transformRecord')}')" label="转账明细" v-if="{$company['game_status']}"></el-radio-button>
+        </el-radio-group>
+        <coin-detail></coin-detail>
+    </el-card>
+</div>
+<!--虚拟货币明细-->
+<template id="coinDetail">
+    <div>
+        <div class="options">
+            时间：
+            <el-radio-group v-model="time" size="mini" @change="handleTime">
+                <el-radio-button label="1">今天</el-radio-button>
+                <el-radio-button label="2">昨天</el-radio-button>
+                <el-radio-button label="3">本月</el-radio-button>
+                <el-radio-button label="4">上月</el-radio-button>
+            </el-radio-group>
+            <el-date-picker v-model="value"  style="width:270px"
+                            type="daterange"
+                            size="mini"
+                            format="yyyy 年 MM 月 dd 日"
+                            value-format="yyyy-MM-dd"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions0">
+            </el-date-picker>
+            <div class="flex tr">
+                <div class="flex-box" style="justify-content: flex-end">
+                    <el-input v-model="nameSearch" type="text" size="mini" placeholder="账号/昵称查询"></el-input>
+                    <el-button plain size="mini" type="info" @click.native="doSearch">搜索</el-button>
+                </div>
+            </div>
+        </div>
+        <page-nation :url="url" @game-record="sortC">
+            <el-table-column property="nickname" label="会员账号" width="180"></el-table-column>
+            <!--<el-table-column property="id" label="ID" width="90" sortable="custom"></el-table-column>-->
+            <el-table-column property="time" label="兑换时间" width="200" sortable="custom">
+                <template slot-scope="scope">{{scope.row.create_time}}</template>
+            </el-table-column>
+            <el-table-column property="name" label="兑换内容"></el-table-column>
+            <el-table-column property="num" label="兑换数量"  width="100"></el-table-column>
+            <el-table-column property="money" label="消耗{$company['lottery_unit']}" width="180" sortable="custom"></el-table-column>
+            <el-table-column property="status" label="状态" width="100">
+                <template slot-scope="scope">
+                    <em v-html="scope.row.status"></em>
+                </template>
+            </el-table-column>
+        </page-nation>
+    </div>
+</template>
+
+{include file='web@common/end'/}
+<script>
+    $(function () {
+        //虚拟货币明细
+        Vue.component('coin-detail', {
+            template: '#coinDetail',
+            data: function() {
+                return {
+                    intUrl: '{:url("details/exchangeList")}'+ '?userid=' + {$userid},
+                    time: '1', //快捷时间值
+                    timeTemp: '',
+                    value: '', //自定义时间值
+                    name: '', //备注
+                    nameSearch:'',
+                    idWords: '',
+                    remarkWords: '',
+                    sort: '', //排序
+
+                    //设置选择今天之前的日期
+                    pickerOptions0: {
+                        disabledDate: function disabledDate(time) {
+                            return time.getTime() > Date.now();
+                        }
+                    }
+                };
+            },
+            watch:{
+                value:function (val) {
+                    if(val){
+                        this.time = ''
+                    }
+                }
+            },
+            computed: {
+                url: function() {
+                    var sort,name,time;
+                    sort = this.sort.length ? this.sort : '';
+                    name = this.name.length ? '&name=' + this.name : '';
+                    time = this.value.length ? '&starttime=' + this.value[0] + '&endtime=' + this.value[1] :  '&time=' + this.time
+                    return this.intUrl + time  + sort + name;
+                }
+            },
+            methods: {
+                handleTime(){
+                    //自定义时间切换为快捷时间选择
+                    this.value = '';
+                },
+                sortC: function(val) {
+                    if (val.prop == null) {
+                        this.sort = '';
+                    } else {
+                        var s;
+                        if (val.order == 'descending') {
+                            s = 1; //降序
+                        } else {
+                            s = 0; //升序
+                        }
+                        this.sort = '&type=' + val.prop + '&sort=' + s;
+                    }
+                },
+                //搜索
+                doSearch: function() {
+                    this.name = this.nameSearch;
+                }
+            }
+        });
+
+        new Vue({
+            el: "#app",
+            data: {
+                label: "兑换明细"
+            },
+            methods: {
+                link: function(url) {
+                    window.location.href = url + '?userid=' + {$userid};
+                }
+            }
+        });
+    });
+</script>

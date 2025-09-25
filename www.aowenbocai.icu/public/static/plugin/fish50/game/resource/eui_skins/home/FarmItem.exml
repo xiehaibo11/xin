@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="FarmItemSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" height="413">
+	<e:Image id="my_pic" source="farm_1_png" bottom="0" horizontalCenter="0"/>
+	<e:Label id="multiple" text="200-1000" anchorOffsetX="0" width="153" verticalAlign="middle" textAlign="center" size="20" height="30" bold="true" stroke="2" strokeColor="0x063de2" bottom="74" horizontalCenter="0"/>
+</e:Skin>

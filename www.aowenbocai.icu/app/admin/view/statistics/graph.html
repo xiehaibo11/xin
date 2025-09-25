@@ -1,0 +1,206 @@
+{include file='common/head' /}
+<script src="/static/admin/echarts.min.js"></script>
+<style>
+    .box-padding-bottom{margin-left: 1rem; color:rgb(30, 178, 189);margin-top: 1%}
+</style>
+<nav class="plugin_nav">
+    <a href="{:url('index')}">资金统计</a>
+    <a class="nav_active" href="">柱形统计图</a>
+    <a href="{:url('spAdGraph')}">消费中奖比</a>
+    <a href="{:url('extOfGraph')}">模块统计</a>
+    <a href="{:url('getTodayList')}">今日数据统计</a>
+</nav>
+<div class="box-padding">
+    <div class="search breadcrumb">
+        <ol class="">
+            <li class="active"><i class="glyphicon glyphicon-link"></i> 消费中奖比</li>
+        </ol>
+        <form class="form-inline">
+            <div class="form-group form-group-left">
+            <button class="btn btn-primary btn-success" data-value="">全部会员</button>
+            <button class="btn btn-default" data-value="0">普通会员</button>
+            <button class="btn btn-default" data-value="1">测试会员</button>
+        </div>
+        </form>
+    </div>
+    <div id="main2" style = "margin-left:1%;width:100%; height:500px"></div>
+    <div id="main" style="width:100%;height:500px"></div>
+</div>
+<script>
+
+function getAll(url){
+    $.get(url, function (res) {
+        var data = res.data.data;
+        var length = res.data.length;
+        data.spend.push((data.spend / length).toFixed(2))
+        data.recharge.push((data.recharge / length).toFixed(2))
+        data.award.push((data.award / length).toFixed(2))
+        data.change.push((data.change / length).toFixed(2))
+        data.send.push((data.send / length).toFixed(2))
+        data.gain.push((data.gain / length).toFixed(2))
+        var option2 = {
+            "color": [
+                "rgba(75, 192, 192, .6)",
+                "rgba(255, 92, 92, .6)",
+                "red",
+                "#9999ff",
+                '#ff33ff',
+                '#dd4f24'
+                ],
+            title : {
+                text: '总统计',
+            },
+            tooltip : {
+                trigger: 'axis',
+            },
+            legend: {
+                data:['消费','中奖','充值','兑换','赠送','盈利']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['总统计', '平均值']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'消费',
+                    type:'bar',
+                    data:data.spend
+                },
+                {
+                    name:'中奖',
+                    type:'bar',
+                    data:data.award,
+                },{
+                    name:'充值',
+                    type:'bar',
+                    data:data.recharge,
+                },{
+                    name:'兑换',
+                    type:'bar',
+                    data:data.change,
+                },
+                {
+                    name:'赠送',
+                    type:'bar',
+                    data:data.send,
+                },
+                {
+                    name:'盈利',
+                    type:'bar',
+                    data:data.gain,
+                }
+            ]
+        };
+                            
+        var myChart2 = echarts.init(document.getElementById('main2'));
+        myChart2.setOption(option2);
+    })
+
+}    
+
+function getList(url){
+    $.get(url, function (res) {
+        var data = res.data.data;
+        var month = [];
+        for(i = 0; i < res.data.length; i++){
+            month[i] = (i + 1) + '月';
+        }
+        var option2 = {
+            "color": [
+                "rgba(75, 192, 192, .6)",
+                "rgba(255, 92, 92, .6)",
+                "red",
+                "#9999ff",
+                '#ff33ff',
+                '#dd4f24'
+                ],
+            title : {
+                text: '资金统计按月统计',
+            },
+            tooltip : {
+                trigger: 'axis',
+            },
+            legend: {
+                data:['消费','中奖','充值','兑换','赠送','盈利']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : month
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'消费',
+                    type:'bar',
+                    data:data.spend,
+                },
+                {
+                    name:'中奖',
+                    type:'bar',
+                    data:data.award,
+                },{
+                    name:'充值',
+                    type:'bar',
+                    data:data.recharge,
+                },{
+                    name:'兑换',
+                    type:'bar',
+                    data:data.change,
+                },
+                {
+                    name:'赠送',
+                    type:'bar',
+                    data:data.send,
+                },
+                {
+                    name:'盈利',
+                    type:'bar',
+                    data:data.gain,
+                }
+            ]
+        };
+                            
+        var myChart2 = echarts.init(document.getElementById('main'));
+        myChart2.setOption(option2);
+    });
+}
+getAll('{:url("admin/Statistics/graphAll")}');
+getList('{:url("admin/Statistics/graphList")}');
+
+$(".search .btn").click(function(){
+    $(".search .btn").removeClass('btn-success');
+    $(this).addClass('btn-success')
+    var value = $(this).data('value');
+    
+    getAll('{:url("admin/Statistics/graphAll",["value" => '+value+'])}');
+    getList('{:url("admin/Statistics/graphList",["value" => '+value+'])}');
+})
+</script>
+{include file='common/foot' /}

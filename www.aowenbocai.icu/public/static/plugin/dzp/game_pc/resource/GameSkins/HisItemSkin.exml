@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HisItemSkin" height="50" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Group left="0" right="0" top="0" bottom="0" width="480">
+		<e:Label id="user_name" text="用户名用户名" x="43" y="14" width="120" height="22" size="22" verticalAlign="middle" textAlign="center" textColor="0x7fbbe0"/>
+		<e:Label id="award_type" text="获得欢乐攻城免费卡1张" x="53" y="24" size="22" height="22" verticalAlign="middle" textAlign="center" textColor="0x7fbbe0" width="240"/>
+		<e:Label id="award_time" text="12分钟前" x="63" y="34" width="120" size="22" height="22" verticalAlign="middle" textAlign="center" textColor="0x7fbbe0"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle" gap="0"/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

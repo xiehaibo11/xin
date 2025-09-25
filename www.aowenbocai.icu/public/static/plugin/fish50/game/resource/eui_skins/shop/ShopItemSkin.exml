@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ShopItemSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="250">
+	<e:Image anchorOffsetX="0" top="0" bottom="0" left="0" right="0" source="Shopping Mall2_json.背景块" scale9Grid="28,28,265,127"/>
+	<e:Group top="15" bottom="58" right="20" left="20" anchorOffsetY="0">
+		<e:Image id="pro_img" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0" maxWidth="200"/>
+	</e:Group>
+	<e:Group height="44.34" anchorOffsetY="0" left="0" right="0" bottom="10">
+		<e:Label id="money" text="20" scaleX="1" scaleY="1" verticalAlign="middle" top="0" bottom="30.340000000000003" textAlign="center" anchorOffsetY="0" left="31" right="124" size="24" textColor="0x004cbc"/>
+		<e:Label text="元" scaleX="1" scaleY="1" verticalAlign="middle" top="0" bottom="30.340000000000003" textAlign="center" anchorOffsetY="0" left="31" right="124" size="20" textColor="0x004cbc"/>
+		<e:Label text="=" scaleX="1" scaleY="1" verticalAlign="middle" top="0" bottom="30.340000000000003" textAlign="center" anchorOffsetY="0" left="31" right="124" size="24" textColor="0x004cbc"/>
+		<e:Image x="38.67" y="3.8600000000000003" anchorOffsetX="0" width="32" anchorOffsetY="0" height="28.07" source="Shopping Mall2_json.钻石"/>
+		<e:Label id="diamonds" text="20" scaleX="1" scaleY="1" verticalAlign="middle" top="0" bottom="30.340000000000003" textAlign="center" anchorOffsetY="0" left="31" right="124" size="24" textColor="0x004cbc"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

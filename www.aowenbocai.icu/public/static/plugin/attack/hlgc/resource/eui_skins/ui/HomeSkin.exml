@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HomeSkin" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image source="backImg_jpg" left="0" right="0" top="0" bottom="0"/>
+	<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0x6b352a" fillAlpha="0.5"/>
+    <e:Group width="180" height="50" anchorOffsetX="0" top="60" left="50">
+		<e:Rect width="100%" height="90%" verticalCenter="0" ellipseWidth="50" y="4.999999999999773" scaleX="1" scaleY="1" fillColor="0x2D1A05" anchorOffsetX="0" horizontalCenter="0"/>
+		<e:Image source="sprite-game_json.sprite-game001" scaleY="1" scaleX="1" verticalCenter="0" right="0"/>
+		<e:Image source="sprite-game_json.sprite-game000" scaleX="1.5" scaleY="1.5" verticalCenter="0" left="0"/>
+		<e:Label id="recharge" text="0" width="70%" height="50" textAlign="left" verticalAlign="middle" textColor="0xEAA215" anchorOffsetX="0" horizontalCenter="6" verticalCenter="0" size="25"/>
+	</e:Group>
+	<e:Group width="300" height="70" top="50" right="0">
+		<e:Group id="head_img" width="70" height="70" scrollEnabled="false" left="0" top="0">
+			<e:Rect strokeWeight="2" ellipseWidth="70" fillAlpha="0" horizontalCenter="0" verticalCenter="0" width="100%" height="100%" strokeColor="0x25aace"/>
+			<e:Image id="img" horizontalCenter="0" verticalCenter="0" source="auto_fight2_png"/>
+			<e:Rect id="rec" ellipseWidth="60" width="60" height="60" horizontalCenter="0" verticalCenter="0"/>
+		</e:Group>
+		<e:Label id="user_name" text="用户名字" width="150" height="50" verticalAlign="middle" textAlign="center" size="25" left="80" verticalCenter="0"/>
+		<e:layout>
+			<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+		</e:layout>
+	</e:Group>
+	<e:Group horizontalCenter="0" top="300">
+		<e:Image source="choos_png" scaleX="2" scaleY="2" left="0" right="0" top="0" bottom="0"/>
+		<e:Label text="选择游戏模式" scaleX="1" scaleY="1" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+	<e:Group width="150" height="50" anchorOffsetY="0" left="100" top="430">
+		<e:Rect left="0" right="0" top="0" bottom="0" strokeColor="0xf21010" strokeWeight="3" ellipseWidth="10" fillColor="0x6baa71"/>
+		<e:Label text="电脑对战" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+	<e:Group width="150" height="50" anchorOffsetY="0" right="100" top="430">
+		<e:Rect left="0" right="0" top="0" bottom="0" strokeColor="0xF21010" strokeWeight="3" ellipseWidth="10" fillColor="0x6BAA71"/>
+		<e:Label text="玩家对战" horizontalCenter="0" verticalCenter="0"/>
+	</e:Group>
+	<e:Group id="cmp_room" width="200" height="200" left="80" bottom="380">
+		<e:Rect left="0" right="0" top="0" bottom="0"/>
+		<e:Label text="创建房间" horizontalCenter="0" verticalCenter="0" size="40"/>
+		<e:Image id="text" source="20171219110520_png" x="44" y="42"/>
+	</e:Group>
+	<e:Group id="user_room" width="200" height="200" bottom="380" right="80">
+		<e:Rect left="0" right="0" top="0" bottom="0"/>
+		<e:Label text="创建房间" horizontalCenter="0" verticalCenter="0" size="40"/>
+	</e:Group>
+</e:Skin>

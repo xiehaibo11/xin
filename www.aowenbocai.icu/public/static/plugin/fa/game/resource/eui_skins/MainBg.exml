@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="MainBg" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*">
+	<w:Config id="15e73e22c55"/>
+	<e:Image source="bg_jpg" left="0" right="0" top="0" bottom="0"/>
+	<e:Group height="73.32" anchorOffsetY="0" left="0" right="0" top="0">
+		<e:Rect fillColor="0x171b1d" anchorOffsetY="0" left="0" right="0" top="0" bottom="0"/>
+		<e:Group height="53" left="29" verticalCenter="-1.1599999999999966" anchorOffsetY="0">
+			<e:Image source="bi_png" x="22" anchorOffsetX="0" width="38" anchorOffsetY="0" height="32.4" verticalCenter="0"/>
+			<e:Rect strokeColor="0xffcc00" strokeWeight="2" ellipseWidth="56" ellipseHeight="56" fillAlpha="0" scaleX="1" scaleY="1" left="0" right="0" top="0" anchorOffsetY="0" bottom="0"/>
+			<e:Label id="money" text="3232323" height="34" verticalCenter="0.5" anchorOffsetY="0" right="70" left="76" verticalAlign="middle" textColor="0xffcc00" size="26"/>
+			<e:Button id="cz_btn" label="+" skinName="skins.AddButtonSkin" scaleX="0.7" scaleY="0.7" right="15" verticalCenter="0"/>
+		</e:Group>
+		<e:Image id="nav_btn" source="more_dian_png" anchorOffsetX="0" width="72" anchorOffsetY="0" height="72" right="28" verticalCenter="0" scaleX="0.6" scaleY="0.6"/>
+	</e:Group>
+	<e:Group height="96" anchorOffsetY="0" left="0" right="0" bottom="0">
+		<e:Rect left="0" right="0" top="5" bottom="0" fillColor="0x1c2021" anchorOffsetY="0"/>
+		<e:Button id="clear_btn" label="Button" skinName="ClearButton" anchorOffsetX="0" width="91" anchorOffsetY="0" height="91" scaleX="0.7" scaleY="0.7" verticalCenter="0" left="29" alpha="0.7"/>
+		<e:Button id="sub_btn" label="确认" skinName="ButtonRedSkin" verticalCenter="0" right="22"/>
+	</e:Group>
+	<e:Group id="code_group" width="372.33" height="109.09" y="1017.77" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="-9">
+		<e:ToggleButton label="100" skinName="Code1Skin" scaleX="0.6" scaleY="0.6" y="17.76"/>
+		<e:ToggleButton label="500" scaleX="0.6" scaleY="0.6" y="17.76" x="98" skinName="Code2Skin"/>
+		<e:ToggleButton label="1000" scaleX="0.6" scaleY="0.6" y="17.76" x="195" skinName="Code3Skin"/>
+		<e:ToggleButton label="5000" scaleX="0.6" scaleY="0.6" x="293" y="17.76" skinName="Code4Skin"/>
+	</e:Group>
+	<e:Group id="free_group" width="372.33" height="91" horizontalCenter="-9" anchorOffsetY="0" bottom="0" visible="false">
+		<e:Rect scaleX="1" scaleY="1" left="0" right="0.3299999999999841" height="70" ellipseWidth="70" ellipseHeight="70" y="7.96" fillColor="0x1c2021" strokeWeight="2" strokeColor="0x444444"/>
+		<e:Group left="0" right="0" top="0" bottom="0">
+			<e:Label text="免费" verticalAlign="middle" textAlign="center" textColor="0xffcc00" y="0" x="0" scaleX="1" scaleY="1"/>
+			<e:Label text="X" verticalAlign="middle" textAlign="center" textColor="0xFFCC00" y="10" x="10" scaleX="1" scaleY="1" size="20"/>
+			<e:Label id="free_num" text="0" verticalAlign="middle" textAlign="center" textColor="0xFFCC00" y="20" x="20" scaleX="1" scaleY="1" size="30"/>
+			<e:layout>
+				<e:HorizontalLayout horizontalAlign="center" verticalAlign="middle"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+	<e:Group id="main_group" height="941.24" y="75.45" anchorOffsetY="0" left="0" right="0">
+		<e:Image id="main_img" anchorOffsetX="0" width="467.73" anchorOffsetY="0" height="843.57" horizontalCenter="0" verticalCenter="-11.620000000000005" x="86" y="27.789999999999992" scaleX="1" scaleY="1" source="main_bg"/>
+		<e:Image id="time_icon" source="icon_json.icon007" y="36.98" scaleX="0.5" scaleY="0.5" anchorOffsetX="0" width="187" anchorOffsetY="0" height="113" alpha="0" horizontalCenter="5"/>
+		<e:Label id="timeTxt" text="" y="44.5" size="24" width="95" horizontalCenter="5.5" verticalAlign="middle" textAlign="center" anchorOffsetY="0" height="46" anchorOffsetX="0" alpha="1"/>
+		<e:Group id="da_group" width="354.54" height="301.51" y="104.59" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="24.5">
+			<e:Image source="da_bg" left="0" right="0" top="0" bottom="0" alpha="0"/>
+			<e:Image y="54.06" anchorOffsetX="0" width="161.13" anchorOffsetY="0" height="151.78" horizontalCenter="-31.77000000000001" source="words_json.da"/>
+			<e:Label text="1.4" y="215.73" textColor="0xaf4937" size="35" fontFamily="Arial" horizontalCenter="-29.77000000000001"/>
+			<e:layout>
+				<e:BasicLayout/>
+			</e:layout>
+		</e:Group>
+		<e:Group id="xiao_group" width="354.54" height="301.51" y="551.04" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="24.5">
+			<e:Image left="0" right="0" top="0" bottom="0" alpha="0" source="xiao_bg"/>
+			<e:Image y="54.06" anchorOffsetX="0" width="161.13" anchorOffsetY="0" height="151.78" horizontalCenter="-31.77000000000001" source="words_json.xiao"/>
+			<e:Label text="1.4" y="215.73" textColor="0xAF4937" size="35" fontFamily="Arial" horizontalCenter="-29.77000000000001"/>
+			<e:layout>
+			<e:BasicLayout/>
+			</e:layout>
+		</e:Group>
+		<e:Group id="fa_group" width="354.54" height="136.35" y="410.18" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="24.5">
+			<e:Image left="0" right="0" top="0" bottom="0" alpha="0" source="fa_bg"/>
+			<e:Image y="10.99" anchorOffsetX="0" width="83.59" anchorOffsetY="0" height="76.69" horizontalCenter="-32.27000000000001" source="words_json.fa"/>
+			<e:Label text="6.5" y="94.58" textColor="0xAF4937" size="35" fontFamily="Arial" horizontalCenter="-29.77000000000001"/>
+			<e:layout>
+			<e:BasicLayout/>
+			</e:layout>
+		</e:Group>
+		<e:Group id="num_group" width="68.2" height="765.15" y="97.95" anchorOffsetY="0" anchorOffsetX="0" touchEnabled="false" touchChildren="false" horizontalCenter="160">
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" left="0" right="0.20000000000000284" top="16">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xd15e4e" ellipseWidth="20" ellipseHeight="20" touchEnabled="false" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="40.9" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.11b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" y="74.04" left="0" right="0.20000000000000284">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" touchEnabled="false" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="40.9" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.10b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" y="132.04" left="0" right="0.20000000000000284">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.9b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" y="191.04" left="0" right="0.20000000000000284">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.8b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" left="0" right="0.20000000000000284" top="250">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.7b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" left="0" right="0.20000000000000284" top="355" alpha="1">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.6b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" left="0" right="0.20000000000000284" top="465">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.5b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" y="524" left="0" right="0">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.4b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" y="582" left="0" right="0">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.3b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" y="641" left="0" right="0">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.2b"/>
+			</e:Group>
+			<e:Group height="48.5" scaleX="1" scaleY="1" anchorOffsetY="0" left="0" right="0.20000000000000284" top="699" x="10" y="10">
+				<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xD15E4E" ellipseWidth="20" ellipseHeight="20" alpha="0"/>
+				<e:Image anchorOffsetX="0" width="25" anchorOffsetY="0" height="31.46" horizontalCenter="0" verticalCenter="0" source="words_json.1b"/>
+			</e:Group>
+		</e:Group>
+		<e:Group width="50" height="708" y="147.32" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="-181">
+			<e:Image source="icon_json.icon001" x="28" y="-36.55" scaleX="0.7" scaleY="0.7"/>
+			<e:DataGroup id="history_data_group" top="0" bottom="29" left="0" right="0" anchorOffsetY="0"/>
+		</e:Group>
+	</e:Group>
+	<e:Group id="user_group" anchorOffsetX="0" anchorOffsetY="0" left="0" right="0" top="0" bottom="0" touchThrough="false" touchEnabled="false">
+		<e:Group width="107.27" height="107.58" y="273.15" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="-256.5">
+			<e:Rect width="80" height="80" ellipseWidth="80" horizontalCenter="0" verticalCenter="-13.79" strokeColor="0xFF7D6B" strokeWeight="2" fillAlpha="0"/>
+			<e:Rect width="65" height="65" ellipseWidth="80" horizontalCenter="0.5" verticalCenter="-13.29" strokeColor="0xFFFFFF" fillAlpha="1" fillColor="0xFF7D6B"/>
+			<e:Label text="空" textColor="0xD65C53" size="22" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Image width="65" height="65" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Label text="空席" left="0" right="0.269999999999996" verticalAlign="middle" textAlign="center" size="18" textColor="0xFF7D6B" top="82"/>
+			<e:Rect height="28" y="75.61" left="0" right="0" ellipseWidth="28" anchorOffsetY="0" fillAlpha="0.4"/>
+		</e:Group>
+		<e:Group width="107.27" height="107.58" y="505" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="-256.5">
+			<e:Rect width="80" height="80" ellipseWidth="80" horizontalCenter="0" verticalCenter="-13.79" strokeColor="0xFF7D6B" strokeWeight="2" fillAlpha="0"/>
+			<e:Rect width="65" height="65" ellipseWidth="80" horizontalCenter="0.5" verticalCenter="-13.29" strokeColor="0xFFFFFF" fillAlpha="1" fillColor="0xFF7D6B"/>
+			<e:Label text="空" textColor="0xD65C53" size="22" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Image width="65" height="65" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Label text="空席" left="0" right="0.269999999999996" verticalAlign="middle" textAlign="center" size="18" textColor="0xFF7D6B" top="82"/>
+			<e:Rect height="28" y="75.61" left="0" right="0" ellipseWidth="28" anchorOffsetY="0" fillAlpha="0.4"/>
+		</e:Group>
+		<e:Group width="107.27" height="107.58" y="736.77" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="-256.5">
+			<e:Rect width="80" height="80" ellipseWidth="80" horizontalCenter="0" verticalCenter="-13.79" strokeWeight="2" fillAlpha="0" strokeColor="0xff7d6b"/>
+			<e:Rect width="65" height="65" ellipseWidth="80" horizontalCenter="0.5" verticalCenter="-13.29" strokeColor="0xFFFFFF" fillAlpha="1" fillColor="0xFF7D6B"/>
+			<e:Label text="空" size="22" horizontalCenter="0.5" verticalCenter="-11.29" textColor="0xd65c53"/>
+			<e:Image width="65" height="65" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Label text="空席" left="0" right="0.269999999999996" verticalAlign="middle" textAlign="center" size="18" textColor="0xff7d6b" top="82"/>
+			<e:Rect height="28" y="75.61" ellipseWidth="28" left="0" right="0" anchorOffsetY="0" fillAlpha="0.4"/>
+		</e:Group>
+		<e:Group width="107.27" height="107.58" y="273.15" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="258.5">
+			<e:Rect width="80" height="80" ellipseWidth="80" horizontalCenter="0" verticalCenter="-13.79" strokeColor="0xFF7D6B" strokeWeight="2" fillAlpha="0"/>
+			<e:Rect width="65" height="65" ellipseWidth="80" horizontalCenter="0.5" verticalCenter="-13.29" strokeColor="0xFFFFFF" fillAlpha="1" fillColor="0xFF7D6B"/>
+			<e:Label text="空" textColor="0xD65C53" size="22" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Image width="65" height="65" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Label text="空席" left="0" right="0.269999999999996" verticalAlign="middle" textAlign="center" size="18" textColor="0xFF7D6B" top="82"/>
+			<e:Rect height="28" y="75.61" left="0" right="0" ellipseWidth="28" anchorOffsetY="0" fillAlpha="0.4"/>
+		</e:Group>
+		<e:Group width="107.27" height="107.58" y="505" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="258.5">
+			<e:Rect width="80" height="80" ellipseWidth="80" horizontalCenter="0" verticalCenter="-13.79" strokeColor="0xFF7D6B" strokeWeight="2" fillAlpha="0"/>
+			<e:Rect width="65" height="65" ellipseWidth="80" horizontalCenter="0.5" verticalCenter="-13.29" strokeColor="0xFFFFFF" fillAlpha="1" fillColor="0xFF7D6B"/>
+			<e:Label text="空" textColor="0xD65C53" size="22" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Image width="65" height="65" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Label text="空席" left="0" right="0.269999999999996" verticalAlign="middle" textAlign="center" size="18" textColor="0xFF7D6B" top="82"/>
+			<e:Rect height="28" y="75.61" left="0" right="0" ellipseWidth="28" anchorOffsetY="0" fillAlpha="0.4"/>
+		</e:Group>
+		<e:Group width="107.27" height="107.58" y="736.77" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="258.5">
+			<e:Rect width="80" height="80" ellipseWidth="80" horizontalCenter="0" verticalCenter="-13.79" strokeColor="0xFF7D6B" strokeWeight="2" fillAlpha="0"/>
+			<e:Rect width="65" height="65" ellipseWidth="80" horizontalCenter="0.5" verticalCenter="-13.29" strokeColor="0xFFFFFF" fillAlpha="1" fillColor="0xFF7D6B"/>
+			<e:Label text="空" textColor="0xD65C53" size="22" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Image width="65" height="65" horizontalCenter="0.5" verticalCenter="-11.29"/>
+			<e:Label text="空席" left="0" right="0.269999999999996" verticalAlign="middle" textAlign="center" size="18" textColor="0xFF7D6B" top="82"/>
+			<e:Rect height="28" y="75.61" left="0" right="0" ellipseWidth="28" anchorOffsetY="0" fillAlpha="0.4"/>
+		</e:Group>
+	</e:Group>
+	<e:Group id="betting_group" scaleX="1" scaleY="1" top="0" bottom="0" touchEnabled="false" touchChildren="false" left="0" right="0">
+	</e:Group>
+	<e:Group id="my_user" width="130" height="107.58" y="910.97" scaleX="1" scaleY="1" anchorOffsetX="0" anchorOffsetY="0" touchEnabled="false" touchChildren="false" horizontalCenter="0">
+		<e:Rect width="80" height="80" ellipseWidth="80" horizontalCenter="0" verticalCenter="-13.79" strokeColor="0xffffff" strokeWeight="2" fillAlpha="0"/>
+		<e:Rect width="65" height="65" ellipseWidth="80" horizontalCenter="0.5" verticalCenter="-13.29" strokeColor="0xFFFFFF" fillAlpha="1" fillColor="0xff7d6b"/>
+		<e:Label text="空" size="25" horizontalCenter="0.5" verticalCenter="-11.29" textColor="0xd65c53"/>
+		<e:Image width="65" height="65" horizontalCenter="0.5" verticalCenter="-11.29"/>
+		<e:Label text="游客" left="0" right="0" verticalAlign="middle" textAlign="center" bottom="0.5799999999999983" size="18"/>
+	</e:Group>
+</e:Skin>

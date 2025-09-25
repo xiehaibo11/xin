@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HistorySkin" width="1334" height="750" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="back" left="0" right="0" top="0" bottom="0" fillAlpha="0"/>
+	<e:Group width="900" height="550" horizontalCenter="0" verticalCenter="0">
+		<e:Rect left="0" right="0" bottom="0" top="0" ellipseWidth="100" fillColor="0x3f4fa8"/>
+		<e:Rect left="10" right="10" top="10" bottom="10" ellipseWidth="100" fillColor="0x1b2244"/>
+		<e:Label id="zero" text="暂无记录！" horizontalCenter="0" verticalCenter="0" visible="false"/>
+		<e:Rect width="800" height="5" horizontalCenter="0" top="65" fillColor="0x1cbc33"/>
+		<e:Scroller id="hisScroller" width="840" anchorOffsetY="0" horizontalCenter="0" top="70" bottom="40">
+			<e:Group>
+				<e:List id="hisList" width="100%" itemRendererSkinName="HisItemSkin" top="0" horizontalCenter="0"/>
+				<e:Label id="loading" text="上拉获取更多" width="800" size="25" verticalAlign="middle" textAlign="center" bottom="0" horizontalCenter="0" background="true" backgroundColor="0xc1aeae" height="35" visible="false"/>
+				<e:layout>
+					<e:VerticalLayout horizontalAlign="center"/>
+				</e:layout>
+			</e:Group>
+		</e:Scroller>
+	</e:Group>
+	<e:Group id="logo" width="380" height="100" horizontalCenter="0" top="54">
+		<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0x151516" strokeAlpha="1" strokeWeight="10" ellipseWidth="50" strokeColor="0x3f4fa8"/>
+		<e:Label text="历史记录" horizontalCenter="0" verticalCenter="0" size="50" textColor="0xa0a6e5" bold="true"/>
+	</e:Group>
+</e:Skin>

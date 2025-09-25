@@ -1,0 +1,77 @@
+{include file='common/head' /}
+<nav class="plugin_nav">
+    <a href="{:url('admin/Shop/index')}">商品管理</a>
+    <a href="{:url('admin/ShopOrder/index')}">订单管理</a>
+    <a class="nav_active" href="{:url('admin/shop/shopNav')}">分类管理</a>
+    <a href="{:url('admin/shop/add')}">添加商品</a>
+</nav>
+<div class="box-padding">
+    <div class="breadcrumb">
+        <ol>
+            <li><i class="glyphicon glyphicon-link"></i> <a href="{:url('index')}">兑换商城</a></li>
+            <li class="active">商品分类</li>
+        </ol>
+        <div class="form-inline fr">
+            <a class="btn btn-danger btn-add-nav" role="button" style="margin-left: 0"><i class="glyphicon glyphicon-plus"></i> 添加商品类型</a>
+        </div>
+        <div class="add-content form-inline fr" style="display:none;margin-right:20px">
+            <label>商品类型：</label>
+            <input type="text" name="name" class="form-control" placeholder="请输入商品类型">
+            <button class="addNav btn btn-info">添加</button>
+        </div>
+    </div>
+    <div class="table_box">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="tc" width="150">ID</th>
+                <th class="tl">栏目名称</th>
+                <th class="tc" width="150">状态</th>
+                <th class="tc" width="150">操作</th>
+            </tr>
+            </thead>
+            <tbody id="table-content">
+                {volist name="$list" id="item"}
+                <tr>
+                    <td class="tc">{$item.id}</td>
+                    <td class="tl">{$item.name}</td>
+                    <td class="tc">{$item.status}</td>
+                    <td class="tc"><a class="btn btn-default btn-sm">删除</a></td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="text-right">{$list->render()}</div>
+</div>
+</div>
+
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+    });
+    $(".btn-add-nav").click(function(){
+        $(".add-content").toggle();
+    })
+    $(".addNav").click(function(){
+        var name = $("input[name=name]").val().trim();
+        if(name.length == 0 || name.length > 8){
+            $.modal.alert('栏目名不能为空或者长度大于8位');
+        }
+        $.post('{:url("shopNav")}', {name: name},function(res){
+            $.modal.alert(res.msg)
+            if(!res.err){
+                var html = '<tr><td class="tc">'+res.data.id+'</td><td>'+res.data.name+'</td><td class="tc"><font style="color: #5cb85c;">显示</font></td><td class="tc"><a class="btn btn-default btn-sm">删除</a></td></tr>'
+                $("#table-content").prepend(html);
+            }
+        })
+    })
+</script>
+
+{include file='common/foot' /}

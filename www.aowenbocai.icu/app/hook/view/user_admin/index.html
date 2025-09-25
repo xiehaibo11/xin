@@ -1,0 +1,81 @@
+{include file='common/head' /}
+<link href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<style media="screen">
+  .add-botton{
+    float: right;
+    margin-right: 30px;
+  }
+  .box-padding-bottom{
+    padding-bottom: 15px;
+  }
+  .box-padding{
+    padding:20px;
+  }
+  .form-group-left{
+    margin-left:15px;
+  }
+</style>
+<div class="box-padding-bottom">
+    <ol class="breadcrumb">
+      <li class="active">管理员管理</li>
+    </ol>
+    <form class="form-inline" action="">
+      <div class="add-botton">
+        <a href="{:url('admin/UserAdmin/add')}" class="btn btn-info" role="button">添加管理员</a>
+      </div>
+    </form>
+  </div>
+  <div class="box-padding">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>管理员</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {foreach $list as $item}
+      <tr>
+        <td>{$item.user.id}</td>
+        <td>{$item.user.username}</td>
+        <td>{$item.status}</td>
+        <td>
+            <div class="btn-group" role="group" aria-label="...">
+                <!--<a href="{:url('admin/UserAdmin/edit')}?id={$item.user.id}" class="btn btn-info btn-xs">修改</a>-->
+                <a href="#" class="btn btn-info btn-xs isdelete" data-url="{:url('admin/UserAdmin/delete')}?id={$item.user.id}">删除</a>
+            </div>
+        </td>
+      </tr>
+      {/foreach}
+      </tbody>
+    </table>
+    {$list->render()}
+  </div>
+</div>
+
+<script>
+    $(function () {
+        $('.isdelete').click(function() {
+            var _url = $(this).data("url");
+            $.modal.confirm('你是否确定删除', function() {
+                location.href = _url;
+            });
+        });
+        $('#begintime,#endtime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    });
+</script>
+
+{include file='common/foot' /}

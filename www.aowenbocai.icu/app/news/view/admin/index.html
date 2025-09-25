@@ -1,0 +1,122 @@
+{include file='admin@common/head' /}
+<link rel="stylesheet" href="__STATIC__/bootstarp-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="__STATIC__/bootstarp-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<nav class="plugin_nav">
+	<a class="nav_active" href="#">文章管理</a>
+	<a href="{:url('nav')}">栏目管理</a>
+</nav>
+<div class="box-padding">
+	<div class="breadcrumb">
+		<div class="add-botton fl">
+			<a type="button" class="btn btn-danger" href="{:url('add')}"><i class="glyphicon glyphicon-plus"></i> 添加文章</a>
+		</div>
+		<form class="form-inline">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default">{$nav_title}</button>
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="caret"></span>
+					<span class="sr-only">Toggle Dropdown</span>
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="{:url('index')}">全部分类</a>
+					</li>
+					{foreach $nav_list as $item}
+					<li>
+						<a href="{:url('index', ['nav_id' => $item.id])}">{$item.title}</a>
+					</li>
+					{/foreach}
+				</ul>
+			</div>
+			<div class="form-group form-group-left">
+				<label>时间</label>
+				<div class='input-group date' id='begintime' data-date-format="yyyy-mm-dd">
+					<input type='text' class="form-control" name="starttime"  />
+					<span class="input-group-addon">
+					<span class="glyphicon glyphicon-calendar"></span>
+				</span>
+				</div>
+				<label>到</label>
+				<div class='input-group date' id='endtime' data-date-format="yyyy-mm-dd">
+					<input type='text' class="form-control" name="endtime"  />
+					<span class="input-group-addon">
+				<span class="glyphicon glyphicon-calendar"></span>
+				</span>
+				</div>
+			</div>
+			<div class="form-group">
+				关键字
+				<input type="text" name="words" class="form-control" value="{$query.words}" placeholder="关键字/用户名/操作/IP/地址">
+			</div>
+			<button type="submit" class="btn btn-default btn-sm">搜索</button>
+		</form>
+		<div class="clear"></div>
+	</div>
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>【所属栏目】文章标题</th>
+				<th class="tc" width="180">创建时间</th>
+				<th class="tc" width="100">阅读数</th>
+				<th class="tc" width="150">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $list as $item}
+			<tr>
+				<td><span style="color:#5cb85c">【{$item.navName}】</span>{$item.title}</td>
+				<td class="tc">{$item.create_time}</td>
+				<td class="tc">{$item.read_count}</td>
+				<td class="tc">
+					<div class="btn-group" role="group" aria-label="...">
+						<a href="{:url('changeList',['id' => $item.id])}" class="btn btn-primary btn-sm btn_install" title="修改"><i class="glyphicon glyphicon-pencil"></i></a>
+						<a class="btn btn-danger btn-sm delete" data-id = "{:url('deleteData',['id' => $item.id])}" title="删除"><i class="glyphicon glyphicon-trash"></i></a>
+					</div>
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+	<div class="tr">{$list->render()}</div>
+</div>
+<script>
+	$(function () {
+
+	  $('#begintime,#endtime').datetimepicker({
+		language: 'zh-CN',
+		weekStart: 1,
+		todayBtn: 1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		endDate : new Date(),
+		minView: 2,
+		forceParse: 0
+	  });
+	  $('#begintime').on('changeDate',function(e){  
+		  var startTime = e.date;  
+		  $('#endtime').datetimepicker('setStartDate',startTime);  
+	  });
+	  $('#endtime').on('changeDate',function(e){  
+		  var startTime = e.date;  
+		  $('#begintime').datetimepicker('setStartDate',startTime);  
+	  });
+
+	  $(".delete").click(function(){
+		var _id = $(this).data("id");
+
+		var _modal = $.modal.confirm('你是否确定删除', function () {
+			$.get(_id,'', function(res){
+				if(!res.err){
+		  			location.href = '';
+				}else{
+					$.modal.alert('删除失败')
+				}
+				_modal.close();
+			});
+		});
+	  })
+	})
+  </script>
+{include file='admin@common/foot' /}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="AlertSkin" minHeight="230" minWidth="450" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" width="640" height="1136">
+	<e:Group anchorOffsetY="0" anchorOffsetX="0" horizontalCenter="0" width="500" verticalCenter="0">
+		<e:Rect anchorOffsetX="0" anchorOffsetY="0" left="0" right="0" top="0" bottom="-40" fillColor="0x23262f" strokeWeight="10" ellipseWidth="40" ellipseHeight="40" scaleX="1" scaleY="1" strokeColor="0x37393f"/>
+		<e:Group scaleX="1" scaleY="1" left="0" right="0" verticalCenter="20" anchorOffsetY="0">
+			<e:Label id="content" text="内容区域" x="13.36" y="20" anchorOffsetY="0" anchorOffsetX="0" width="400" size="28" lineSpacing="15" textAlign="center"/>
+			<e:Button id="closeButton" label="close" horizontalCenter="0" x="2.999999999999943" y="461" scaleX="1" scaleY="1"/>
+			<e:layout>
+				<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="30"/>
+			</e:layout>
+		</e:Group>
+		<e:layout>
+			<e:BasicLayout/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

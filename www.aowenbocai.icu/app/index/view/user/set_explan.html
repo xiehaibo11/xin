@@ -1,0 +1,48 @@
+{include file='common@common/head' /}
+
+<style>
+  .form {
+    margin: .5rem;
+  }
+  .form button.btn
+  {
+    display: block;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .header .header-left{
+    margin-top: .2rem;
+  }
+</style>
+
+<header class="header">
+    <div class="header-nav">
+        <a class="nav-word" id="cancleBtn" href="javascript:history.go(-1);"><i class="icon-svg icon_left"></i></a>
+    </div>
+  <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<form class="form" action="/index/user/setExplan" id="edit_password">
+    <div class="item-line item-lg item-lg-radius">
+        <textarea name="explan" class="input input-line input-lg" placeholder="输入签名" rows="3">{$explan}</textarea>
+    </div>
+  <div><button class="btn btn-fill btn-lg">保存</button></div>
+</form>
+
+<script>
+    $(function () {
+        $("#edit_password").formAjax({
+            callback: function (data) {
+                $.msg(data.msg);
+                if (data.code) {
+                    setTimeout(function () {
+                        location.href = "/index/User/";
+                    }, 2000);
+                }
+            }
+        });
+    });
+</script>
+
+{include file='common@common/foot' /}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="MenuSkin" currentState="close" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" states="open,close"  height.close="84" height.open="245" height="298">
+	<e:Image id="menuBtn" source="menu_png" scaleX="1" scaleY="1" right.close="0" top.close="0" right.open="0" top.open="0"/>
+	<e:Group includeIn="open" width="200" anchorOffsetY="0" height="275" right="85" top="0">
+		<e:Image source="ui008_png" scale9Grid="48,120,5,17" left="0" right="0" top="0" bottom="-9" anchorOffsetY="0"/>
+		<e:Group includeIn="open" scaleX="1" scaleY="1" anchorOffsetY="0" left="0" right="0" y="6" x="0">
+			<e:Label id="btn_his" text="记录" size="30" left="0" right="0" top="0" bottom="0" verticalAlign="middle" textAlign="center" includeIn="open" x="93" y="-82" scaleX="1" scaleY="1" width="200"/>
+			<e:Label id="btn_bouns" text="图鉴" y="26" x="71" x.open="164" y.open="-56" scaleX.open="1" scaleY.open="1" width="200" textAlign="center"/>
+			<e:Label id="btn_help" text="说明" x="128" y="80" width="200" textAlign="center"/>
+			<e:Label id="back_btn" text="返回" y="92" x="71" x.open="164" y.open="10" scaleX.open="1" scaleY.open="1" width="200" textAlign="center"/>
+			<e:Label id="gameIndex" text="首页" y="102" x="81" width="200" textAlign="center"/>
+			<e:layout>
+			<e:VerticalLayout horizontalAlign="center" verticalAlign="middle" gap="20" paddingTop="20" paddingBottom="20"/>
+			</e:layout>
+		</e:Group>
+		<e:layout>
+			<e:BasicLayout/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

@@ -1,0 +1,30 @@
+---------------------------------------------------------------
+[ 2025-09-24T15:53:29+08:00 ] 38.14.248.196 GET www.aowenbocai.icu/pk10_debug.php
+[运行时间：0.010182s] [吞吐率：98.21req/s] [内存消耗：1,279.40kb] [文件加载：19]
+[ info ] [ DB ] INIT mysql
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-09-24T15:54:17+08:00 ] 38.14.248.196 GET www.aowenbocai.icu/db_config_test.php
+[运行时间：0.005312s] [吞吐率：188.25req/s] [内存消耗：563.19kb] [文件加载：16]
+[ info ] [ DB ] INIT mysql
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.000352s ] mysql:host=127.0.0.1;dbname=cai886;charset=utf8
+[ sql ] [ SQL ] SELECT 1 as test [ RunTime:0.000240s ]
+---------------------------------------------------------------
+[ 2025-09-24T16:13:07+08:00 ] 38.14.248.196 GET www.aowenbocai.icu/pk10_step_debug.php
+[运行时间：0.011896s] [吞吐率：84.06req/s] [内存消耗：1,274.75kb] [文件加载：19]
+[ info ] [ DB ] INIT mysql
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-09-24T16:15:01+08:00 ] 38.14.248.196 GET www.aowenbocai.icu/pk10_minimal_test.php
+[运行时间：0.010616s] [吞吐率：94.20req/s] [内存消耗：878.05kb] [文件加载：20]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+  'httponly' => true,
+  'secure' => false,
+)
+[ info ] [ LOG ] INIT File

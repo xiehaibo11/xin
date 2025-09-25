@@ -1,0 +1,539 @@
+{include file='web@common/head' title="开奖结果"/}
+<link rel="stylesheet" type="text/css"  href="/static/vipweb/css/game_lottery.css">
+<script src="/static/vipweb/js/historyCode.js"></script>
+
+<div class="page-list web mt15" id="app" v-cloak>
+    <div class="list-left">
+        <div class="nav-head">开奖公告</div>
+        <div class="nav-list">
+            <ul>
+                <li v-for="item in navData"><a :class="{'active': item.selected}" @click="link(item.url)">{{item.title}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="list-rig lottery-detail-main" style="min-height: 500px">
+        <div class="lottery-detail-img">
+            <img src="{$lotteryInfo.logo}" alt="" class="game-icon">
+        </div>
+        <div class="lottery-detail-cont">
+            <div class="title">
+                <div class="name flex">{$lotteryInfo.title}开奖结果</div>
+            </div>
+            <div class="cur-issue-bet">
+                <p class="flex-box">
+                    第{{expect}}期正在销售  距投注截止时间还有：<span class="time">{{timer}}</span>
+                    <el-button plain size="mini" @click.native="goBet">立即投注</el-button>
+                </p>
+                <p class="summary">预计开奖时间：{{kjTime}}</p>
+            </div>
+            <div class="new-issue-code">
+                <span>第{{curIssue.issue}}期开奖号码：</span>
+                <span v-for="item in curIssue.code">
+                    <span class="ball ball-red">{{item}}</span>
+                </span>
+            </div>
+
+            <div class="lottery-award-all">
+                <div class="flex-box head">
+                    <div class="flex name">开奖详情</div>
+                    <div class="flex-box">
+                        日期：
+                        <el-date-picker
+                                size="mini"
+                                v-model="showData"
+                                type="date"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                :clearable = "false"
+                                :picker-options="pickerOptions0"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <today-kj :kj-code="kjCode" :date="date"></today-kj>
+            </div>
+        </div>
+    </div>
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            top="0"
+            :lock-scroll = "false"
+            width="450px"
+    >
+        <span style="font-size: 15px">你好，第<b class="red">{{curIssue.issue}}</b>期已截止，当前期是第<b class="red">{{expect}}</b>期，投注时请确认选择的期号。</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>
+</div>
+<!--底部 今日开奖号-->
+<template id="todayKj">
+    <div class="flex-box cont">
+        <template v-if="typeName == 'pk10'">
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="20%">期次</td>
+                        <td width="80%">开奖号码</td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td width="20%">{{checkUp(n).addZero}}</td>
+                        <td class="code" width="80%" :class="{'red' : kjCode[checkUp(n).expect]}">{{kjCode[checkUp(n).expect] || '--'}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="20%">期次</td>
+                        <td width="80%">开奖号码</td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td width="20%">{{checkUp(n + column).addZero}}</td>
+                        <td class="code" width="80%" :class="{'red' : kjCode[checkUp(n + column).expect]}">{{kjCode[checkUp(n + column).expect] || '--'}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="20%">期次</td>
+                        <td width="80%">开奖号码</td>
+                    </tr>
+                    <tr v-for="n in totalIssue-column*2">
+                        <td width="20%">{{checkUp(n + column*2).addZero}}</td>
+                        <td class="code" width="80%" :class="{'red' : kjCode[checkUp(n + column*2).expect]}">{{kjCode[checkUp(n + column*2).expect] || '--'}}</td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+        <template v-if="typeName == 'ssc'">
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="38%"><b>开奖号码</b></td>
+                        <td width="15%"><b>十位</b></td>
+                        <td width="15%"><b>个位</b></td>
+                        <td width="15%"><b>后三</b></td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td bgcolor="#fdfdfd">{{checkUp(n).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n).expect]}">{{kjCode[checkUp(n).expect] || '--'}}</td>
+                        <td>{{sscStatus(kjCode[checkUp(n).expect]).shi}}</td>
+                        <td>{{sscStatus(kjCode[checkUp(n).expect]).ge}}</td>
+                        <td :class="sscStatus(kjCode[checkUp(n).expect]).bg_color">{{sscStatus(kjCode[checkUp(n).expect]).hs}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="38%"><b>开奖号码</b></td>
+                        <td width="15%"><b>十位</b></td>
+                        <td width="15%"><b>个位</b></td>
+                        <td width="15%"><b>后三</b></td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td style="background-color: #fdfdfd">{{checkUp(n + column).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n + column).expect]}">{{kjCode[checkUp(n + column).expect] || '--'}}</td>
+                        <td>{{sscStatus(kjCode[checkUp(n + column).expect]).shi}}</td>
+                        <td>{{sscStatus(kjCode[checkUp(n + column).expect]).ge}}</td>
+                        <td :class="sscStatus(kjCode[checkUp(n + column).expect]).bg_color">{{sscStatus(kjCode[checkUp(n + column).expect]).hs}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="38%"><b>开奖号码</b></td>
+                        <td width="15%"><b>十位</b></td>
+                        <td width="15%"><b>个位</b></td>
+                        <td width="15%"><b>后三</b></td>
+                    </tr>
+                    <tr v-for="n in totalIssue-column*2">
+                        <td bgcolor="#fdfdfd">{{checkUp(n + column*2).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n + column*2).expect]}">{{kjCode[checkUp(n + column*2).expect] || '--'}}</td>
+                        <td>{{sscStatus(kjCode[checkUp(n + column*2).expect]).shi}}</td>
+                        <td>{{sscStatus(kjCode[checkUp(n + column*2).expect]).ge}}</td>
+                        <td :class="sscStatus(kjCode[checkUp(n + column*2).expect]).bg_color">{{sscStatus(kjCode[checkUp(n + column*2).expect]).hs}}</td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+        <template v-if="typeName == 'syxw'">
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="41%"><b>开奖号码</b></td>
+                        <td width="21%"><b>大小比</b></td>
+                        <td width="21%"><b>奇偶比</b></td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td bgcolor="#fdfdfd">{{checkUp(n).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n).expect]}">{{kjCode[checkUp(n).expect] || '--'}}</td>
+                        <td>{{syxwStatus(kjCode[checkUp(n).expect]).dx}}</td>
+                        <td>{{syxwStatus(kjCode[checkUp(n).expect]).jo}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="41%"><b>开奖号码</b></td>
+                        <td width="21%"><b>大小比</b></td>
+                        <td width="21%"><b>奇偶比</b></td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td style="background-color: #fdfdfd">{{checkUp(n + column).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n + column).expect]}">{{kjCode[checkUp(n + column).expect] || '--'}}</td>
+                        <td>{{syxwStatus(kjCode[checkUp(n + column).expect]).dx}}</td>
+                        <td>{{syxwStatus(kjCode[checkUp(n + column).expect]).jo}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="41%"><b>开奖号码</b></td>
+                        <td width="21%"><b>大小比</b></td>
+                        <td width="21%"><b>奇偶比</b></td>
+                    </tr>
+                    <tr v-for="n in totalIssue-column*2">
+                        <td bgcolor="#fdfdfd">{{checkUp(n + column*2).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n + column*2).expect]}">{{kjCode[checkUp(n + column*2).expect] || '--'}}</td>
+                        <td>{{syxwStatus(kjCode[checkUp(n + column*2).expect]).dx}}</td>
+                        <td>{{syxwStatus(kjCode[checkUp(n + column*2).expect]).jo}}</td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+        <template v-if="typeName == 'ks'">
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="30%"><b>开奖号码</b></td>
+                        <td width="15%"><b>和值</b></td>
+                        <td width="15%"><b>形态</b></td>
+                        <td width="23%"><b>类型</b></td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td bgcolor="#fdfdfd">{{checkUp(n).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n).expect]}">{{kjCode[checkUp(n).expect] || '--'}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n).expect]).he}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n).expect]).xt}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n).expect]).lx}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="30%"><b>开奖号码</b></td>
+                        <td width="15%"><b>和值</b></td>
+                        <td width="15%"><b>形态</b></td>
+                        <td width="23%"><b>类型</b></td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td style="background-color: #fdfdfd">{{checkUp(n + column).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n + column).expect]}">{{kjCode[checkUp(n + column).expect] || '--'}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n + column).expect]).he}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n + column).expect]).xt}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n + column).expect]).lx}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="17%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="30%"><b>开奖号码</b></td>
+                        <td width="15%"><b>和值</b></td>
+                        <td width="15%"><b>形态</b></td>
+                        <td width="23%"><b>类型</b></td>
+                    </tr>
+                    <tr v-for="n in safeColumn3">
+                        <td bgcolor="#fdfdfd">{{checkUp(n + column*2).addZero}}</td>
+                        <td class="code" :class="{'red' : kjCode[checkUp(n + column*2).expect]}">{{kjCode[checkUp(n + column*2).expect] || '--'}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n + column*2).expect]).he}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n + column*2).expect]).xt}}</td>
+                        <td>{{ksStatus(kjCode[checkUp(n + column*2).expect]).lx}}</td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+        <template v-if="typeName == 'pc28'">
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="13%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="35%"><b>开奖号码</b></td>
+                        <td width="15%"><b>形态</b></td>
+                        <td width="15%"><b>色波</b></td>
+                        <td width="11%"><b>极值</b></td>
+                        <td width="11%"><b>豹子</b></td>
+                    </tr>
+                    <tr v-for="n in column">
+                        <td bgcolor="#fdfdfd">{{checkUp(n).addZero}}</td>
+                        <td class="code">
+                            <div class="cf pc28-tencode" v-if="kjCode[checkUp(n).expect] && kjCode[checkUp(n).expect] !== '开奖中..'">
+                                <span class="fl pc28-code tc">{{getCodeArr(kjCode[checkUp(n).expect])[0]}}</span>
+                                <span class="fl">+</span>
+                                <span class="fl pc28-code tc">{{getCodeArr(kjCode[checkUp(n).expect])[1]}}</span>
+                                <span class="fl">+</span>
+                                <span class="fl pc28-code tc">{{getCodeArr(kjCode[checkUp(n).expect])[2]}}</span>
+                                <span class="fl">=</span>
+                                <span class="fl tc pc28-he" :style="{'backgroundColor' : pcStatus(kjCode[checkUp(n).expect]).bg_color}">{{pcStatus(kjCode[checkUp(n).expect]).he}}</span>
+                            </div>
+                            <div class="cf" v-if="kjCode[checkUp(n).expect] == '开奖中..'">
+                                开奖中..
+                            </div>
+                            <div v-if="!kjCode[checkUp(n).expect] && kjCode[checkUp(n).expect] !== '开奖中..'">--</div>
+                        </td>
+                        <td>{{pcStatus(kjCode[checkUp(n).expect]).xt}}</td>
+                        <td>
+                            <span :class="{'pc28-sb':kjCode[checkUp(n).expect] && kjCode[checkUp(n).expect] !== '开奖中..'}"
+                                  :style="{'backgroundColor' : pcStatus(kjCode[checkUp(n).expect]).bg_color}">{{pcStatus(kjCode[checkUp(n).expect]).text_color}}</span>
+                        </td>
+                        <td>{{pcStatus(kjCode[checkUp(n).expect]).jz}}</td>
+                        <td>{{pcStatus(kjCode[checkUp(n).expect]).bz}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="all-num">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="13%" bgcolor="#fdfdfd"><b>期号</b></td>
+                        <td width="35%"><b>开奖号码</b></td>
+                        <td width="15%"><b>形态</b></td>
+                        <td width="15%"><b>色波</b></td>
+                        <td width="11%"><b>极值</b></td>
+                        <td width="11%"><b>豹子</b></td>
+                    </tr>
+                    <tr v-for="n in totalIssue-column">
+                        <td bgcolor="#fdfdfd">{{checkUp(n + column).addZero}}</td>
+                        <td class="code">
+                            <div class="cf pc28-tencode" v-if="kjCode[checkUp(n + column).expect] && kjCode[checkUp(n + column).expect] !== '开奖中..'">
+                                <span class="fl pc28-code tc">{{getCodeArr(kjCode[checkUp(n + column).expect])[0]}}</span>
+                                <span class="fl">+</span>
+                                <span class="fl pc28-code tc">{{getCodeArr(kjCode[checkUp(n + column).expect])[1]}}</span>
+                                <span class="fl">+</span>
+                                <span class="fl pc28-code tc">{{getCodeArr(kjCode[checkUp(n + column).expect])[2]}}</span>
+                                <span class="fl">=</span>
+                                <span class="fl tc pc28-he" :style="{'backgroundColor' : pcStatus(kjCode[checkUp(n + column).expect]).bg_color}">{{pcStatus(kjCode[checkUp(n + column).expect]).he}}</span>
+                            </div>
+                            <div class="cf" v-if="kjCode[checkUp(n + column).expect] == '开奖中..'">
+                                开奖中..
+                            </div>
+                            <div v-if="!kjCode[checkUp(n + column).expect] && kjCode[checkUp(n + column).expect] !== '开奖中..'">--</div>
+                        </td>
+                        <td>{{pcStatus(kjCode[checkUp(n + column).expect]).xt}}</td>
+                        <td>
+                            <span :class="{'pc28-sb':kjCode[checkUp(n + column).expect] && kjCode[checkUp(n + column).expect] !== '开奖中..'}"
+                                  :style="{'backgroundColor' : pcStatus(kjCode[checkUp(n + column).expect]).bg_color}">{{pcStatus(kjCode[checkUp(n + column).expect]).text_color}}</span>
+                        </td>
+                        <td>{{pcStatus(kjCode[checkUp(n + column).expect]).jz}}</td>
+                        <td>{{pcStatus(kjCode[checkUp(n + column).expect]).bz}}</td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+    </div>
+</template>
+{include file='web@common/foot'/}
+
+<script>
+    'use strict';
+
+    $(function () {
+        var today = new Date();
+        //今日开奖号码
+        Vue.component('today-kj', {
+            template: '#todayKj',
+            props: ['kjCode', 'date'],
+            data: function data() {
+                return {
+                    totalIssue: '{$issue.startIssue}', //每天开奖总次数
+                    typeName: '{$typeName}',
+                    hasError: false // 错误状态
+                };
+            },
+            computed: {
+                // 安全的总期数
+                safeTotalIssue: function() {
+                    const total = parseInt(this.totalIssue) || 0;
+                    return Math.max(0, total); // 确保非负
+                },
+                column: function() {
+                    var n = this.typeName == 'pc28' ? 2 : 3 //pc28 2列展示，其余彩种 3列
+                    return Math.max(1, Math.ceil(this.safeTotalIssue / n));
+                },
+                // 安全的第三列数量
+                safeColumn3: function() {
+                    const result = this.safeTotalIssue - this.column * 2;
+                    return Math.max(0, result); // 确保非负
+                },
+                //时时彩个位、十位、后三形态
+                sscStatus:function () {
+                    return function (codeStr) {
+                        return sscStatus(codeStr);
+                    }
+                },
+                //11选5大小比、奇偶比
+                syxwStatus:function() {
+                    return function (codeStr) {
+                        return syxwStatus(codeStr);
+                    }
+                },
+                //快3和值、形态、类型
+                ksStatus:function() {
+                    return function (codeStr) {
+                        return ksStatus(codeStr);
+                    }
+                },
+                //计算pc28【和、形态、颜色，色波】
+                pcStatus:function(){
+                    return function (codeStr) {
+                        return pcStatus(codeStr);
+                    }
+                },
+                //开奖号码转换成数组
+                getCodeArr:function () {
+                    return function (codeStr) {
+                        return getCodeArr(codeStr);
+                    }
+                }
+            },
+            methods:{
+                //今日开奖期号处理判断
+                checkUp:function (n) {
+                    var string = ''
+                    for(var i = 0 ; i< this.totalIssue.toString().length - n.toString().length ; i++){
+                        string +='0'
+                    }
+                    var addZero = string + "" + n; //序号根据总期数补零
+                    var issueString = this.date + ''+ addZero   //期号拼接
+                    return {'addZero' : addZero ,'expect' : issueString}
+                }
+            }
+        });
+        new Vue({
+            el: '#app',
+            data: {
+                dialogVisible: false,
+                navData: {$lottery}, //左侧导航列表
+                expect: '{$issue.expect}', //当前销售期号
+                kjTime: '{$openTime}', //当前销售期号预计开奖时间
+                curIssue: {
+                    issue: '{$expect}', //最新开奖期号
+                    code: {$code} //最新开奖号码
+                },
+                time: '{$issue.down_time}', //剩余时间（秒）
+                showData: today,
+                //开奖数组
+                kjCode: {$open},
+                date: '{$today}', //今天的日期
+                //设置选择六个月之前到今天的日期
+                pickerOptions0: {
+                    disabledDate: function(time) {
+                        var curDate = new Date().getTime();
+                        var three = 180 * 24 * 3600 * 1000;
+                        var threeMonths = curDate - three;
+                        return time.getTime() > Date.now() || time.getTime() < threeMonths;;
+                    }
+                },
+                typeName: '{$typeName}',
+                name: '{$name}'
+            },
+            computed: {
+                //投注剩余时间格式化
+                timer: function() {
+                    return format('i:s', this.time);
+                }
+            },
+            watch: {
+                //根据日期查询
+                showData: function(n) {
+                    var _this = this;
+
+                    var searchDate = n.replace(/-/g, '');
+                    this.$set(this, 'date', searchDate);
+                    $.get('{:url("historyCode")}', {
+                        times: n,
+                        name: this.name
+                    }, function (res) {
+                        _this.$set(_this, 'kjCode', res.data);
+                    });
+                }
+            },
+            methods: {
+                //当期投注倒计时
+                setTime: function() {
+                    var _this2 = this;
+
+                    setInterval(function () {
+                        _this2.time--;
+                        //当期投注结束
+                        if (_this2.time == 0) {
+                            $.get('{:url("./")}' + _this2.typeName + '/getIssueInfo', { name: '{$name}' }, function (res) {
+                                _this2.time = res.data.down_time;
+                                _this2.expect = res.data.expect;
+                                _this2.curIssue.issue = res.data.lastIssue;
+                                _this2.dialogVisible = true; //期数提示
+                            });
+                            _this2.curIssue.code = ['正', '在', '开', '奖', '中']; //显示正在开奖
+                            var issue = parseInt(_this2.curIssue.issue);
+                            _this2.kjCode[issue] = '开奖中..';
+                            setTimeout(function () {
+                                _this2.dialogVisible = false;
+                            }, 5000);
+                            //30秒后获取开奖号码
+                            setTimeout(function () {
+                                _this2.getNewCode();
+                            }, 30000);
+                        }
+                    }, '1000');
+                },
+
+                //获取开奖号码
+                getNewCode: function() {
+                    var _this3 = this;
+
+                    var interval = setInterval(function () {
+                        $.get('{:url("./")}' + _this3.typeName + '/getNewCode', {
+                            issue: _this3.curIssue.issue,
+                            name: '{$name}'
+                        }, function (res) {
+                            if (!res.err) {
+                                clearInterval(interval);
+                                _this3.kjCode[res.data.expect] = res.data.codeOpen;
+                                _this3.curIssue.code = res.data.code;
+                            }
+                        });
+                    }, 10000); //每隔10秒
+                },
+                link: function(url) {
+                    window.location = url;
+                },
+                goBet: function() {
+                    window.location = '{:url("./")}' + this.typeName + '/index/name/' + this.name;
+                }
+            },
+            created: function() {
+                this.setTime();
+                var state = "{$getnewcode}";
+                if (state) {
+                    this.getNewCode();
+                }
+            }
+        });
+    });
+</script>

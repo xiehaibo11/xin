@@ -1,0 +1,100 @@
+{include file='common@common/head' /}
+
+<style>
+    .form {
+        margin: .5rem;
+    }
+    .form button.btn
+    {
+        display: block;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    .icon-svg {
+        display: inline-block;
+        margin: 0.2rem .4rem;
+    }
+    .header .header-left{
+        margin-top: .2rem;
+    }
+    .bank{
+
+    }
+</style>
+
+<header class="header">
+    <a class="header-left" href="{:url('bank')}">
+        <i class="icon-svg icon_left"></i>
+    </a>
+    <div class="header-center">{$title}</div>
+</header>
+<div class="p-height"></div>
+<div id="app" class="bank">
+    <div class="form">
+        <div class="item-lg-radius">
+            <div class="item-line item-lg">
+                <div class="item-title">姓名</div>
+                <input type="text" class="input input-line input-lg" placeholder="输入真实姓名" name="nickname" v-model="idname" disabled>
+            </div>
+            <div class="item-line item-lg">
+                <div class="item-title">银行</div>
+                <select class="input input-line input-lg" style="margin-right: 10px;background-color: #ebebeb;border: none;font-size: .75rem;" v-model="bankname">
+                    <option value="0">选择银行</option>
+                    <option value="中国工商银行">中国工商银行</option>
+                    <option value="中国农业银行">中国农业银行</option>
+                    <option value="中国银行">中国银行</option>
+                    <option value="建设银行">建设银行</option>
+                </select>
+            </div>
+            <div class="item-line item-lg">
+                <div class="item-title">卡号</div>
+                <input type="text" class="input input-line input-lg" placeholder="输入银行卡卡号" name="email" v-model="banknum">
+            </div>
+        </div>
+        <div><button class="btn btn-fill btn-lg" @click="submit">提交</button></div>
+    </div>
+</div>
+
+{include file='common@common/foot' /}
+
+<script>
+    $(function () {
+        new Vue({
+            el: '#app',
+            data: {
+                idname:'{$name}',
+                bankname:'0',
+                banknum:'',
+                cardLish:[], //银行卡列表
+                isBind : 0
+            },
+            methods: {
+                submit : function() {
+                    var _this = this;
+                    if(_this.bankname == 0){
+                        $.alert('请选择银行!')
+                        return
+                    }
+                    if(!_this.banknum.length){
+                        $.alert('卡号不能为空!')
+                        return
+                    }
+                    $.post('/index/user/lockBank',{
+                        type:1,
+                        name:'银行卡',
+                        openname:_this.bankname,
+                        numbers:_this.banknum
+                    },function(res) {
+                        $.alert(res.msg)
+                        if(!res.err){
+                            setTimeout(function () {
+                                location.href = '{:url("bank")}';
+                            },1500)
+                        }
+                    });
+                }
+            }
+        });
+
+    });
+</script>

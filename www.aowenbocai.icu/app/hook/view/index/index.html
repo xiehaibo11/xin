@@ -1,0 +1,128 @@
+{include file='common/head' /}
+
+<style>
+  .main-nav{
+    background: #438EB9;
+    height: 40px;
+    line-height:40px;
+  }
+
+  .main-navtwo{
+    background: #F5F5F5;
+    border-bottom: 1px solid #ddd;
+    padding-left:50px;
+  }
+
+  .main-left{
+    position: absolute;
+    top:80px;
+    bottom: 0;
+    background: #F2F2F2;
+    width: 200px;
+  }
+
+  .body-main{
+    position: absolute;
+    left:200px;
+    top:80px;
+    bottom: 0;
+    right: 0;
+  }
+
+  .main-nav .admin-title{
+    line-height: 40px;
+    margin-left: 40px;
+    float: left;
+    color: #fff;
+    font-size: 20px;
+  }
+
+  .main-nav .admin-action{
+    float: right;
+    margin-right: 20px;
+    color: #fff;
+  }
+
+  .main-nav .admin-action a{
+    text-decoration:none;
+    color: #fff;
+    margin-left: 15px;
+  }
+</style>
+
+<div class="main">
+      <div class="main-nav">
+          <div class="admin-title">
+              <span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>
+              web Admin
+          </div>
+
+          <div class="admin-action">
+            欢迎你 <span>{$admin.username}</span>
+            <a href="{:url('admin/Login/logout')}">
+              <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+               退出
+            </a>
+          </div>
+      </div>
+
+      <div class="main-nav main-navtwo">
+          <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
+          播报提醒...
+      </div>
+
+      <div class="main-body">
+          <div class="main-left">
+            <div class="list-group">
+                <a href="#{:url('admin/SystemSet/')}" data-url="{:url('admin/SystemSet/')}" class="list-group-item">
+                    <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                    系统设置
+                </a>
+                <a href="#{:url('admin/User/')}" data-url="{:url('admin/User/')}" class="list-group-item">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    用户管理
+                </a>
+                <a href="#{:url('admin/Extend/')}" data-url="{:url('admin/Extend/')}" class="list-group-item">
+                    <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                    扩展管理
+                </a>
+                <a href="#{:url('admin/Log/')}" data-url="{:url('admin/Log/')}" class="list-group-item">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    日志查询
+                </a>
+                <a href="#{:url('admin/OtherSet/')}" data-url="{:url('admin/OtherSet/')}" class="list-group-item">
+                    <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                    其它设置
+                </a>
+                <a href="#{:url('admin/UserAdmin/')}" data-url="{:url('admin/UserAdmin/')}" class="list-group-item">
+                    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                    管理员设置
+                </a>
+            </div>
+          </div>
+          <div class="body-main">
+              <iframe width="100%" height="100%" id="main-body">
+              </iframe>
+          </div>
+      </div>
+</div>
+
+<script>
+    $(function(){
+        var loadHref = window.location.hash.replace('#','')
+            ,iframe_obj = $("#main-body");
+        if(loadHref){
+            iframe_obj.attr({'src':loadHref});
+        }else{
+           iframe_obj.attr({'src':'{:url('admin/index/index_main')}'});
+        }
+        $(".main-left a.list-group-item").on('click',function(){
+            var url = $(this).data("url");
+            if(url){
+                $("#main-body").attr({'src':url});
+            }
+        });
+    });
+</script>
+
+{include file='common/foot' /}
