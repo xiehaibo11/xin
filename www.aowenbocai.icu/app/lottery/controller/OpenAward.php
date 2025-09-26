@@ -53,51 +53,152 @@ class OpenAward
         if (!$res_data) {
             return json(['code' => 0, 'msg' => '开奖号码为空']);
         }
-        $get_code = json_decode($res_data, true);
+        
+        try {
+            $get_code = json_decode($res_data, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return json(['code' => 0, 'msg' => '开奖数据格式错误']);
+            }
+        } catch (Exception $e) {
+            Log::error('开奖数据解析失败: ' . $e->getMessage());
+            return json(['code' => 0, 'msg' => '开奖数据解析失败']);
+        }
 
         $code_model = LotteryCommon::getModel($name, 'code');
         $last = $code_model->max('expect');
         $ext_model = new Ext();
         $ext_info = $ext_model->where('name', $name)->find();
-        if ($ext_info['is_system_code']) json(['code' => 0, 'msg' => '系统开奖不能推送']);
+        if ($ext_info['is_system_code']) return json(['code' => 0, 'msg' => '系统开奖不能推送']);
+        
         $setting_model = LotteryCommon::getSetting($name);
         $setting_config = json_decode($setting_model->getValue(LotteryCommon::getSettingValue($name, 'setting')),true);
         $dataNum_len = strlen((string)$setting_config['startIssue']);
+        
+        $data = [];
+        $batch_size = 100; // 批量处理大小
+        $processed = 0;
+        
         foreach ($get_code as $key => $v) {
-            $dataNum = explode('-', $v['dataNum']);
-            if ($ext_info['expect_type']) {
-                $expect = $dataNum[1];
-            } else {
-                $expect = (int)'20' . $dataNum[0] . sprintf("%0" . $dataNum_len . "d", intval($dataNum[1]));
+            try {
+                $dataNum = explode('-', $v['dataNum']);
+                if ($ext_info['expect_type']) {
+                    $expect = $dataNum[1];
+                } else {
+                    $expect = (int)'20' . $dataNum[0] . sprintf("%0" . $dataNum_len . "d", intval($dataNum[1]));
+                }
+                if($expect <= $last) continue;
+                
+                array_shift($v);
+                $code = implode(",", $v);
+                if ($code == '-' || $code == '') continue;
+                
+                $data[] = [
+                    'code' => $code,
+                    'expect' => $expect,
+                    'ext_name' => $name,
+                    'create_time' => time()
+                ];
+                
+                $processed++;
+                
+                // 批量处理，避免内存溢出
+                if ($processed >= $batch_size) {
+                    $this->processBatch($code_model, $data, $name, $signature, $timestamp);
+                    $data = [];
+                    $processed = 0;
+                }
+            } catch (Exception $e) {
+                Log::error("处理开奖数据失败 [{$name}]: " . $e->getMessage());
+                continue;
             }
-            if($expect <= $last) continue;
-            array_shift($v);
-            $code = implode(",", $v);
-            if ($code == '-' || $code == '') continue;
-            $data[] = [
-                'code' => $code,
-                'expect' => $expect,
-                'ext_name' => $name
-            ];
         }
-        if(empty($data)){
+        
+        // 处理剩余数据
+        if (!empty($data)) {
+            return $this->processBatch($code_model, $data, $name, $signature, $timestamp);
+        }
+        
+        return json(['code' => 1, 'msg' => '数据已最新']);
+    }
+    
+    /**
+     * 批量处理开奖数据
+     */
+    private function processBatch($code_model, $data, $name, $signature, $timestamp)
+    {
+        if (empty($data)) {
             return json(['code' => 1, 'msg' => '数据已最新']);
         }
+        
+        // 去重检查
+        $expects = array_column($data, 'expect');
+        $existing = $code_model->whereIn('expect', $expects)->column('expect,code');
+        
         foreach ($data as $key => $v) {
-            $has_info = $code_model->where('expect', $v['expect'])->where('code', $v['code'])->find();
-            if ($has_info) unset($data[$key]);
+            $check_key = $v['expect'] . ',' . $v['code'];
+            if (in_array($check_key, $existing)) {
+                unset($data[$key]);
+            }
         }
-        $data = array_unique($data, SORT_REGULAR);
-        $res = $code_model->insertAll($data);
-        if($res){
-            /**遗漏--彩种名到时候配置*/
-            (new Award())->miss($name,$data);
-            /**派奖*/
-            $redis = new Redis();
-            $redis->pub('prize', "signature=" . $signature . "&timestamp=" . $timestamp . "&name=" . $name);
-            return json(['code' => 1]);
+        
+        $data = array_values(array_unique($data, SORT_REGULAR));
+        
+        if (empty($data)) {
+            return json(['code' => 1, 'msg' => '数据已最新']);
         }
-        return json(['code' => 0, 'msg' => '数据库执行失败']);
+        
+        // 使用事务确保数据一致性
+        $code_model->startTrans();
+        try {
+            $res = $code_model->insertAll($data);
+            if ($res) {
+                // 异步处理遗漏计算
+                $this->asyncProcessMiss($name, $data);
+                
+                // 发布开奖消息到Redis
+                $redis = new Redis();
+                $redis->pub('prize', "signature=" . $signature . "&timestamp=" . $timestamp . "&name=" . $name);
+                
+                // 发布WebSocket推送消息
+                $latest_data = end($data);
+                $websocket_data = json_encode([
+                    'lotteryName' => $name,
+                    'data' => [
+                        'code' => $latest_data['code'],
+                        'expect' => $latest_data['expect'],
+                        'timestamp' => time()
+                    ]
+                ]);
+                $redis->pub('lottery_update', $websocket_data);
+                
+                $code_model->commit();
+                return json(['code' => 1, 'msg' => '处理成功', 'count' => count($data)]);
+            } else {
+                $code_model->rollback();
+                return json(['code' => 0, 'msg' => '数据库执行失败']);
+            }
+        } catch (Exception $e) {
+            $code_model->rollback();
+            Log::error("开奖数据入库失败 [{$name}]: " . $e->getMessage());
+            return json(['code' => 0, 'msg' => '数据处理异常']);
+        }
+    }
+    
+    /**
+     * 异步处理遗漏计算
+     */
+    private function asyncProcessMiss($name, $data)
+    {
+        try {
+            // 使用队列或异步任务处理遗漏计算，避免阻塞主流程
+            if (function_exists('fastcgi_finish_request')) {
+                fastcgi_finish_request();
+            }
+            
+            (new Award())->miss($name, $data);
+        } catch (Exception $e) {
+            Log::error("遗漏计算失败 [{$name}]: " . $e->getMessage());
+        }
     }
 
     /**

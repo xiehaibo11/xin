@@ -254,11 +254,20 @@ export default {
     },
     //倒计时
     setDownTime(state){
-        state.lottery.info.time--;
+        if (state.lottery.info.time > 0) {
+            state.lottery.info.time--;
+        } else {
+            // 确保倒计时不会变成负数
+            state.lottery.info.time = 0;
+        }
     },
     //清除倒计时
     clearDownTime(state){
-        clearInterval(state.intervalTime);
+        if (state.intervalTime) {
+            clearTimeout(state.intervalTime);
+            clearInterval(state.intervalTime);
+            state.intervalTime = null;
+        }
     },
     //添加投注数据
     pushBetNum(state,betinfo){

@@ -147,7 +147,11 @@
             return {
                 show : false,
                 changeNum:'',
-                num:''
+                num:'',
+                websocket: null,
+                wsConnected: false,
+                statusSync: null,
+                lastUpdateTime: 0
             }
         },
         filters:{
@@ -249,35 +253,78 @@
                 if(val == 0 && val !== ''){
                     this.$store.commit('clearNewCode')  //清除获取开奖号码定时器
                     this.$store.commit('clearRandomNum')  //清除开奖动画
-                    this.$axios(this.url).then(({data})=>{
-                        this.$store.commit('setBetData',data.data)
-                        this.$emit('change-time') //触发追号内容重写
-                        this.$messagebox('提示','期次已更改，当前第' + this.sortExpect + '期')
-                        setTimeout(()=>{
-                            this.$messagebox.close();
-                        },10000)
-                        this.$store.commit('setAwardNumber',data.data.awardNumber.code); //更新最新开奖号码状态
-                        this.$store.commit('setRecentOpen',data.data.open) //更新近10期开奖数组
-                        this.$store.commit('isGetNewCode',data.data.getnewcode);
+                    
+                    // 增加重试机制的期号更新
+                    const updatePeriod = (retryCount = 0) => {
+                        this.$axios(this.url, {timeout: 10000}).then(({data})=>{
+                            this.$store.commit('setBetData',data.data)
+                            this.$emit('change-time') //触发追号内容重写
+                            this.$messagebox('提示','期次已更改，当前第' + this.sortExpect + '期')
+                            setTimeout(()=>{
+                                this.$messagebox.close();
+                            },8000)
+                            this.$store.commit('setAwardNumber',data.data.awardNumber.code); //更新最新开奖号码状态
+                            this.$store.commit('setRecentOpen',data.data.open) //更新近10期开奖数组
+                            this.$store.commit('isGetNewCode',data.data.getnewcode);
 
-                        this.rMoveNum(); //执行开奖动画
+                            this.rMoveNum(); //执行开奖动画
 
-                        let timelong = data.data.timelong;
-                        let j = timelong < 5 ? 10000 : 60000 //j秒后开始获取开奖号码
-                        var ctime = setTimeout(()=>{
-                            this.getNewCode();
-                            clearTimeout(ctime);
-                        },j)
-                    })
+                            let timelong = data.data.timelong;
+                            let j = timelong < 5 ? 5000 : 15000 //减少等待时间，更快获取开奖号码
+                            var ctime = setTimeout(()=>{
+                                this.getNewCode();
+                                clearTimeout(ctime);
+                            },j)
+                        }).catch((error) => {
+                            console.log('更新期号失败:', error);
+                            if(retryCount < 2) {
+                                setTimeout(() => updatePeriod(retryCount + 1), 3000);
+                            }
+                        })
+                    };
+                    
+                    updatePeriod();
                 }
             }
         },
         methods:{
             //倒计时
             timeInterval(){
-                this.$store.state.intervalTime = setInterval(()=>{
+                // 清除之前的定时器
+                this.$store.commit('clearDownTime');
+                
+                let lastTime = Date.now();
+                let drift = 0;
+                
+                const tick = () => {
+                    const now = Date.now();
+                    const elapsed = now - lastTime;
+                    lastTime = now;
+                    
+                    // 计算时间漂移并调整
+                    drift += elapsed - 1000;
+                    
+                    // 更新倒计时
                     this.$store.commit('setDownTime');
-                },1000)
+                    
+                    // 检查是否需要同步服务器时间
+                    if (this.downTime <= 0) {
+                        // 倒计时结束，触发期号更新
+                        return;
+                    }
+                    
+                    // 调整下次执行时间，补偿时间漂移
+                    const nextInterval = Math.max(0, 1000 - drift);
+                    
+                    this.$store.state.intervalTime = setTimeout(tick, nextInterval);
+                    
+                    // 重置漂移（如果超过1秒）
+                    if (Math.abs(drift) > 1000) {
+                        drift = 0;
+                    }
+                };
+                
+                this.$store.state.intervalTime = setTimeout(tick, 1000);
             },
             //获取不和上次随机相同的随机号
             getRandomNum(){
@@ -311,13 +358,17 @@
             //获取开奖号码
             getNewCode(){
                 this.$store.commit('clearNewCode')  //清除获取开奖号码定时器
-                let timer = this.timelong < 5 ? 5000 : 10000; //每隔timer秒获取一次
-                this.$store.state.newCodeFun = setInterval(()=>{
+                let timer = this.timelong < 5 ? 2000 : 3000; //减少轮询间隔，提高响应速度
+                let retryCount = 0;
+                const maxRetries = 3;
+                
+                const fetchCode = () => {
                     this.$axios.get('/index/'+ this.cz + '/getNewCode',{
                         params:{
                             name:this.name,
                             issue: this.lastIssue
-                        }
+                        },
+                        timeout: 8000 // 增加超时设置
                     }).then(({data})=>{
                         if(!data.err){
                             this.$store.commit('setRecentOpen',data.data.tenCode);//更新近10期开奖号码组
@@ -325,24 +376,47 @@
                             this.$store.commit('clearNewCode')  //清除获取开奖号码定时器
                             this.$store.commit('clearRandomNum')  //清除开奖动画
                             this.$store.commit('isGetNewCode',false);
-                            if(this.cz !== 'ks' || this.cz !== 'pc28'){
-                                this.$axios.get('/index/'+ this.cz + '/getmiss',{ //更新遗漏
-                                    params:{
-                                        name:this.name
-                                    }
-                                }).then(({data})=>{
-                                    if(!data.err){
-                                        this.$store.commit('setMiss',data.data);
-                                    }
-                                }).catch(({error})=>{
-                                    console.log(error)
-                                })
+                            retryCount = 0; // 重置重试计数
+                            
+                            // 异步更新遗漏数据，不阻塞主流程
+                            if(this.cz !== 'ks' && this.cz !== 'pc28'){
+                                this.$nextTick(() => {
+                                    this.$axios.get('/index/'+ this.cz + '/getmiss',{
+                                        params:{
+                                            name:this.name
+                                        },
+                                        timeout: 5000
+                                    }).then(({data})=>{
+                                        if(!data.err){
+                                            this.$store.commit('setMiss',data.data);
+                                        }
+                                    }).catch(({error})=>{
+                                        console.log('更新遗漏数据失败:', error)
+                                    })
+                                });
+                            }
+                        } else {
+                            // 如果返回错误但还没达到最大重试次数，立即重试
+                            if(retryCount < maxRetries) {
+                                retryCount++;
+                                console.log(`开奖号码获取失败，重试第${retryCount}次`);
+                                setTimeout(fetchCode, 1000);
                             }
                         }
                     }).catch(({error})=>{
-                        console.log(error)
+                        console.log('获取开奖号码失败:', error);
+                        // 网络错误重试机制
+                        if(retryCount < maxRetries) {
+                            retryCount++;
+                            console.log(`网络错误，重试第${retryCount}次`);
+                            setTimeout(fetchCode, 2000);
+                        }
                     })
-                },timer)
+                };
+                
+                this.$store.state.newCodeFun = setInterval(fetchCode, timer);
+                // 立即执行一次
+                fetchCode();
             },
             //初始数据
             initData(){
@@ -375,10 +449,111 @@
                         this.rMoveNum();
                     }
                 }
+            },
+            
+            //初始化WebSocket连接
+            initWebSocket(){
+                try {
+                    // 动态导入WebSocket工具
+                    import('@/utils/websocket').then(({ getWebSocket }) => {
+                        this.websocket = getWebSocket();
+                        
+                        // 监听连接状态
+                        this.websocket.on('connection_status', (status) => {
+                            this.wsConnected = status.connected;
+                            console.log('WebSocket连接状态:', status.connected);
+                        });
+                        
+                        // 监听开奖更新
+                        this.websocket.on('lottery_update', (data) => {
+                            this.handleWebSocketUpdate(data);
+                        });
+                        
+                        // 订阅当前彩种
+                        if (this.name && this.websocket.isConnected()) {
+                            this.websocket.subscribe(this.name);
+                        }
+                        
+                        // 连接成功后订阅
+                        this.websocket.on('open', () => {
+                            if (this.name) {
+                                this.websocket.subscribe(this.name);
+                            }
+                        });
+                    }).catch(error => {
+                        console.error('WebSocket初始化失败:', error);
+                    });
+                } catch (error) {
+                    console.error('WebSocket模块加载失败:', error);
+                }
+            },
+            
+            //处理WebSocket推送的开奖更新
+            handleWebSocketUpdate(data) {
+                console.log('收到开奖推送:', data);
+                
+                if (data.lotteryName === this.name) {
+                    this.lastUpdateTime = Date.now();
+                    
+                    // 立即更新开奖号码，减少延迟
+                    if (data.data && data.data.code) {
+                        this.$store.commit('setAwardNumber', data.data.code);
+                    }
+                    
+                    // 更新近期开奖
+                    if (data.data && data.data.recentOpen) {
+                        this.$store.commit('setRecentOpen', data.data.recentOpen);
+                    }
+                    
+                    // 停止轮询，使用实时推送
+                    this.$store.commit('clearNewCode');
+                    this.$store.commit('clearRandomNum');
+                    this.$store.commit('isGetNewCode', false);
+                    
+                    // 强制同步状态
+                    if (this.statusSync) {
+                        this.statusSync.forcSync();
+                    }
+                    
+                    // 更新遗漏数据
+                    if (this.cz !== 'ks' && this.cz !== 'pc28') {
+                        this.$nextTick(() => {
+                            this.$axios.get('/index/'+ this.cz + '/getmiss',{
+                                params: { name: this.name },
+                                timeout: 5000
+                            }).then(({data})=>{
+                                if(!data.err){
+                                    this.$store.commit('setMiss',data.data);
+                                }
+                            }).catch(({error})=>{
+                                console.log('更新遗漏数据失败:', error)
+                            })
+                        });
+                    }
+                }
+            },
+            
+            //初始化状态同步
+            initStatusSync() {
+                try {
+                    import('@/utils/statusSync').then(({ getStatusSync }) => {
+                        this.statusSync = getStatusSync(this.$store, this.$axios);
+                        
+                        if (this.name) {
+                            this.statusSync.startSync(this.name);
+                        }
+                    }).catch(error => {
+                        console.error('状态同步初始化失败:', error);
+                    });
+                } catch (error) {
+                    console.error('状态同步模块加载失败:', error);
+                }
             }
         },
         created(){
            this.initData();
+           this.initWebSocket();
+           this.initStatusSync();
         },
         activated(){
             this.$store.commit('clearRandomNum')  //清除开奖动画
@@ -386,6 +561,23 @@
             if(this.$store.state.lottery.isGetCode){
                 this.rMoveNum();
                 this.getNewCode();
+            }
+            
+            // 重新订阅WebSocket
+            if (this.websocket && this.name) {
+                this.websocket.subscribe(this.name);
+            }
+        },
+        
+        beforeDestroy() {
+            // 清理WebSocket订阅
+            if (this.websocket && this.name) {
+                this.websocket.unsubscribe(this.name);
+            }
+            
+            // 清理状态同步
+            if (this.statusSync) {
+                this.statusSync.stopSync();
             }
         }
     }

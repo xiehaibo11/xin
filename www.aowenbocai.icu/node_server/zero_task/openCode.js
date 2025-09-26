@@ -7,28 +7,46 @@ module.exports.createOpenCode = function(base_config) {
     this.start_time = base_config. startTime;//每天开始时间
     this.space_time = base_config.timelong;//间隔时间
     this.run = function () {
+        const startTime = Date.now();
         network.get(config.url + 'index/api/pushSystemCode?name=' + this.name, (res) => {
-            console.log( '[' +this.name + ']:' + res.data);
+            const responseTime = Date.now() - startTime;
+            console.log(`[${this.name}] 响应时间: ${responseTime}ms, 数据: ${res.data}`);
+            
             var data = res.data;
             try {
                 data = eval('(' + data + ')');
             } catch (error) {
+                console.error(`[${this.name}] 数据解析失败:`, error);
                 data = "";
             }
-            if (data != "" && !data.err) {//开奖成功  间隔时间再发
+            
+            if (data != "" && !data.err) {
+                // 开奖成功，计算下次执行时间
+                const nextTime = this.getNextTime(data.next_time, res.time);
+                console.log(`[${this.name}] 开奖成功，${nextTime}ms后执行下次采集`);
+                
                 setTimeout(() => {
                     this.run();
-                }, this.getNextTime(data.next_time, res.time))
-            } else {//错误重发
-                var next_time = 5000;
+                }, nextTime);
+            } else {
+                // 处理错误情况，使用指数退避策略
+                var next_time = 3000; // 基础重试时间3秒
                 if (data != "" && data.hasOwnProperty('next_time') && data.next_time) {
-                    next_time = (data.next_time + 2) * 1000;
+                    next_time = Math.max((data.next_time + 1) * 1000, 3000);
+                } else if (data != "" && data.err) {
+                    // 如果有错误信息，适当增加重试间隔
+                    next_time = 5000;
                 }
+                
+                console.log(`[${this.name}] 采集失败，${next_time}ms后重试`);
                 setTimeout(() => {
                     this.run();
-                }, next_time)
+                }, next_time);
             }
-        }, 1)
+        }, 1, {
+            timeout: 15000, // 15秒超时
+            retries: 2      // 重试2次
+        });
     }
 
     //获取下次采集时间
