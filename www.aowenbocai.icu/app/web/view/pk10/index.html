@@ -327,7 +327,7 @@
                         <div class="kj-num kj-num-pk10">
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -defaultInfo.awardNumber[0]*54 + 'px' }">
+                                    <ul :style="{ top: -((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0)*54 + 'px' }">
                                         <li><span>正</span></li>
                                         <li v-for="n in 10"><span>{{n | addPreZero}}</span></li>
                                     </ul>

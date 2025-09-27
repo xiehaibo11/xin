@@ -43,9 +43,9 @@
                     </div>
                     <div class="kj-num">
                         <ul class="cf">
-                            <li :class="Number(defaultInfo.awardNumber[0]) ? 'open-point point'+ defaultInfo.awardNumber[0] : ''"><img v-if="!Number(defaultInfo.awardNumber[0])" src="/static/vipweb/images/open_num.gif" alt=""></li>
-                            <li :class="Number(defaultInfo.awardNumber[1]) ? 'open-point point'+ defaultInfo.awardNumber[1] : ''"><img v-if="!Number(defaultInfo.awardNumber[1])" src="/static/vipweb/images/open_num.gif" alt=""></li>
-                            <li :class="Number(defaultInfo.awardNumber[2]) ? 'open-point point'+ defaultInfo.awardNumber[2] : ''"><img v-if="!Number(defaultInfo.awardNumber[2])"  src="/static/vipweb/images/open_num.gif" alt=""></li>
+                            <li :class="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0) ? 'open-point point'+ ((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0) : ''"><img v-if="!Number((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0)" src="/static/vipweb/images/open_num.gif" alt=""></li>
+                            <li :class="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[1]) ? defaultInfo.awardNumber[1] : 0) ? 'open-point point'+ ((defaultInfo.awardNumber && defaultInfo.awardNumber[1]) ? defaultInfo.awardNumber[1] : 0) : ''"><img v-if="!Number((defaultInfo.awardNumber && defaultInfo.awardNumber[1]) ? defaultInfo.awardNumber[1] : 0)" src="/static/vipweb/images/open_num.gif" alt=""></li>
+                            <li :class="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[2]) ? defaultInfo.awardNumber[2] : 0) ? 'open-point point'+ ((defaultInfo.awardNumber && defaultInfo.awardNumber[2]) ? defaultInfo.awardNumber[2] : 0) : ''"><img v-if="!Number((defaultInfo.awardNumber && defaultInfo.awardNumber[2]) ? defaultInfo.awardNumber[2] : 0)"  src="/static/vipweb/images/open_num.gif" alt=""></li>
                         </ul>
                     </div>
                 </div>

@@ -302,7 +302,7 @@
                         <div class="kj-num">
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[0])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0)+1)*72 + 'px' }">
                                         <li><span>正</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -310,7 +310,7 @@
                             </div>
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[1])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[1]) ? defaultInfo.awardNumber[1] : 0)+1)*72 + 'px' }">
                                         <li><span>在</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -318,7 +318,7 @@
                             </div>
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[2])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[2]) ? defaultInfo.awardNumber[2] : 0)+1)*72 + 'px' }">
                                         <li><span>开</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -326,7 +326,7 @@
                             </div>
                      <!--<div class="kj-num-item" v-if="name!= 'ynssc'">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[3])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[3]) ? defaultInfo.awardNumber[3] : 0)+1)*72 + 'px' }">
                                         <li><span>奖</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -334,7 +334,7 @@
                             </div>
                             <div class="kj-num-item" v-if="name!= 'ynssc'">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[4])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[4]) ? defaultInfo.awardNumber[4] : 0)+1)*72 + 'px' }">
                                         <li><span>中</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -3358,9 +3358,9 @@
                 notes:function(){ //选择注数
                     if(this.dmNum + this.tmNum < parseInt(this.number) + 1 || this.dmNum == 0){
                         return 0
-                    }else if(this.radio == 4){<!--组三-->
+                    }else if(this.radio == 4){ // 组三
                         return this.tmNum * 2
-                    }else if(this.radio == 7){<!--组六-->
+                    }else if(this.radio == 7){ // 组六
                         return combination(this.tmNum,this.num - this.dmNum)
                     }
                 },

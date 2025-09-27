@@ -364,7 +364,7 @@ class LotteryCom extends Model
     }
 
     /**系统自动出票判断及期号数据 */
-    public function expectData($data, $total_money, $buy_id, $nowExpect)
+    public function expectData($data, $total_money, $buy_id, $nowExpect, $ext_name = '')
     {
          //添加期号--自动出票判断
          $setting = (new Setting)->get(['isAuto', 'openBd', 'Bdpercent']);
@@ -383,6 +383,10 @@ class LotteryCom extends Model
              $expect_array[$key]['multiple'] = floatval($v['multiple']) > 0 ? floatval($v['multiple']) : 1;
              $expect_array[$key]['buy_id'] = $buy_id;
              $expect_array[$key]['status'] = $nowExpect ==$v['expect'] &&  $isAuto ? 1 : 0;
+             // 添加ext_name字段，修复投注失败<代码：02>问题
+             if ($ext_name) {
+                 $expect_array[$key]['ext_name'] = $ext_name;
+             }
          }
          return $expect_array;
     }

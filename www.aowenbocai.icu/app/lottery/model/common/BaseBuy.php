@@ -384,10 +384,19 @@ class BaseBuy extends Model
         }
         $is_join = $data['buy']['is_join'];
         $data = $data['data'];
-        $expect_array = (new LotteryCom)->expectData($data, $total_money,$this->id, $nowExpect);
-        $res = (LotteryCommon::getModel($this->ext_name, 'expect'))->saveAll($expect_array);//期号添加
-        if(!$res){
-            return ["err"=>2,"msg"=>'投注失败<代码：02>'];
+        $expect_array = (new LotteryCom)->expectData($data, $total_money,$this->id, $nowExpect, $this->ext_name);
+
+        $expectModel = LotteryCommon::getModel($this->ext_name, 'expect');
+
+        // 使用 insertAll 方法而不是 saveAll，避免更新条件缺失问题
+        try {
+            $res = $expectModel->insertAll($expect_array);//期号添加
+            if(!$res){
+                return ["err"=>2,"msg"=>'投注失败<代码：02> - 期号数据插入失败'];
+            }
+        } catch (\Exception $e) {
+            \think\Log::error('期号插入异常: ' . $e->getMessage());
+            return ["err"=>2,"msg"=>'投注失败<代码：02> - ' . $e->getMessage()];
         }
         //添加参与会员信息
         $res = (LotteryCommon::getModel($this->ext_name, 'join'))->save([
@@ -395,7 +404,8 @@ class BaseBuy extends Model
             'money' => $data['money'],
             'buy_id' => $this->id,
             'is_chase' => count($expect_array) > 1 ? 1 : 0,
-            'join_status' => $is_join
+            'join_status' => $is_join,
+            'ext_name' => $this->ext_name  // 添加ext_name字段，修复投注失败<代码：02>问题
         ]);
         if(!$res){
             return ["err"=>3, "msg"=>'投注失败<代码：02>'];

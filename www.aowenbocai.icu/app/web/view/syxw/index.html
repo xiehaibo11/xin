@@ -111,7 +111,7 @@
                         <div class="kj-num">
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -defaultInfo.awardNumber[0]*72 + 'px' }">
+                                    <ul :style="{ top: -((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0)*72 + 'px' }">
                                         <li><span>正</span></li>
                                         <li v-for="n in 11"><span>{{n | addPreZero}}</span></li>
                                     </ul>

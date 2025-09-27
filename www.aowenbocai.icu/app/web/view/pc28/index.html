@@ -44,26 +44,26 @@
                     <div class="kj-num-pc28">
                         <ul class="cf">
                             <li class="code">
-                                <template v-if="Number(defaultInfo.awardNumber[0]) !== -1">{{defaultInfo.awardNumber[0]}}</template>
+                                <template v-if="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : -1) !== -1">{{(defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0}}</template>
                                 <template v-else>开</template>
                             </li>
                             <li>+</li>
                             <li class="code">
-                                <template v-if="Number(defaultInfo.awardNumber[1]) !== -1">{{defaultInfo.awardNumber[1]}}</template>
+                                <template v-if="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[1]) ? defaultInfo.awardNumber[1] : -1) !== -1">{{(defaultInfo.awardNumber && defaultInfo.awardNumber[1]) ? defaultInfo.awardNumber[1] : 0}}</template>
                                 <template v-else>奖</template>
                             </li>
                             <li>+</li>
                             <li class="code">
-                                <template v-if="Number(defaultInfo.awardNumber[2]) !== -1">{{defaultInfo.awardNumber[2]}}</template>
+                                <template v-if="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[2]) ? defaultInfo.awardNumber[2] : -1) !== -1">{{(defaultInfo.awardNumber && defaultInfo.awardNumber[2]) ? defaultInfo.awardNumber[2] : 0}}</template>
                                 <template v-else>中</template>
                             </li>
                             <li>=</li>
                             <li class="code code-result" :style="{backgroundColor: pcResult(CodeXt[0])}">
-                                <template v-if="Number(defaultInfo.awardNumber[0]) !== -1">{{CodeXt[0]}}</template>
+                                <template v-if="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : -1) !== -1">{{CodeXt[0]}}</template>
                                 <template v-else>?</template>
                             </li>
                             <li class="code-lx">
-                                <span v-if="Number(defaultInfo.awardNumber[0]) !== -1">{{CodeXt[1]}}</span>
+                                <span v-if="Number((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : -1) !== -1">{{CodeXt[1]}}</span>
                                 <span v-else>- , -</span>
                             </li>
                         </ul>

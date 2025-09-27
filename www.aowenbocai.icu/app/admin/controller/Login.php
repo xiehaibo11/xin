@@ -40,7 +40,10 @@ class Login extends Controller
             'imageW'   => 110,
             // 验证码字体大小(px)
             'fontSize' => 14,
-            'length' => 4
+            // 验证码位数
+            'length' => 4,
+            // 验证码字符集合 - 纯数字
+            'codeSet' => '0123456789'
         ];
         $captcha = new \captcha\Captcha($config);
         return $captcha->entry();

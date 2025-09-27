@@ -108,6 +108,15 @@ class User extends BaseModel
         $user = $this->where('username', $data['username'])->where(function($query) use ($password){
             $query->where('password', $password)->whereOr('password', mb_substr($password, 8, 16));
         })->find();
+
+        // 如果MD5验证失败，尝试bcrypt验证
+        if (!$user) {
+            $user = $this->where('username', $data['username'])->find();
+            if ($user && !password_verify($data['password'], $user['password'])) {
+                $user = null;
+            }
+        }
+
         if (!$user) {
             return ["code"=>0,"msg"=>"账号密码不正确"];
         }

@@ -1,77 +1,653 @@
-{include file='common/head' /}
-<style>
-    html{
-        height: 100%;
-    }
-    body {
-        background: url("/static/admin/images/login_bg.png") no-repeat center;
-        background-size: cover;
-        height: 100%;
-    }
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <link rel="stylesheet" href="__STATIC__/bootstrap/css/bootstrap.css"/>
+    <script src="__STATIC__/js/jquery-3.2.1.min.js"></script>
+    <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/js/bootstrap-alert.js"></script>
+    <style>
+        /* 页面加载优化 - 防止闪动 */
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative; /* 为绝对定位的子元素提供定位上下文 */
+        }
 
-    .top-center {
-        background: url("/static/admin/images/form_bg.png") no-repeat center;
-        position: absolute;
-        padding: 20px 30px;
-        width: 437px;
-        margin: auto;
-        top: 30%;
-        left: 50%;
-        margin-left: -180px;
-        border-radius: 4px;
-        height: 308px;
-        padding-right: 80px;
-    }    
-    .verify_input{
-        width: 100px;
-        display: inline-block;
-    }
-    .reload_verify{
-        color: #313131;
-    }
-    .reload_verify,.reload_verify:hover{cursor: pointer;font-size: 12px;color: #000000}
-</style>
-<form class="top-center" action="" method="post">
-    <h3 style="color: #ffffff;padding: 10px 0 10px 0">
-        后台管理
-    </h3>
-    <div class="form-group">
-    <input type="text" class="form-control" placeholder="账号" name="username">
+        /* 页面加载状态 */
+        .page-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #238BAB;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .page-loading.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 主体样式 */
+        body {
+            background: #238BAB; /* 备用背景色，视频加载失败时显示 */
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            position: relative;
+        }
+
+        /* 视频背景样式 */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            background: #238BAB; /* 视频加载前的背景色 */
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .login-container {
+            /* 透明黑色渐变背景 */
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+            backdrop-filter: blur(10px); /* 背景模糊效果 */
+            border: 1px solid rgba(255,255,255,0.2); /* 半透明白色边框 */
+            position: absolute; /* 绝对定位用于页面居中 */
+            padding: 30px 40px;
+            width: 420px;
+            max-width: 90vw; /* 响应式宽度限制 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 完美居中 */
+            border-radius: 12px; /* 更圆润的边角 */
+            min-height: 320px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+            z-index: 10; /* 确保登录表单在视频上方 */
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3); /* 阴影效果 */
+            overflow: hidden; /* 为光束动画做准备 */
+        }
+
+        /* 光束闪动动画效果 */
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,215,0,0.3) 52%,
+                rgba(255,255,255,0.1) 54%,
+                transparent 70%
+            );
+            animation: lightBeam 10s infinite linear;
+            pointer-events: none; /* 不影响鼠标事件 */
+            z-index: 1;
+        }
+
+        /* 光束动画关键帧 */
+        @keyframes lightBeam {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        /* 确保表单内容在光束上方 */
+        .login-container > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-container.show {
+            opacity: 1;
+        }
+
+        .login-title {
+            color: #ffffff;
+            padding: 15px 0;
+            margin-bottom: 25px;
+            text-align: center; /* 居中对齐 */
+            font-size: 22px;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* 文字阴影增强可读性 */
+            letter-spacing: 1px; /* 字母间距 */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* 最后一个表单组的下边距 */
+        .form-group:last-of-type {
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            height: 45px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.3); /* 半透明白色边框 */
+            background: rgba(255,255,255,0.1); /* 半透明白色背景 */
+            backdrop-filter: blur(5px); /* 背景模糊 */
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #ffffff; /* 输入文字为白色 */
+            transition: all 0.3s ease;
+        }
+
+        /* 输入框聚焦效果 */
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(255,215,0,0.6); /* 金色边框 */
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 15px rgba(255,215,0,0.3); /* 金色光晕 */
+        }
+
+        /* placeholder文字样式 */
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.7); /* 半透明白色 */
+            font-size: 14px;
+        }
+
+        /* 输入框悬停效果 */
+        .form-control:hover {
+            border-color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .verify-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verify_input {
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .verify-image {
+            height: 45px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .verify-image:hover {
+            border-color: rgba(255,215,0,0.6);
+            box-shadow: 0 0 10px rgba(255,215,0,0.2);
+        }
+
+        .reload_verify {
+            color: rgba(255,255,255,0.8); /* 白色文字 */
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+
+        .reload_verify:hover {
+            color: #ffffff; /* 悬停时更亮的白色 */
+            text-decoration: underline;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 48px;
+            /* 与登录容器完全相同的背景样式 */
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+            backdrop-filter: blur(10px); /* 与登录容器相同的背景模糊效果 */
+            border: 1px solid rgba(255,255,255,0.2); /* 与登录容器相同的半透明白色边框 */
+            border-radius: 8px;
+            color: #ffffff; /* 白色文字 */
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* 文字阴影增强可读性 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* 深色阴影 */
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            /* 悬停时保持与默认状态完全相同的样式，取消黄色效果 */
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%) !important;
+            border-color: rgba(255,255,255,0.2) !important; /* 保持与默认状态相同 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; /* 保持与默认状态相同 */
+            transform: none !important; /* 取消上浮效果 */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important; /* 保持与默认状态相同 */
+            color: #ffffff !important; /* 确保文字颜色保持白色 */
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4); /* 点击时的深色阴影 */
+            background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 100%); /* 点击时更深的背景 */
+        }
+
+        .login-btn:disabled {
+            background: rgba(128,128,128,0.5) !important;
+            border-color: rgba(128,128,128,0.3) !important;
+            color: rgba(255,255,255,0.5) !important;
+            cursor: not-allowed;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        /* 强制覆盖任何可能的外部样式，确保按钮不会显示黄色 */
+        .login-btn,
+        .login-btn:hover,
+        .login-btn:focus,
+        .login-btn:active {
+            background-color: transparent !important;
+            /* 确保不使用任何黄色或金色 */
+        }
+
+        /* 移除按钮的默认outline，防止浏览器默认样式 */
+        .login-btn:focus {
+            outline: none !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+        }
+
+        /* 响应式设计 - 确保在小屏幕上完美居中 */
+        @media (max-width: 480px) {
+            .login-container {
+                width: 350px;
+                max-width: 85vw;
+                padding: 25px 30px;
+                min-height: 300px;
+            }
+
+            .login-title {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-container {
+                width: 320px;
+                max-width: 80vw;
+                padding: 20px 25px;
+            }
+
+            .form-control {
+                height: 42px;
+                font-size: 13px;
+            }
+
+            .login-btn {
+                height: 44px;
+                font-size: 15px;
+            }
+        }
+
+        /* 确保在极小屏幕上也能正常显示 */
+        @media (max-height: 600px) {
+            .login-container {
+                min-height: auto;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+
+        /* ===== 登录成功提示框样式统一 ===== */
+
+        /* Modal背景遮罩层 */
+        .modal.fade {
+            background: rgba(0,0,0,0.5); /* 半透明黑色遮罩 */
+        }
+
+        /* Modal主要内容容器 - 与登录容器保持完全一致的样式 */
+        .modal-content {
+            /* 与登录容器完全相同的背景样式 */
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%) !important;
+            backdrop-filter: blur(10px) !important; /* 与登录容器相同的背景模糊效果 */
+            border: 1px solid rgba(255,255,255,0.2) !important; /* 与登录容器相同的半透明白色边框 */
+            border-radius: 12px !important; /* 与登录容器相同的圆角 */
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important; /* 与登录容器相同的阴影效果 */
+            color: #ffffff !important; /* 白色文字 */
+        }
+
+        /* Modal标题样式 */
+        .modal-title {
+            color: #ffffff !important; /* 白色标题文字 */
+            font-weight: 600 !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important; /* 文字阴影增强可读性 */
+        }
+
+        /* Modal头部样式 */
+        .modal-header {
+            border-bottom: 1px solid rgba(255,255,255,0.1) !important; /* 半透明分割线 */
+            background: transparent !important;
+        }
+
+        /* Modal内容区域样式 */
+        .modal-body {
+            color: #ffffff !important; /* 白色内容文字 */
+            background: transparent !important;
+            font-size: 16px !important;
+            text-align: center !important; /* 内容居中 */
+        }
+
+        /* Modal底部样式 */
+        .modal-footer {
+            border-top: 1px solid rgba(255,255,255,0.1) !important; /* 半透明分割线 */
+            background: transparent !important;
+            text-align: center !important; /* 按钮居中 */
+        }
+
+        /* Modal中的按钮样式 - 与登录按钮保持一致 */
+        .modal-footer .btn {
+            /* 与登录按钮完全相同的样式 */
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            border-radius: 8px !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            padding: 8px 20px !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* Modal按钮悬停效果 - 保持与登录按钮一致 */
+        .modal-footer .btn:hover {
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%) !important;
+            border-color: rgba(255,255,255,0.2) !important;
+            color: #ffffff !important;
+            transform: none !important;
+        }
+
+        /* 关闭按钮(×)样式 */
+        .modal-header .close {
+            color: #ffffff !important; /* 白色关闭按钮 */
+            opacity: 0.8 !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+            font-size: 24px !important;
+        }
+
+        .modal-header .close:hover {
+            color: #ffffff !important;
+            opacity: 1 !important;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5) !important;
+        }
+
+        /* Modal对话框居中和尺寸 */
+        .modal-dialog {
+            margin: auto !important;
+            position: relative !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            max-width: 400px !important; /* 与登录容器相似的宽度 */
+        }
+
+        /* 小尺寸modal的特殊处理 */
+        .modal-dialog.modal-sm {
+            max-width: 350px !important;
+        }
+
+        /* Modal的z-index确保显示在视频背景之上 */
+        .modal {
+            z-index: 1050 !important; /* 确保在视频背景和登录容器之上 */
+        }
+
+        /* 响应式设计 - Modal在小屏幕上的适配 */
+        @media (max-width: 480px) {
+            .modal-dialog {
+                max-width: 90vw !important;
+                margin: 10px auto !important;
+            }
+
+            .modal-content {
+                margin: 0 !important;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .modal-dialog {
+                top: 20px !important;
+                transform: none !important;
+                margin-top: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 视频背景 -->
+    <div class="video-background">
+        <video id="backgroundVideo" autoplay muted playsinline>
+            <source src="/static/admin/videos/home-bg-video-572f13439052432d5734aab6f528be5555d48ad5.mp4" type="video/mp4">
+            <!-- 视频加载失败时的备用内容 -->
+            您的浏览器不支持视频播放。
+        </video>
     </div>
-    <div class="form-group">
-    <input type="password" class="form-control" placeholder="密码" name="password">
+
+    <!-- 页面加载状态 -->
+    <div class="page-loading" id="pageLoading">
+        <div class="loading-spinner"></div>
     </div>
-    <div class="form-group">
-        <input type="text" class="form-control verify_input" name="verify" placeholder="验证码">
-        <img src="{:url('getVerify')}" class="verify" >
-        <a class="reload_verify" onclick="getVerify()" >看不清，重新获取</a>
-    </div>
-    <button type="button" class="btn btn-default btn-block">登录后台</button>
-</form>
+
+    <!-- 登录表单 -->
+    <form class="login-container" id="loginForm" action="" method="post">
+        <h3 class="login-title">后台管理</h3>
+
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="账号" name="username" id="username" autocomplete="username">
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="密码" name="password" id="password" autocomplete="current-password">
+        </div>
+
+        <div class="form-group">
+            <div class="verify-group">
+                <input type="text" class="form-control verify_input" name="verify" id="verify" placeholder="验证码" autocomplete="off">
+                <img src="{:url('getVerify')}" class="verify-image" id="verifyImage" alt="验证码">
+                <a class="reload_verify" href="javascript:void(0)" onclick="refreshVerify()">看不清，重新获取</a>
+            </div>
+        </div>
+
+        <button type="button" class="login-btn" id="loginBtn">登录后台</button>
+    </form>
 
 
+    <script>
+        // 页面加载优化
+        $(document).ready(function() {
+            // 初始化背景视频
+            initBackgroundVideo();
 
-<script>
-    function getVerify()
-    {
-        $(".verify").attr('src', "{:url('getVerify')}") 
-    }
-    setTimeout(() => {
-        getVerify();
-    }, 100);
-    $(function () {
-        $(document).on('click', '.btn-block', function () {
-            var param = $('form').serializeArray();
-            $.post('{:Url("login/index")}', param, function(data){
-                $.modal.alert(data.msg);
+            // 延迟显示登录表单，确保背景视频开始加载
+            setTimeout(function() {
+                $('#pageLoading').addClass('fade-out');
+                $('#loginForm').addClass('show');
+
+                // 移除加载状态
+                setTimeout(function() {
+                    $('#pageLoading').remove();
+                }, 300);
+            }, 500);
+
+            // 初始化验证码
+            refreshVerify();
+        });
+
+        // 初始化背景视频
+        function initBackgroundVideo() {
+            var video = document.getElementById('backgroundVideo');
+
+            if (video) {
+                // 视频加载成功事件
+                video.addEventListener('loadeddata', function() {
+                    console.log('背景视频加载成功');
+                });
+
+                // 视频加载错误事件
+                video.addEventListener('error', function() {
+                    console.log('背景视频加载失败，使用备用背景');
+                    // 隐藏视频容器，显示备用背景色
+                    $('.video-background').hide();
+                });
+
+                // 实现15秒循环播放
+                video.addEventListener('timeupdate', function() {
+                    // 当播放时间达到15秒时，重新开始播放
+                    if (video.currentTime >= 15) {
+                        video.currentTime = 0;
+                    }
+                });
+
+                // 确保视频能够播放
+                video.addEventListener('canplay', function() {
+                    // 尝试播放视频
+                    var playPromise = video.play();
+
+                    if (playPromise !== undefined) {
+                        playPromise.then(function() {
+                            console.log('背景视频开始播放');
+                        }).catch(function(error) {
+                            console.log('视频自动播放被阻止:', error);
+                            // 如果自动播放被阻止，静默处理
+                        });
+                    }
+                });
+
+                // 设置视频音量为0（确保静音）
+                video.volume = 0;
+            }
+        }
+
+        // 刷新验证码
+        function refreshVerify() {
+            var timestamp = new Date().getTime();
+            $('#verifyImage').attr('src', "{:url('getVerify')}?t=" + timestamp);
+        }
+
+        // 登录函数
+        function doLogin() {
+            var $btn = $('#loginBtn');
+            var username = $('#username').val().trim();
+            var password = $('#password').val().trim();
+            var verify = $('#verify').val().trim();
+
+            // 基本验证
+            if (!username) {
+                showAlert('请输入账号');
+                $('#username').focus();
+                return;
+            }
+
+            if (!password) {
+                showAlert('请输入密码');
+                $('#password').focus();
+                return;
+            }
+
+            if (!verify) {
+                showAlert('请输入验证码');
+                $('#verify').focus();
+                return;
+            }
+
+            // 禁用按钮，防止重复提交
+            $btn.prop('disabled', true).text('登录中...');
+
+            var param = $('#loginForm').serializeArray();
+            $.post('{:Url("login/index")}', param, function(data) {
                 if (data.code) {
-                    window.location.href = data.url;
+                    showAlert('登录成功', function() {
+                        window.location.href = data.url;
+                    });
                 } else {
-                    getVerify();
+                    showAlert(data.msg);
+                    refreshVerify();
+                    $('#verify').val('').focus();
                 }
-            },"json");
-        })
-    })
-</script>
+            }, "json").fail(function() {
+                showAlert('网络错误，请重试');
+            }).always(function() {
+                // 恢复按钮状态
+                $btn.prop('disabled', false).text('登录后台');
+            });
+        }
 
-{include file='common/foot' /}
+        // 显示提示信息
+        function showAlert(message, callback) {
+            if (typeof $.modal !== 'undefined') {
+                $.modal.alert(message, callback);
+            } else {
+                alert(message);
+                if (callback) callback();
+            }
+        }
+
+        // 事件绑定
+        $(function() {
+            // 点击登录按钮
+            $('#loginBtn').on('click', function() {
+                doLogin();
+            });
+
+            // Enter键登录支持
+            $('#loginForm').on('keypress', 'input', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    doLogin();
+                }
+            });
+
+            // 验证码图片点击刷新
+            $('#verifyImage').on('click', function() {
+                refreshVerify();
+            });
+
+            // 输入框焦点优化
+            $('#username').focus();
+        });
+    </script>
+</body>
+</html>

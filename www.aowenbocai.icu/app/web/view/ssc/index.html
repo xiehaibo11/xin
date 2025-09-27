@@ -299,7 +299,7 @@
                         <div class="kj-num">
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[0])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[0]) ? defaultInfo.awardNumber[0] : 0)+1)*72 + 'px' }">
                                         <li><span>正</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -307,7 +307,7 @@
                             </div>
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[1])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[1]) ? defaultInfo.awardNumber[1] : 0)+1)*72 + 'px' }">
                                         <li><span>在</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -315,7 +315,7 @@
                             </div>
                             <div class="kj-num-item">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[2])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[2]) ? defaultInfo.awardNumber[2] : 0)+1)*72 + 'px' }">
                                         <li><span>开</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -323,7 +323,7 @@
                             </div>
                             <div class="kj-num-item" v-if="name!= 'ynssc' && name!= 'jlssc'">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[3])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[3]) ? defaultInfo.awardNumber[3] : 0)+1)*72 + 'px' }">
                                         <li><span>奖</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -331,7 +331,7 @@
                             </div>
                             <div class="kj-num-item" v-if="name!= 'ynssc' && name!= 'jlssc'">
                                 <div class="inner">
-                                    <ul :style="{ top: -(parseInt(defaultInfo.awardNumber[4])+1)*72 + 'px' }">
+                                    <ul :style="{ top: -(parseInt((defaultInfo.awardNumber && defaultInfo.awardNumber[4]) ? defaultInfo.awardNumber[4] : 0)+1)*72 + 'px' }">
                                         <li><span>中</span></li>
                                         <li v-for="n in 10"><span>{{n - 1}}</span></li>
                                     </ul>
@@ -3802,7 +3802,19 @@
             }
         })
 
-        var awardNum = '{$info.awardNumber.code}'.split(",");
+        // 安全地处理awardNumber数据，防止undefined错误
+        var awardNumStr = '{$info.awardNumber.code}';
+        var awardNum = [];
+        if (awardNumStr && awardNumStr !== '' && awardNumStr !== 'undefined') {
+            awardNum = awardNumStr.split(",");
+        } else {
+            // 为ynssc和jlssc提供默认的3位数字，其他彩种提供5位数字
+            if ('{$name}' === 'ynssc' || '{$name}' === 'jlssc') {
+                awardNum = ['0', '0', '0'];
+            } else {
+                awardNum = ['0', '0', '0', '0', '0'];
+            }
+        }
         //字符串截取
         Vue.filter("slice", function(value) {
             return value.toString().slice(2);
@@ -4354,7 +4366,17 @@ timestamp=timestamp*1000;
                                 _this2.$set(_this2.defaultInfo,'expect',res.data.lastIssue)
                                 _this2.$set(_this2.defaultInfo,'kjTime',res.data.openTime)
                                 _this2.$set(_this2.defaultInfo,'todayTime',res.data.todayTime)
-                                _this2.$set(_this2.defaultInfo,'awardNumber',res.data.awardNumber.code.split(','))  //显示正在开奖
+                                // 安全地处理awardNumber数据更新
+                                if (res.data.awardNumber && res.data.awardNumber.code) {
+                                    _this2.$set(_this2.defaultInfo,'awardNumber',res.data.awardNumber.code.split(','));
+                                } else {
+                                    // 提供默认值
+                                    if ('{$name}' === 'ynssc' || '{$name}' === 'jlssc') {
+                                        _this2.$set(_this2.defaultInfo,'awardNumber',['开','奖','中']);
+                                    } else {
+                                        _this2.$set(_this2.defaultInfo,'awardNumber',['开','奖','中','.','.']);
+                                    }
+                                }
                                 _this2.$set(_this2,'recentAwardData',res.data.open) //更新近10期开奖数组
                                 _this2.dialogVisible = true; //期数提示
 
@@ -4389,7 +4411,17 @@ timestamp=timestamp*1000;
                                 _this3.$set(_this3.kjCode, res.data.expect, res.data.codeOpen);
                                 _this3.kjCode[res.data.expect] = res.data.codeOpen;
                                 _this3.$set(_this3,'recentAwardData',res.data.tenCode);
-                                _this3.$set(_this3.defaultInfo,'awardNumber',res.data.code);
+                                // 安全地处理开奖号码更新
+                                if (res.data.code && Array.isArray(res.data.code)) {
+                                    _this3.$set(_this3.defaultInfo,'awardNumber',res.data.code);
+                                } else {
+                                    // 提供默认值
+                                    if ('{$name}' === 'ynssc' || '{$name}' === 'jlssc') {
+                                        _this3.$set(_this3.defaultInfo,'awardNumber',['0','0','0']);
+                                    } else {
+                                        _this3.$set(_this3.defaultInfo,'awardNumber',['0','0','0','0','0']);
+                                    }
+                                }
                                 $.get('{:url("getColdHot")}', { name: '{$name}' }, function (res) {
                                     _this3.$set(_this3, 'cold', res.data.cold);
                                     _this3.$set(_this3, 'hot', res.data.hot);
@@ -5038,7 +5070,8 @@ timestamp=timestamp*1000;
             }
         });
         document.addEventListener("visibilitychange", function (e) {
-            if(!e.path[0].hidden){
+            // 修复浏览器兼容性问题：使用document.hidden而不是e.path[0].hidden
+            if(!document.hidden){
                 vm.getIssueInfo();
             }
         }, false);
